@@ -5,12 +5,22 @@ import backgroundImage from "@/public/Generated image 1.png";
 
 const Hero = () => {
   return (
-    <section className="min-h-screen">
+    <section className="relative min-h-[100svh] overflow-hidden">
       <Container>
-        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center text-center">
-          <p className="font-sans mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-(--primary)">
-            Iron Palace
-          </p>
+        <div className="relative z-10 flex min-h-[100svh] -translate-y-[6vh] flex-col items-center justify-center pb-16 pt-28 text-center md:-translate-y-[8vh]">
+          <div className="mb-4 flex flex-col items-center gap-4 md:mb-5">
+            <Image
+              src="/icon.png"
+              alt="Iron Palace logo"
+              width={160}
+              height={160}
+              priority
+              className="h-24 w-24 object-contain md:h-32 md:w-32"
+            />
+            <p className="font-sans text-sm font-semibold uppercase tracking-[0.55em] text-(--primary) md:text-base">
+              Iron Palace
+            </p>
+          </div>
 
           <h1 className="font-heading max-w-5xl text-5xl font-black uppercase tracking-tight md:text-7xl lg:text-8xl">
             The Midwest Mecca

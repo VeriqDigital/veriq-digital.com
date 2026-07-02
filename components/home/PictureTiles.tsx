@@ -53,7 +53,7 @@ const PictureTiles = () => {
   }, []);
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col justify-center px-6 py-24">
+    <div className="mx-auto flex w-full max-w-5xl flex-col justify-center px-6 pb-24 pt-8 md:pt-12">
       <div
         ref={textRef}
         className={`origin-bottom transition-all duration-700 ease-out ${
