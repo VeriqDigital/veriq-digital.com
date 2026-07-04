@@ -1,17 +1,24 @@
 import type { MembershipPlan } from "./membershipPlans";
 
 type CheckoutBarProps = {
+  memberName: string;
   selectedPlan: MembershipPlan | null;
   onNext: () => void;
 };
 
-const CheckoutBar = ({ selectedPlan, onNext }: CheckoutBarProps) => {
+const CheckoutBar = ({
+  memberName,
+  selectedPlan,
+  onNext,
+}: CheckoutBarProps) => {
+  const displayName = memberName || "Your Name";
+
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-black/95 px-6 py-4">
       <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-6 md:grid-cols-[minmax(0,1fr)_16rem_9rem]">
         <div className="min-w-0">
           <p className="text-xs uppercase text-white/50">Iron Palace Member</p>
-          <p className="font-bold uppercase">Your Name</p>
+          <p className="truncate font-bold uppercase">{displayName}</p>
           <p className="truncate text-xs text-white/60">
             {selectedPlan ? selectedPlan.name : "Choose a plan"} &middot; All
             Access
