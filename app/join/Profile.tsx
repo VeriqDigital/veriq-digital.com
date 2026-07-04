@@ -1,17 +1,41 @@
 import Container from "@/components/ui/Container";
 
-type ProfileName = {
+export type ContactInfo = {
   firstName: string;
   lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  birthDate: string;
+  gender: string;
+  consentName: string;
 };
 
 type ProfileProps = {
-  name: ProfileName;
+  contactInfo: ContactInfo;
   onBack: () => void;
-  onNameChange: (name: ProfileName) => void;
+  onContactInfoChange: (contactInfo: ContactInfo) => void;
 };
 
-const contactFields = [
+const contactFields: {
+  label: string;
+  name: keyof Pick<
+    ContactInfo,
+    | "firstName"
+    | "lastName"
+    | "email"
+    | "phone"
+    | "address"
+    | "city"
+    | "state"
+    | "zip"
+    | "birthDate"
+  >;
+  type: string;
+}[] = [
   { label: "First Name", name: "firstName", type: "text" },
   { label: "Last Name", name: "lastName", type: "text" },
   { label: "Email", name: "email", type: "email" },
@@ -26,7 +50,18 @@ const contactFields = [
 const fieldClass =
   "h-20 w-full rounded-md border border-white/15 bg-zinc-950 px-5 text-base font-semibold text-white outline-none transition duration-200 placeholder:text-white/35 focus:border-green-500";
 
-const Profile = ({ name, onBack, onNameChange }: ProfileProps) => {
+const Profile = ({
+  contactInfo,
+  onBack,
+  onContactInfoChange,
+}: ProfileProps) => {
+  const updateContactInfo = (name: keyof ContactInfo, value: string) => {
+    onContactInfoChange({
+      ...contactInfo,
+      [name]: value,
+    });
+  };
+
   return (
     <section className="bg-black pb-48">
       <Container>
@@ -56,21 +91,9 @@ const Profile = ({ name, onBack, onNameChange }: ProfileProps) => {
                       type={field.type}
                       placeholder={`${field.label} *`}
                       required
-                      value={
-                        field.name === "firstName" ||
-                        field.name === "lastName"
-                          ? name[field.name]
-                          : undefined
-                      }
-                      onChange={
-                        field.name === "firstName" ||
-                        field.name === "lastName"
-                          ? (event) =>
-                              onNameChange({
-                                ...name,
-                                [field.name]: event.target.value,
-                              })
-                          : undefined
+                      value={contactInfo[field.name]}
+                      onChange={(event) =>
+                        updateContactInfo(field.name, event.target.value)
                       }
                     />
                   </label>
@@ -81,7 +104,10 @@ const Profile = ({ name, onBack, onNameChange }: ProfileProps) => {
                   <select
                     name="gender"
                     className={`${fieldClass} appearance-none text-white/40`}
-                    defaultValue=""
+                    value={contactInfo.gender}
+                    onChange={(event) =>
+                      updateContactInfo("gender", event.target.value)
+                    }
                   >
                     <option value="" disabled>
                       Select gender
@@ -113,6 +139,10 @@ const Profile = ({ name, onBack, onNameChange }: ProfileProps) => {
                     type="text"
                     placeholder="Type your full name to confirm *"
                     required
+                    value={contactInfo.consentName}
+                    onChange={(event) =>
+                      updateContactInfo("consentName", event.target.value)
+                    }
                   />
                 </label>
               </div>
