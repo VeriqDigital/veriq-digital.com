@@ -1,17 +1,78 @@
-import Link from "next/link";
+"use client";
 
-const utilityLinks = [
+import Link from "next/link";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import LeadModal from "./LeadModal";
+import type { ModalType } from "./LeadModal";
+import useLeadModal from "./useLeadModal";
+
+type UtilityLink =
+  | {
+      label: string;
+      href: string;
+    }
+  | {
+      label: string;
+      modal: ModalType;
+    };
+
+const utilityLinks: UtilityLink[] = [
   { label: "Careers", href: "/careers" },
   { label: "Join Now", href: "/join" },
   { label: "Waiver Form", href: "/waiver" },
-  { label: "Contact Us", href: "/contact" },
-  { label: "Book A Tour", href: "/tours" },
-  { label: "Membership Cancellation", href: "/cancel" },
+  { label: "Contact Us", modal: "contact" },
+  { label: "Book A Tour", modal: "tour" },
+  { label: "Membership Cancellation", modal: "cancellation" },
 ];
 
 const legalLinks = ["PRIVACY POLICY", "TERMS OF SERVICE", "CCPA"];
 
 const Footer = () => {
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterMessage, setNewsletterMessage] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const {
+    activeModal,
+    closeModal,
+    handleFormSubmit,
+    hasSubmitted,
+    openModal,
+  } = useLeadModal();
+
+  const handleNewsletterSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setNewsletterStatus("loading");
+    setNewsletterMessage("");
+
+    const response = await fetch("/api/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: newsletterEmail }),
+    });
+    const data = (await response.json().catch(() => null)) as {
+      message?: string;
+    } | null;
+
+    if (!response.ok) {
+      setNewsletterStatus("error");
+      setNewsletterMessage(
+        data?.message ?? "Something went wrong. Please try again.",
+      );
+      return;
+    }
+
+    setNewsletterStatus("success");
+    setNewsletterEmail("");
+    setNewsletterMessage(
+      data?.message ?? "Thanks for signing up to the Iron Palace newsletter!",
+    );
+  };
+
   return (
     <footer className="w-full px-6 py-20 text-white sm:py-24">
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center">
@@ -22,13 +83,23 @@ const Footer = () => {
             </h2>
             <ul className="mt-5 flex flex-col gap-4 text-sm font-bold text-white/65">
               {utilityLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="transition hover:text-(--primary)"
-                  >
-                    {link.label}
-                  </Link>
+                <li key={link.label}>
+                  {"href" in link ? (
+                    <Link
+                      href={link.href}
+                      className="transition hover:text-(--primary)"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => openModal(link.modal)}
+                      className="cursor-pointer transition hover:text-(--primary)"
+                    >
+                      {link.label}
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
@@ -38,23 +109,44 @@ const Footer = () => {
             <h2 className="font-heading text-lg font-black uppercase">
               Sign Up To Our Newsletter
             </h2>
-            <div className="mt-5 flex w-full max-w-md flex-col gap-3 sm:flex-row">
-              <label className="sr-only" htmlFor="footer-email">
-                Email address
-              </label>
-              <input
-                id="footer-email"
-                type="email"
-                placeholder="Your Email Address"
-                className="min-h-12 flex-1 rounded-md border border-white/35 bg-transparent px-5 text-sm font-semibold text-white outline-none transition placeholder:text-white/45 focus:border-(--primary)"
-              />
-              <button
-                type="button"
-                className="cursor-pointer min-h-12 rounded-md bg-white px-7 font-heading text-sm font-black uppercase text-black transition duration-200 hover:scale-[1.03] hover:bg-(--primary)"
-              >
-                Sign Up
-              </button>
-            </div>
+            <form
+              className="mt-5 flex w-full max-w-md flex-col gap-3"
+              onSubmit={handleNewsletterSubmit}
+            >
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <label className="sr-only" htmlFor="footer-email">
+                  Email address
+                </label>
+                <input
+                  id="footer-email"
+                  type="email"
+                  value={newsletterEmail}
+                  onChange={(event) => setNewsletterEmail(event.target.value)}
+                  placeholder="Your Email Address"
+                  required
+                  className="min-h-12 flex-1 rounded-md border border-white/35 bg-transparent px-5 text-sm font-semibold text-white outline-none transition placeholder:text-white/45 focus:border-(--primary)"
+                />
+                <button
+                  type="submit"
+                  disabled={newsletterStatus === "loading"}
+                  className="min-h-12 cursor-pointer rounded-md bg-white px-7 font-heading text-sm font-black uppercase text-black transition duration-200 hover:scale-[1.03] hover:bg-(--primary) disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100 disabled:hover:bg-white"
+                >
+                  {newsletterStatus === "loading" ? "Sending" : "Sign Up"}
+                </button>
+              </div>
+              {newsletterMessage && (
+                <p
+                  className={`text-sm font-semibold ${
+                    newsletterStatus === "success"
+                      ? "text-(--primary)"
+                      : "text-red-300"
+                  }`}
+                  aria-live="polite"
+                >
+                  {newsletterMessage}
+                </p>
+              )}
+            </form>
 
             <div className="mt-9 h-px w-full max-w-md bg-white/18" />
 
@@ -90,6 +182,15 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {activeModal && (
+        <LeadModal
+          activeModal={activeModal}
+          hasSubmitted={hasSubmitted}
+          onClose={closeModal}
+          onSubmit={handleFormSubmit}
+        />
+      )}
     </footer>
   );
 };
