@@ -1,10 +1,6 @@
 "use client";
 import { useState } from "react";
 
-type FAQProps = {
-  selected: boolean;
-};
-
 const FAQData = [
   {
     question: "What are your opening hours?",
@@ -100,22 +96,24 @@ const FAQ = () => {
 
           return (
             <button
+              key={item.question} // better than index if questions are unique
               type="button"
               onClick={() => setOpenIndex(isOpen ? null : index)}
               className="flex w-full cursor-pointer items-stretch text-left transition duration-200 hover:scale-[1.01]"
               aria-expanded={isOpen}
             >
               <div className="w-full rounded-lg border border-white/10 bg-zinc-900 p-5">
-                <span className="font-heading text-xs font-black uppercase tracking-[0.3em]">
-                  {item.question}
-                </span>
-                <span className="text-xl leading-none">
-                  {isOpen ? "×" : "+"}
-                </span>
+                <div className="flex items-start justify-between gap-4">
+                  <span className="font-heading text-xs font-black uppercase tracking-[0.3em]">
+                    {item.question}
+                  </span>
 
-                {isOpen ? (
-                  <p className="text-gray-300 pt-">{item.answer}</p>
-                ) : null}
+                  <span className="text-xl leading-none">
+                    {isOpen ? "×" : "+"}
+                  </span>
+                </div>
+
+                {isOpen && <p className="pt-4 text-gray-300">{item.answer}</p>}
               </div>
             </button>
           );
