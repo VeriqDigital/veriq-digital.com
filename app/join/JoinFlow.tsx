@@ -67,7 +67,13 @@ const JoinFlow = () => {
           />
         );
       case 3:
-        return <Payment onBack={handleBack} />;
+        return (
+          <Payment
+            contactInfo={contactInfo}
+            selectedPlan={selectedPlan}
+            onBack={handleBack}
+          />
+        );
       default:
         return null;
     }
@@ -77,11 +83,13 @@ const JoinFlow = () => {
     <>
       <FlowBar currentStep={currentStep} />
       {renderCurrentStep()}
-      <CheckoutBar
-        memberName={memberName}
-        selectedPlan={selectedPlan}
-        onNext={handleNext}
-      />
+      {currentStep < 3 ? (
+        <CheckoutBar
+          memberName={memberName}
+          selectedPlan={selectedPlan}
+          onNext={handleNext}
+        />
+      ) : null}
     </>
   );
 };
