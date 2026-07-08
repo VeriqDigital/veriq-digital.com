@@ -20,13 +20,10 @@ type UtilityLink =
 const utilityLinks: UtilityLink[] = [
   { label: "Careers", href: "/careers" },
   { label: "Join Now", href: "/join" },
-  { label: "Waiver Form", href: "/waiver" },
   { label: "Contact Us", modal: "contact" },
   { label: "Book A Tour", modal: "tour" },
   { label: "Membership Cancellation", modal: "cancellation" },
 ];
-
-const legalLinks = ["PRIVACY POLICY", "TERMS OF SERVICE", "CCPA"];
 
 const Footer = () => {
   const [newsletterEmail, setNewsletterEmail] = useState("");
