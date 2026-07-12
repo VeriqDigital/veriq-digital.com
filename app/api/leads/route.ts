@@ -1,27 +1,23 @@
+import { siteConfig } from "@/config/site";
 import { Resend } from "resend";
 import { z } from "zod";
 
-const baseLeadSchema = z.object({
-  email: z.email(),
-  phone: z.string().trim().max(40).optional(),
-  message: z.string().trim().max(2000).optional(),
-});
-
 const leadSchema = z.discriminatedUnion("type", [
-  baseLeadSchema.extend({
+  z.object({
     type: z.literal("contact"),
     name: z.string().trim().min(1).max(120),
+    email: z.email(),
+    phone: z.string().trim().max(40).optional(),
     topic: z.string().trim().max(80).optional(),
-  }),
-  baseLeadSchema.extend({
-    type: z.literal("tour"),
-    name: z.string().trim().min(1).max(120),
-    preferredDay: z.string().trim().max(40).optional(),
+    message: z.string().trim().max(2000).optional(),
   }),
   z.object({
-    type: z.literal("cancellation"),
+    type: z.literal("quote"),
+    name: z.string().trim().min(1).max(120),
     email: z.email(),
-    barcode: z.string().trim().min(1).max(80),
+    phone: z.string().trim().max(40).optional(),
+    preferredDate: z.string().trim().max(40).optional(),
+    message: z.string().trim().max(2000).optional(),
   }),
 ]);
 
@@ -29,19 +25,15 @@ type Lead = z.infer<typeof leadSchema>;
 
 const leadLabels: Record<Lead["type"], string> = {
   contact: "Contact message",
-  cancellation: "Membership cancellation request",
-  tour: "Tour request",
+  quote: "Quote request",
 };
 
 const formatLeadForOwner = (lead: Lead) => {
-  const rows: string[] = [`Type: ${leadLabels[lead.type]}`, `Email: ${lead.email}`];
-
-  if (lead.type === "cancellation") {
-    rows.push(`Barcode: ${lead.barcode}`);
-    return rows.join("\n");
-  }
-
-  rows.splice(1, 0, `Name: ${lead.name}`);
+  const rows: string[] = [
+    `Type: ${leadLabels[lead.type]}`,
+    `Name: ${lead.name}`,
+    `Email: ${lead.email}`,
+  ];
 
   if (lead.phone) {
     rows.push(`Phone: ${lead.phone}`);
@@ -51,8 +43,8 @@ const formatLeadForOwner = (lead: Lead) => {
     rows.push(`Topic: ${lead.topic}`);
   }
 
-  if (lead.type === "tour" && lead.preferredDay) {
-    rows.push(`Preferred day: ${lead.preferredDay}`);
+  if (lead.type === "quote" && lead.preferredDate) {
+    rows.push(`Preferred date: ${lead.preferredDate}`);
   }
 
   if (lead.message) {
@@ -63,23 +55,19 @@ const formatLeadForOwner = (lead: Lead) => {
 };
 
 const getAutoReplyText = (type: Lead["type"]) => {
-  if (type === "tour") {
-    return "Thanks for requesting a tour at Iron Palace. We received your request and will follow up soon to confirm the details.";
+  if (type === "quote") {
+    return `Thanks for requesting a quote from ${siteConfig.name}. We received your request and will follow up soon.`;
   }
 
-  if (type === "cancellation") {
-    return "We received your Iron Palace membership request. Next steps will be reviewed and emailed to you soon.";
-  }
-
-  return "Thanks for contacting Iron Palace. We received your message and will get back to you soon.";
+  return `Thanks for contacting ${siteConfig.name}. We received your message and will get back to you soon.`;
 };
 
 export async function POST(request: Request) {
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.EMAIL_FROM;
-  const gymOwnerEmail = process.env.GYM_OWNER_EMAIL;
+  const businessOwnerEmail = process.env.BUSINESS_OWNER_EMAIL;
 
-  if (!apiKey || !fromEmail || !gymOwnerEmail) {
+  if (!apiKey || !fromEmail || !businessOwnerEmail) {
     return Response.json(
       { message: "Email service is not configured." },
       { status: 500 },
@@ -102,9 +90,9 @@ export async function POST(request: Request) {
   const ownerEmail = await resend.emails
     .send({
       from: fromEmail,
-      to: gymOwnerEmail,
+      to: businessOwnerEmail,
       replyTo: lead.email,
-      subject: `New Iron Palace ${leadLabels[lead.type]}`,
+      subject: `New ${siteConfig.name} ${leadLabels[lead.type]}`,
       text: formatLeadForOwner(lead),
     })
     .catch((error: unknown) => ({ error }));
@@ -122,7 +110,7 @@ export async function POST(request: Request) {
     .send({
       from: fromEmail,
       to: lead.email,
-      subject: "We received your Iron Palace request",
+      subject: `We received your ${siteConfig.name} request`,
       text: getAutoReplyText(lead.type),
     })
     .catch((error: unknown) => ({ error }));

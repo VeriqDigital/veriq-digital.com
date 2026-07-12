@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import { Resend } from "resend";
 import { z } from "zod";
 
@@ -33,8 +34,8 @@ export async function POST(request: Request) {
     .send({
       from: fromEmail,
       to: email,
-      subject: "Thanks for signing up",
-      text: "Thanks for signing up to the Iron Palace newsletter!",
+      subject: `Thanks for signing up with ${siteConfig.name}`,
+      text: `Thanks for signing up for updates from ${siteConfig.name}.`,
     })
     .catch((error: unknown) => ({ error }));
 

@@ -3,27 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { footerLinks, siteConfig } from "@/config/site";
 import LeadModal from "./LeadModal";
-import type { ModalType } from "./LeadModal";
 import useLeadModal from "./useLeadModal";
-
-type UtilityLink =
-  | {
-      label: string;
-      href: string;
-    }
-  | {
-      label: string;
-      modal: ModalType;
-    };
-
-const utilityLinks: UtilityLink[] = [
-  { label: "Careers", href: "/careers" },
-  { label: "Join Now", href: "/join" },
-  { label: "Contact Us", modal: "contact" },
-  { label: "Book A Tour", modal: "tour" },
-  { label: "Membership Cancellation", modal: "cancellation" },
-];
 
 const Footer = () => {
   const [newsletterEmail, setNewsletterEmail] = useState("");
@@ -67,21 +49,22 @@ const Footer = () => {
 
     setNewsletterStatus("success");
     setNewsletterEmail("");
-    setNewsletterMessage(
-      data?.message ?? "Thanks for signing up to the Iron Palace newsletter!",
-    );
+    setNewsletterMessage(data?.message ?? "Thanks for signing up.");
   };
 
   return (
     <footer className="w-full px-6 py-20 text-white sm:py-24">
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center">
-        <div className="grid w-full gap-14 md:grid-cols-[1fr_1.2fr] md:gap-54">
+        <div className="grid w-full gap-14 md:grid-cols-[1fr_1.2fr] md:gap-24">
           <div className="text-center md:text-left">
             <h2 className="font-heading text-lg font-black uppercase">
-              Utilities
+              {siteConfig.name}
             </h2>
-            <ul className="mt-5 flex flex-col gap-4 text-sm font-bold text-white/65">
-              {utilityLinks.map((link) => (
+            <p className="mt-4 max-w-sm text-sm leading-6 text-white/60">
+              {siteConfig.description}
+            </p>
+            <ul className="mt-6 flex flex-col gap-4 text-sm font-bold text-white/65">
+              {footerLinks.map((link) => (
                 <li key={link.label}>
                   {"href" in link ? (
                     <Link
@@ -153,38 +136,25 @@ const Footer = () => {
               <h2 className="font-heading text-lg font-black uppercase">
                 Follow Us
               </h2>
-              <a
-                href="https://www.instagram.com/"
-                aria-label="Instagram"
-                className="grid size-8 place-items-center rounded-md border border-white/35 text-xs font-black text-white/75 transition hover:border-(--primary) hover:text-(--primary)"
-              >
-                IG
-              </a>
+              <div className="flex gap-2">
+                {siteConfig.socialLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    aria-label={link.label}
+                    className="grid size-8 place-items-center rounded-md border border-white/35 text-xs font-black text-white/75 transition hover:border-(--primary) hover:text-(--primary)"
+                  >
+                    {link.shortLabel}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-16 text-center text-[0.7rem] font-bold uppercase leading-relaxed text-white/55">
+        <div className="mt-16 text-center text-xs font-bold uppercase leading-relaxed text-white/55">
           <p className="text-white/80">
-            &copy; 2026 Iron Palace. All Rights Reserved
-          </p>
-          {/* <p className="mt-2 font-heading text-white">
-            Learn More | Train Hard | Be More
-          </p>
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
-            {legalLinks.map((link, index) => (
-              <span key={link} className="flex items-center gap-2">
-                {index > 0 && <span className="text-white/30">|</span>}
-                <span>{link}</span>
-              </span>
-            ))}
-          </div> */}
-          <p className="mx-auto mt-6 max-w-xl text-center text-xs leading-relaxed text-zinc-500">
-            Disclaimer: This website is a fictional portfolio project developed
-            to demonstrate web design and development capabilities. Iron Palace
-            is not an operating business, and all content, pricing, memberships,
-            events, locations, and services displayed are fictitious and
-            provided solely for demonstration purposes.
+            &copy; 2026 {siteConfig.name}. All rights reserved.
           </p>
         </div>
       </div>

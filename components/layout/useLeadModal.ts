@@ -46,22 +46,15 @@ const useLeadModal = () => {
     }
 
     const formData = new FormData(event.currentTarget);
-    const payload =
-      activeModal === "cancellation"
-        ? {
-            type: activeModal,
-            barcode: String(formData.get("barcode") ?? ""),
-            email: String(formData.get("email") ?? ""),
-          }
-        : {
-            type: activeModal,
-            name: String(formData.get("name") ?? ""),
-            email: String(formData.get("email") ?? ""),
-            phone: String(formData.get("phone") ?? ""),
-            topic: String(formData.get("topic") ?? ""),
-            preferredDay: String(formData.get("preferred-day") ?? ""),
-            message: String(formData.get("message") ?? ""),
-          };
+    const payload = {
+      type: activeModal,
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      phone: String(formData.get("phone") ?? ""),
+      topic: String(formData.get("topic") ?? ""),
+      preferredDate: String(formData.get("preferred-date") ?? ""),
+      message: String(formData.get("message") ?? ""),
+    };
 
     setIsSubmitting(true);
 

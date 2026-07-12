@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Oswald } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Navbar from "@/components/layout/Navbar";
+import { siteConfig } from "@/config/site";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,19 +22,18 @@ const oswald = Oswald({
 
 export const metadata: Metadata = {
   title: {
-    default: "Iron Palace | Luxury Gym Concept",
-    template: "%s | Iron Palace",
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
   },
-  description:
-    "A fictional premium gym concept featuring memberships, day passes, coaches, events, tours, and training facilities.",
-  metadataBase: new URL("https://iron-palace-henna.vercel.app/"),
+  description: siteConfig.description,
+  metadataBase: new URL(siteConfig.url),
   openGraph: {
-    title: "Iron Palace",
-    description: "A fictional premium gym concept website.",
-    url: "https://iron-palace-henna.vercel.app/",
-    siteName: "Iron Palace",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
     images: ["/opengraph-image.png"],
-    locale: "en_US",
+    locale: siteConfig.locale,
     type: "website",
   },
 };
@@ -48,7 +48,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${oswald.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col">
         <Navbar />
         {children}
         <Footer />

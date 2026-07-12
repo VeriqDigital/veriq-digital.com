@@ -1,23 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { navigation, primaryCta, siteConfig } from "@/config/site";
 import LeadModal from "./LeadModal";
 import type { ModalType } from "./LeadModal";
 import useLeadModal from "./useLeadModal";
 
-type NavItem =
-  | {
-      name: string;
-      href: string;
-    }
-  | {
-      name: string;
-      modal: ModalType;
-    };
-
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
   const {
     activeModal,
     closeModal,
@@ -28,14 +22,76 @@ const Navbar = () => {
     submitError,
   } = useLeadModal();
 
-  const navItems: NavItem[] = [
-    { name: "Events", href: "/events" },
-    { name: "Coaches", href: "/coaches" },
-    { name: "FAQ", href: "/#faq" },
-    { name: "Tours", modal: "tour" },
-    { name: "Contact Us", modal: "contact" },
-    { name: "Day Passes", href: "/#day-passes" },
-  ];
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    let frameId: number | null = null;
+    let resetTimer: ReturnType<typeof setTimeout> | null = null;
+    let downwardDistance = 0;
+    let upwardDistance = 0;
+
+    const updateNavbar = () => {
+      const currentScrollY = window.scrollY;
+      const difference = currentScrollY - lastScrollY.current;
+
+      setIsScrolled(currentScrollY > 8);
+
+      if (currentScrollY <= 8) {
+        setIsVisible(true);
+        downwardDistance = 0;
+        upwardDistance = 0;
+      } else if (difference > 0) {
+        downwardDistance += difference;
+        upwardDistance = 0;
+
+        if (currentScrollY > 72 && downwardDistance >= 300) {
+          setIsVisible(false);
+          downwardDistance = 0;
+        }
+      } else if (difference < 0) {
+        upwardDistance += Math.abs(difference);
+        downwardDistance = 0;
+
+        if (upwardDistance >= 40) {
+          setIsVisible(true);
+          upwardDistance = 0;
+        }
+      }
+
+      lastScrollY.current = currentScrollY;
+      frameId = null;
+    };
+
+    const handleScroll = () => {
+      if (frameId === null) {
+        frameId = window.requestAnimationFrame(updateNavbar);
+      }
+
+      // Treat a pause as the end of the current scrolling gesture.
+      if (resetTimer !== null) {
+        clearTimeout(resetTimer);
+      }
+
+      resetTimer = setTimeout(() => {
+        downwardDistance = 0;
+        upwardDistance = 0;
+      }, 180);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+
+      if (resetTimer !== null) {
+        clearTimeout(resetTimer);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!isMenuOpen) {
@@ -59,49 +115,62 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed left-0 top-0 z-50 flex w-full justify-center px-4 pt-5 text-sm">
-      <nav className="flex w-full max-w-4xl items-center justify-between gap-6 rounded-full border border-white/10 bg-black/55 px-5 py-3 text-sm shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-md sm:px-7">
+    <header
+      className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-base"
+      data-scrolled={isScrolled}
+      data-visible={isVisible || isMenuOpen}
+    >
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 z-0 transition duration-300 ${
+          isScrolled
+            ? "bg-white/10 backdrop-blur-2xl"
+            : "bg-transparent backdrop-blur-none"
+        }`}
+      />
+      <nav className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-8 px-6 sm:px-10 lg:px-14 xl:px-20">
         <Link
           href="/"
-          className="font-heading text-lg font-black uppercase tracking-wide text-white"
+          className="font-heading text-2xl font-black uppercase tracking-wide text-black"
         >
-          Iron Palace
+          {siteConfig.shortName}
         </Link>
 
         <div className="hidden items-center gap-7 md:flex">
-          {navItems.map((item) =>
+          {navigation.map((item) =>
             "href" in item ? (
               <Link
                 key={item.href}
                 href={item.href}
-                className="font-medium text-white/72 transition hover:text-(--primary)"
+                className="font-medium text-black/75 transition hover:text-(--primary)"
               >
-                {item.name}
+                {item.label}
               </Link>
             ) : (
               <button
-                key={item.name}
+                key={item.label}
                 type="button"
                 onClick={() => openModal(item.modal)}
-                className="cursor-pointer font-medium text-white/72 transition hover:text-(--primary)"
+                className="cursor-pointer font-medium text-black/75 transition hover:text-(--primary)"
               >
-                {item.name}
+                {item.label}
               </button>
             ),
           )}
         </div>
 
         <div className="ml-auto flex items-center gap-3">
-          <Link
-            href="/join"
+          <button
+            type="button"
+            onClick={() => openModal(primaryCta.modal)}
             className="rounded-full bg-(--primary) px-4 py-2 font-semibold text-black transition hover:bg-(--primary-hover)"
           >
-            Join now
-          </Link>
+            {primaryCta.label}
+          </button>
 
           <button
             type="button"
-            className="flex size-10 items-center justify-center rounded-full border border-white/15 text-white/80 transition hover:border-(--primary) hover:text-(--primary) md:hidden"
+            className="flex size-11 items-center justify-center rounded-full border border-black/15 text-black/80 transition hover:border-(--primary) hover:text-(--primary) md:hidden"
             aria-label={
               isMenuOpen ? "Close navigation menu" : "Open navigation menu"
             }
@@ -118,9 +187,9 @@ const Navbar = () => {
       </nav>
 
       {isMenuOpen && (
-        <div className="absolute top-19 w-[calc(100%-2rem)] max-w-4xl rounded-lg border border-white/10 bg-black/88 p-2 text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-md md:hidden">
+        <div className="absolute inset-x-4 top-full rounded-lg border border-white/10 bg-black/88 p-2 text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:hidden">
           <div className="grid gap-1">
-            {navItems.map((item) =>
+            {navigation.map((item) =>
               "href" in item ? (
                 <Link
                   key={item.href}
@@ -128,16 +197,16 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className="rounded-md px-4 py-3 font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
                 >
-                  {item.name}
+                  {item.label}
                 </Link>
               ) : (
                 <button
-                  key={item.name}
+                  key={item.label}
                   type="button"
                   onClick={() => handleModalOpen(item.modal)}
                   className="rounded-md px-4 py-3 text-left font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
                 >
-                  {item.name}
+                  {item.label}
                 </button>
               ),
             )}
