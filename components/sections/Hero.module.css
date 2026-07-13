@@ -25,7 +25,22 @@
   inset: -20%;
   z-index: -3;
   background:
-    radial-gradient(circle at 72% 46%, color-mix(in srgb, var(--primary) 22%, transparent), transparent 20%),
+    radial-gradient(
+      ellipse 25% 18% at 75% 52%,
+      color-mix(in srgb, var(--primary) 18%, transparent),
+      color-mix(in srgb, var(--primary) 8%, transparent) 44%,
+      transparent 74%
+    ),
+    radial-gradient(
+      ellipse 13% 26% at 84% 39%,
+      color-mix(in srgb, var(--primary) 10%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 18% 10% at 65% 63%,
+      color-mix(in srgb, var(--primary) 8%, transparent),
+      transparent 76%
+    ),
     radial-gradient(circle at 88% 16%, color-mix(in srgb, #7357ff 13%, transparent), transparent 23%);
   transform: translate3d(var(--ambient-x), var(--ambient-y), 0);
   transition: transform 300ms ease-out;
@@ -72,8 +87,19 @@
 
 .halo {
   inset: 4%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--primary) 22%, transparent), transparent 65%);
-  filter: blur(40px);
+  border-radius: 44% 56% 61% 39% / 50% 43% 57% 50%;
+  background:
+    radial-gradient(
+      ellipse 58% 44% at 64% 63%,
+      color-mix(in srgb, var(--primary) 22%, transparent),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 37% 56% at 39% 43%,
+      color-mix(in srgb, var(--primary) 11%, transparent),
+      transparent 78%
+    );
+  filter: blur(46px);
   animation: breathe 7s ease-in-out infinite;
 }
 
