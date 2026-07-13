@@ -37,14 +37,12 @@ export const navigation: NavItem[] = [
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },
-  { label: "Contact", modal: "contact" },
 ];
 
 export const footerLinks: NavItem[] = [
   { label: "Services", href: "/#services" },
   { label: "About", href: "/about" },
   { label: "Contact", modal: "contact" },
-  { label: "Request Quote", modal: "quote" },
 ];
 
 export const primaryCta = {

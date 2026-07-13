@@ -137,7 +137,7 @@ const Hero = () => {
             <Button onClick={() => openModal(primaryCta.modal)}>
               Start a project
             </Button>
-            <Button href="/#services" variant="secondary">
+            <Button href="/work" variant="secondary">
               View our Work
             </Button>
           </div>
