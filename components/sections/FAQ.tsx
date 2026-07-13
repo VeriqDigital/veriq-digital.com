@@ -12,7 +12,7 @@ const FAQ = () => {
         <p className="text-sm font-bold uppercase tracking-[0.3em] text-(--primary)">
           FAQ
         </p>
-        <h2 className="mt-4 font-heading text-4xl font-black uppercase text-white md:text-6xl">
+        <h2 className="mt-4 font-heading text-4xl font-black uppercase text-(--foreground) md:text-6xl">
           Common Questions
         </h2>
       </div>
@@ -28,7 +28,7 @@ const FAQ = () => {
               className="flex w-full cursor-pointer items-stretch text-left transition duration-200 hover:scale-[1.01]"
               aria-expanded={isOpen}
             >
-              <div className="w-full rounded-lg border border-white/10 bg-(--surface) p-5">
+              <div className="w-full rounded-lg border border-white/10 bg-(--surface) p-5 text-(--surface-foreground)">
                 <div className="flex items-start justify-between gap-4">
                   <span className="font-heading text-xs font-black uppercase tracking-[0.3em]">
                     {item.question}

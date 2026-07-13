@@ -8,10 +8,10 @@ export default function AboutPage() {
         <p className="text-sm font-bold uppercase tracking-[0.3em] text-(--primary)">
           About
         </p>
-        <h1 className="mt-4 font-heading text-5xl font-black uppercase text-white md:text-7xl">
+        <h1 className="mt-4 font-heading text-5xl font-black uppercase text-(--foreground) md:text-7xl">
           About {siteConfig.name}
         </h1>
-        <p className="mt-6 text-lg leading-8 text-white/70">
+        <p className="mt-6 text-lg leading-8 text-(--muted)">
           Use this page to tell the business story, explain what makes the team
           credible, and give customers confidence before they reach out.
         </p>

@@ -1,11 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f5f5;
-  --surface: #161616;
-  --surface-hover: #1f1f1f;
-  --foreground: #f5f5f5;
-  --muted: #9ca3af;
+  color-scheme: light;
+  --background: #f7f7f5;
+  --surface: #121212;
+  --surface-hover: #202020;
+  --surface-foreground: #f7f7f5;
+  --foreground: #111111;
+  --muted: #5f6368;
+  --nav-text: #111111;
+  --nav-muted: rgba(17, 17, 17, 0.76);
   --primary: #f2c14e;
   --primary-hover: #ddb13f;
   --border: #2a2a2a;
@@ -14,6 +18,21 @@
   --radius-md: 10px;
   --radius-lg: 18px;
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #1a1c1e;
+  --surface: #24272a;
+  --surface-hover: #2d3135;
+  --surface-foreground: #f4f5f5;
+  --foreground: #f4f5f5;
+  --muted: #aeb3b7;
+  --nav-text: #f4f5f5;
+  --nav-muted: rgba(244, 245, 245, 0.78);
+  --border: #3a3e42;
+  --primary: #f4f5f5;
+  --primary-hover: rgba(244, 245, 245, 0.78);
 }
 
 @theme inline {
@@ -35,6 +54,24 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+.theme-toggle {
+  border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  background: var(--foreground);
+  color: var(--background);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
+  transition: transform 200ms ease, background-color 300ms ease, color 300ms ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
 }
 
 .site-navbar {

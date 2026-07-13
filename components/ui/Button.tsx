@@ -24,7 +24,7 @@ const Button = ({
     primary:
       "bg-[var(--primary)] text-black hover:bg-[var(--primary-hover)] cursor-pointer",
     secondary:
-      "border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-hover)] cursor-pointer",
+      "border border-[var(--border)] bg-[var(--surface)] text-[var(--surface-foreground)] hover:bg-[var(--surface-hover)] cursor-pointer",
   };
 
   if (href) {

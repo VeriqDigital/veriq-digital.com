@@ -116,7 +116,7 @@ const Navbar = () => {
 
   return (
     <header
-      className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-base"
+      className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-lg"
       data-scrolled={isScrolled}
       data-visible={isVisible || isMenuOpen}
     >
@@ -131,18 +131,18 @@ const Navbar = () => {
       <nav className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-8 px-6 sm:px-10 lg:px-14 xl:px-20">
         <Link
           href="/"
-          className="font-heading text-2xl font-black uppercase tracking-wide text-black"
+          className="font-heading text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
         >
           {siteConfig.shortName}
         </Link>
 
-        <div className="hidden items-center gap-7 md:flex">
+        <div className="ml-auto hidden items-center gap-8 md:flex">
           {navigation.map((item) =>
             "href" in item ? (
               <Link
                 key={item.href}
                 href={item.href}
-                className="font-medium text-black/75 transition hover:text-(--primary)"
+                className="text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary) lg:text-xl"
               >
                 {item.label}
               </Link>
@@ -151,7 +151,7 @@ const Navbar = () => {
                 key={item.label}
                 type="button"
                 onClick={() => openModal(item.modal)}
-                className="cursor-pointer font-medium text-black/75 transition hover:text-(--primary)"
+                className="cursor-pointer text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary) lg:text-xl"
               >
                 {item.label}
               </button>
@@ -159,18 +159,18 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="ml-auto flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => openModal(primaryCta.modal)}
-            className="rounded-full bg-(--primary) px-4 py-2 font-semibold text-black transition hover:bg-(--primary-hover)"
+            className="cursor-pointer rounded-full bg-(--primary) px-6 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) lg:text-xl"
           >
             {primaryCta.label}
           </button>
 
           <button
             type="button"
-            className="flex size-11 items-center justify-center rounded-full border border-black/15 text-black/80 transition hover:border-(--primary) hover:text-(--primary) md:hidden"
+            className="flex size-11 items-center justify-center rounded-full border border-current/15 text-(--nav-muted) transition hover:border-(--primary) hover:text-(--primary) md:hidden"
             aria-label={
               isMenuOpen ? "Close navigation menu" : "Open navigation menu"
             }
@@ -195,7 +195,7 @@ const Navbar = () => {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="rounded-md px-4 py-3 font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
+                  className="rounded-md px-4 py-3 text-lg font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
                 >
                   {item.label}
                 </Link>
@@ -204,7 +204,7 @@ const Navbar = () => {
                   key={item.label}
                   type="button"
                   onClick={() => handleModalOpen(item.modal)}
-                  className="rounded-md px-4 py-3 text-left font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
+                  className="rounded-md px-4 py-3 text-left text-lg font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
                 >
                   {item.label}
                 </button>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Oswald } from "next/font/google";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -52,6 +53,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <ThemeToggle />
       </body>
     </html>
   );

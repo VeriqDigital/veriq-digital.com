@@ -9,26 +9,26 @@ const LocationSection = () => {
           <p className="text-sm font-bold uppercase tracking-[0.3em] text-(--primary)">
             Visit
           </p>
-          <h2 className="mt-4 max-w-3xl font-heading text-4xl font-black uppercase leading-tight text-white md:text-6xl">
+          <h2 className="mt-4 max-w-3xl font-heading text-4xl font-black uppercase leading-tight text-(--foreground) md:text-6xl">
             Find Us Locally
           </h2>
         </div>
         <div>
-          <h3 className="font-heading text-2xl font-black uppercase text-white">
+          <h3 className="font-heading text-2xl font-black uppercase text-(--foreground)">
             Address
           </h3>
-          <p className="mt-2 text-white/70">{siteConfig.contact.address}</p>
+          <p className="mt-2 text-(--muted)">{siteConfig.contact.address}</p>
         </div>
         <Button href={siteConfig.contact.mapUrl} newTab>
           Directions
         </Button>
         <div className="h-px bg-white/10" />
         <div className="space-y-2">
-          <h3 className="font-heading text-2xl font-black uppercase text-white">
+          <h3 className="font-heading text-2xl font-black uppercase text-(--foreground)">
             Hours
           </h3>
           {siteConfig.hours.map((item) => (
-            <p key={item.label} className="font-bold text-white/75">
+            <p key={item.label} className="font-bold text-(--muted)">
               {item.label}: {item.value}
             </p>
           ))}

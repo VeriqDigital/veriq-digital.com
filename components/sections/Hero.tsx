@@ -26,12 +26,10 @@ const Hero = () => {
             {siteConfig.name}
           </p>
           <h1 className="max-w-5xl font-heading text-5xl font-black uppercase tracking-tight md:text-7xl lg:text-8xl">
-            A Strong Starter For Local Business Sites
+            Website design agency
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-(--muted) md:text-xl">
-            Swap the config, copy, services, and images to launch polished sites
-            for trades, repair shops, studios, clinics, and other service
-            businesses.
+            We help bring businesses into the 21st century.
           </p>
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <Button onClick={() => openModal(primaryCta.modal)}>

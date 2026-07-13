@@ -53,7 +53,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="w-full px-6 py-20 text-white sm:py-24">
+    <footer className="w-full bg-(--surface) px-6 py-20 text-white sm:py-24">
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center">
         <div className="grid w-full gap-14 md:grid-cols-[1fr_1.2fr] md:gap-24">
           <div className="text-center md:text-left">

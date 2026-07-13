@@ -1,15 +1,15 @@
 import type { ModalType } from "@/components/layout/LeadModal";
 
 export const siteConfig = {
-  name: "Business Starter Site",
-  shortName: "Starter",
+  name: "Veriq",
+  shortName: "Veriq",
   description:
-    "A reusable small-business website starter built with Next.js, TypeScript, and Tailwind CSS.",
-  url: "https://example.com",
+    "A modern web design agency built to modernize businesses online personas.",
+  url: "https://veriqdigital.com",
   locale: "en_US",
   contact: {
-    phone: "(555) 123-4567",
-    email: "hello@example.com",
+    phone: "(815) 416-8926",
+    email: "mick@veriqdigital.com",
     address: "123 Main Street, Your City, ST 12345",
     mapUrl: "https://maps.google.com/?q=123+Main+Street",
     mapEmbedUrl: "https://www.google.com/maps?q=123%20Main%20Street&output=embed",
@@ -34,20 +34,20 @@ export type NavItem =
 
 export const navigation: NavItem[] = [
   { label: "Services", href: "/#services" },
+  { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
-  { label: "FAQ", href: "/#faq" },
-  { label: "Request Quote", modal: "quote" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", modal: "contact" },
 ];
 
 export const footerLinks: NavItem[] = [
   { label: "Services", href: "/#services" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact", modal: "contact" },
   { label: "Request Quote", modal: "quote" },
 ];
 
 export const primaryCta = {
-  label: "Request a quote",
-  modal: "quote",
+  label: "Contact",
+  modal: "contact",
 } as const satisfies { label: string; modal: ModalType };

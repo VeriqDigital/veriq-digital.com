@@ -7,7 +7,7 @@ const ServicesSection = () => {
         <p className="text-sm font-bold uppercase tracking-[0.3em] text-(--primary)">
           Services
         </p>
-        <h2 className="mt-4 max-w-xl font-heading text-4xl font-black uppercase leading-tight text-white md:text-6xl">
+        <h2 className="mt-4 max-w-xl font-heading text-4xl font-black uppercase leading-tight text-(--foreground) md:text-6xl">
           Replace These Cards With What The Business Actually Sells
         </h2>
       </div>

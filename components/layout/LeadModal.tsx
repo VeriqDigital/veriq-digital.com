@@ -1,6 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
+import { createPortal } from "react-dom";
 
 export type ModalType = "quote" | "contact";
 
@@ -41,9 +42,9 @@ const LeadModal = ({
   const activeContent = modalContent[activeModal];
   const isQuote = activeModal === "quote";
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 py-8 backdrop-blur-sm"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/75 px-4 py-8 backdrop-blur-sm"
       role="presentation"
       onClick={onClose}
     >
@@ -187,7 +188,8 @@ const LeadModal = ({
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 
