@@ -9,7 +9,7 @@ const leadSchema = z.discriminatedUnion("type", [
     email: z.email(),
     phone: z.string().trim().max(40).optional(),
     topic: z.string().trim().max(80).optional(),
-    message: z.string().trim().max(2000).optional(),
+    message: z.string().trim().min(1).max(2000),
   }),
   z.object({
     type: z.literal("quote"),
@@ -17,7 +17,7 @@ const leadSchema = z.discriminatedUnion("type", [
     email: z.email(),
     phone: z.string().trim().max(40).optional(),
     preferredDate: z.string().trim().max(40).optional(),
-    message: z.string().trim().max(2000).optional(),
+    message: z.string().trim().min(1).max(2000),
   }),
 ]);
 
@@ -40,7 +40,7 @@ const formatLeadForOwner = (lead: Lead) => {
   }
 
   if (lead.type === "contact" && lead.topic) {
-    rows.push(`Topic: ${lead.topic}`);
+    rows.push(`Budget: ${lead.topic}`);
   }
 
   if (lead.type === "quote" && lead.preferredDate) {
@@ -110,7 +110,7 @@ export async function POST(request: Request) {
     .send({
       from: fromEmail,
       to: lead.email,
-      subject: `We received your ${siteConfig.name} request`,
+      subject: `We received your request`,
       text: getAutoReplyText(lead.type),
     })
     .catch((error: unknown) => ({ error }));

@@ -1,0 +1,413 @@
+.services {
+  position: relative;
+  isolation: isolate;
+}
+
+.services::before {
+  content: "";
+  position: absolute;
+  top: -1rem;
+  left: 48%;
+  width: 8rem;
+  height: 8rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 9%, transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.intro {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(17rem, 0.65fr);
+  align-items: end;
+  gap: clamp(2rem, 8vw, 8rem);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eyebrow span {
+  width: 2.75rem;
+  height: 2px;
+  background: var(--primary);
+}
+
+.heading {
+  max-width: 10ch;
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 6.7vw, 6.75rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.heading span {
+  color: var(--muted);
+}
+
+.introCopy {
+  max-width: 29rem;
+  padding-bottom: 0.35rem;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  line-height: 1.6;
+}
+
+.serviceGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: start;
+  gap: 1.25rem;
+  margin-top: clamp(2.75rem, 5vw, 4.75rem);
+  padding-bottom: 3.5rem;
+}
+
+.backdrop {
+  --backdrop-y: -45px;
+  --backdrop-rotate: -16deg;
+  --tracer-left: 85.2%;
+  --tracer-top: 34.5%;
+  position: absolute;
+  top: 6rem;
+  right: clamp(-15rem, -10vw, -7rem);
+  z-index: -1;
+  width: clamp(29rem, 44vw, 42rem);
+  aspect-ratio: 1;
+  opacity: 0.72;
+  transform: translate3d(0, var(--backdrop-y), 0)
+    rotate(var(--backdrop-rotate));
+  transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.backdropGlow {
+  position: absolute;
+  inset: 12% 3% 4% 17%;
+  border-radius: 39% 61% 46% 54% / 59% 38% 62% 41%;
+  background:
+    radial-gradient(ellipse at 64% 58%, color-mix(in srgb, var(--primary) 18%, transparent), transparent 58%),
+    radial-gradient(ellipse at 35% 38%, color-mix(in srgb, #7357ff 7%, transparent), transparent 64%);
+  filter: blur(30px);
+  animation: lensBreathe 8s ease-in-out infinite alternate;
+}
+
+.wire {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.wireOuter {
+  inset: 13% 2%;
+  border: 1px solid color-mix(in srgb, var(--foreground) 17%, transparent);
+  transform: rotate(22deg) scaleY(0.52);
+  animation: serviceWireOuter 13s ease-in-out infinite alternate;
+}
+
+.wireInner {
+  inset: 24% 15%;
+  border: 1px solid color-mix(in srgb, var(--primary) 58%, transparent);
+  transform: rotate(-34deg) scaleY(0.46);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--primary) 10%, transparent);
+  animation: serviceWireInner 10s ease-in-out infinite alternate;
+}
+
+.lens {
+  position: absolute;
+  top: 31%;
+  left: 39%;
+  width: 28%;
+  aspect-ratio: 1.14;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  border-radius: 64% 36% 58% 42% / 42% 62% 38% 58%;
+  background:
+    radial-gradient(circle at 30% 23%, rgba(255, 255, 255, 0.58), transparent 8%),
+    linear-gradient(145deg, color-mix(in srgb, var(--background) 92%, white), color-mix(in srgb, var(--primary) 55%, var(--surface)));
+  box-shadow:
+    0 28px 55px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  animation: lensFloat 6s ease-in-out infinite;
+}
+
+.lens span {
+  position: absolute;
+  right: -15%;
+  bottom: -20%;
+  width: 78%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--primary);
+  opacity: 0.35;
+  filter: blur(22px);
+}
+
+.tracer {
+  position: absolute;
+  top: var(--tracer-top);
+  left: var(--tracer-left);
+  width: 1.1rem;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  will-change: top, left;
+}
+
+.tracer span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, white, var(--primary) 40%, #16a8ad 78%);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  animation: serviceTracerFloat 4.8s ease-in-out infinite;
+}
+
+@keyframes lensBreathe {
+  to { transform: scale(1.12) translate(-2%, 3%); opacity: 0.72; }
+}
+
+@keyframes serviceWireOuter {
+  to { transform: rotate(35deg) scaleY(0.47); }
+}
+
+@keyframes serviceWireInner {
+  to { transform: rotate(-19deg) scaleY(0.54); }
+}
+
+@keyframes lensFloat {
+  50% { transform: translate3d(8px, -13px, 0) rotate(4deg); }
+}
+
+@keyframes serviceTracerFloat {
+  50% { transform: translate3d(8px, -12px, 0) scale(1.08); }
+}
+
+.card {
+  --card-offset: 0rem;
+  position: relative;
+  display: flex;
+  min-height: 13.5rem;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--foreground) 13%, transparent);
+  border-radius: 1.25rem;
+  padding: clamp(1.35rem, 2vw, 1.8rem);
+  background: var(--surface);
+  color: var(--surface-foreground);
+  transform: translateY(var(--card-offset));
+  transition:
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 250ms ease,
+    box-shadow 250ms ease;
+}
+
+.card:hover {
+  transform: translateY(calc(var(--card-offset) - 0.5rem));
+  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.16);
+}
+
+.card:nth-child(1) {
+  grid-column: 1 / span 4;
+  border-bottom-right-radius: 4.5rem;
+}
+
+.card:nth-child(2) {
+  --card-offset: 3.5rem;
+  grid-column: 5 / span 5;
+  min-height: 14.5rem;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--primary) 14%, transparent), transparent 58%),
+    var(--surface);
+  border-top-left-radius: 4.5rem;
+}
+
+.card:nth-child(3) {
+  --card-offset: 1rem;
+  grid-column: 10 / span 3;
+  min-height: 15.25rem;
+  border-top-right-radius: 4.5rem;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.cardMeta i {
+  width: 1.75rem;
+  height: 1px;
+  background: var(--primary);
+}
+
+.card h3 {
+  max-width: 14ch;
+  font-family: var(--font-heading);
+  font-size: clamp(1.65rem, 2.2vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+}
+
+.card p {
+  max-width: 36rem;
+  margin-top: 0.8rem;
+  color: color-mix(in srgb, var(--surface-foreground) 65%, transparent);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.cardIcon {
+  position: absolute;
+  top: 1rem;
+  right: 1.1rem;
+  display: grid;
+  width: 2.65rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--surface-foreground) 18%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
+  transition:
+    border-color 250ms ease,
+    color 250ms ease,
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cardIcon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.globe {
+  border-radius: 50%;
+}
+
+.command {
+  border-radius: 0.65rem 0.25rem 0.65rem 0.25rem;
+}
+
+.growth {
+  border-radius: 50% 50% 0.3rem 50%;
+}
+
+.card:hover .cardIcon {
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  color: var(--primary);
+  transform: rotate(4deg) scale(1.05);
+}
+
+@media (max-width: 960px) {
+  .backdrop {
+    top: 9rem;
+    right: -18rem;
+    width: 39rem;
+    opacity: 0.5;
+  }
+
+  .intro {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .heading {
+    max-width: 11ch;
+  }
+
+  .serviceGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card:nth-child(1),
+  .card:nth-child(2),
+  .card:nth-child(3) {
+    grid-column: auto;
+  }
+
+  .card:nth-child(3) {
+    grid-column: 1 / -1;
+    width: min(75%, 38rem);
+    margin-left: 12%;
+  }
+}
+
+@media (max-width: 640px) {
+  .services::before {
+    display: none;
+  }
+
+  .backdrop {
+    top: 14rem;
+    right: -18rem;
+    width: 32rem;
+    opacity: 0.32;
+  }
+
+  .serviceGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-bottom: 0;
+  }
+
+  .card,
+  .card:nth-child(1),
+  .card:nth-child(2),
+  .card:nth-child(3) {
+    --card-offset: 0rem;
+    grid-column: auto;
+    width: 100%;
+    min-height: 12.5rem;
+    margin-left: 0;
+    border-radius: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop {
+    transform: none;
+    transition: none;
+  }
+
+  .backdropGlow,
+  .wireOuter,
+  .wireInner,
+  .lens,
+  .tracer span {
+    animation: none;
+  }
+
+  .card,
+  .card:hover {
+    transform: translateY(var(--card-offset));
+    transition: none;
+  }
+}

@@ -2,6 +2,7 @@
 
 import type { FormEvent } from "react";
 import { createPortal } from "react-dom";
+import BudgetSelect from "@/components/ui/BudgetSelect";
 
 export type ModalType = "quote" | "contact";
 
@@ -14,8 +15,8 @@ const modalContent = {
     successMessage: "Someone from the business will follow up soon.",
   },
   contact: {
-    eyebrow: "Contact",
-    title: "Send a message",
+    eyebrow: "hello@veriqdigital.com",
+    title: "Let's Talk",
     submitLabel: "Send message",
     successTitle: "Thanks, your message is in.",
     successMessage: "Someone from the business will get back to you soon.",
@@ -112,7 +113,12 @@ const LeadModal = ({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block text-sm font-semibold text-white/80">
-                Phone
+                <span className="flex items-center justify-between gap-3">
+                  Phone
+                  <span className="text-xs font-normal text-white/35">
+                    Optional
+                  </span>
+                </span>
                 <input
                   name="phone"
                   type="tel"
@@ -130,32 +136,31 @@ const LeadModal = ({
                   />
                 </label>
               ) : (
-                <label className="block text-sm font-semibold text-white/80">
-                  Topic
-                  <select
-                    name="topic"
-                    className="mt-2 w-full rounded-md border border-white/10 bg-black/35 px-3 py-2 text-white outline-none transition focus:border-(--primary)"
-                    defaultValue=""
+                <div className="block text-sm font-semibold text-white/80">
+                  <span
+                    id="budget-label"
+                    className="flex items-center justify-between gap-3"
                   >
-                    <option value="" disabled>
-                      Choose a topic
-                    </option>
-                    <option value="general">General question</option>
-                    <option value="service">Service</option>
-                    <option value="billing">Billing</option>
-                    <option value="other">Other</option>
-                  </select>
-                </label>
+                    Budget
+                    <span className="text-xs font-normal text-white/35">
+                      Optional
+                    </span>
+                  </span>
+                  <BudgetSelect />
+                </div>
               )}
             </div>
 
             <label className="block text-sm font-semibold text-white/80">
-              {isQuote ? "What can we help with?" : "Message"}
+              {isQuote
+                ? "What can we help with?"
+                : "Tell us About Your Project"}
               <textarea
+                required
                 name="message"
                 rows={4}
                 className="mt-2 w-full resize-none rounded-md border border-white/10 bg-black/35 px-3 py-2 text-white outline-none transition placeholder:text-white/35 focus:border-(--primary)"
-                placeholder="Share a few details so we can follow up prepared."
+                placeholder="Share a few details about what you are looking for."
               />
             </label>
 

@@ -1,17 +1,20 @@
 export const services = [
   {
-    title: "Core Service",
+    icon: "globe",
+    title: "Websites That convert",
     description:
-      "Describe the primary service your business is known for and the outcome customers can expect.",
+      "Fast, modern websites that build trust and convert visitors into customers.",
   },
   {
-    title: "Specialty Service",
+    icon: "command",
+    title: "Custom Software",
     description:
-      "Highlight a higher-value or more specialized offer that helps the right customers choose you faster.",
+      "Customer portals, quote systems, dashboards, booking tools, and internal business software built around your workflow.",
   },
   {
-    title: "Maintenance Plan",
+    icon: "growth",
+    title: "Ongoing Growth & Support",
     description:
-      "Use this card for recurring service, seasonal work, support packages, or preventative care.",
+      "Hosting, maintenance, analytics, SEO, and continuous improvements to keep your business moving forward.",
   },
-];
+] as const;

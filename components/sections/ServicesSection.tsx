@@ -1,28 +1,70 @@
 import { services } from "@/data/services";
+import ServicesBackdrop from "./ServicesBackdrop";
+import styles from "./ServicesSection.module.css";
+
+type ServiceIconProps = {
+  name: (typeof services)[number]["icon"];
+};
+
+const ServiceIcon = ({ name }: ServiceIconProps) => {
+  if (name === "globe") {
+    return (
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M3.5 12h17M12 3.5c2.1 2.3 3.2 5.1 3.2 8.5S14.1 18.2 12 20.5M12 3.5C9.9 5.8 8.8 8.6 8.8 12s1.1 6.2 3.2 8.5" />
+      </svg>
+    );
+  }
+
+  if (name === "command") {
+    return (
+      <svg viewBox="0 0 24 24">
+        <path d="M9 9H6.5A2.5 2.5 0 1 1 9 6.5V17.5A2.5 2.5 0 1 1 6.5 15H17.5A2.5 2.5 0 1 1 15 17.5V6.5A2.5 2.5 0 1 1 17.5 9H9Z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24">
+      <path d="m4 17 5.2-5.2 3.4 3.4L20 7.8" />
+      <path d="M14.5 7.8H20v5.5" />
+    </svg>
+  );
+};
 
 const ServicesSection = () => {
   return (
-    <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr]">
-      <div>
-        <p className="text-sm font-bold uppercase tracking-[0.3em] text-(--primary)">
-          Services
-        </p>
-        <h2 className="mt-4 max-w-xl font-heading text-4xl font-black uppercase leading-tight text-(--foreground) md:text-6xl">
-          Replace These Cards With What The Business Actually Sells
-        </h2>
+    <div className={styles.services}>
+      <ServicesBackdrop />
+      <div className={styles.intro}>
+        <div>
+          <p className={styles.eyebrow}>
+            <span aria-hidden="true" />
+            What we do
+          </p>
+          <h2 className={styles.heading}>
+            Digital work with <span>real-world weight.</span>
+          </h2>
+        </div>
       </div>
-      <div className="grid gap-5 md:grid-cols-3">
-        {services.map((service) => (
-          <article
-            key={service.title}
-            className="rounded-lg border border-white/10 bg-(--surface) p-6"
-          >
-            <h3 className="font-heading text-xl font-black uppercase text-white">
-              {service.title}
-            </h3>
-            <p className="mt-4 text-sm leading-6 text-white/65">
-              {service.description}
-            </p>
+
+      <div className={styles.serviceGrid}>
+        {services.map((service, index) => (
+          <article key={service.title} className={styles.card}>
+            <div className={styles.cardMeta}>
+              <span>0{index + 1}</span>
+              <i aria-hidden="true" />
+            </div>
+            <div>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </div>
+            <span
+              className={`${styles.cardIcon} ${styles[service.icon]}`}
+              aria-hidden="true"
+            >
+              <ServiceIcon name={service.icon} />
+            </span>
           </article>
         ))}
       </div>

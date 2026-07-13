@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Section id="services">
+      <Section id="services" compactTop>
         <ServicesSection />
       </Section>
       <Section id="testimonials">
