@@ -6,6 +6,7 @@ import LocationSection from "@/components/sections/LocationSection";
 import ServicesSection from "@/components/sections/ServicesSection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import Section from "@/components/ui/Section";
+import Works from "@/components/sections/WorksSection";
 
 export default function Home() {
   return (
@@ -14,9 +15,13 @@ export default function Home() {
       <Section id="services" compactTop>
         <ServicesSection />
       </Section>
+      <Section id="works">
+        <Works />
+      </Section>
       <Section id="testimonials">
         <TestimonialsSection />
       </Section>
+
       <Section id="location">
         <LocationSection />
       </Section>
