@@ -47,10 +47,10 @@
 
 .scene {
   position: absolute;
-  top: 47%;
+  top: 44%;
   right: clamp(-15rem, -7vw, -4rem);
   z-index: -1;
-  width: clamp(32rem, 51vw, 58rem);
+  width: clamp(34.5rem, 55vw, 62.5rem);
   aspect-ratio: 1;
   transform: translate3d(
       calc(var(--pointer-x) + var(--scene-scroll-x)),
@@ -179,7 +179,10 @@
   justify-content: center;
   padding-block: 9rem 7rem;
   text-align: left;
-  transform: translateX(clamp(-3rem, -3vw, -1.25rem));
+  transform: translate(
+    clamp(-3rem, -3vw, -1.25rem),
+    clamp(-4rem, -5vh, -2.5rem)
+  );
 }
 
 .eyebrow {
@@ -214,7 +217,12 @@
 
 .title span {
   display: block;
+  margin-top: 0.08em;
   color: var(--muted);
+  font-size: 0.78em;
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.035em;
 }
 
 .description {
@@ -295,15 +303,15 @@
 
 @media (max-width: 900px) {
   .scene {
-    top: 39%;
+    top: 36%;
     right: -17rem;
-    width: 42rem;
+    width: 45.5rem;
     opacity: 0.58;
   }
 
   .content {
     width: min(100%, 46rem);
-    transform: translateX(-1rem);
+    transform: translate(-1rem, -2.5rem);
   }
 
   .grid {
@@ -319,19 +327,23 @@
   .scene {
     top: 28%;
     right: -19rem;
-    width: 37rem;
+    width: 40rem;
     opacity: 0.4;
   }
 
   .content {
     min-height: max(100svh, 46rem);
     padding-block: 8.5rem 6.5rem;
-    transform: none;
+    transform: translateY(-1.5rem);
   }
 
   .title {
     font-size: clamp(3.6rem, 17vw, 5.5rem);
     line-height: 0.9;
+  }
+
+  .title span {
+    font-size: 0.8em;
   }
 
   .description {

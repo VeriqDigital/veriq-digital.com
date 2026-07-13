@@ -138,7 +138,7 @@ const Hero = () => {
               Start a project
             </Button>
             <Button href="/#services" variant="secondary">
-              Explore services
+              View our Work
             </Button>
           </div>
         </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Oswald } from "next/font/google";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import CursorGlow from "@/components/ui/CursorGlow";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
@@ -50,6 +51,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${oswald.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        <CursorGlow />
         <Navbar />
         {children}
         <Footer />
