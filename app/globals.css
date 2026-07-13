@@ -4,14 +4,14 @@
   color-scheme: light;
   --background: #f7f7f5;
   --surface: #121212;
-  --surface-hover: #202020;
+  --surface-hover: #494949;
   --surface-foreground: #f7f7f5;
   --foreground: #111111;
   --muted: #5f6368;
   --nav-text: #111111;
   --nav-muted: rgba(17, 17, 17, 0.76);
-  --primary: #f2c14e;
-  --primary-hover: #ddb13f;
+  --primary: #4ef2f2;
+  --primary-hover: #40c5c5;
   --border: #2a2a2a;
   --container-width: 1280px;
   --radius-sm: 6px;
