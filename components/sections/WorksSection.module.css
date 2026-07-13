@@ -1,5 +1,98 @@
 .works {
   position: relative;
+  isolation: isolate;
+}
+
+.wireBackdrop {
+  --works-scroll-x: 0px;
+  --works-scroll-y: 0px;
+  --works-pointer-x: 0px;
+  --works-pointer-y: 0px;
+  --works-rotate: 0deg;
+  --works-tracer-left: 86%;
+  --works-tracer-top: 28%;
+  position: absolute;
+  z-index: -1;
+  top: clamp(1rem, 4vw, 4rem);
+  right: clamp(-14rem, -8vw, -6rem);
+  width: clamp(30rem, 46vw, 44rem);
+  aspect-ratio: 1;
+  color: var(--foreground);
+  opacity: 0.46;
+  pointer-events: none;
+  transform: translate3d(
+      calc(var(--works-scroll-x) + var(--works-pointer-x)),
+      calc(var(--works-scroll-y) + var(--works-pointer-y)),
+      0
+    )
+    rotate(var(--works-rotate));
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.wireMesh {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: worksMeshFloat 9s ease-in-out infinite alternate;
+}
+
+.wireMesh path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+
+.wireMesh .meshOuter {
+  opacity: 0.25;
+}
+
+.wireMesh .meshInner {
+  stroke-dasharray: 5 8;
+  opacity: 0.2;
+  animation: worksMeshDash 18s linear infinite;
+}
+
+.wireMesh .meshContour {
+  stroke: var(--primary);
+  stroke-width: 1.15px;
+  opacity: 0.58;
+}
+
+.wireMesh .meshLatitude,
+.wireMesh .meshLongitude {
+  opacity: 0.14;
+}
+
+.wireTracer {
+  position: absolute;
+  top: var(--works-tracer-top);
+  left: var(--works-tracer-left);
+  width: 0.9rem;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  transition:
+    top 180ms linear,
+    left 180ms linear;
+}
+
+.wireTracer span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid color-mix(in srgb, var(--primary) 70%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primary) 38%, transparent);
+  box-shadow: 0 0 1.25rem color-mix(in srgb, var(--primary) 38%, transparent);
+  animation: worksTracerFloat 2.8s ease-in-out infinite alternate;
+}
+
+.header,
+.grid {
+  position: relative;
+  z-index: 1;
 }
 
 .header {
@@ -167,6 +260,11 @@
 }
 
 @media (max-width: 800px) {
+  .wireBackdrop {
+    right: -17rem;
+    opacity: 0.34;
+  }
+
   .header {
     grid-template-columns: 1fr;
   }
@@ -190,6 +288,13 @@
 }
 
 @media (max-width: 540px) {
+  .wireBackdrop {
+    top: 10rem;
+    right: -15rem;
+    width: 28rem;
+    opacity: 0.25;
+  }
+
   .project:nth-child(2) {
     width: 100%;
   }
@@ -204,6 +309,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .wireBackdrop {
+    transform: none;
+    transition: none;
+  }
+
+  .wireMesh,
+  .wireMesh .meshInner,
+  .wireTracer span {
+    animation: none;
+  }
+
   .image,
   .viewProject {
     transition: none;
@@ -211,5 +327,23 @@
 
   .project:hover .image {
     transform: none;
+  }
+}
+
+@keyframes worksMeshFloat {
+  to {
+    transform: translate3d(-10px, 14px, 0) rotate(3deg);
+  }
+}
+
+@keyframes worksMeshDash {
+  to {
+    stroke-dashoffset: -130;
+  }
+}
+
+@keyframes worksTracerFloat {
+  to {
+    transform: translateY(-5px) scale(0.86);
   }
 }

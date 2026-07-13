@@ -1,11 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { projects } from "@/data/projects";
+import WorksBackdrop from "./WorksBackdrop";
 import styles from "./WorksSection.module.css";
 
 const WorksSection = () => {
   return (
     <div className={styles.works}>
+      <WorksBackdrop />
       <header className={styles.header}>
         <div>
           <p className={styles.eyebrow}>

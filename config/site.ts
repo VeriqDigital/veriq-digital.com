@@ -33,7 +33,7 @@ export type NavItem =
   | { label: string; modal: ModalType };
 
 export const navigation: NavItem[] = [
-  { label: "Services", href: "/#services" },
+  { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },

@@ -21,10 +21,6 @@ export default function Home() {
       <Section id="testimonials">
         <TestimonialsSection />
       </Section>
-
-      <Section id="location">
-        <LocationSection />
-      </Section>
       <Section id="faq">
         <FAQ />
       </Section>
