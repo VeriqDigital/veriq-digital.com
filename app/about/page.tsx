@@ -38,7 +38,7 @@ const reasons = [
       "We work closely with our clients to ensure all requirements are met.",
   },
   {
-    title: "Unrivaled attention",
+    title: "Dedicated attention",
     description:
       "Being a smaller studio allows us to focus on client needs and provide quick response times.",
   },
