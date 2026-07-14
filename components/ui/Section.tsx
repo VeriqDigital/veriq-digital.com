@@ -12,8 +12,8 @@ const Section = ({ children, compactTop = false, id }: SectionProps) => {
       id={id}
       className={
         compactTop
-          ? "relative z-10 pb-24 pt-4 sm:-mt-16 sm:pt-0 md:-mt-28 lg:-mt-32"
-          : "py-24"
+          ? "relative z-10 overflow-x-clip pb-24 pt-4 sm:-mt-16 sm:pt-0 md:-mt-28 lg:-mt-32"
+          : "overflow-x-clip py-24"
       }
     >
       <Container>{children}</Container>
