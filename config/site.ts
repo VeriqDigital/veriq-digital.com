@@ -4,20 +4,13 @@ export const siteConfig = {
   name: "Veriq",
   shortName: "Veriq",
   description:
-    "A modern web design agency built to modernize businesses online personas.",
+    "Founder-led digital studio creating thoughtful websites and software.",
   url: "https://veriqdigital.com",
   locale: "en_US",
   contact: {
     phone: "(815) 416-8926",
     email: "hello@veriqdigital.com",
   },
-  socialLinks: [
-    {
-      label: "Instagram",
-      href: "https://www.instagram.com/",
-      shortLabel: "IG",
-    },
-  ],
 } as const;
 
 export type NavItem =
@@ -30,11 +23,12 @@ export const navigation: NavItem[] = [
   { label: "About", href: "/about" },
 ];
 
-export const footerLinks: NavItem[] = [
-  { label: "Services", href: "/#services" },
+export const footerLinks = [
+  { label: "Services", href: "/services" },
+  { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
-  { label: "Contact", modal: "contact" },
-];
+  { label: "Contact", href: "/contact" },
+] as const satisfies ReadonlyArray<{ label: string; href: string }>;
 
 export const primaryCta = {
   label: "Contact",

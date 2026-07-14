@@ -1,0 +1,764 @@
+.page {
+  overflow: clip;
+}
+
+.hero {
+  position: relative;
+  min-height: min(58rem, 100svh);
+  padding: clamp(10rem, 16vh, 13rem) 0 clamp(6rem, 10vw, 9rem);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px);
+  background-size: 4.5rem 4.5rem;
+  mask-image: linear-gradient(to bottom, black, transparent 92%);
+}
+
+.heroInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(14rem, 0.55fr);
+  align-items: end;
+  gap: clamp(3rem, 8vw, 8rem);
+}
+
+.heroCopy,
+.heroAside {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow span {
+  width: 2.75rem;
+  height: 2px;
+  background: var(--primary);
+}
+
+.hero h1 {
+  max-width: 9ch;
+  font-family: var(--font-heading);
+  font-size: clamp(4.4rem, 9.2vw, 9.3rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.hero h1 span {
+  color: var(--muted);
+}
+
+.heroSummary {
+  display: grid;
+  grid-template-columns: minmax(17rem, 31rem) auto;
+  align-items: end;
+  gap: clamp(2rem, 5vw, 5rem);
+  margin-top: clamp(2.25rem, 4vw, 4rem);
+}
+
+.heroSummary > p {
+  color: var(--muted);
+  font-size: clamp(1rem, 1.3vw, 1.18rem);
+  line-height: 1.7;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.primaryLink,
+.closingLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  padding: 0.95rem 1.25rem;
+  background: var(--primary);
+  color: #071011;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition:
+    background-color 200ms ease,
+    transform 250ms ease;
+}
+
+.primaryLink:hover,
+.closingLink:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.primaryLink span,
+.textLink span,
+.closingLink span {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 30%, transparent);
+  padding-bottom: 0.25rem;
+  color: var(--foreground);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.textLink:hover {
+  border-color: var(--primary);
+  color: color-mix(in srgb, var(--foreground) 68%, var(--primary));
+}
+
+.heroAside {
+  display: grid;
+  align-self: end;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+.heroAside span {
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  padding: 1rem 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  font-weight: 750;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.heroAside span::before {
+  content: "+";
+  display: inline-block;
+  width: 2rem;
+  color: var(--primary-hover);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.heroGraphic {
+  position: absolute;
+  top: -10rem;
+  right: -13rem;
+  z-index: -1;
+  width: clamp(27rem, 40vw, 40rem);
+  aspect-ratio: 1;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: heroGraphicFloat 10s ease-in-out infinite alternate;
+}
+
+.graphicOuter,
+.graphicInner,
+.graphicNode {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.graphicOuter {
+  inset: 10%;
+  border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  transform: rotate(31deg) scaleY(0.54);
+}
+
+.graphicInner {
+  inset: 30%;
+  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
+  background: radial-gradient(circle at 32% 27%, color-mix(in srgb, white 50%, transparent), transparent 11%),
+    linear-gradient(145deg, color-mix(in srgb, var(--background) 94%, white), color-mix(in srgb, var(--primary) 20%, var(--background)));
+  box-shadow: 0 2.5rem 5rem color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.graphicNode {
+  top: 18%;
+  right: 17%;
+  width: 1rem;
+  aspect-ratio: 1;
+  background: var(--primary);
+  box-shadow: 0 0 1.5rem color-mix(in srgb, var(--primary) 58%, transparent);
+}
+
+.philosophy {
+  scroll-margin-top: 7rem;
+  padding: clamp(7rem, 12vw, 12rem) 0;
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.philosophyInner {
+  display: grid;
+  grid-template-columns: minmax(11rem, 0.32fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(3rem, 9vw, 9rem);
+}
+
+.sectionMarker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.sectionMarker span {
+  display: grid;
+  width: 2.2rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: 50%;
+  color: inherit;
+  letter-spacing: 0;
+}
+
+.philosophy .sectionMarker {
+  color: color-mix(in srgb, var(--surface-foreground) 48%, transparent);
+}
+
+.philosophyStatement h2 {
+  max-width: 12ch;
+  font-family: var(--font-heading);
+  font-size: clamp(3.8rem, 7.7vw, 8rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.philosophyStatement h2 span {
+  color: color-mix(in srgb, var(--surface-foreground) 38%, transparent);
+}
+
+.philosophyCopy {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: 52rem;
+  margin-top: clamp(3rem, 6vw, 5rem);
+  color: color-mix(in srgb, var(--surface-foreground) 62%, transparent);
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  line-height: 1.75;
+}
+
+.beliefs {
+  padding: clamp(7rem, 11vw, 11rem) 0 clamp(8rem, 13vw, 13rem);
+}
+
+.sectionHeader {
+  display: grid;
+  grid-template-columns: minmax(11rem, 0.32fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(3rem, 9vw, 9rem);
+}
+
+.sectionHeader h2 {
+  max-width: 10ch;
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 6.7vw, 6.8rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.beliefGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: start;
+  gap: 1.25rem;
+  margin-top: clamp(4rem, 8vw, 8rem);
+}
+
+.beliefCard {
+  position: relative;
+  display: flex;
+  min-height: 17rem;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--foreground) 13%, transparent);
+  border-radius: 1.25rem;
+  padding: clamp(1.4rem, 2.5vw, 2rem);
+  background: var(--background);
+}
+
+.beliefCard > span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+}
+
+.beliefCard h3 {
+  max-width: 12ch;
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 2.7vw, 2.7rem);
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.beliefCard p {
+  max-width: 28rem;
+  margin-top: 0.9rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.beliefCard:nth-child(1) {
+  grid-column: 1 / span 3;
+  border-bottom-right-radius: 4.5rem;
+}
+
+.beliefCard:nth-child(2) {
+  grid-column: 4 / span 4;
+  margin-top: 3.5rem;
+  border-top-left-radius: 4.5rem;
+  background: color-mix(in srgb, var(--primary) 9%, var(--background));
+}
+
+.beliefCard:nth-child(3) {
+  grid-column: 8 / span 2;
+  min-height: 20rem;
+  margin-top: 1.25rem;
+}
+
+.beliefCard:nth-child(4) {
+  grid-column: 10 / span 3;
+  margin-top: 5rem;
+  border-top-right-radius: 4.5rem;
+}
+
+.founder {
+  padding: clamp(7rem, 12vw, 12rem) 0;
+  background: color-mix(in srgb, var(--foreground) 3%, var(--background));
+}
+
+.founderInner {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: clamp(4rem, 10vw, 10rem);
+}
+
+.founderVisual {
+  position: relative;
+  display: flex;
+  min-height: clamp(28rem, 46vw, 42rem);
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  border-radius: 1.5rem 1.5rem 7rem 1.5rem;
+  background:
+    linear-gradient(color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px),
+    var(--background);
+  background-size: 3.5rem 3.5rem;
+}
+
+.founderVisual::after {
+  content: "";
+  position: absolute;
+  right: -5rem;
+  bottom: -5rem;
+  width: 15rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primary) 24%, transparent);
+  filter: blur(2.5rem);
+}
+
+.founderOrbit {
+  position: absolute;
+  width: 72%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--foreground) 19%, transparent);
+  border-radius: 50%;
+  transform: rotate(-27deg) scaleY(0.53);
+  animation: founderOrbit 11s ease-in-out infinite alternate;
+}
+
+.founderMonogram {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-heading);
+  font-size: clamp(10rem, 25vw, 19rem);
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.08em;
+}
+
+.founderVisual > p {
+  position: absolute;
+  bottom: 1.75rem;
+  left: 1.75rem;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.founderCopy h2 {
+  max-width: 11ch;
+  margin-top: 1.75rem;
+  font-family: var(--font-heading);
+  font-size: clamp(3.4rem, 6.3vw, 6.5rem);
+  font-weight: 900;
+  line-height: 0.91;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.founderCopy > p {
+  max-width: 38rem;
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+  line-height: 1.75;
+}
+
+.founderRole {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 1rem;
+  max-width: 38rem;
+  margin-top: 2.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  padding-top: 1.25rem;
+}
+
+.founderRole span {
+  color: var(--primary-hover);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.founderRole p {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.whyVeriq {
+  padding: clamp(7rem, 12vw, 12rem) 0;
+}
+
+.whyInner {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.72fr) minmax(0, 1.28fr);
+  align-items: start;
+  gap: clamp(4rem, 11vw, 11rem);
+}
+
+.whyHeading {
+  position: sticky;
+  top: 8rem;
+}
+
+.whyHeading h2 {
+  max-width: 10ch;
+  margin-top: 1.75rem;
+  font-family: var(--font-heading);
+  font-size: clamp(3.4rem, 5.9vw, 6rem);
+  font-weight: 900;
+  line-height: 0.91;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.whyHeading > p {
+  max-width: 31rem;
+  margin-top: 1.75rem;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.reasonList {
+  list-style: none;
+}
+
+.reasonList li {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  gap: 1.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  padding: 1.75rem 0;
+}
+
+.reasonList li:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+.reasonList li > span {
+  padding-top: 0.35rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+}
+
+.reasonList h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.reasonList p {
+  max-width: 34rem;
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.reasonList i {
+  color: var(--primary-hover);
+  font-size: 1rem;
+  font-style: normal;
+}
+
+.closing {
+  padding: clamp(6rem, 10vw, 10rem) 0;
+  background: var(--primary);
+  color: #071011;
+}
+
+.closingInner {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.closingInner > p {
+  align-self: start;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.closing h2 {
+  max-width: 12ch;
+  font-family: var(--font-heading);
+  font-size: clamp(3.1rem, 5.8vw, 6rem);
+  font-weight: 900;
+  line-height: 0.91;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.closingLink {
+  margin-bottom: 0.25rem;
+  background: #071011;
+  color: white;
+  white-space: nowrap;
+}
+
+.closingLink:hover {
+  background: #202727;
+}
+
+@keyframes heroGraphicFloat {
+  to {
+    transform: translate3d(-1.25rem, 1.75rem, 0) rotate(6deg);
+  }
+}
+
+@keyframes founderOrbit {
+  to {
+    transform: rotate(-12deg) scaleY(0.6);
+  }
+}
+
+@media (max-width: 980px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+  }
+
+  .heroAside {
+    width: min(100%, 34rem);
+    margin-left: auto;
+  }
+
+  .heroGraphic {
+    top: -6rem;
+    right: -18rem;
+    opacity: 0.34;
+  }
+
+  .beliefGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .beliefCard:nth-child(1),
+  .beliefCard:nth-child(2),
+  .beliefCard:nth-child(3),
+  .beliefCard:nth-child(4) {
+    grid-column: auto;
+  }
+
+  .beliefCard:nth-child(3) {
+    min-height: 17rem;
+    margin-top: 0;
+  }
+
+  .founderInner,
+  .whyInner {
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+
+  .closingInner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .closingInner > p {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    min-height: auto;
+    padding-top: 9rem;
+  }
+
+  .heroSummary,
+  .philosophyInner,
+  .sectionHeader,
+  .founderInner,
+  .whyInner,
+  .closingInner {
+    grid-template-columns: 1fr;
+  }
+
+  .philosophyCopy,
+  .beliefGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroAside {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .beliefCard,
+  .beliefCard:nth-child(1),
+  .beliefCard:nth-child(2),
+  .beliefCard:nth-child(3),
+  .beliefCard:nth-child(4) {
+    min-height: 14rem;
+    margin-top: 0;
+    border-radius: 1.1rem;
+  }
+
+  .beliefCard:nth-child(even) {
+    width: 92%;
+    margin-left: auto;
+  }
+
+  .founderVisual {
+    width: 92%;
+    min-height: 30rem;
+  }
+
+  .founderCopy {
+    max-width: 42rem;
+    margin-left: auto;
+  }
+
+  .whyHeading {
+    position: static;
+  }
+
+  .closingLink {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: clamp(3.7rem, 18vw, 5.2rem);
+  }
+
+  .primaryLink {
+    width: 100%;
+  }
+
+  .beliefCard:nth-child(even),
+  .founderVisual {
+    width: 100%;
+  }
+
+  .founderVisual {
+    min-height: 25rem;
+  }
+
+  .reasonList li {
+    grid-template-columns: 2rem 1fr;
+  }
+
+  .reasonList i {
+    display: none;
+  }
+
+  .founderRole {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroGraphic,
+  .founderOrbit {
+    animation: none;
+  }
+
+  .primaryLink,
+  .textLink,
+  .closingLink {
+    transition: none;
+  }
+}

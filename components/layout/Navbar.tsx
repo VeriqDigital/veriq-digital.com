@@ -170,7 +170,7 @@ const Navbar = () => {
 
           <button
             type="button"
-            className="flex size-11 items-center justify-center rounded-full border border-current/15 text-(--nav-muted) transition hover:border-(--primary) hover:text-(--primary) md:hidden"
+            className="cursor-pointer flex size-11 items-center justify-center rounded-full border border-current/15 text-(--nav-muted) transition hover:border-(--primary) hover:text-(--primary) md:hidden"
             aria-label={
               isMenuOpen ? "Close navigation menu" : "Open navigation menu"
             }

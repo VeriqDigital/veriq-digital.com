@@ -9,7 +9,7 @@ Resend, and Zod.
 - Config-driven metadata, navigation, contact details, and social links
 - Project case-study routes generated from `data/projects.ts`
 - Contact modal and full-page lead forms
-- Lead notification, customer auto-reply, and newsletter API routes
+- Lead notification and customer auto-reply API route
 - Vercel Analytics and Speed Insights
 
 ## Configuration

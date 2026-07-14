@@ -1,0 +1,292 @@
+.footer {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: clamp(5rem, 9vw, 8rem) 1.5rem 2rem;
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  top: -14rem;
+  right: -13rem;
+  width: 34rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--surface-foreground) 8%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.footer::after {
+  content: "";
+  position: absolute;
+  top: 2rem;
+  right: 4rem;
+  width: 12rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--primary) 24%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: rotate(32deg) scaleY(0.48);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(4rem, 11vw, 11rem);
+}
+
+.brand {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 4.2vw, 4rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+}
+
+.brand > p {
+  max-width: 24rem;
+  margin-top: 1.5rem;
+  color: color-mix(in srgb, var(--surface-foreground) 62%, transparent);
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  line-height: 1.7;
+}
+
+.brand > span {
+  margin-top: auto;
+  padding-top: 3rem;
+  color: color-mix(in srgb, var(--surface-foreground) 35%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.navigation {
+  position: relative;
+}
+
+.navigationHeading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: color-mix(in srgb, var(--surface-foreground) 45%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.navigationHeading i {
+  width: 2.75rem;
+  height: 1px;
+  background: var(--primary);
+}
+
+.linkGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+}
+
+.linkGrid a {
+  position: relative;
+  display: grid;
+  min-height: 8rem;
+  grid-template-columns: 1.8rem 1fr auto;
+  align-items: end;
+  gap: 0.75rem;
+  border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+  padding: 1.25rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 3vw, 2.8rem);
+  font-weight: 750;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: background-color 250ms ease, color 250ms ease;
+}
+
+.linkGrid a:hover {
+  background: color-mix(in srgb, var(--primary) 9%, transparent);
+  color: var(--primary);
+}
+
+.linkGrid a > span {
+  align-self: start;
+  color: color-mix(in srgb, var(--surface-foreground) 35%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+}
+
+.linkGrid a > i {
+  align-self: start;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-style: normal;
+}
+
+.email {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.28fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 5rem);
+  margin-top: clamp(5rem, 10vw, 9rem);
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 18%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 18%, transparent);
+  padding: clamp(1.75rem, 3vw, 2.75rem) 0;
+  transition: border-color 250ms ease, color 250ms ease;
+}
+
+.email:hover {
+  border-color: color-mix(in srgb, var(--primary) 58%, transparent);
+  color: var(--primary);
+}
+
+.email > span {
+  color: color-mix(in srgb, var(--surface-foreground) 45%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.email strong {
+  overflow-wrap: anywhere;
+  font-family: var(--font-heading);
+  font-size: clamp(2.3rem, 5.4vw, 5.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: lowercase;
+}
+
+.email > i {
+  color: var(--primary);
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-style: normal;
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-top: 2rem;
+  color: color-mix(in srgb, var(--surface-foreground) 45%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bottom > span {
+  width: 3rem;
+  height: 2px;
+  background: var(--primary);
+}
+
+@media (max-width: 760px) {
+  .footer {
+    padding-top: 5rem;
+  }
+
+  .footer::before {
+    right: -24rem;
+  }
+
+  .footer::after {
+    display: none;
+  }
+
+  .top {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  .brand {
+    align-items: center;
+    text-align: center;
+  }
+
+  .brand > span {
+    padding-top: 2rem;
+  }
+
+  .navigationHeading {
+    justify-content: center;
+  }
+
+  .linkGrid a {
+    min-height: 7rem;
+  }
+
+  .email {
+    grid-template-columns: 1fr auto;
+    gap: 1.25rem;
+    text-align: left;
+  }
+
+  .email > span {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding-inline: 1rem;
+  }
+
+  .linkGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .linkGrid a {
+    min-height: 5.5rem;
+  }
+
+  .email strong {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .bottom {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .bottom > span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .linkGrid a,
+  .email {
+    transition: none;
+  }
+}
