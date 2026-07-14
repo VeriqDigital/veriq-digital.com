@@ -57,6 +57,29 @@ const serviceChapters = [
   },
 ] as const;
 
+const processSteps = [
+  {
+    title: "Discovery",
+    description: "Learn about the business.",
+  },
+  {
+    title: "Design",
+    description: "Wireframes and visual direction.",
+  },
+  {
+    title: "Development",
+    description: "Build everything.",
+  },
+  {
+    title: "Launch",
+    description: "Deploy and test.",
+  },
+  {
+    title: "Growth",
+    description: "Maintain and improve.",
+  },
+] as const;
+
 export const metadata: Metadata = {
   title: "Services",
   description:
@@ -166,6 +189,37 @@ export default function ServicesPage() {
           </section>
         ))}
       </div>
+
+      <section className={styles.process}>
+        <Container>
+          <div className={styles.processHeader}>
+            <p className={styles.eyebrow}>
+              <span aria-hidden="true" />
+              How we work
+            </p>
+            <h2>A clear path from first conversation to what comes next.</h2>
+          </div>
+
+          <ol className={styles.processList}>
+            {processSteps.map((step, index) => (
+              <li className={styles.processStep} key={step.title}>
+                <span className={styles.stepNumber}>
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+                {index < processSteps.length - 1 && (
+                  <span className={styles.processArrow} aria-hidden="true">
+                    ↓
+                  </span>
+                )}
+              </li>
+            ))}
+          </ol>
+        </Container>
+      </section>
 
       <section className={styles.closing}>
         <Container>

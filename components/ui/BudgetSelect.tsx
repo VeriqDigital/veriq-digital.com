@@ -9,7 +9,11 @@ const budgetOptions = [
   { value: "10000-plus", label: "$10,000+" },
 ] as const;
 
-const BudgetSelect = () => {
+type BudgetSelectProps = {
+  labelId?: string;
+};
+
+const BudgetSelect = ({ labelId = "budget-label" }: BudgetSelectProps) => {
   const listboxId = useId();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -98,7 +102,7 @@ const BudgetSelect = () => {
         ref={buttonRef}
         type="button"
         role="combobox"
-        aria-labelledby="budget-label"
+        aria-labelledby={labelId}
         aria-controls={listboxId}
         aria-expanded={isOpen}
         aria-haspopup="listbox"

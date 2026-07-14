@@ -160,13 +160,13 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => openModal(primaryCta.modal)}
+          <Link
+            href="/contact"
+            onClick={() => setIsMenuOpen(false)}
             className="cursor-pointer rounded-full bg-(--primary) px-6 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) lg:text-xl"
           >
             {primaryCta.label}
-          </button>
+          </Link>
 
           <button
             type="button"

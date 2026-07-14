@@ -9,7 +9,7 @@ export const siteConfig = {
   locale: "en_US",
   contact: {
     phone: "(815) 416-8926",
-    email: "mick@veriqdigital.com",
+    email: "hello@veriqdigital.com",
     address: "123 Main Street, Your City, ST 12345",
     mapUrl: "https://maps.google.com/?q=123+Main+Street",
     mapEmbedUrl: "https://www.google.com/maps?q=123%20Main%20Street&output=embed",
