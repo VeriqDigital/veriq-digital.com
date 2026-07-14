@@ -2,30 +2,19 @@ import { siteConfig } from "@/config/site";
 import { Resend } from "resend";
 import { z } from "zod";
 
-const leadSchema = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal("contact"),
-    name: z.string().trim().min(1).max(120),
-    email: z.email(),
-    phone: z.string().trim().max(40).optional(),
-    topic: z.string().trim().max(80).optional(),
-    message: z.string().trim().min(1).max(2000),
-  }),
-  z.object({
-    type: z.literal("quote"),
-    name: z.string().trim().min(1).max(120),
-    email: z.email(),
-    phone: z.string().trim().max(40).optional(),
-    preferredDate: z.string().trim().max(40).optional(),
-    message: z.string().trim().min(1).max(2000),
-  }),
-]);
+const leadSchema = z.object({
+  type: z.literal("contact"),
+  name: z.string().trim().min(1).max(120),
+  email: z.email(),
+  phone: z.string().trim().max(40).optional(),
+  topic: z.string().trim().max(80).optional(),
+  message: z.string().trim().min(1).max(2000),
+});
 
 type Lead = z.infer<typeof leadSchema>;
 
 const leadLabels: Record<Lead["type"], string> = {
   contact: "Contact message",
-  quote: "Quote request",
 };
 
 const formatLeadForOwner = (lead: Lead) => {
@@ -39,12 +28,8 @@ const formatLeadForOwner = (lead: Lead) => {
     rows.push(`Phone: ${lead.phone}`);
   }
 
-  if (lead.type === "contact" && lead.topic) {
+  if (lead.topic) {
     rows.push(`Budget: ${lead.topic}`);
-  }
-
-  if (lead.type === "quote" && lead.preferredDate) {
-    rows.push(`Preferred date: ${lead.preferredDate}`);
   }
 
   if (lead.message) {
@@ -54,11 +39,7 @@ const formatLeadForOwner = (lead: Lead) => {
   return rows.join("\n");
 };
 
-const getAutoReplyText = (type: Lead["type"]) => {
-  if (type === "quote") {
-    return `Thanks for requesting a quote from ${siteConfig.name}. We received your request and will follow up soon.`;
-  }
-
+const getAutoReplyText = () => {
   return `Thanks for contacting ${siteConfig.name}. We received your message and will get back to you within 24 hours.`;
 };
 
@@ -111,7 +92,7 @@ export async function POST(request: Request) {
       from: fromEmail,
       to: lead.email,
       subject: `We received your request`,
-      text: getAutoReplyText(lead.type),
+      text: getAutoReplyText(),
     })
     .catch((error: unknown) => ({ error }));
 

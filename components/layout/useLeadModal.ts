@@ -52,7 +52,6 @@ const useLeadModal = () => {
       email: String(formData.get("email") ?? ""),
       phone: String(formData.get("phone") ?? ""),
       topic: String(formData.get("topic") ?? ""),
-      preferredDate: String(formData.get("preferred-date") ?? ""),
       message: String(formData.get("message") ?? ""),
     };
 

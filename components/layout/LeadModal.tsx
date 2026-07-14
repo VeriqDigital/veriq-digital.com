@@ -4,16 +4,7 @@ import type { FormEvent } from "react";
 import { createPortal } from "react-dom";
 import BudgetSelect from "@/components/ui/BudgetSelect";
 
-export type ModalType = "quote" | "contact";
-
 const modalContent = {
-  quote: {
-    eyebrow: "Request quote",
-    title: "Tell us what you need",
-    submitLabel: "Send request",
-    successTitle: "Thanks, we got your request.",
-    successMessage: "Someone from the business will follow up soon.",
-  },
   contact: {
     eyebrow: "hello@veriqdigital.com",
     title: "Let's Talk",
@@ -21,7 +12,9 @@ const modalContent = {
     successTitle: "Thanks, your message is in.",
     successMessage: "Someone from the business will get back to you soon.",
   },
-};
+} as const;
+
+export type ModalType = keyof typeof modalContent;
 
 type LeadModalProps = {
   activeModal: ModalType;
@@ -41,7 +34,6 @@ const LeadModal = ({
   submitError,
 }: LeadModalProps) => {
   const activeContent = modalContent[activeModal];
-  const isQuote = activeModal === "quote";
 
   return createPortal(
     <div
@@ -126,35 +118,22 @@ const LeadModal = ({
                   placeholder="(555) 555-5555"
                 />
               </label>
-              {isQuote ? (
-                <label className="block text-sm font-semibold text-white/80">
-                  Preferred date
-                  <input
-                    name="preferred-date"
-                    type="date"
-                    className="mt-2 w-full rounded-md border border-white/10 bg-black/35 px-3 py-2 text-white outline-none transition focus:border-(--primary)"
-                  />
-                </label>
-              ) : (
-                <div className="block text-sm font-semibold text-white/80">
-                  <span
-                    id="budget-label"
-                    className="flex items-center justify-between gap-3"
-                  >
-                    Budget
-                    <span className="text-xs font-normal text-white/35">
-                      Optional
-                    </span>
+              <div className="block text-sm font-semibold text-white/80">
+                <span
+                  id="budget-label"
+                  className="flex items-center justify-between gap-3"
+                >
+                  Budget
+                  <span className="text-xs font-normal text-white/35">
+                    Optional
                   </span>
-                  <BudgetSelect />
-                </div>
-              )}
+                </span>
+                <BudgetSelect />
+              </div>
             </div>
 
             <label className="block text-sm font-semibold text-white/80">
-              {isQuote
-                ? "What can we help with?"
-                : "Tell us About Your Project"}
+              Tell us About Your Project
               <textarea
                 required
                 name="message"

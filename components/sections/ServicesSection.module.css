@@ -58,14 +58,6 @@
   color: var(--muted);
 }
 
-.introCopy {
-  max-width: 29rem;
-  padding-bottom: 0.35rem;
-  color: var(--muted);
-  font-size: clamp(1rem, 1.3vw, 1.15rem);
-  line-height: 1.6;
-}
-
 .serviceGrid {
   position: relative;
   z-index: 1;

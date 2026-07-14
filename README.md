@@ -1,26 +1,23 @@
-# Business Site Starter
+# Veriq Digital
 
-A reusable small-business website starter built with Next.js, React, TypeScript,
-Tailwind CSS, Resend, and Zod.
+The Veriq marketing site, built with Next.js, React, TypeScript, Tailwind CSS,
+Resend, and Zod.
 
-## What Is Included
+## Included
 
-- Config-driven site metadata, navigation, contact info, hours, and social links
-- Responsive homepage with hero, services, testimonials, location, and FAQ
-- Reusable layout components: navbar, footer, modal lead forms
-- Lead capture API route with owner notification and customer auto-reply
-- Newsletter confirmation API route
-- SEO metadata pattern for the App Router
-- Vercel Analytics and Speed Insights hooks
+- Responsive homepage, services, work, about, and contact pages
+- Config-driven metadata, navigation, contact details, and social links
+- Project case-study routes generated from `data/projects.ts`
+- Contact modal and full-page lead forms
+- Lead notification, customer auto-reply, and newsletter API routes
+- Vercel Analytics and Speed Insights
 
-## Customize A New Client Site
+## Configuration
 
-1. Update `config/site.ts` with the business name, URL, contact details, hours,
-   navigation, and CTAs.
-2. Update `data/services.ts`, `data/faq.ts`, and `data/testimonials.ts`.
-3. Replace `public/starter-hero.svg`, `app/icon.png`, and any Open Graph image
-   assets.
-4. Set environment variables in `.env.local` or your deployment provider:
+Update the site-wide details in `config/site.ts` and the homepage content in the
+files under `data/`.
+
+Set these environment variables locally or in the deployment provider:
 
 ```bash
 RESEND_API_KEY=
@@ -28,16 +25,14 @@ EMAIL_FROM=
 BUSINESS_OWNER_EMAIL=
 ```
 
-## Running Locally
+## Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`.
-
-## Scripts
+## Verification
 
 ```bash
 npm run lint

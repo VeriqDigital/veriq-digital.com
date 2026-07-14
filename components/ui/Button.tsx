@@ -4,7 +4,6 @@ type ButtonProps = {
   children: React.ReactNode;
   variant?: "primary" | "secondary";
   href?: string;
-  newTab?: boolean;
   onClick?: () => void;
   type?: "button" | "submit";
 };
@@ -13,7 +12,6 @@ const Button = ({
   children,
   variant = "primary",
   href,
-  newTab,
   onClick,
   type = "button",
 }: ButtonProps) => {
@@ -31,7 +29,6 @@ const Button = ({
     return (
       <Link
         href={href}
-        target={newTab ? "_blank" : undefined}
         className={`${baseClasses} ${variantClasses[variant]}`}
       >
         {children}
