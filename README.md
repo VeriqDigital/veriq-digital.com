@@ -6,7 +6,7 @@ Resend, and Zod.
 ## Included
 
 - Responsive homepage, services, work, about, and contact pages
-- Config-driven metadata, navigation, contact details, and social links
+- Config-driven metadata, navigation, contact details, and social sharing metadata
 - Project case-study routes generated from `data/projects.ts`
 - Contact modal and full-page lead forms
 - Lead notification and customer auto-reply API route

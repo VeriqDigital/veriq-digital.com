@@ -40,7 +40,7 @@ const formatLeadForOwner = (lead: Lead) => {
 };
 
 const getAutoReplyText = () => {
-  return `Thanks for contacting ${siteConfig.name}. We received your message and will get back to you within 24 hours.`;
+  return `Thanks for contacting ${siteConfig.name}. We received your message and will get back to you within one business day.`;
 };
 
 export async function POST(request: Request) {

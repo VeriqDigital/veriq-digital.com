@@ -139,7 +139,7 @@ const Hero = () => {
               Start a project
             </Button>
             <Button href="/work" variant="secondary">
-              View our Work
+              View our work
             </Button>
           </div>
         </div>

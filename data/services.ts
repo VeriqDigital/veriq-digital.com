@@ -1,7 +1,7 @@
 export const services = [
   {
     icon: "globe",
-    title: "Websites That convert",
+    title: "Websites That Convert",
     description:
       "Fast, modern websites that build trust and convert visitors into customers.",
   },

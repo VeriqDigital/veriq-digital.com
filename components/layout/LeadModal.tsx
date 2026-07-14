@@ -10,7 +10,7 @@ const modalContent = {
     title: "Let's Talk",
     submitLabel: "Send message",
     successTitle: "Thanks, your message is in.",
-    successMessage: "Someone from the business will get back to you soon.",
+    successMessage: "We’ll get back to you within one business day.",
   },
 } as const;
 
@@ -133,7 +133,7 @@ const LeadModal = ({
             </div>
 
             <label className="block text-sm font-semibold text-white/80">
-              Tell us About Your Project
+              Tell us about your project
               <textarea
                 required
                 name="message"

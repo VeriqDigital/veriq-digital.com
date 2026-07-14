@@ -35,12 +35,12 @@ const reasons = [
   {
     title: "Direct collaboration",
     description:
-      "We work closely with our clients to assure all requirements are met",
+      "We work closely with our clients to ensure all requirements are met.",
   },
   {
-    title: "Unrivaled Attention",
+    title: "Unrivaled attention",
     description:
-      "Being a smaller studio allows us to focus on client needs and provide quick repsonse times.",
+      "Being a smaller studio allows us to focus on client needs and provide quick response times.",
   },
   {
     title: "Built around the business",
