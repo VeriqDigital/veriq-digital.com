@@ -19,7 +19,8 @@ const serviceChapters = [
       "Content systems & CMS setup",
       "Analytics & conversion tracking",
     ],
-    outcome: "A credible website that works as hard as the rest of your business.",
+    outcome:
+      "A credible website that works as hard as the rest of your business.",
   },
   {
     number: "02",
@@ -36,7 +37,8 @@ const serviceChapters = [
       "Booking and workflow automation",
       "API and platform integrations",
     ],
-    outcome: "Purpose-built software that removes friction instead of adding it.",
+    outcome:
+      "Purpose-built software that removes friction instead of adding it.",
   },
   {
     number: "03",
@@ -53,30 +55,36 @@ const serviceChapters = [
       "Analytics and reporting",
       "Ongoing design & development",
     ],
-    outcome: "Steady support, clearer decisions, and fewer technical distractions.",
+    outcome:
+      "Steady support, clearer decisions, and fewer technical distractions.",
   },
 ] as const;
 
 const processSteps = [
   {
-    title: "Discovery",
-    description: "Learn about the business.",
+    title: "Discover",
+    description:
+      "Understand your business, goals, challenges, and the people you're building for.",
   },
   {
     title: "Design",
-    description: "Wireframes and visual direction.",
+    description:
+      "Collaborate to shape a thoughtful solution through planning, feedback, and refinement.",
   },
   {
-    title: "Development",
-    description: "Build everything.",
+    title: "Develop",
+    description:
+      "Build iteratively while working closely together to ensure every feature aligns with your vision.",
   },
   {
     title: "Launch",
-    description: "Deploy and test.",
+    description:
+      "Deploy, test, and refine every detail to ensure a smooth and successful launch.",
   },
   {
-    title: "Growth",
-    description: "Maintain and improve.",
+    title: "Grow",
+    description:
+      "Provide ongoing support, maintenance, and improvements to help your business continue growing.",
   },
 ] as const;
 
@@ -104,11 +112,14 @@ export default function ServicesPage() {
               <div className={styles.heroSummary}>
                 <p>
                   From the first impression to the systems behind it, we build
-                  digital work that helps ambitious businesses operate with
-                  more clarity and confidence.
+                  digital work that helps ambitious businesses operate with more
+                  clarity and confidence.
                 </p>
                 <div className={styles.heroActions}>
-                  <Link href="#business-websites" className={styles.primaryLink}>
+                  <Link
+                    href="#business-websites"
+                    className={styles.primaryLink}
+                  >
                     Explore services
                     <span aria-hidden="true">↓</span>
                   </Link>
@@ -120,7 +131,10 @@ export default function ServicesPage() {
               </div>
             </div>
 
-            <nav className={styles.serviceIndex} aria-label="Services on this page">
+            <nav
+              className={styles.serviceIndex}
+              aria-label="Services on this page"
+            >
               <p>Three ways we can help</p>
               {serviceChapters.map((service) => (
                 <Link href={`#${service.id}`} key={service.id}>
@@ -142,11 +156,7 @@ export default function ServicesPage() {
 
       <div className={styles.chapters}>
         {serviceChapters.map((service, index) => (
-          <section
-            id={service.id}
-            className={styles.chapter}
-            key={service.id}
-          >
+          <section id={service.id} className={styles.chapter} key={service.id}>
             <Container>
               <div
                 className={`${styles.chapterInner} ${
