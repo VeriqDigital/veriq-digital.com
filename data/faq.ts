@@ -1,22 +1,22 @@
 export const faqs = [
   {
-    question: "What areas do you serve?",
+    question: "How much does a website cost?",
     answer:
-      "Replace this with your service area, neighborhood, or travel radius so customers know whether they are a fit.",
+      "Every project is different, but most websites fall somewhere between a simple business site and a fully custom digital experience. After a quick conversation, we'll provide a transparent quote based on your goals and requirements.",
   },
   {
-    question: "How do I request a quote?",
+    question: "How long does a project take?",
     answer:
-      "Use the quote form and include a few details about what you need. The business can follow up by phone or email.",
+      "Most websites are completed in 2–6 weeks depending on the size and complexity of the project. Larger custom software projects are planned around your specific timeline and business needs.",
   },
   {
-    question: "How quickly do you respond?",
+    question: "Do you only build websites?",
     answer:
-      "Set a realistic response expectation, such as same business day or within one to two business days.",
+      "No. Alongside modern websites, we also build custom software such as customer portals, quote systems, dashboards, booking tools, and other digital solutions that help businesses operate more efficiently.",
   },
   {
-    question: "Do you offer appointments?",
+    question: "What happens after my website launches?",
     answer:
-      "Use this answer to explain booking, walk-ins, consultations, estimates, or service windows.",
+      "We don't disappear after launch. We offer ongoing hosting, maintenance, updates, performance improvements, and support so your website continues to grow alongside your business.",
   },
 ];

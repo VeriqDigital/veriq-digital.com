@@ -36,7 +36,7 @@ export const navigation: NavItem[] = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
-  { label: "Blog", href: "/blog" },
+  // { label: "Blog", href: "/blog" }, get rid of for now add back eventually
 ];
 
 export const footerLinks: NavItem[] = [

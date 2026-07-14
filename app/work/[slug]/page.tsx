@@ -73,7 +73,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
           </div>
         </header>
 
-        <div className="relative aspect-[3/2] overflow-hidden rounded-xl bg-(--surface)">
+        <div className="relative aspect-3/2 overflow-hidden rounded-xl bg-(--surface)">
           <Image
             src={project.image}
             alt={project.imageAlt}

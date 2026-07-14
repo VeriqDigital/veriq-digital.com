@@ -16,7 +16,7 @@ const FAQ = () => {
           Common Questions
         </h2>
       </div>
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid items-start gap-5 md:grid-cols-2">
         {faqs.map((item, index) => {
           const isOpen = openIndex === index;
 
@@ -25,7 +25,7 @@ const FAQ = () => {
               key={item.question}
               type="button"
               onClick={() => setOpenIndex(isOpen ? null : index)}
-              className="flex w-full cursor-pointer items-stretch text-left transition duration-200 hover:scale-[1.01]"
+              className="flex w-full cursor-pointer items-stretch self-start text-left transition duration-200 hover:scale-[1.01]"
               aria-expanded={isOpen}
             >
               <div className="w-full rounded-lg border border-white/10 bg-(--surface) p-5 text-(--surface-foreground)">

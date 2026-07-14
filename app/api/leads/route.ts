@@ -59,7 +59,7 @@ const getAutoReplyText = (type: Lead["type"]) => {
     return `Thanks for requesting a quote from ${siteConfig.name}. We received your request and will follow up soon.`;
   }
 
-  return `Thanks for contacting ${siteConfig.name}. We received your message and will get back to you soon.`;
+  return `Thanks for contacting ${siteConfig.name}. We received your message and will get back to you within 24 hours.`;
 };
 
 export async function POST(request: Request) {
