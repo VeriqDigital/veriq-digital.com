@@ -1,17 +1,18 @@
-import type { Metadata } from "next";
 import Container from "@/components/ui/Container";
+import { createPageMetadata } from "@/config/seo";
 import { siteConfig } from "@/config/site";
 import ContactForm from "./ContactForm";
 import styles from "./contact.module.css";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Contact",
   description:
-    "Tell Veriq about your website, software, or ongoing digital support needs.",
-};
+    "Contact Veriq about web design, custom software, or ongoing digital support in Des Moines or remotely.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
-  const phoneHref = `tel:${siteConfig.contact.phone.replace(/[^+\d]/g, "")}`;
+  const phoneHref = `tel:${siteConfig.contact.phoneE164}`;
 
   return (
     <main className={styles.page}>
@@ -44,6 +45,10 @@ export default function ContactPage() {
               <div>
                 <span>Response time</span>
                 <p>Usually within one business day.</p>
+              </div>
+              <div>
+                <span>Based in</span>
+                <p>Des Moines, Iowa &middot; Available remotely.</p>
               </div>
             </div>
           </section>

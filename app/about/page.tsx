@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import { createPageMetadata } from "@/config/seo";
 import { siteConfig } from "@/config/site";
 import styles from "./about.module.css";
 
@@ -54,11 +54,12 @@ const reasons = [
   },
 ] as const;
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "About",
   description:
-    "The philosophy, beliefs, and founder-led approach behind Veriq Digital.",
-};
+    "Meet the founder and explore the philosophy behind Veriq, a Des Moines digital studio serving local and remote clients.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

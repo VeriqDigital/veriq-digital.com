@@ -11,8 +11,8 @@ const Footer = () => {
             <Link href="/" className={styles.logo}>
               {siteConfig.name}
             </Link>
-            <p>{siteConfig.description}</p>
-            <span>Founder-led · Since 2026</span>
+            <p>{siteConfig.tagline}</p>
+            <span>Des Moines, Iowa &middot; Local + remote</span>
           </div>
 
           <nav className={styles.navigation} aria-label="Footer navigation">

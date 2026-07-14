@@ -3,12 +3,23 @@ import type { ModalType } from "@/components/layout/LeadModal";
 export const siteConfig = {
   name: "Veriq",
   shortName: "Veriq",
-  description:
+  defaultTitle: "Web Design & Custom Software Studio | Veriq",
+  tagline:
     "Founder-led digital studio creating thoughtful websites and software.",
+  description:
+    "Des Moines web design and custom software studio creating thoughtful digital experiences for local and remote clients.",
   url: "https://veriqdigital.com",
   locale: "en_US",
+  location: {
+    city: "Des Moines",
+    region: "Iowa",
+    regionCode: "IA",
+    country: "United States",
+    countryCode: "US",
+  },
   contact: {
     phone: "(815) 416-8926",
+    phoneE164: "+18154168926",
     email: "hello@veriqdigital.com",
   },
 } as const;

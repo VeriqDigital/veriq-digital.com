@@ -24,19 +24,30 @@ const oswald = Oswald({
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
+    default: siteConfig.defaultTitle,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
   openGraph: {
-    title: siteConfig.name,
+    title: siteConfig.defaultTitle,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    images: ["/opengraph-image.png"],
+    images: [
+      {
+        url: "/opengraph-image",
+        alt: `${siteConfig.name} — web design and custom software studio`,
+      },
+    ],
     locale: siteConfig.locale,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.defaultTitle,
+    description: siteConfig.description,
+    images: ["/twitter-image"],
   },
 };
 

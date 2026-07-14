@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import { createPageMetadata } from "@/config/seo";
 import styles from "./services.module.css";
 
 const serviceChapters = [
@@ -80,11 +80,12 @@ const processSteps = [
   },
 ] as const;
 
-export const metadata: Metadata = {
-  title: "Services",
+export const metadata = createPageMetadata({
+  title: "Web Design & Software Services",
   description:
-    "Business websites, custom software, and ongoing digital support from Veriq.",
-};
+    "Business websites, custom software, and ongoing digital support from a Des Moines studio working with clients locally and remotely.",
+  path: "/services",
+});
 
 export default function ServicesPage() {
   return (

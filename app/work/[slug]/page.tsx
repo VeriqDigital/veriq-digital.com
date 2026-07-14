@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Container from "@/components/ui/Container";
+import { createPageMetadata } from "@/config/seo";
 import { getProject, projects } from "@/data/projects";
 
 type WorkPageProps = {
@@ -22,10 +23,15 @@ export async function generateMetadata({
     return {};
   }
 
-  return {
+  return createPageMetadata({
     title: project.title,
     description: project.summary,
-  };
+    path: `/work/${project.slug}`,
+    image: {
+      url: project.image,
+      alt: project.imageAlt,
+    },
+  });
 }
 
 export default async function ProjectPage({ params }: WorkPageProps) {

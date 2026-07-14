@@ -123,7 +123,7 @@ const Hero = () => {
         <div className={styles.content}>
           <p className={styles.eyebrow}>
             <span aria-hidden="true" />
-            Independent digital studio
+            Des Moines-based digital studio
           </p>
           <h1 className={styles.title}>
             Web design &amp; development
@@ -131,7 +131,8 @@ const Hero = () => {
           </h1>
           <p className={styles.description}>
             We design websites, software, and digital experiences that help
-            businesses earn trust, attract customers, and grow faster.
+            businesses earn trust, attract customers, and grow faster. Working
+            with clients locally and remotely.
           </p>
           <div className={styles.actions}>
             <Button onClick={() => openModal(primaryCta.modal)}>
