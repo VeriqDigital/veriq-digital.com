@@ -1,5 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#111111"/>
-  <path d="M13 14h11l8 29 8-29h11L39 51H25L13 14Z" fill="#4ef2f2"/>
-  <circle cx="49" cy="14" r="4" fill="#f7f7f5"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48px" height="48px" viewBox="0 0 48 48" version="1.1">
+<g id="surface1">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(6.666667%,6.666667%,6.666667%);fill-opacity:1;" d="M 10.5 0 L 37.5 0 C 43.300781 0 48 4.699219 48 10.5 L 48 37.5 C 48 43.300781 43.300781 48 37.5 48 L 10.5 48 C 4.699219 48 0 43.300781 0 37.5 L 0 10.5 C 0 4.699219 4.699219 0 10.5 0 Z M 10.5 0 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(30.588236%,94.901961%,94.901961%);fill-opacity:1;" d="M 9.75 10.5 L 18 10.5 L 24 32.25 L 30 10.5 L 38.25 10.5 L 29.25 38.25 L 18.75 38.25 Z M 9.75 10.5 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(96.862745%,96.862745%,96.078432%);fill-opacity:1;" d="M 39.75 10.5 C 39.75 8.84375 38.40625 7.5 36.75 7.5 C 35.09375 7.5 33.75 8.84375 33.75 10.5 C 33.75 12.15625 35.09375 13.5 36.75 13.5 C 38.40625 13.5 39.75 12.15625 39.75 10.5 Z M 39.75 10.5 "/>
+</g>
 </svg>
