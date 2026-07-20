@@ -89,7 +89,7 @@ const processSteps = [
 ] as const;
 
 export const metadata = createPageMetadata({
-  title: "Web Design & Software Services",
+  title: "Des Moines Web Design & Software Services",
   description:
     "Business websites, custom software, and ongoing digital support from a Des Moines studio working with clients locally and remotely.",
   path: "/services",
