@@ -126,13 +126,13 @@ const Hero = () => {
             Des Moines-based digital studio
           </p>
           <h1 className={styles.title}>
-            Web design &amp; development
-            <span>built for what&apos;s next.</span>
+            Digital Systems
+            <span>built for growth.</span>
           </h1>
           <p className={styles.description}>
-            We design websites, software, and digital experiences that help
-            businesses earn trust, attract customers, and grow faster. Working
-            with clients locally and remotely.
+            We build websites, software, and growth systems that help ambitious
+            businesses attract customers, operate more efficiently, and scale
+            with confidence.
           </p>
           <div className={styles.actions}>
             <Button onClick={() => openModal(primaryCta.modal)}>

@@ -1,7 +1,7 @@
 export const services = [
   {
     icon: "globe",
-    title: "Websites That Convert",
+    title: "Customer Acquisition",
     description:
       "Fast, modern websites that build trust and convert visitors into customers.",
   },
@@ -13,7 +13,7 @@ export const services = [
   },
   {
     icon: "growth",
-    title: "Ongoing Growth & Support",
+    title: "Growth Systems",
     description:
       "Hosting, maintenance, analytics, SEO, and continuous improvements to keep your business moving forward.",
   },

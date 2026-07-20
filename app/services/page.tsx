@@ -107,13 +107,13 @@ export default function ServicesPage() {
                 What we do
               </p>
               <h1>
-                Digital foundations <span>built for what comes next.</span>
+                Beautiful Websites <span>are just the beginning.</span>
               </h1>
               <div className={styles.heroSummary}>
                 <p>
-                  From the first impression to the systems behind it, we build
-                  digital work that helps ambitious businesses operate with more
-                  clarity and confidence.
+                  We build the digital systems that help ambitious businesses
+                  attract more customers, operate more efficiently, and grow
+                  with confidence.
                 </p>
                 <div className={styles.heroActions}>
                   <Link
@@ -236,7 +236,7 @@ export default function ServicesPage() {
         <Container>
           <div className={styles.closingInner}>
             <p>Have something specific in mind?</p>
-            <h2>Let&apos;s figure out what your business actually needs.</h2>
+            <h2>Let&apos;s BUILD WHAT YOUR BUSINESS NEEDS TO GROW.</h2>
             <Link href="/contact" className={styles.closingLink}>
               Start a project
               <span aria-hidden="true">↗</span>

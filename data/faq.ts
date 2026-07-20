@@ -1,22 +1,32 @@
 export const faqs = [
   {
-    question: "How much does a website cost?",
+    question: "How much does a project cost?",
     answer:
-      "Every project is different, but most websites fall somewhere between a simple business site and a fully custom digital experience. After a quick conversation, we'll provide a transparent quote based on your goals and requirements.",
+      "Every business is different, so every project starts with a conversation rather than a fixed package. Whether you need a new website, custom software, or ongoing support, we'll provide a clear proposal based on your goals, timeline, and scope.",
   },
   {
     question: "How long does a project take?",
     answer:
-      "Most websites are completed in 2–6 weeks depending on the size and complexity of the project. Larger custom software projects are planned around your specific timeline and business needs.",
+      "Most business websites are completed within 2–6 weeks. More complex software projects vary based on their requirements, but we'll establish a clear timeline and keep you informed from kickoff through launch.",
   },
   {
     question: "Do you only build websites?",
     answer:
-      "No. Alongside modern websites, we also build custom software such as customer portals, quote systems, dashboards, booking tools, and other digital solutions that help businesses operate more efficiently.",
+      "No. Websites are often where our partnerships begin, not where they end. We also design and develop custom software, automate business processes, integrate existing tools, and build digital systems that help businesses operate more efficiently as they grow.",
   },
   {
-    question: "What happens after my website launches?",
+    question: "What happens after launch?",
     answer:
-      "We don't disappear after launch. We offer ongoing hosting, maintenance, updates, performance improvements, and support so your website continues to grow alongside your business.",
+      "Launching a website isn't the finish line. We can continue supporting your business with hosting, maintenance, performance improvements, SEO, analytics, feature development, and ongoing optimization so your digital presence continues to evolve alongside your business.",
   },
+  {
+    question: "Is Veriq the right fit for my business?",
+    answer:
+      "We work best with businesses that see their website as more than an online brochure. If you're looking to build trust, improve your digital presence, streamline operations, or create a stronger foundation for growth, we'd love to start the conversation.",
+  },
+  {
+  question: "Can you work with my existing website or software?",
+  answer:
+    "Absolutely. Not every project starts from scratch. We can improve an existing website, add new features, modernize outdated systems, or build custom software that integrates with the tools your business already relies on.",
+}
 ];

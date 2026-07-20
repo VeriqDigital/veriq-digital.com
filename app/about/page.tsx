@@ -13,21 +13,21 @@ const beliefs = [
   },
   {
     number: "02",
-    title: "Useful beats flashy",
+    title: "Substance Over Hype",
     description:
       "Good design can be memorable without getting in the way of the job it needs to do.",
   },
   {
     number: "03",
-    title: "Built for change",
+    title: "Built To Evolve",
     description:
       "Businesses evolve. Their websites and tools should be able to evolve with them.",
   },
   {
     number: "04",
-    title: "Care is a feature",
+    title: "Beyond The Brief",
     description:
-      "The details people do not consciously notice are often the ones that make an experience feel right.",
+      "Great work rarely stops at the requirements. We look for thoughtful ways to improve the final result and create lasting value beyond the original brief.",
   },
 ] as const;
 
@@ -35,22 +35,22 @@ const reasons = [
   {
     title: "Direct collaboration",
     description:
-      "We work closely with our clients to ensure all requirements are met.",
+      "Work directly with the person designing and building your project from the first conversation through launch.",
   },
   {
     title: "Dedicated attention",
     description:
-      "Being a smaller studio allows us to focus on client needs and provide quick response times.",
+      "We intentionally take on a limited number of projects so every client receives thoughtful communication, focused execution, and the attention their business deserves.",
   },
   {
     title: "Built around the business",
     description:
-      "The solution follows your goals and workflow instead of forcing them into a rigid template.",
+      "No templates. No recycled strategies. Every recommendation starts with how your business actually operates.",
   },
   {
     title: "Support beyond launch",
     description:
-      "There is a clear path for maintenance, iteration, and growth after the first version goes live.",
+      "Launch isn't the finish line. We continue improving your digital presence as your business grows.",
   },
 ] as const;
 
@@ -178,12 +178,16 @@ export default function AboutPage() {
               <h2>Hi, I&apos;m Mick.</h2>
               <p>
                 I started Veriq because I believe businesses deserve websites
-                and software that are as professional as the work they do every
-                day.
+                that not only look professional, but help them perform better.
+                Every project is designed around the way a business actually
+                operates, with the goal of building something thoughtful,
+                distinctive, and built to support long-term growth.
               </p>
               <p>
-                I enjoy building thoughtful digital experiences that combine
-                clean design with practical technology to help businesses grow.
+                As a software engineer, I enjoy building websites and software
+                that are fast, thoughtful, and built to last. But more
+                importantly, I enjoy helping businesses become easier to
+                discover, easier to trust, and easier to do business with.
               </p>
               <div className={styles.founderRole}>
                 <span>Mick Enev</span>

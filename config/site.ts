@@ -5,7 +5,7 @@ export const siteConfig = {
   shortName: "Veriq",
   defaultTitle: "Web Design & Custom Software Studio | Veriq",
   tagline:
-    "Founder-led digital studio creating thoughtful websites and software.",
+    "Helping ambitious businesses grow through websites, software, and long-term digital systems.",
   description:
     "Des Moines web design and custom software studio creating thoughtful digital experiences for local and remote clients.",
   url: "https://veriqdigital.com",
