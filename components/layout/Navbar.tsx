@@ -128,10 +128,10 @@ const Navbar = () => {
             : "bg-transparent backdrop-blur-none"
         }`}
       />
-      <nav className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-8 px-6 sm:px-10 lg:px-14 xl:px-20">
+      <nav className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-3 px-4 sm:gap-8 sm:px-10 lg:px-14 xl:px-20">
         <Link
           href="/"
-          className="font-heading text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
+          className="font-heading text-2xl font-black uppercase tracking-wide text-(--nav-text) sm:text-3xl md:text-4xl"
         >
           {siteConfig.shortName}
         </Link>
@@ -163,7 +163,7 @@ const Navbar = () => {
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className="cursor-pointer rounded-full bg-(--primary) px-6 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) lg:text-xl"
+            className="cursor-pointer rounded-full bg-(--primary) px-4 py-2.5 text-base font-semibold text-black transition hover:bg-(--primary-hover) sm:px-6 sm:py-3 sm:text-lg lg:text-xl"
           >
             {primaryCta.label}
           </Link>

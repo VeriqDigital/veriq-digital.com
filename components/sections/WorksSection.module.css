@@ -259,6 +259,45 @@
   text-transform: uppercase;
 }
 
+.projectMeta .projectSummary {
+  max-width: 38rem;
+  margin-top: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  line-height: 1.55;
+  text-transform: none;
+}
+
+.projectDetails {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 13%, transparent);
+  padding-top: 1.25rem;
+}
+
+.projectDetails div {
+  min-width: 0;
+}
+
+.projectDetails dt {
+  color: var(--primary-hover);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.projectDetails dd {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
 @media (max-width: 800px) {
   .wireBackdrop {
     right: -17rem;
@@ -306,6 +345,10 @@
   .viewProject {
     display: none;
   }
+}
+
+@media (max-width: 540px) {
+  .projectDetails { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

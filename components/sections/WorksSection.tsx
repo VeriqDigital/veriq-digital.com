@@ -4,7 +4,11 @@ import { projects } from "@/data/projects";
 import WorksBackdrop from "./WorksBackdrop";
 import styles from "./WorksSection.module.css";
 
-const WorksSection = () => {
+type WorksSectionProps = {
+  detailed?: boolean;
+};
+
+const WorksSection = ({ detailed = false }: WorksSectionProps) => {
   return (
     <div className={styles.works}>
       <WorksBackdrop />
@@ -19,8 +23,9 @@ const WorksSection = () => {
           </h2>
         </div>
         <p>
-          Two self-directed builds exploring how focused design and development
-          can give local businesses a sharper digital presence.
+          Self-directed builds showing the business problem, what Veriq built,
+          and what each experience was intended to improve—without invented
+          performance claims.
         </p>
       </header>
 
@@ -51,9 +56,30 @@ const WorksSection = () => {
               <div>
                 <h3>{project.title}</h3>
                 <p>{project.category}</p>
+                <p className={styles.projectSummary}>{project.previewSummary}</p>
               </div>
               <span>{project.year}</span>
             </div>
+            {detailed && (
+              <dl className={styles.projectDetails}>
+                <div>
+                  <dt>Status</dt>
+                  <dd>{project.status}</dd>
+                </div>
+                <div>
+                  <dt>Problem explored</dt>
+                  <dd>{project.problemExplored}</dd>
+                </div>
+                <div>
+                  <dt>Built</dt>
+                  <dd>{project.built}</dd>
+                </div>
+                <div>
+                  <dt>Intended outcome</dt>
+                  <dd>{project.outcome}</dd>
+                </div>
+              </dl>
+            )}
           </Link>
         ))}
       </div>

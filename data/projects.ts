@@ -7,6 +7,10 @@ export type Project = {
   imageAlt: string;
   liveUrl: string;
   summary: string;
+  previewSummary: string;
+  status: string;
+  problemExplored: string;
+  built: string;
   about: string;
   challenge: string;
   outcome: string;
@@ -27,6 +31,13 @@ export const projects: readonly Project[] = [
     liveUrl: "https://iron-palace-henna.vercel.app/",
     summary:
       "A cinematic gym concept designed to make the experience feel like a destination before someone ever walks through the door.",
+    previewSummary:
+      "Concept website exploring a premium gym brand, membership flow, coach profiles, and conversion-focused calls to action.",
+    status: "Self-directed concept",
+    problemExplored:
+      "How a premium independent gym could communicate its identity, explain memberships, showcase coaches, and guide visitors toward tours or joining.",
+    built:
+      "Responsive marketing site, membership page, coach profiles, FAQ, and contact and tour flows.",
     about:
       "Iron Palace is a self-directed concept website exploring how a high-end strength facility could present its identity, coaches, events, tours, and day-pass experience online.",
     challenge:
@@ -48,6 +59,13 @@ export const projects: readonly Project[] = [
     liveUrl: "https://auto-repair-demo-neon.vercel.app/",
     summary:
       "A practical, conversion-focused auto repair demo that builds trust and moves customers toward requesting a quote.",
+    previewSummary:
+      "Concept website designed to improve credibility, clarify services, and make appointment requests easier.",
+    status: "Self-directed concept",
+    problemExplored:
+      "How a local repair shop could improve credibility, make its services easier to understand, and create a clearer path to requesting service.",
+    built:
+      "Responsive service site, service explanations, trust content, FAQs, and appointment-oriented calls to action.",
     about:
       "ABC Auto Repair is a self-directed full-site demo for a neighborhood repair shop. It combines a customer-facing marketing experience with clear pathways for service information, quote requests, login, and administration.",
     challenge:

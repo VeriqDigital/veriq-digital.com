@@ -14,6 +14,11 @@ const staticRoutes: MetadataRoute.Sitemap = [
     priority: 0.9,
   },
   {
+    url: `${siteConfig.url}/web-design`,
+    changeFrequency: "monthly",
+    priority: 0.9,
+  },
+  {
     url: `${siteConfig.url}/work`,
     changeFrequency: "monthly",
     priority: 0.8,

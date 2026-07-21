@@ -6,92 +6,53 @@ import styles from "./services.module.css";
 const serviceChapters = [
   {
     number: "01",
-    id: "business-websites",
-    title: "Business Websites",
-    statement: "A sharper digital presence built to earn attention and trust.",
-    description:
-      "We shape your positioning, content, and user experience into a fast, focused website that makes it easy for the right customers to understand your value and take the next step.",
-    note: "Best for businesses that have outgrown a dated, unclear, or hard-to-manage website.",
-    capabilities: [
-      "Strategy & information architecture",
-      "Responsive web design",
-      "Performance & accessibility",
-      "Content systems & CMS setup",
-      "Analytics & conversion tracking",
-    ],
-    outcome:
-      "A credible website that works as hard as the rest of your business.",
+    id: "websites",
+    title: "Websites and Conversion",
+    statement: "Make it easier for the right customers to find you, trust you, and take action.",
+    description: "Veriq plans, designs, and develops websites that clearly explain the business, present the offer professionally, and guide visitors toward a useful next step.",
+    note: "A strong starting point when the current site is dated, unclear, difficult to find, or not producing useful inquiries.",
+    capabilities: ["Business websites", "Landing pages", "Site strategy and structure", "Local SEO foundations", "Quote, contact, and booking flows", "Analytics and conversion tracking"],
+    outcome: "A clear, credible website with a practical path from visit to inquiry.",
   },
   {
     number: "02",
-    id: "custom-software",
+    id: "operations",
     title: "Custom Software",
-    statement: "Tools designed around the way your business actually works.",
-    description:
-      "When off-the-shelf software creates more friction than it removes, we design and build focused digital tools around your team, customers, and existing workflow.",
-    note: "Best for teams losing time to manual processes, disconnected tools, or rigid software.",
-    capabilities: [
-      "Customer & staff portals",
-      "Quote and intake systems",
-      "Dashboards & reporting tools",
-      "Booking and workflow automation",
-      "API and platform integrations",
-    ],
-    outcome:
-      "Purpose-built software that removes friction instead of adding it.",
+    statement: "Replace repetitive work and disconnected tools with software built around the workflow.",
+    description: "When spreadsheets, manual handoffs, and generic platforms begin creating friction, Veriq can build focused tools around the way the business actually operates.",
+    note: "Best for teams spending too much time copying information, working around rigid tools, or managing processes by hand.",
+    capabilities: ["Customer and staff portals", "Quote and intake systems", "Dashboards and reporting", "Workflow automation", "Platform integrations", "Internal business tools"],
+    outcome: "A focused tool that removes avoidable steps without adding unnecessary complexity.",
   },
   {
     number: "03",
-    id: "ongoing-support",
+    id: "support",
     title: "Ongoing Support",
-    statement: "A digital presence that keeps improving after launch.",
-    description:
-      "Websites and software are living business tools. We stay involved with maintenance, measurement, and thoughtful improvements so your investment remains useful as your company changes.",
-    note: "Best for businesses that want a dependable technical partner rather than occasional emergency help.",
-    capabilities: [
-      "Hosting, monitoring & maintenance",
-      "Performance and security reviews",
-      "SEO and content improvements",
-      "Analytics and reporting",
-      "Ongoing design & development",
-    ],
-    outcome:
-      "Steady support, clearer decisions, and fewer technical distractions.",
+    statement: "Keep the work current, fast, secure, and useful after launch.",
+    description: "Websites and software need maintenance, measurement, and refinement. Veriq can continue supporting the work after launch without forcing the business into a large agency retainer.",
+    note: "Useful when the business needs a dependable technical partner for practical updates and continued attention.",
+    capabilities: ["Hosting and maintenance", "Content updates", "Performance monitoring", "Technical fixes", "Analytics review", "Ongoing design and development"],
+    outcome: "Reliable support that keeps the original investment working as the business changes.",
   },
+] as const;
+
+const startingPoints = [
+  { number: "01", problem: "Customers cannot find or trust the business", recommendation: "Website Design and Local Visibility", description: "Clarify the offer, strengthen credibility, and create a better path to an inquiry.", href: "/web-design", label: "View Web Design" },
+  { number: "02", problem: "The team relies on repetitive manual work", recommendation: "Custom Software and Automation", description: "Map the workflow and identify where a focused tool can remove repeated steps.", href: "/contact", label: "Discuss the Workflow" },
+  { number: "03", problem: "The current site or system needs continued attention", recommendation: "Ongoing Support", description: "Handle maintenance, fixes, content, measurement, and useful refinements over time.", href: "/contact", label: "Discuss Support" },
 ] as const;
 
 const processSteps = [
-  {
-    title: "Discover",
-    description:
-      "Understand your business, goals, challenges, and the people you're building for.",
-  },
-  {
-    title: "Design",
-    description:
-      "Collaborate to shape a thoughtful solution through planning, feedback, and refinement.",
-  },
-  {
-    title: "Develop",
-    description:
-      "Build iteratively while working closely together to ensure every feature aligns with your vision.",
-  },
-  {
-    title: "Launch",
-    description:
-      "Deploy, test, and refine every detail to ensure a smooth and successful launch.",
-  },
-  {
-    title: "Grow",
-    description:
-      "Provide ongoing support, maintenance, and improvements to help your business continue growing.",
-  },
+  ["Discover", "Understand the business, the problem, and the people affected."],
+  ["Prioritize", "Choose the clearest next step and define the work that matters."],
+  ["Design", "Shape the structure, interface, and practical details together."],
+  ["Build", "Develop and test the work with direct, focused feedback."],
+  ["Launch and Improve", "Deploy carefully, measure what matters, and refine when useful."],
 ] as const;
 
 export const metadata = createPageMetadata({
-  title: "Des Moines Web Design & Software Services",
-  description:
-    "Business websites, custom software, and ongoing digital support from a Des Moines studio working with clients locally and remotely.",
+  title: "Websites, Custom Software & Digital Growth Services",
+  description: "Explore Veriq services for attracting customers, improving operations, and supporting ongoing digital growth through websites, software, analytics, and optimization.",
   path: "/services",
 });
 
@@ -102,98 +63,58 @@ export default function ServicesPage() {
         <Container>
           <div className={styles.heroInner}>
             <div className={styles.heroCopy}>
-              <p className={styles.eyebrow}>
-                <span aria-hidden="true" />
-                What we do
-              </p>
-              <h1>
-                Beautiful Websites <span>are just the beginning.</span>
-              </h1>
+              <p className={styles.eyebrow}><span aria-hidden="true" />Services</p>
+              <h1>Websites, software, and support <span>built around real business problems.</span></h1>
               <div className={styles.heroSummary}>
-                <p>
-                  We build the digital systems that help ambitious businesses
-                  attract more customers, operate more efficiently, and grow
-                  with confidence.
-                </p>
+                <p>Veriq helps businesses improve how customers find them, how work moves through the company, and how their digital tools perform over time.</p>
                 <div className={styles.heroActions}>
-                  <Link
-                    href="#business-websites"
-                    className={styles.primaryLink}
-                  >
-                    Explore services
-                    <span aria-hidden="true">↓</span>
-                  </Link>
-                  <Link href="/contact" className={styles.textLink}>
-                    Start a conversation
-                    <span aria-hidden="true">↗</span>
-                  </Link>
+                  <Link href="/contact" className={styles.primaryLink}>Start a conversation <span aria-hidden="true">↗</span></Link>
+                  <Link href="/web-design" className={styles.textLink}>Explore Web Design <span aria-hidden="true">→</span></Link>
                 </div>
               </div>
             </div>
 
-            <nav
-              className={styles.serviceIndex}
-              aria-label="Services on this page"
-            >
-              <p>Three ways we can help</p>
+            <nav className={styles.serviceIndex} aria-label="Services on this page">
+              <p>Service index</p>
               {serviceChapters.map((service) => (
-                <Link href={`#${service.id}`} key={service.id}>
-                  <span>{service.number}</span>
-                  {service.title}
-                  <i aria-hidden="true">↘</i>
-                </Link>
+                <Link href={`#${service.id}`} key={service.id}><span>{service.number}</span>{service.title}<i aria-hidden="true">↘</i></Link>
               ))}
             </nav>
 
-            <div className={styles.heroGraphic} aria-hidden="true">
-              <span className={styles.graphicOrbit} />
-              <span className={styles.graphicCore} />
-              <span className={styles.graphicNode} />
-            </div>
+            <div className={styles.heroGraphic} aria-hidden="true"><span className={styles.graphicOrbit} /><span className={styles.graphicCore} /><span className={styles.graphicNode} /></div>
           </div>
         </Container>
       </section>
 
       <div className={styles.chapters}>
         {serviceChapters.map((service, index) => (
-          <section id={service.id} className={styles.chapter} key={service.id}>
+          <section
+            id={service.id}
+            className={styles.chapter}
+            data-number={service.number}
+            key={service.id}
+          >
             <Container>
-              <div
-                className={`${styles.chapterInner} ${
-                  index % 2 === 1 ? styles.chapterReverse : ""
-                }`}
-              >
+              <div className={`${styles.chapterInner} ${index % 2 === 1 ? styles.chapterReverse : ""}`}>
                 <div className={styles.chapterCopy}>
-                  <p className={styles.chapterLabel}>
-                    <span>{service.number}</span>
-                    {service.title}
-                  </p>
+                  <p className={styles.chapterLabel}><span>{service.number}</span>{service.title}</p>
                   <h2>{service.statement}</h2>
-                  <p className={styles.chapterDescription}>
-                    {service.description}
-                  </p>
-                  <div className={styles.fitNote}>
-                    <span>Good fit</span>
-                    <p>{service.note}</p>
-                  </div>
+                  <p className={styles.chapterDescription}>{service.description}</p>
+                  <div className={styles.fitNote}><span>Good fit</span><p>{service.note}</p></div>
+                  {index === 0 && (
+                    <Link className={styles.featuredService} href="/web-design">
+                      <span>Des Moines Web Design</span>
+                      <p>Explore the complete website design and development service for local and remote businesses.</p>
+                      <strong>View Web Design Service →</strong>
+                    </Link>
+                  )}
                 </div>
 
-                <aside className={styles.capabilityPanel}>
-                  <div className={styles.panelHeading}>
-                    <span>Core capabilities</span>
-                    <i aria-hidden="true">{service.number}</i>
-                  </div>
-                  <ol>
-                    {service.capabilities.map((capability, capabilityIndex) => (
-                      <li key={capability}>
-                        <span>
-                          {String(capabilityIndex + 1).padStart(2, "0")}
-                        </span>
-                        {capability}
-                      </li>
-                    ))}
-                  </ol>
+                <aside className={`${styles.capabilityPanel} ${index === 1 ? styles.technicalPanel : ""} ${index === 2 ? styles.supportPanel : ""}`}>
+                  <div className={styles.panelHeading}><span>Core capabilities</span><i aria-hidden="true">{service.number}</i></div>
+                  <ol>{service.capabilities.map((capability, capabilityIndex) => <li key={capability}><span>{String(capabilityIndex + 1).padStart(2, "0")}</span>{capability}</li>)}</ol>
                   <p className={styles.panelOutcome}>{service.outcome}</p>
+                  {index === 2 && <div className={styles.supportLoop} aria-hidden="true"><span>Monitor</span><i>→</i><span>Maintain</span><i>→</i><span>Refine</span></div>}
                 </aside>
               </div>
             </Container>
@@ -201,49 +122,21 @@ export default function ServicesPage() {
         ))}
       </div>
 
+      <section className={styles.diagnostic}>
+        <Container>
+          <div className={styles.diagnosticHeader}><p className={styles.eyebrow}><span aria-hidden="true" />Where to start</p><h2>Start with the problem, not a package.</h2></div>
+          <div className={styles.diagnosticGrid}>{startingPoints.map((item) => <article key={item.number}><span>{item.number}</span><h3>{item.problem}</h3><p>{item.description}</p><div><small>Recommended starting point</small><strong>{item.recommendation}</strong></div><Link href={item.href}>{item.label} →</Link></article>)}</div>
+        </Container>
+      </section>
+
       <section className={styles.process}>
         <Container>
-          <div className={styles.processHeader}>
-            <p className={styles.eyebrow}>
-              <span aria-hidden="true" />
-              How we work
-            </p>
-            <h2>A clear path from first conversation to what comes next.</h2>
-          </div>
-
-          <ol className={styles.processList}>
-            {processSteps.map((step, index) => (
-              <li className={styles.processStep} key={step.title}>
-                <span className={styles.stepNumber}>
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                </div>
-                {index < processSteps.length - 1 && (
-                  <span className={styles.processArrow} aria-hidden="true">
-                    ↓
-                  </span>
-                )}
-              </li>
-            ))}
-          </ol>
+          <div className={styles.processHeader}><p className={styles.eyebrow}><span aria-hidden="true" />How we work</p><h2>A compact process with direct collaboration.</h2></div>
+          <ol className={styles.processList}>{processSteps.map(([title, description], index) => <li className={styles.processStep} key={title}><span className={styles.stepNumber}>{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{description}</p></div>{index < processSteps.length - 1 && <span className={styles.processArrow} aria-hidden="true">→</span>}</li>)}</ol>
         </Container>
       </section>
 
-      <section className={styles.closing}>
-        <Container>
-          <div className={styles.closingInner}>
-            <p>Have something specific in mind?</p>
-            <h2>Let&apos;s BUILD WHAT YOUR BUSINESS NEEDS TO GROW.</h2>
-            <Link href="/contact" className={styles.closingLink}>
-              Start a project
-              <span aria-hidden="true">↗</span>
-            </Link>
-          </div>
-        </Container>
-      </section>
+      <section className={styles.closing}><Container><div className={styles.closingInner}><p>Not sure where to begin?</p><div><h2>Let&apos;s identify the right next step.</h2><p>Tell us what is creating friction. We will help determine whether the business needs a stronger website, a focused software tool, or ongoing support.</p></div><Link href="/contact" className={styles.closingLink}>Start a conversation <span aria-hidden="true">↗</span></Link></div></Container></section>
     </main>
   );
 }

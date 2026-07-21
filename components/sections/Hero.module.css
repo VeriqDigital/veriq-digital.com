@@ -376,6 +376,16 @@
     max-width: 28rem;
   }
 
+  .actions {
+    width: min(100%, 24rem);
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actions > * {
+    width: 100%;
+  }
+
   .scrollCue span {
     display: none;
   }

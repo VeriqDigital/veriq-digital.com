@@ -105,10 +105,10 @@ export default async function ProjectPage({ params }: WorkPageProps) {
           <dl className="grid grid-cols-2 content-start gap-x-5 gap-y-8 border-t border-current/10 pt-7 md:border-l md:border-t-0 md:pl-10 md:pt-0">
             <div>
               <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-(--muted)">
-                Timeframe
+                Status
               </dt>
               <dd className="mt-2 font-heading text-3xl font-black uppercase">
-                {project.timeframe}
+                {project.status}
               </dd>
             </div>
             <div>

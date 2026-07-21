@@ -193,7 +193,7 @@
   --card-offset: 0rem;
   position: relative;
   display: flex;
-  min-height: 13.5rem;
+  min-height: 26rem;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
@@ -223,7 +223,7 @@
 .card:nth-child(2) {
   --card-offset: 3.5rem;
   grid-column: 5 / span 5;
-  min-height: 14.5rem;
+  min-height: 28rem;
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--primary) 14%, transparent), transparent 58%),
     var(--surface);
@@ -233,7 +233,7 @@
 .card:nth-child(3) {
   --card-offset: 1rem;
   grid-column: 10 / span 3;
-  min-height: 15.25rem;
+  min-height: 27rem;
   border-top-right-radius: 4.5rem;
 }
 
@@ -272,6 +272,44 @@
   color: color-mix(in srgb, var(--surface-foreground) 65%, transparent);
   font-size: 0.875rem;
   line-height: 1.55;
+}
+
+.card .problem {
+  max-width: 30rem;
+  margin: 0 0 1.25rem;
+  color: color-mix(in srgb, var(--primary) 74%, var(--surface-foreground));
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.capabilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1.15rem;
+  list-style: none;
+}
+
+.capabilities li {
+  border: 1px solid color-mix(in srgb, var(--surface-foreground) 13%, transparent);
+  border-radius: 999px;
+  padding: 0.32rem 0.55rem;
+  color: color-mix(in srgb, var(--surface-foreground) 56%, transparent);
+  font-size: 0.66rem;
+}
+
+.cardLink {
+  display: block;
+  margin-top: 1.35rem;
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .cardIcon {
@@ -377,7 +415,7 @@
     --card-offset: 0rem;
     grid-column: auto;
     width: 100%;
-    min-height: 12.5rem;
+    min-height: 23rem;
     margin-left: 0;
     border-radius: 1.1rem;
   }

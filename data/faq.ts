@@ -1,5 +1,15 @@
 export const faqs = [
   {
+    question: "Does Veriq work with businesses in Des Moines?",
+    answer:
+      "Yes. Veriq is based in Des Moines and works directly with local businesses across the metro and throughout Iowa, as well as with clients remotely.",
+  },
+  {
+    question: "What web design services do you provide?",
+    answer:
+      "We provide website strategy, responsive design, web development, performance and accessibility improvements, analytics, SEO foundations, CMS setup, and ongoing support.",
+  },
+  {
     question: "How much does a project cost?",
     answer:
       "Every business is different, so every project starts with a conversation rather than a fixed package. Whether you need a new website, custom software, or ongoing support, we'll provide a clear proposal based on your goals, timeline, and scope.",

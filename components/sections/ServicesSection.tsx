@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { services } from "@/data/services";
 import ServicesBackdrop from "./ServicesBackdrop";
 import styles from "./ServicesSection.module.css";
@@ -50,14 +51,21 @@ const ServicesSection = () => {
 
       <div className={styles.serviceGrid}>
         {services.map((service, index) => (
-          <article key={service.title} className={styles.card}>
+          <Link key={service.title} className={styles.card} href={service.href}>
             <div className={styles.cardMeta}>
               <span>0{index + 1}</span>
               <i aria-hidden="true" />
             </div>
             <div>
+              <p className={styles.problem}>{service.problem}</p>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
+              <ul className={styles.capabilities}>
+                {service.capabilities.map((capability) => (
+                  <li key={capability}>{capability}</li>
+                ))}
+              </ul>
+              <span className={styles.cardLink}>{service.linkLabel} →</span>
             </div>
             <span
               className={`${styles.cardIcon} ${styles[service.icon]}`}
@@ -65,7 +73,7 @@ const ServicesSection = () => {
             >
               <ServiceIcon name={service.icon} />
             </span>
-          </article>
+          </Link>
         ))}
       </div>
     </div>

@@ -123,23 +123,23 @@ const Hero = () => {
         <div className={styles.content}>
           <p className={styles.eyebrow}>
             <span aria-hidden="true" />
-            Des Moines-based digital studio
+            Websites, software, and digital growth systems
           </p>
           <h1 className={styles.title}>
-            Digital Systems
-            <span>built for growth.</span>
+            Beautiful websites
+            <span>are just the beginning.</span>
           </h1>
           <p className={styles.description}>
-            We build websites, software, and growth systems that help ambitious
-            businesses attract customers, operate more efficiently, and scale
-            with confidence.
+            Veriq helps businesses attract customers, improve inefficient
+            workflows, and build a stronger digital presence through custom
+            websites, software, and ongoing support.
           </p>
           <div className={styles.actions}>
             <Button onClick={() => openModal(primaryCta.modal)}>
-              Start a project
+              Start a conversation
             </Button>
-            <Button href="/work" variant="secondary">
-              View our work
+            <Button href="/services" variant="secondary">
+              Explore services
             </Button>
           </div>
         </div>

@@ -45,7 +45,7 @@ const reasons = [
   {
     title: "Built around the business",
     description:
-      "No templates. No recycled strategies. Every recommendation starts with how your business actually operates.",
+      "Every recommendation starts with the business problem—not with selling the largest package or forcing a predetermined service.",
   },
   {
     title: "Support beyond launch",
@@ -57,7 +57,7 @@ const reasons = [
 export const metadata = createPageMetadata({
   title: "About",
   description:
-    "Meet the founder and explore the philosophy behind Veriq, a Des Moines digital studio serving local and remote clients.",
+    "Meet the founder behind Veriq and learn how this Des Moines studio approaches websites, software, and long-term digital support.",
   path: "/about",
 });
 
@@ -77,9 +77,9 @@ export default function AboutPage() {
               </h1>
               <div className={styles.heroSummary}>
                 <p>
-                  Veriq is an independent digital studio creating websites and
-                  software that help businesses look sharper, work smarter, and
-                  move forward with confidence.
+                  Veriq is an independent digital studio building websites,
+                  software, and connected systems that help businesses attract
+                  customers, work more effectively, and make clearer decisions.
                 </p>
                 <div className={styles.heroActions}>
                   <Link href="#philosophy" className={styles.primaryLink}>
@@ -177,17 +177,16 @@ export default function AboutPage() {
               </div>
               <h2>Hi, I&apos;m Mick.</h2>
               <p>
-                I started Veriq because I believe businesses deserve websites
-                that not only look professional, but help them perform better.
-                Every project is designed around the way a business actually
-                operates, with the goal of building something thoughtful,
-                distinctive, and built to support long-term growth.
+                Veriq is a founder-led studio run by Mick Enev, a software
+                developer with experience building web applications and
+                business software. The studio was created around a simple idea:
+                businesses should be able to work directly with the person
+                designing and building the solution.
               </p>
               <p>
-                As a software engineer, I enjoy building websites and software
-                that are fast, thoughtful, and built to last. But more
-                importantly, I enjoy helping businesses become easier to
-                discover, easier to trust, and easier to do business with.
+                That direct relationship makes it easier to understand the real
+                problem, avoid unnecessary layers, and build something practical
+                enough to keep using after launch.
               </p>
               <div className={styles.founderRole}>
                 <span>Mick Enev</span>
@@ -208,7 +207,9 @@ export default function AboutPage() {
               <h2>Less distance between the idea and the outcome.</h2>
               <p>
                 A smaller studio means fewer layers, clearer ownership, and more
-                attention on the decisions that make the work effective.
+                attention on the decisions that make the work effective. The
+                aim is to keep supporting useful systems as the businesses
+                behind them evolve.
               </p>
             </div>
 
