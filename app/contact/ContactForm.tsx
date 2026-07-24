@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import BudgetSelect from "@/components/ui/BudgetSelect";
+import { submitLead } from "@/lib/submit-lead";
 import styles from "./contact.module.css";
 
 const ContactForm = () => {
@@ -16,7 +17,7 @@ const ContactForm = () => {
 
     const formData = new FormData(event.currentTarget);
     const payload = {
-      type: "contact",
+      type: "contact" as const,
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       phone: String(formData.get("phone") ?? ""),
@@ -26,28 +27,12 @@ const ContactForm = () => {
 
     setIsSubmitting(true);
 
-    const response = await fetch("/api/leads", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    }).catch(() => null);
-    const data = response
-      ? ((await response.json().catch(() => null)) as {
-          message?: string;
-        } | null)
-      : null;
+    const result = await submitLead(payload);
 
     setIsSubmitting(false);
 
-    if (!response) {
-      setSubmitError("Could not connect. Please try again.");
-      return;
-    }
-
-    if (!response.ok) {
-      setSubmitError(data?.message ?? "Something went wrong. Please try again.");
+    if (!result.ok) {
+      setSubmitError(result.message);
       return;
     }
 

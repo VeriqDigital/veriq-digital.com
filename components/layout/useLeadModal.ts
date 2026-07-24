@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import { submitLead } from "@/lib/submit-lead";
 import type { ModalType } from "./LeadModal";
 
 const useLeadModal = () => {
@@ -57,26 +58,12 @@ const useLeadModal = () => {
 
     setIsSubmitting(true);
 
-    const response = await fetch("/api/leads", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    }).catch(() => null);
-    const data = response
-      ? ((await response.json().catch(() => null)) as { message?: string } | null)
-      : null;
+    const result = await submitLead(payload);
 
     setIsSubmitting(false);
 
-    if (!response) {
-      setSubmitError("Could not connect. Please try again.");
-      return;
-    }
-
-    if (!response.ok) {
-      setSubmitError(data?.message ?? "Something went wrong. Please try again.");
+    if (!result.ok) {
+      setSubmitError(result.message);
       return;
     }
 
