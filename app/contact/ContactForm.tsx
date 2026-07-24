@@ -15,7 +15,8 @@ const ContactForm = () => {
     event.preventDefault();
     setSubmitError("");
 
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const payload = {
       type: "contact" as const,
       name: String(formData.get("name") ?? ""),
@@ -36,6 +37,7 @@ const ContactForm = () => {
       return;
     }
 
+    form.reset();
     setHasSubmitted(true);
   };
 
