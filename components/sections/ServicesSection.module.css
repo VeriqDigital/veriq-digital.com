@@ -58,6 +58,34 @@
   color: var(--muted);
 }
 
+.servicesLink {
+  display: inline-flex;
+  align-items: center;
+  justify-self: end;
+  gap: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  padding-bottom: 0.35rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+
+.servicesLink span {
+  color: var(--primary);
+}
+
+.servicesLink:hover {
+  border-color: var(--primary);
+  color: var(--foreground);
+}
+
+.servicesLink:focus-visible {
+  border-radius: 0.25rem;
+  outline: 3px solid var(--primary);
+  outline-offset: 0.35rem;
+}
+
 .serviceGrid {
   position: relative;
   z-index: 1;
@@ -329,6 +357,10 @@
   .intro {
     grid-template-columns: 1fr;
     gap: 1.75rem;
+  }
+
+  .servicesLink {
+    justify-self: start;
   }
 
   .heading {

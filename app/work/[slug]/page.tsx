@@ -24,7 +24,7 @@ export async function generateMetadata({
   }
 
   return createPageMetadata({
-    title: project.title,
+    title: project.seoTitle,
     description: project.summary,
     path: `/work/${project.slug}`,
     image: {

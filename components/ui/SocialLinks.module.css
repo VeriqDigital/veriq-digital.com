@@ -1,0 +1,68 @@
+.links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.link {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: inherit;
+  opacity: 0.56;
+  transition:
+    border-color 200ms ease,
+    color 200ms ease,
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.link svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.6;
+}
+
+.link svg rect,
+.link svg circle:not(.iconDot) {
+  fill: none;
+}
+
+.facebookIcon {
+  stroke: none !important;
+}
+
+.iconDot {
+  stroke: none;
+}
+
+.link:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.link:focus-visible {
+  border-color: var(--primary);
+  color: var(--primary);
+  opacity: 1;
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+
+  .link:hover {
+    transform: none;
+  }
+}

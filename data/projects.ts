@@ -1,6 +1,7 @@
 export type Project = {
   slug: string;
   title: string;
+  seoTitle: string;
   category: string;
   year: string;
   image: string;
@@ -19,6 +20,7 @@ export const projects: readonly Project[] = [
   {
     slug: "iron-palace",
     title: "Iron Palace",
+    seoTitle: "Iron Palace Gym Website Concept",
     category: "Gym concept website",
     year: "Demo",
     image: "/work/iron-palace.png",
@@ -40,6 +42,7 @@ export const projects: readonly Project[] = [
   {
     slug: "abc-auto-repair",
     title: "ABC Auto Repair",
+    seoTitle: "ABC Auto Repair Website Demo",
     category: "Auto repair demo website",
     year: "Demo",
     image: "/work/abc-auto.png",

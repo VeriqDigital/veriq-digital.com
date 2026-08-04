@@ -23,6 +23,8 @@ const oswald = Oswald({
   variable: "--font-heading",
 });
 
+const isPreviewDeployment = process.env.VERCEL_ENV === "preview";
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.defaultTitle,
@@ -30,6 +32,16 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  robots: isPreviewDeployment
+    ? {
+        index: false,
+        follow: false,
+        nocache: true,
+      }
+    : undefined,
   openGraph: {
     title: siteConfig.defaultTitle,
     description: siteConfig.description,

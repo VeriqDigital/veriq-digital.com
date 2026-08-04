@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
-import { createPageMetadata } from "@/config/seo";
+import { createPageMetadata, serializeJsonLd } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 import styles from "./services.module.css";
 
 const serviceChapters = [
@@ -89,15 +90,51 @@ const processSteps = [
 ] as const;
 
 export const metadata = createPageMetadata({
-  title: "Des Moines Web Design & Software Services",
+  title: "Web Design & Custom Software Services",
   description:
-    "Business websites, custom software, and ongoing digital support from a Des Moines studio working with clients locally and remotely.",
+    "Des Moines web design, website redesign, custom software, and ongoing digital support for businesses across Central Iowa and beyond.",
   path: "/services",
 });
+
+const servicesStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Veriq Digital services",
+  itemListElement: serviceChapters.map((service, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    item: {
+      "@type": "Service",
+      "@id": `${siteConfig.url}/services#${service.id}`,
+      name: service.title,
+      description: service.description,
+      url: `${siteConfig.url}/services#${service.id}`,
+      provider: {
+        "@id": `${siteConfig.url}/#organization`,
+      },
+      areaServed: [
+        {
+          "@type": "City",
+          name: `${siteConfig.location.city}, ${siteConfig.location.region}`,
+        },
+        {
+          "@type": "AdministrativeArea",
+          name: "Central Iowa",
+        },
+      ],
+    },
+  })),
+} as const;
 
 export default function ServicesPage() {
   return (
     <main className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(servicesStructuredData),
+        }}
+      />
       <section className={styles.hero}>
         <Container>
           <div className={styles.heroInner}>

@@ -96,19 +96,19 @@
   text-transform: uppercase;
 }
 
-.contactDetails a,
+.contactDetails > div > a,
 .contactDetails p {
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
-.contactDetails a {
+.contactDetails > div > a {
   text-decoration-color: color-mix(in srgb, var(--primary) 60%, transparent);
   text-underline-offset: 0.25rem;
   transition: color 200ms ease;
 }
 
-.contactDetails a:hover {
+.contactDetails > div > a:hover {
   color: var(--primary-hover);
 }
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SocialLinks from "@/components/ui/SocialLinks";
 import { footerLinks, siteConfig } from "@/config/site";
 import styles from "./Footer.module.css";
 
@@ -9,10 +10,11 @@ const Footer = () => {
         <div className={styles.top}>
           <div className={styles.brand}>
             <Link href="/" className={styles.logo}>
-              {siteConfig.name}
+              {siteConfig.shortName}
             </Link>
             <p>{siteConfig.tagline}</p>
             <span>Des Moines, Iowa &middot; Local + remote</span>
+            <SocialLinks className={styles.socialLinks} />
           </div>
 
           <nav className={styles.navigation} aria-label="Footer navigation">

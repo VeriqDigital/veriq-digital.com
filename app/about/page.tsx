@@ -55,9 +55,9 @@ const reasons = [
 ] as const;
 
 export const metadata = createPageMetadata({
-  title: "About",
+  title: "About Our Des Moines Digital Studio",
   description:
-    "Meet the founder and explore the philosophy behind Veriq, a Des Moines digital studio serving local and remote clients.",
+    "Meet Veriq Digital founder Mick Enev and learn how this Des Moines studio approaches websites, custom software, and long-term digital support.",
   path: "/about",
 });
 

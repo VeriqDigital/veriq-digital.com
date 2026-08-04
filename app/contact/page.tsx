@@ -1,13 +1,14 @@
 import Container from "@/components/ui/Container";
+import SocialLinks from "@/components/ui/SocialLinks";
 import { createPageMetadata } from "@/config/seo";
 import { siteConfig } from "@/config/site";
 import ContactForm from "./ContactForm";
 import styles from "./contact.module.css";
 
 export const metadata = createPageMetadata({
-  title: "Contact",
+  title: "Contact Our Des Moines Digital Studio",
   description:
-    "Contact Veriq about web design, custom software, or ongoing digital support in Des Moines or remotely.",
+    "Contact Veriq Digital about website design, redesigns, custom software, or ongoing digital support in Des Moines and Central Iowa.",
   path: "/contact",
 });
 
@@ -49,6 +50,10 @@ export default function ContactPage() {
               <div>
                 <span>Based in</span>
                 <p>Des Moines, Iowa &middot; Available remotely.</p>
+              </div>
+              <div>
+                <span>Follow</span>
+                <SocialLinks />
               </div>
             </div>
           </section>

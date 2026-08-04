@@ -1,9 +1,9 @@
 import type { ModalType } from "@/components/layout/LeadModal";
 
 export const siteConfig = {
-  name: "Veriq",
+  name: "Veriq Digital",
   shortName: "Veriq",
-  defaultTitle: "Des Moines Web Design & Custom Software | Veriq",
+  defaultTitle: "Des Moines Web Design & Custom Software | Veriq Digital",
   tagline:
     "Helping ambitious businesses grow through websites, software, and long-term digital systems.",
   description:
@@ -22,6 +22,18 @@ export const siteConfig = {
     phoneE164: "+18154168926",
     email: "hello@veriqdigital.com",
   },
+  socialLinks: [
+    {
+      name: "Facebook",
+      href: "https://www.facebook.com/profile.php?id=61592568039360",
+      ariaLabel: "Visit Veriq Digital on Facebook",
+    },
+    {
+      name: "Instagram",
+      href: "https://www.instagram.com/veriqdigital/",
+      ariaLabel: "Visit Veriq Digital on Instagram",
+    },
+  ],
 } as const;
 
 export type NavItem =

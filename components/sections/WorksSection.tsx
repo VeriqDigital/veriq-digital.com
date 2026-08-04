@@ -4,7 +4,13 @@ import { projects } from "@/data/projects";
 import WorksBackdrop from "./WorksBackdrop";
 import styles from "./WorksSection.module.css";
 
-const WorksSection = () => {
+type WorksSectionProps = {
+  headingLevel?: "h1" | "h2";
+};
+
+const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
+  const Heading = headingLevel;
+
   return (
     <div className={styles.works}>
       <WorksBackdrop />
@@ -14,9 +20,9 @@ const WorksSection = () => {
             <span aria-hidden="true" />
             Selected work
           </p>
-          <h2>
+          <Heading>
             Built to be <span>used, remembered,</span> and trusted.
-          </h2>
+          </Heading>
         </div>
         <p>
           Two self-directed builds exploring how focused design and development

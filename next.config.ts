@@ -1,14 +1,15 @@
 import type { NextConfig } from "next";
+import { siteConfig } from "./config/site";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://connect.facebook.net${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' blob: data:",
+  "img-src 'self' blob: data: https://www.facebook.com",
   "font-src 'self'",
-  `connect-src 'self' https://vitals.vercel-insights.com${isDevelopment ? " ws: wss:" : ""}`,
+  `connect-src 'self' https://vitals.vercel-insights.com https://connect.facebook.net https://www.facebook.com${isDevelopment ? " ws: wss:" : ""}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -49,6 +50,21 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: securityHeaders,
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "veriqdigital.com",
+          },
+        ],
+        destination: `${siteConfig.url}/:path*`,
+        permanent: true,
       },
     ];
   },

@@ -82,6 +82,10 @@
   text-transform: uppercase;
 }
 
+.socialLinks {
+  margin-top: 1rem;
+}
+
 .navigation {
   position: relative;
 }

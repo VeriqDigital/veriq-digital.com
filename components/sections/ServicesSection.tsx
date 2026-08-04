@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { services } from "@/data/services";
 import ServicesBackdrop from "./ServicesBackdrop";
 import styles from "./ServicesSection.module.css";
@@ -46,6 +47,10 @@ const ServicesSection = () => {
             Digital work with <span>real-world weight.</span>
           </h2>
         </div>
+        <Link href="/services" className={styles.servicesLink}>
+          Explore web design &amp; software services
+          <span aria-hidden="true">↗</span>
+        </Link>
       </div>
 
       <div className={styles.serviceGrid}>
