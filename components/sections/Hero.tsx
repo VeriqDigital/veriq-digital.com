@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import useLeadModal from "@/components/layout/useLeadModal";
 import Button from "@/components/ui/Button";
@@ -10,7 +11,11 @@ import styles from "./Hero.module.css";
 
 const LeadModal = dynamic(() => import("@/components/layout/LeadModal"));
 
-const Hero = () => {
+type HeroProps = {
+  campaign?: ReactNode;
+};
+
+const Hero = ({ campaign }: HeroProps) => {
   const heroRef = useRef<HTMLElement>(null);
   const {
     activeModal,
@@ -146,6 +151,7 @@ const Hero = () => {
               View our work
             </Button>
           </div>
+          {campaign}
         </div>
       </Container>
       <div className={styles.scrollCue} aria-hidden="true">

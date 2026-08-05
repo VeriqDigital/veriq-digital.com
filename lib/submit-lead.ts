@@ -9,6 +9,19 @@ export type ContactLeadPayload = {
   message: string;
 };
 
+export type FreeLandingPageLeadPayload = {
+  type: "free-landing-page";
+  businessName: string;
+  email: string;
+  website?: string;
+  source: "facebook-free-landing-page";
+  offer: "free-landing-page";
+  page: "homepage";
+  submittedAt: string;
+};
+
+export type LeadPayload = ContactLeadPayload | FreeLandingPageLeadPayload;
+
 type SubmitLeadResult =
   | {
       ok: true;
@@ -20,7 +33,7 @@ type SubmitLeadResult =
     };
 
 export async function submitLead(
-  payload: ContactLeadPayload,
+  payload: LeadPayload,
 ): Promise<SubmitLeadResult> {
   const idempotencyKey = crypto.randomUUID();
 

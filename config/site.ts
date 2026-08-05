@@ -36,6 +36,34 @@ export const siteConfig = {
   ],
 } as const;
 
+export type HomepageCampaignConfig = {
+  enabled: boolean;
+  spotCount: number;
+  eyebrow: string;
+  heading: string;
+  description: string;
+  supportingText: string;
+  ctaLabel: string;
+  source: "facebook-free-landing-page";
+  offer: "free-landing-page";
+  page: "homepage";
+};
+
+export const homepageCampaign: HomepageCampaignConfig = {
+  enabled: true,
+  spotCount: 3,
+  eyebrow: "FOR IOWA SERVICE BUSINESSES",
+  heading: "Free Custom Landing Page",
+  description:
+    "Custom designed specifically for your business.",
+  supportingText:
+    "No contracts. No obligation.",
+  ctaLabel: "Claim My Spot",
+  source: "facebook-free-landing-page",
+  offer: "free-landing-page",
+  page: "homepage",
+};
+
 export type NavItem =
   | { label: string; href: string }
   | { label: string; modal: ModalType };

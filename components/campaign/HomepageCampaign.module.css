@@ -1,0 +1,401 @@
+.campaignCard {
+  position: relative;
+  width: min(100%, 44rem);
+  margin-top: 1.75rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primary) 34%, var(--border));
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--surface-foreground);
+  padding: clamp(1.15rem, 2.4vw, 1.65rem);
+}
+
+.campaignCard::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5rem;
+  height: 5rem;
+  border-top: 1px solid color-mix(in srgb, var(--primary) 62%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--primary) 62%, transparent);
+  pointer-events: none;
+  clip-path: polygon(42% 0, 100% 0, 100% 58%);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.campaignHeader,
+.campaignFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.campaignEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: color-mix(in srgb, var(--surface-foreground) 72%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.campaignEyebrow span {
+  display: block;
+  width: 1.75rem;
+  height: 2px;
+  background: var(--primary);
+}
+
+.spotBadge {
+  flex: none;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #071010;
+  padding: 0.42rem 0.72rem;
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.spotBadge strong {
+  font-family: var(--font-mono);
+}
+
+.campaignHeading {
+  max-width: 19ch;
+  margin-top: 1rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.campaignDescription {
+  max-width: 62ch;
+  margin-top: 0.75rem;
+  color: color-mix(in srgb, var(--surface-foreground) 78%, transparent);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.campaignFooter {
+  align-items: flex-end;
+  margin-top: 1rem;
+}
+
+.campaignSupport {
+  max-width: 42ch;
+  color: color-mix(in srgb, var(--surface-foreground) 60%, transparent);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.campaignCta,
+.submitButton,
+.successState button {
+  min-height: 3rem;
+  cursor: pointer;
+  border: 0;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #071010;
+  font-weight: 800;
+  transition:
+    background-color 180ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.campaignCta {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.campaignCta:hover,
+.submitButton:hover,
+.successState button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.campaignCta:focus-visible,
+.submitButton:focus-visible,
+.successState button:focus-visible,
+.modalClose:focus-visible,
+.offerForm input:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: rgba(0, 0, 0, 0.76);
+  padding: max(1rem, env(safe-area-inset-top)) 1rem
+    max(1rem, env(safe-area-inset-bottom));
+  backdrop-filter: blur(10px);
+}
+
+.modalDialog {
+  width: min(100%, 34rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  border: 0;
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--surface-foreground);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.52);
+}
+
+.modalHeader {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--surface-foreground) 10%, transparent);
+  background: var(--surface);
+  padding: 1rem clamp(1.15rem, 4vw, 1.75rem);
+}
+
+.modalEyebrow {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.modalClose {
+  display: grid;
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  place-items: center;
+  border: 1px solid
+    color-mix(in srgb, var(--surface-foreground) 18%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--surface-foreground);
+  font-size: 1.55rem;
+  line-height: 1;
+  transition:
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.modalClose:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.modalIntro,
+.offerForm,
+.successState {
+  padding-inline: clamp(1.15rem, 4vw, 1.75rem);
+}
+
+.modalIntro {
+  padding-top: 1.5rem;
+}
+
+.modalIntro h2,
+.successState h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 7vw, 2.75rem);
+  font-weight: 850;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.modalIntro p,
+.successState p {
+  margin-top: 0.75rem;
+  color: color-mix(in srgb, var(--surface-foreground) 70%, transparent);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+.offerForm {
+  display: grid;
+  gap: 1rem;
+  padding-block: 1.35rem 1.5rem;
+}
+
+.offerForm label {
+  display: grid;
+  gap: 0.5rem;
+  color: color-mix(in srgb, var(--surface-foreground) 84%, transparent);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.labelLine {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.labelLine small {
+  color: color-mix(in srgb, var(--surface-foreground) 50%, transparent);
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.offerForm input {
+  min-height: 3.15rem;
+  width: 100%;
+  border: 1px solid
+    color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, black 32%, var(--surface));
+  color: var(--surface-foreground);
+  padding: 0.78rem 0.9rem;
+  font: inherit;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 180ms ease;
+}
+
+.offerForm input::placeholder {
+  color: color-mix(in srgb, var(--surface-foreground) 46%, transparent);
+}
+
+.offerForm input:hover,
+.offerForm input:focus {
+  border-color: var(--primary);
+}
+
+.submitButton {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.8rem 1.1rem;
+  font-size: 0.88rem;
+}
+
+.submitButton:disabled {
+  cursor: wait;
+  opacity: 0.62;
+  transform: none;
+}
+
+.reassurance {
+  color: color-mix(in srgb, var(--surface-foreground) 60%, transparent);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.formError {
+  border-radius: 8px;
+  background: rgba(185, 28, 28, 0.22);
+  color: #fecaca;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.successState {
+  padding-block: clamp(2rem, 8vw, 3.5rem);
+  outline: none;
+  text-align: center;
+}
+
+.successMark {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1.25rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #071010;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.successState button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .campaignCard {
+    margin-top: 1.35rem;
+  }
+
+  .campaignHeader,
+  .campaignFooter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .campaignHeader {
+    gap: 0.8rem;
+  }
+
+  .spotBadge {
+    align-self: flex-start;
+  }
+
+  .campaignHeading {
+    margin-top: 0.85rem;
+  }
+
+  .campaignCta {
+    width: 100%;
+  }
+
+  .modalOverlay {
+    align-items: flex-start;
+    padding-inline: 0.75rem;
+  }
+
+  .modalDialog {
+    max-height: calc(100dvh - 2rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .campaignCta,
+  .submitButton,
+  .successState button {
+    transition-duration: 1ms;
+  }
+
+  .campaignCta:hover,
+  .submitButton:hover,
+  .successState button:hover {
+    transform: none;
+  }
+}

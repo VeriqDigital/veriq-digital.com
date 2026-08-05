@@ -3,7 +3,7 @@ import { siteConfig } from "@/config/site";
 import { Resend } from "resend";
 import { z } from "zod";
 
-const leadSchema = z.object({
+const contactLeadSchema = z.object({
   type: z.literal("contact"),
   name: z.string().trim().min(1).max(120),
   email: z.email(),
@@ -12,10 +12,27 @@ const leadSchema = z.object({
   message: z.string().trim().min(1).max(2000),
 });
 
+const freeLandingPageLeadSchema = z.object({
+  type: z.literal("free-landing-page"),
+  businessName: z.string().trim().min(1).max(120),
+  email: z.email(),
+  website: z.union([z.literal(""), z.url().max(2048)]).optional(),
+  source: z.literal("facebook-free-landing-page"),
+  offer: z.literal("free-landing-page"),
+  page: z.literal("homepage"),
+  submittedAt: z.iso.datetime(),
+});
+
+const leadSchema = z.discriminatedUnion("type", [
+  contactLeadSchema,
+  freeLandingPageLeadSchema,
+]);
+
 type Lead = z.infer<typeof leadSchema>;
 
 const leadLabels: Record<Lead["type"], string> = {
   contact: "Contact message",
+  "free-landing-page": "Free landing page campaign lead",
 };
 
 const estimatedValuesByBudget: Record<string, number> = {
@@ -26,6 +43,19 @@ const estimatedValuesByBudget: Record<string, number> = {
 };
 
 const formatLeadForOwner = (lead: Lead) => {
+  if (lead.type === "free-landing-page") {
+    return [
+      `Type: ${leadLabels[lead.type]}`,
+      `Business name: ${lead.businessName}`,
+      `Email: ${lead.email}`,
+      `Website: ${lead.website || "Not provided"}`,
+      `Source: ${lead.source}`,
+      `Offer: ${lead.offer}`,
+      `Page: ${lead.page}`,
+      `Submitted at: ${lead.submittedAt}`,
+    ].join("\n");
+  }
+
   const rows: string[] = [
     `Type: ${leadLabels[lead.type]}`,
     `Name: ${lead.name}`,
@@ -45,8 +75,46 @@ const formatLeadForOwner = (lead: Lead) => {
   return rows.join("\n");
 };
 
-const getAutoReplyText = () =>
-  `Thanks for contacting ${siteConfig.name}. We received your message and will get back to you within one business day.`;
+const getLeadHomePayload = (lead: Lead) => {
+  if (lead.type === "free-landing-page") {
+    return {
+      name: lead.businessName,
+      email: lead.email,
+      company: lead.businessName,
+      message: [
+        "Free landing page promotion submission",
+        `Website: ${lead.website || "Not provided"}`,
+        `Source: ${lead.source}`,
+        `Offer: ${lead.offer}`,
+        `Page: ${lead.page}`,
+        `Submitted at: ${lead.submittedAt}`,
+      ].join("\n"),
+      website: lead.website || undefined,
+      source: lead.source,
+      metadata: {
+        offer: lead.offer,
+        page: lead.page,
+        submittedAt: lead.submittedAt,
+      },
+    };
+  }
+
+  return {
+    name: lead.name,
+    email: lead.email,
+    phone: lead.phone,
+    company: siteConfig.name,
+    message: lead.message,
+    estimatedValue: lead.topic
+      ? estimatedValuesByBudget[lead.topic]
+      : undefined,
+  };
+};
+
+const getAutoReplyText = (lead: Lead) =>
+  lead.type === "free-landing-page"
+    ? "You’re on the list. I’ll review your business and follow up personally by email."
+    : `Thanks for contacting ${siteConfig.name}. We received your message and will get back to you within one business day.`;
 
 export async function POST(request: Request) {
   const apiKey = process.env.RESEND_API_KEY;
@@ -103,16 +171,7 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
         "Idempotency-Key": idempotencyKey,
       },
-      body: JSON.stringify({
-        name: lead.name,
-        email: lead.email,
-        phone: lead.phone,
-        company: siteConfig.name,
-        message: lead.message,
-        estimatedValue: lead.topic
-          ? estimatedValuesByBudget[lead.topic]
-          : undefined,
-      }),
+      body: JSON.stringify(getLeadHomePayload(lead)),
       cache: "no-store",
     }),
     resend.emails.send({
@@ -175,8 +234,11 @@ export async function POST(request: Request) {
     .send({
       from: fromEmail,
       to: lead.email,
-      subject: "We received your request",
-      text: getAutoReplyText(),
+      subject:
+        lead.type === "free-landing-page"
+          ? "You’re on the free landing page list"
+          : "We received your request",
+      text: getAutoReplyText(lead),
     })
     .catch((error: unknown) => ({ error }));
 
