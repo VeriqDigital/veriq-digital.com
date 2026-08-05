@@ -1,11 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import { faqs } from "@/data/faq";
 
 const FAQ = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-
   return (
     <div className="flex flex-col gap-8">
       <div>
@@ -17,31 +12,25 @@ const FAQ = () => {
         </h2>
       </div>
       <div className="grid items-start gap-5 md:grid-cols-2">
-        {faqs.map((item, index) => {
-          const isOpen = openIndex === index;
-
-          return (
-            <button
-              key={item.question}
-              type="button"
-              onClick={() => setOpenIndex(isOpen ? null : index)}
-              className="flex w-full cursor-pointer items-stretch self-start text-left transition duration-200 hover:scale-[1.01]"
-              aria-expanded={isOpen}
-            >
-              <div className="w-full rounded-lg border border-white/10 bg-(--surface) p-5 text-(--surface-foreground)">
-                <div className="flex items-start justify-between gap-4">
-                  <span className="font-heading text-xs font-black uppercase tracking-[0.3em]">
-                    {item.question}
-                  </span>
-                  <span className="text-xl leading-none">
-                    {isOpen ? "x" : "+"}
-                  </span>
-                </div>
-                {isOpen && <p className="pt-4 text-white/65">{item.answer}</p>}
-              </div>
-            </button>
-          );
-        })}
+        {faqs.map((item, index) => (
+          <details
+            key={item.question}
+            name="homepage-faq"
+            open={index === 0}
+            className="group w-full self-start rounded-lg border border-white/10 bg-(--surface) text-(--surface-foreground) transition duration-200 hover:scale-[1.01]"
+          >
+            <summary className="flex cursor-pointer list-none items-start justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
+              <span className="font-heading text-xs font-black uppercase tracking-[0.3em]">
+                {item.question}
+              </span>
+              <span className="text-xl leading-none group-open:hidden">+</span>
+              <span className="hidden text-xl leading-none group-open:inline">
+                x
+              </span>
+            </summary>
+            <p className="px-5 pb-5 text-white/65">{item.answer}</p>
+          </details>
+        ))}
       </div>
     </div>
   );

@@ -84,8 +84,8 @@ export default async function ProjectPage({ params }: WorkPageProps) {
             src={project.image}
             alt={project.imageAlt}
             fill
-            priority
-            sizes="(max-width: 1280px) 100vw, 1280px"
+            preload
+            sizes="(max-width: 1280px) calc(100vw - 3rem), 1232px"
             className="object-cover"
           />
         </div>

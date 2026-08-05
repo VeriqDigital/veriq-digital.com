@@ -99,6 +99,18 @@ body {
   outline-offset: 3px;
 }
 
+.theme-icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-icon-sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-icon-moon {
+  display: none;
+}
+
 .site-navbar {
   transform: translate3d(0, -100%, 0);
   border-bottom: 1px solid transparent;

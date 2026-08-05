@@ -11,7 +11,9 @@ const ServicesBackdrop = () => {
 
     if (
       !backdrop ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce), (pointer: coarse), (hover: none)",
+      ).matches
     ) {
       return;
     }

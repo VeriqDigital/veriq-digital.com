@@ -1,12 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
-import LeadModal from "@/components/layout/LeadModal";
 import useLeadModal from "@/components/layout/useLeadModal";
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import { primaryCta } from "@/config/site";
 import styles from "./Hero.module.css";
+
+const LeadModal = dynamic(() => import("@/components/layout/LeadModal"));
 
 const Hero = () => {
   const heroRef = useRef<HTMLElement>(null);
@@ -25,7 +27,9 @@ const Hero = () => {
 
     if (
       !hero ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce), (pointer: coarse), (hover: none)",
+      ).matches
     ) {
       return;
     }

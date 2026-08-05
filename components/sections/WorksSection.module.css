@@ -4,13 +4,13 @@
 }
 
 .wireBackdrop {
-  --works-scroll-x: 0px;
-  --works-scroll-y: 0px;
+  --works-scroll-x: 35px;
+  --works-scroll-y: -55px;
   --works-pointer-x: 0px;
   --works-pointer-y: 0px;
-  --works-rotate: 0deg;
-  --works-tracer-left: 86%;
-  --works-tracer-top: 28%;
+  --works-rotate: -22deg;
+  --works-tracer-left: 65%;
+  --works-tracer-top: 22.8%;
   position: absolute;
   z-index: -1;
   top: clamp(1rem, 4vw, 4rem);
@@ -308,7 +308,7 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce), (pointer: coarse), (hover: none) {
   .wireBackdrop {
     transform: none;
     transition: none;

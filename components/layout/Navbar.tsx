@@ -1,11 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { navigation, primaryCta, siteConfig } from "@/config/site";
-import LeadModal from "./LeadModal";
 import type { ModalType } from "./LeadModal";
 import useLeadModal from "./useLeadModal";
+
+const LeadModal = dynamic(() => import("./LeadModal"));
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,15 +31,31 @@ const Navbar = () => {
     let resetTimer: ReturnType<typeof setTimeout> | null = null;
     let downwardDistance = 0;
     let upwardDistance = 0;
+    let scrolled = false;
+    let visible = true;
+
+    const updateScrolledState = (nextScrolled: boolean) => {
+      if (scrolled !== nextScrolled) {
+        scrolled = nextScrolled;
+        setIsScrolled(nextScrolled);
+      }
+    };
+
+    const updateVisibleState = (nextVisible: boolean) => {
+      if (visible !== nextVisible) {
+        visible = nextVisible;
+        setIsVisible(nextVisible);
+      }
+    };
 
     const updateNavbar = () => {
       const currentScrollY = window.scrollY;
       const difference = currentScrollY - lastScrollY.current;
 
-      setIsScrolled(currentScrollY > 8);
+      updateScrolledState(currentScrollY > 8);
 
       if (currentScrollY <= 8) {
-        setIsVisible(true);
+        updateVisibleState(true);
         downwardDistance = 0;
         upwardDistance = 0;
       } else if (difference > 0) {
@@ -45,7 +63,7 @@ const Navbar = () => {
         upwardDistance = 0;
 
         if (currentScrollY > 72 && downwardDistance >= 300) {
-          setIsVisible(false);
+          updateVisibleState(false);
           downwardDistance = 0;
         }
       } else if (difference < 0) {
@@ -53,7 +71,7 @@ const Navbar = () => {
         downwardDistance = 0;
 
         if (upwardDistance >= 40) {
-          setIsVisible(true);
+          updateVisibleState(true);
           upwardDistance = 0;
         }
       }
@@ -79,6 +97,7 @@ const Navbar = () => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    updateNavbar();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -120,14 +139,6 @@ const Navbar = () => {
       data-scrolled={isScrolled}
       data-visible={isVisible || isMenuOpen}
     >
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 z-0 transition duration-300 ${
-          isScrolled
-            ? "bg-white/10 backdrop-blur-2xl"
-            : "bg-transparent backdrop-blur-none"
-        }`}
-      />
       <nav className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-8 px-6 sm:px-10 lg:px-14 xl:px-20">
         <Link
           href="/"

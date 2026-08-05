@@ -44,8 +44,8 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
                 fill
                 sizes={
                   index === 0
-                    ? "(max-width: 768px) 100vw, 66vw"
-                    : "(max-width: 768px) 100vw, 42vw"
+                    ? "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 55vw, 700px"
+                    : "(max-width: 540px) calc(100vw - 3rem), (max-width: 800px) 75vw, (max-width: 1280px) 30vw, 380px"
                 }
                 className={styles.image}
               />
