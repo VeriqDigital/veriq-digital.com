@@ -25,6 +25,8 @@ const oswald = Oswald({
 
 const isPreviewDeployment = process.env.VERCEL_ENV === "preview";
 
+const themeInitScript = `try{var root=document.documentElement;var savedTheme=localStorage.getItem("theme");var theme=savedTheme==="light"||savedTheme==="dark"?savedTheme:window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";var themeColor=theme==="dark"?"#1a1c1e":"#f7f7f5";root.dataset.theme=theme;root.style.backgroundColor=themeColor;root.style.colorScheme=theme;var themeColorMeta=document.querySelectorAll('meta[name="theme-color"]');for(var i=0;i<themeColorMeta.length;i++){themeColorMeta[i].setAttribute("content",themeColor)}window.addEventListener("load",function(){root.style.removeProperty("background-color");root.style.removeProperty("color-scheme")},{once:true})}catch{document.documentElement.dataset.theme=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}`;
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.defaultTitle,
@@ -68,6 +70,11 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   minimumScale: 1,
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f7f5" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1c1e" },
+  ],
 };
 
 export default function RootLayout({
@@ -82,9 +89,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {`try{var savedTheme=localStorage.getItem('theme');document.documentElement.dataset.theme=savedTheme==='dark'?'dark':'light'}catch{document.documentElement.dataset.theme='light'}`}
-        </Script>
+        <script
+          id="theme-init"
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
         <Script id="meta-pixel" strategy="lazyOnload">
           {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1599699858459369');fbq('track','PageView');`}
         </Script>

@@ -35,6 +35,23 @@
   --primary-hover: #40c5c5;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --background: #1a1c1e;
+    --surface: #24272a;
+    --surface-hover: #2d3135;
+    --surface-foreground: #f4f5f5;
+    --foreground: #f4f5f5;
+    --muted: #aeb3b7;
+    --nav-text: #f4f5f5;
+    --nav-muted: rgba(244, 245, 245, 0.78);
+    --border: #3a3e42;
+    --primary: #4ef2f2;
+    --primary-hover: #40c5c5;
+  }
+}
+
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -47,6 +64,7 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: var(--background);
 }
 
 body {

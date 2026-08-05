@@ -7,9 +7,21 @@ const ThemeToggle = () => {
     const currentTheme: Theme =
       document.documentElement.dataset.theme === "dark" ? "dark" : "light";
     const nextTheme: Theme = currentTheme === "light" ? "dark" : "light";
+    const themeColor = nextTheme === "dark" ? "#1a1c1e" : "#f7f7f5";
+    const root = document.documentElement;
 
-    document.documentElement.dataset.theme = nextTheme;
-    window.localStorage.setItem("theme", nextTheme);
+    root.dataset.theme = nextTheme;
+    root.style.removeProperty("background-color");
+    root.style.removeProperty("color-scheme");
+    document
+      .querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
+      .forEach((meta) => meta.setAttribute("content", themeColor));
+
+    try {
+      window.localStorage.setItem("theme", nextTheme);
+    } catch {
+      // The selected theme still applies when storage is unavailable.
+    }
   };
 
   return (
