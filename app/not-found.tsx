@@ -4,7 +4,7 @@ import styles from "./not-found.module.css";
 
 export default function NotFound() {
   return (
-    <main className={styles.page}>
+    <main id="main-content" className={styles.page}>
       <div className={styles.grid} aria-hidden="true" />
 
       <Container>

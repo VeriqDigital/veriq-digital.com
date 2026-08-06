@@ -194,8 +194,8 @@
 .modalClose {
   display: grid;
   flex: none;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   cursor: pointer;
   place-items: center;
   border: 1px solid
@@ -266,7 +266,7 @@
 }
 
 .labelLine small {
-  color: color-mix(in srgb, var(--surface-foreground) 50%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 62%, transparent);
   font-size: 0.7rem;
   font-weight: 500;
 }
@@ -287,7 +287,7 @@
 }
 
 .offerForm input::placeholder {
-  color: color-mix(in srgb, var(--surface-foreground) 46%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 62%, transparent);
 }
 
 .offerForm input:hover,

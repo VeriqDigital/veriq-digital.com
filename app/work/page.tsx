@@ -11,10 +11,10 @@ export const metadata = createPageMetadata({
 
 export default function WorkPage() {
   return (
-    <div className="pt-20">
+    <main id="main-content" className="pt-20">
       <Section>
         <WorksSection headingLevel="h1" />
       </Section>
-    </div>
+    </main>
   );
 }

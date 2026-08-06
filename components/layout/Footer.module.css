@@ -74,7 +74,7 @@
 .brand > span {
   margin-top: auto;
   padding-top: 3rem;
-  color: color-mix(in srgb, var(--surface-foreground) 35%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 650;
@@ -94,7 +94,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: color-mix(in srgb, var(--surface-foreground) 45%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 650;
@@ -141,7 +141,7 @@
 
 .linkGrid a > span {
   align-self: start;
-  color: color-mix(in srgb, var(--surface-foreground) 35%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 500;
@@ -173,7 +173,7 @@
 }
 
 .email > span {
-  color: color-mix(in srgb, var(--surface-foreground) 45%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 650;
@@ -203,7 +203,7 @@
   justify-content: space-between;
   gap: 2rem;
   padding-top: 2rem;
-  color: color-mix(in srgb, var(--surface-foreground) 45%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 650;

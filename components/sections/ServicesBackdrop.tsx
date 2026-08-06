@@ -35,6 +35,8 @@ const ServicesBackdrop = () => {
         1,
       );
       const tracerAngle = (-35 + progress * 285) * (Math.PI / 180);
+      const tracerStartAngle = -35 * (Math.PI / 180);
+      const backdropWidth = backdrop.offsetWidth;
 
       backdrop.style.setProperty(
         "--backdrop-y",
@@ -45,12 +47,12 @@ const ServicesBackdrop = () => {
         `${-16 + progress * 48}deg`,
       );
       backdrop.style.setProperty(
-        "--tracer-left",
-        `${50 + Math.cos(tracerAngle) * 43}%`,
+        "--tracer-x",
+        `${(Math.cos(tracerAngle) - Math.cos(tracerStartAngle)) * 0.43 * backdropWidth}px`,
       );
       backdrop.style.setProperty(
-        "--tracer-top",
-        `${50 + Math.sin(tracerAngle) * 27}%`,
+        "--tracer-y",
+        `${(Math.sin(tracerAngle) - Math.sin(tracerStartAngle)) * 0.27 * backdropWidth}px`,
       );
       frameId = null;
     };

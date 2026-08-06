@@ -190,7 +190,7 @@
 }
 
 .labelLine small {
-  color: color-mix(in srgb, var(--surface-foreground) 35%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 60%, transparent);
   font-size: 0.66rem;
   font-weight: 450;
 }
@@ -220,7 +220,7 @@
 
 .form input::placeholder,
 .form textarea::placeholder {
-  color: color-mix(in srgb, var(--surface-foreground) 34%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 60%, transparent);
 }
 
 .form input:focus,
@@ -243,7 +243,7 @@
 
 .formFooter > p {
   max-width: 19rem;
-  color: color-mix(in srgb, var(--surface-foreground) 42%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 60%, transparent);
   font-size: 0.7rem;
   line-height: 1.5;
 }

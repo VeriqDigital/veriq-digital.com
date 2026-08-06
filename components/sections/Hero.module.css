@@ -7,10 +7,10 @@
   --scene-scroll-x: 0px;
   --scene-scroll-y: 0px;
   --scene-rotate: -8deg;
-  --node-cyan-left: 75.2%;
-  --node-cyan-top: 27.9%;
-  --node-dark-left: 15.6%;
-  --node-dark-top: 67.8%;
+  --node-cyan-x: 0px;
+  --node-cyan-y: 0px;
+  --node-dark-x: 0px;
+  --node-dark-y: 0px;
   position: relative;
   isolation: isolate;
   min-height: 100svh;
@@ -157,8 +157,7 @@
 .nodeDark {
   position: absolute;
   z-index: 2;
-  transform: translate(-50%, -50%);
-  will-change: left, top;
+  will-change: transform;
 }
 
 .nodeCyan span,
@@ -171,10 +170,15 @@
 }
 
 .nodeCyan {
-  top: var(--node-cyan-top);
-  left: var(--node-cyan-left);
+  top: 27.9%;
+  left: 75.2%;
   width: clamp(1.1rem, 2vw, 2rem);
   aspect-ratio: 1;
+  transform: translate3d(
+    calc(-50% + var(--node-cyan-x)),
+    calc(-50% + var(--node-cyan-y)),
+    0
+  );
 }
 
 .nodeCyan span {
@@ -183,10 +187,15 @@
 }
 
 .nodeDark {
-  top: var(--node-dark-top);
-  left: var(--node-dark-left);
+  top: 67.8%;
+  left: 15.6%;
   width: clamp(0.7rem, 1.25vw, 1.25rem);
   aspect-ratio: 1;
+  transform: translate3d(
+    calc(-50% + var(--node-dark-x)),
+    calc(-50% + var(--node-dark-y)),
+    0
+  );
 }
 
 .nodeDark span {

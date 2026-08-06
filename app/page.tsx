@@ -27,22 +27,24 @@ export default function Home() {
           __html: serializeJsonLd(siteStructuredData),
         }}
       />
-      <Hero
-        campaign={
-          homepageCampaign.enabled ? (
-            <HomepageCampaignOffer campaign={homepageCampaign} />
-          ) : null
-        }
-      />
-      <Section id="services" compactTop>
-        <ServicesSection />
-      </Section>
-      <Section id="works">
-        <Works />
-      </Section>
-      <Section id="faq">
-        <FAQ />
-      </Section>
+      <main id="main-content">
+        <Hero
+          campaign={
+            homepageCampaign.enabled ? (
+              <HomepageCampaignOffer campaign={homepageCampaign} />
+            ) : null
+          }
+        />
+        <Section id="services" compactTop>
+          <ServicesSection />
+        </Section>
+        <Section id="works">
+          <Works />
+        </Section>
+        <Section id="faq">
+          <FAQ />
+        </Section>
+      </main>
       <Analytics />
       <SpeedInsights />
     </>

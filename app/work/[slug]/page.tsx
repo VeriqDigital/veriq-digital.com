@@ -46,18 +46,18 @@ export default async function ProjectPage({ params }: WorkPageProps) {
   const nextProject = projects[(currentIndex + 1) % projects.length];
 
   return (
-    <main className="pb-24 pt-36 md:pt-44">
+    <main id="main-content" className="pb-24 pt-36 md:pt-44">
       <Container>
         <Link
           href="/work"
-          className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--muted) transition hover:text-(--primary)"
+          className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--muted) transition hover:text-(--primary-readable)"
         >
           ← All work
         </Link>
 
         <header className="grid gap-8 pb-12 pt-8 md:grid-cols-[1fr_0.55fr] md:items-end md:pb-16">
           <div>
-            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--primary)">
+            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--primary-readable)">
               {project.category} · {project.year}
             </p>
             <h1 className="max-w-5xl font-heading text-6xl font-black uppercase leading-[0.9] tracking-[-0.04em] md:text-8xl lg:text-9xl">
@@ -92,7 +92,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
 
         <section className="mt-5 grid gap-10 rounded-xl border border-black/5 bg-[color-mix(in_srgb,var(--foreground)_4%,var(--background))] p-6 md:grid-cols-[1.25fr_0.75fr] md:p-10 lg:p-14">
           <div>
-            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--primary)">
+            <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--primary-readable)">
               About the project
             </p>
             <h2 className="font-heading text-4xl font-black uppercase md:text-5xl">
@@ -139,7 +139,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
 
         <section className="grid gap-12 py-20 md:grid-cols-2 md:gap-20 md:py-28">
           <div>
-            <span className="font-mono text-xs font-semibold text-(--primary)">
+            <span className="font-mono text-xs font-semibold text-(--primary-readable)">
               01
             </span>
             <h2 className="mt-4 font-heading text-4xl font-black uppercase md:text-6xl">
@@ -150,7 +150,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
             </p>
           </div>
           <div className="md:pt-24">
-            <span className="font-mono text-xs font-semibold text-(--primary)">
+            <span className="font-mono text-xs font-semibold text-(--primary-readable)">
               02
             </span>
             <h2 className="mt-4 font-heading text-4xl font-black uppercase md:text-6xl">
@@ -169,7 +169,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
           <span className="font-mono text-xs uppercase tracking-[0.14em] text-(--muted)">
             Next project
           </span>
-          <span className="mt-3 flex items-center justify-between gap-6 font-heading text-4xl font-black uppercase transition group-hover:text-(--primary) md:text-7xl">
+          <span className="mt-3 flex items-center justify-between gap-6 font-heading text-4xl font-black uppercase transition group-hover:text-(--primary-readable) md:text-7xl">
             {nextProject.title}
             <i className="font-sans text-3xl font-normal not-italic md:text-5xl">
               ↗

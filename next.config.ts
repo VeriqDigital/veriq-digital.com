@@ -42,6 +42,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  experimental: {
+    webVitalsAttribution: isDevelopment ? ["CLS", "LCP", "INP"] : [],
+  },
   images: {
     qualities: [75, 100],
   },

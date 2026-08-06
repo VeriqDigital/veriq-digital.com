@@ -139,7 +139,10 @@ const Navbar = () => {
       data-scrolled={isScrolled}
       data-visible={isVisible || isMenuOpen}
     >
-      <nav className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-8 px-6 sm:px-10 lg:px-14 xl:px-20">
+      <nav
+        className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-8 px-6 sm:px-10 lg:px-14 xl:px-20"
+        aria-label="Primary"
+      >
         <Link
           href="/"
           className="font-heading text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
@@ -153,7 +156,7 @@ const Navbar = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary) lg:text-xl"
+                className="text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) lg:text-xl"
               >
                 {item.label}
               </Link>
@@ -162,7 +165,7 @@ const Navbar = () => {
                 key={item.label}
                 type="button"
                 onClick={() => openModal(item.modal)}
-                className="cursor-pointer text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary) lg:text-xl"
+                className="cursor-pointer text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) lg:text-xl"
               >
                 {item.label}
               </button>
@@ -181,10 +184,11 @@ const Navbar = () => {
 
           <button
             type="button"
-            className="cursor-pointer flex size-11 items-center justify-center rounded-full border border-current/15 text-(--nav-muted) transition hover:border-(--primary) hover:text-(--primary) md:hidden"
+            className="cursor-pointer flex size-11 items-center justify-center rounded-full border border-current/15 text-(--nav-muted) transition hover:border-(--primary-readable) hover:text-(--primary-readable) md:hidden"
             aria-label={
               isMenuOpen ? "Close navigation menu" : "Open navigation menu"
             }
+            aria-controls="mobile-navigation"
             aria-expanded={isMenuOpen}
             onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
           >
@@ -198,7 +202,11 @@ const Navbar = () => {
       </nav>
 
       {isMenuOpen && (
-        <div className="absolute inset-x-4 top-full rounded-lg border border-white/10 bg-black/88 p-2 text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:hidden">
+        <nav
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+          className="absolute inset-x-4 top-full rounded-lg border border-white/10 bg-black/88 p-2 text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:hidden"
+        >
           <div className="grid gap-1">
             {navigation.map((item) =>
               "href" in item ? (
@@ -222,7 +230,7 @@ const Navbar = () => {
               ),
             )}
           </div>
-        </div>
+        </nav>
       )}
 
       {activeModal && (

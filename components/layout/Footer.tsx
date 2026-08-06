@@ -43,7 +43,7 @@ const Footer = () => {
         <div className={styles.bottom}>
           <p>&copy; 2026 {siteConfig.name}. All rights reserved.</p>
           <span aria-hidden="true" />
-          <p className="mt-1 normal-case text-white/45">
+          <p className="mt-1 normal-case">
             Website designed by{" "}
             <Link
               href="https://www.veriqdigital.com/"

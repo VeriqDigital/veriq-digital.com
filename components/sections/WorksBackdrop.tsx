@@ -37,6 +37,8 @@ const WorksBackdrop = () => {
         1,
       );
       const tracerAngle = (-70 + progress * 310) * (Math.PI / 180);
+      const tracerStartAngle = -70 * (Math.PI / 180);
+      const backdropWidth = backdrop.offsetWidth;
 
       backdrop.style.setProperty(
         "--works-scroll-x",
@@ -53,12 +55,12 @@ const WorksBackdrop = () => {
       backdrop.style.setProperty("--works-pointer-x", `${pointerX}px`);
       backdrop.style.setProperty("--works-pointer-y", `${pointerY}px`);
       backdrop.style.setProperty(
-        "--works-tracer-left",
-        `${50 + Math.cos(tracerAngle) * 44}%`,
+        "--works-tracer-x",
+        `${(Math.cos(tracerAngle) - Math.cos(tracerStartAngle)) * 0.44 * backdropWidth}px`,
       );
       backdrop.style.setProperty(
-        "--works-tracer-top",
-        `${50 + Math.sin(tracerAngle) * 29}%`,
+        "--works-tracer-y",
+        `${(Math.sin(tracerAngle) - Math.sin(tracerStartAngle)) * 0.29 * backdropWidth}px`,
       );
       frameId = null;
     };

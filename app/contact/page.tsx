@@ -16,7 +16,7 @@ export default function ContactPage() {
   const phoneHref = `tel:${siteConfig.contact.phoneE164}`;
 
   return (
-    <main className={styles.page}>
+    <main id="main-content" className={styles.page}>
       <Container>
         <div className={styles.layout}>
           <section className={styles.intro} aria-labelledby="contact-title">

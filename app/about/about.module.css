@@ -135,8 +135,12 @@
 }
 
 .textLink:hover {
-  border-color: var(--primary);
-  color: color-mix(in srgb, var(--foreground) 68%, var(--primary));
+  border-color: var(--primary-readable);
+  color: color-mix(
+    in srgb,
+    var(--foreground) 68%,
+    var(--primary-readable)
+  );
 }
 
 .heroAside {

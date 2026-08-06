@@ -4,7 +4,7 @@ const FAQ = () => {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <p className="text-sm font-bold uppercase tracking-[0.3em] text-(--primary)">
+        <p className="text-sm font-bold uppercase tracking-[0.3em] text-(--primary-readable)">
           FAQ
         </p>
         <h2 className="mt-4 font-heading text-4xl font-black uppercase text-(--foreground) md:text-6xl">
@@ -23,8 +23,16 @@ const FAQ = () => {
               <span className="font-heading text-xs font-black uppercase tracking-[0.3em]">
                 {item.question}
               </span>
-              <span className="text-xl leading-none group-open:hidden">+</span>
-              <span className="hidden text-xl leading-none group-open:inline">
+              <span
+                className="text-xl leading-none group-open:hidden"
+                aria-hidden="true"
+              >
+                +
+              </span>
+              <span
+                className="hidden text-xl leading-none group-open:inline"
+                aria-hidden="true"
+              >
                 x
               </span>
             </summary>

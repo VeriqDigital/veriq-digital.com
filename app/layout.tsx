@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Oswald } from "next/font/google";
 import Script from "next/script";
+import DevelopmentWebVitals from "@/components/analytics/DevelopmentWebVitals";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import CursorGlow from "@/components/ui/CursorGlow";
@@ -24,6 +25,7 @@ const oswald = Oswald({
 });
 
 const isPreviewDeployment = process.env.VERCEL_ENV === "preview";
+const isDevelopment = process.env.NODE_ENV === "development";
 
 const themeInitScript = `try{var root=document.documentElement;var savedTheme=localStorage.getItem("theme");var theme=savedTheme==="light"||savedTheme==="dark"?savedTheme:window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";var themeColor=theme==="dark"?"#1a1c1e":"#f7f7f5";root.dataset.theme=theme;root.style.backgroundColor=themeColor;root.style.colorScheme=theme;var themeColorMeta=document.querySelectorAll('meta[name="theme-color"]');for(var i=0;i<themeColorMeta.length;i++){themeColorMeta[i].setAttribute("content",themeColor)}window.addEventListener("load",function(){root.style.removeProperty("background-color");root.style.removeProperty("color-scheme")},{once:true})}catch{document.documentElement.dataset.theme=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}`;
 
@@ -98,6 +100,10 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="flex min-h-full flex-col">
+        {isDevelopment ? <DevelopmentWebVitals /> : null}
+        <a className="skip-link" href="#main-content">
+          Skip to main content
+        </a>
         <noscript>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

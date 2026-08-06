@@ -9,8 +9,8 @@
   --works-pointer-x: 0px;
   --works-pointer-y: 0px;
   --works-rotate: -22deg;
-  --works-tracer-left: 65%;
-  --works-tracer-top: 22.8%;
+  --works-tracer-x: 0px;
+  --works-tracer-y: 0px;
   position: absolute;
   z-index: -1;
   top: clamp(1rem, 4vw, 4rem);
@@ -68,14 +68,17 @@
 
 .wireTracer {
   position: absolute;
-  top: var(--works-tracer-top);
-  left: var(--works-tracer-left);
+  top: 22.8%;
+  left: 65%;
   width: 0.9rem;
   aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  transition:
-    top 180ms linear,
-    left 180ms linear;
+  transform: translate3d(
+    calc(-50% + var(--works-tracer-x)),
+    calc(-50% + var(--works-tracer-y)),
+    0
+  );
+  transition: transform 180ms linear;
+  will-change: transform;
 }
 
 .wireTracer span {
@@ -228,7 +231,7 @@
 
 .project:focus-visible {
   border-radius: 1rem;
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--primary-readable);
   outline-offset: 5px;
 }
 

@@ -4,6 +4,7 @@ import { track } from "@vercel/analytics";
 import type { FormEvent, KeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import useStableModalPosition from "@/components/ui/useStableModalPosition";
 import { submitLead } from "@/lib/submit-lead";
 import type { CampaignTracking } from "./HomepageCampaignCta";
 import styles from "./HomepageCampaign.module.css";
@@ -37,6 +38,8 @@ const FreeLandingPageModal = ({
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
+
+  useStableModalPosition(dialogRef, isOpen);
 
   useEffect(() => {
     if (!isOpen) {
@@ -98,10 +101,14 @@ const FreeLandingPageModal = ({
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
     const activeElement = document.activeElement;
+    const activeIndex = focusableElements.indexOf(activeElement as HTMLElement);
 
     if (!dialogRef.current.contains(activeElement)) {
       event.preventDefault();
       firstElement.focus();
+    } else if (activeIndex === -1) {
+      event.preventDefault();
+      (event.shiftKey ? lastElement : firstElement).focus();
     } else if (event.shiftKey && activeElement === firstElement) {
       event.preventDefault();
       lastElement.focus();

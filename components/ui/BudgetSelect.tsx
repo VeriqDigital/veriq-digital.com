@@ -111,7 +111,7 @@ const BudgetSelect = ({ labelId = "budget-label" }: BudgetSelectProps) => {
         }
         onClick={() => (isOpen ? setIsOpen(false) : openListbox())}
         onKeyDown={handleKeyDown}
-        className={`flex w-full cursor-pointer items-center justify-between gap-3 rounded-md border bg-black/35 px-3 py-2 text-left text-sm font-medium outline-none transition ${
+        className={`flex w-full cursor-pointer items-center justify-between gap-3 rounded-md border bg-black/35 px-3 py-2 text-left text-sm font-medium outline-none transition focus-visible:border-(--primary) focus-visible:shadow-[0_0_0_3px_rgba(78,242,242,0.2)] ${
           isOpen
             ? "border-(--primary) shadow-[0_0_0_3px_rgba(78,242,242,0.12)]"
             : "border-white/10 hover:border-white/25"

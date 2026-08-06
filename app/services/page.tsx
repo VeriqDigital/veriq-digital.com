@@ -128,7 +128,7 @@ const servicesStructuredData = {
 
 export default function ServicesPage() {
   return (
-    <main className={styles.page}>
+    <main id="main-content" className={styles.page}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

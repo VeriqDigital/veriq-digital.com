@@ -63,7 +63,8 @@
   align-items: center;
   justify-self: end;
   gap: 0.75rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--primary-readable) 65%, transparent);
   padding-bottom: 0.35rem;
   color: var(--muted);
   font-size: 0.82rem;
@@ -72,17 +73,17 @@
 }
 
 .servicesLink span {
-  color: var(--primary);
+  color: var(--primary-readable);
 }
 
 .servicesLink:hover {
-  border-color: var(--primary);
+  border-color: var(--primary-readable);
   color: var(--foreground);
 }
 
 .servicesLink:focus-visible {
   border-radius: 0.25rem;
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--primary-readable);
   outline-offset: 0.35rem;
 }
 
@@ -100,8 +101,8 @@
 .backdrop {
   --backdrop-y: -45px;
   --backdrop-rotate: -16deg;
-  --tracer-left: 85.2%;
-  --tracer-top: 34.5%;
+  --tracer-x: 0px;
+  --tracer-y: 0px;
   position: absolute;
   top: 6rem;
   right: clamp(-15rem, -10vw, -7rem);
@@ -179,12 +180,16 @@
 
 .tracer {
   position: absolute;
-  top: var(--tracer-top);
-  left: var(--tracer-left);
+  top: 34.5%;
+  left: 85.2%;
   width: 1.1rem;
   aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  will-change: top, left;
+  transform: translate3d(
+    calc(-50% + var(--tracer-x)),
+    calc(-50% + var(--tracer-y)),
+    0
+  );
+  will-change: transform;
 }
 
 .tracer span {

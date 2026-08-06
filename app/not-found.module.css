@@ -158,7 +158,7 @@
 
 .primaryAction:focus-visible,
 .secondaryAction:focus-visible {
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--primary-readable);
   outline-offset: 4px;
 }
 

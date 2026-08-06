@@ -17,6 +17,7 @@ type HeroProps = {
 
 const Hero = ({ campaign }: HeroProps) => {
   const heroRef = useRef<HTMLElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
   const {
     activeModal,
     closeModal,
@@ -29,9 +30,11 @@ const Hero = ({ campaign }: HeroProps) => {
 
   useEffect(() => {
     const hero = heroRef.current;
+    const scene = sceneRef.current;
 
     if (
       !hero ||
+      !scene ||
       window.matchMedia(
         "(prefers-reduced-motion: reduce), (pointer: coarse), (hover: none)",
       ).matches
@@ -47,6 +50,9 @@ const Hero = ({ campaign }: HeroProps) => {
       const scrollProgress = Math.min(window.scrollY / hero.offsetHeight, 1);
       const cyanAngle = (-55 + scrollProgress * 250) * (Math.PI / 180);
       const darkAngle = (145 + scrollProgress * 215) * (Math.PI / 180);
+      const sceneWidth = scene.offsetWidth;
+      const cyanStartAngle = -55 * (Math.PI / 180);
+      const darkStartAngle = 145 * (Math.PI / 180);
 
       hero.style.setProperty("--pointer-x", `${pointerX}px`);
       hero.style.setProperty("--pointer-y", `${pointerY}px`);
@@ -63,20 +69,20 @@ const Hero = ({ campaign }: HeroProps) => {
         `${-8 + scrollProgress * 12}deg`,
       );
       hero.style.setProperty(
-        "--node-cyan-left",
-        `${50 + Math.cos(cyanAngle) * 44}%`,
+        "--node-cyan-x",
+        `${(Math.cos(cyanAngle) - Math.cos(cyanStartAngle)) * 0.44 * sceneWidth}px`,
       );
       hero.style.setProperty(
-        "--node-cyan-top",
-        `${50 + Math.sin(cyanAngle) * 27}%`,
+        "--node-cyan-y",
+        `${(Math.sin(cyanAngle) - Math.sin(cyanStartAngle)) * 0.27 * sceneWidth}px`,
       );
       hero.style.setProperty(
-        "--node-dark-left",
-        `${50 + Math.cos(darkAngle) * 42}%`,
+        "--node-dark-x",
+        `${(Math.cos(darkAngle) - Math.cos(darkStartAngle)) * 0.42 * sceneWidth}px`,
       );
       hero.style.setProperty(
-        "--node-dark-top",
-        `${50 + Math.sin(darkAngle) * 31}%`,
+        "--node-dark-y",
+        `${(Math.sin(darkAngle) - Math.sin(darkStartAngle)) * 0.31 * sceneWidth}px`,
       );
       frameId = null;
     };
@@ -113,7 +119,7 @@ const Hero = ({ campaign }: HeroProps) => {
     <section ref={heroRef} className={styles.hero}>
       <div className={styles.ambient} aria-hidden="true" />
       <div className={styles.grid} aria-hidden="true" />
-      <div className={styles.scene} aria-hidden="true">
+      <div ref={sceneRef} className={styles.scene} aria-hidden="true">
         <div className={styles.halo} />
         <div className={styles.orbitOuter} />
         <div className={styles.orbitInner} />
