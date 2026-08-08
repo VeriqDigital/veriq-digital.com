@@ -61,6 +61,28 @@ export const projects: readonly Project[] = [
     team: "Solo project",
     services: ["UX/UI design", "Web development", "Quote flow", "Responsive design"],
   },
+  {
+    slug: "mick-enev",
+    title: "Mick Enev Portfolio",
+    seoTitle: "Mick Enev Portfolio Website",
+    category: "Portfolio website",
+    year: "2026",
+    image: "/work/mick-enev.png",
+    imageAlt:
+      "Mick Enev portfolio website with a dark hero and a grid of project cards",
+    liveUrl: "https://mickenev.com/",
+    summary:
+      "A portfolio website for a software engineer, built to showcase work.",
+    about:
+      "This portfolio website is my own personal portfolio that I remade in 2026 in order to modernize the design and improve site performance.",
+    challenge:
+      "The previous version of my portfolio was built in 2024 and had become outdated in terms of design and performance. I wanted to create a new version that would better showcase my work and skills as a software engineer.",
+    outcome:
+      "The new portfolio website features a modern design, improved performance, and a better user experience. It effectively showcases my work and skills as a software engineer, and has received positive feedback from visitors.",
+    timeframe: "1 week",
+    team: "Solo project",
+    services: ["Creative direction", "Web design", "Frontend development", "Responsive design"],
+  },
 ] as const;
 
 export const getProject = (slug: string) =>

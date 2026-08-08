@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Container from "@/components/ui/Container";
 import { createPageMetadata } from "@/config/seo";
 import { siteConfig } from "@/config/site";
@@ -50,7 +51,7 @@ const reasons = [
   {
     title: "Support beyond launch",
     description:
-      "Launch isn't the finish line. We continue improving your digital presence as your business grows.",
+      "Launch isn&apos;t the finish line. We continue improving your digital presence as your business grows.",
   },
 ] as const;
 
@@ -166,8 +167,18 @@ export default function AboutPage() {
           <div className={styles.founderInner}>
             <div className={styles.founderVisual} aria-hidden="true">
               <span className={styles.founderOrbit} />
-              <span className={styles.founderMonogram}>V</span>
-              <p>Founder-led digital studio</p>
+              <span className={styles.founderMonogram}>
+                <Image
+                  src="/mick.png"
+                  alt="Mick Enev"
+                  fill
+                  sizes="(max-width: 480px) 100vw, (max-width: 720px) 92vw, (max-width: 980px) 44vw, 540px"
+                  quality={100}
+                  priority
+                  className={styles.founderPhoto}
+                />
+              </span>
+              <p className={styles.founderCaption}>Founder-led digital studio</p>
             </div>
 
             <div className={styles.founderCopy}>

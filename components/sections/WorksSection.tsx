@@ -25,8 +25,8 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
           </Heading>
         </div>
         <p>
-          Two self-directed builds exploring how focused design and development
-          can give local businesses a sharper digital presence.
+          Focused digital experiences designed to sharpen brands, simplify
+          interactions, and help businesses make a stronger impression online.
         </p>
       </header>
 
@@ -35,7 +35,7 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
           <Link
             href={`/work/${project.slug}`}
             key={project.slug}
-            className={styles.project}
+            className={`${styles.project} ${index === 0 ? styles.projectPrimary : index === 1 ? styles.projectSecondary : styles.projectTertiary}`}
           >
             <div className={styles.imageWrap}>
               <Image
@@ -44,8 +44,10 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
                 fill
                 sizes={
                   index === 0
-                    ? "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 55vw, 700px"
-                    : "(max-width: 540px) calc(100vw - 3rem), (max-width: 800px) 75vw, (max-width: 1280px) 30vw, 380px"
+                    ? "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 79vw, 980px"
+                    : index === 1
+                    ? "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 66vw, 780px"
+                    : "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 70vw, 900px"
                 }
                 className={styles.image}
               />
@@ -58,7 +60,6 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
                 <h3>{project.title}</h3>
                 <p>{project.category}</p>
               </div>
-              <span>{project.year}</span>
             </div>
           </Link>
         ))}

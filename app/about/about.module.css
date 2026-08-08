@@ -418,24 +418,36 @@
 }
 
 .founderMonogram {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 1;
-  font-family: var(--font-heading);
-  font-size: clamp(10rem, 25vw, 19rem);
-  font-weight: 900;
-  line-height: 0.8;
-  letter-spacing: -0.08em;
+  overflow: hidden;
+  border-radius: inherit;
 }
 
-.founderVisual > p {
+.founderPhoto {
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+.founderCaption {
   position: absolute;
   bottom: 1.75rem;
   left: 1.75rem;
-  z-index: 1;
+  z-index: 2;
+  max-width: calc(100% - 3.5rem);
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 0.5rem;
+  padding: 0.7rem 0.85rem;
+  background: rgb(7 16 17 / 82%);
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 24%);
+  color: #fff;
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 650;
   letter-spacing: 0.13em;
+  line-height: 1.35;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 45%);
   text-transform: uppercase;
 }
 
