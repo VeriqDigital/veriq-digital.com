@@ -1,10 +1,3 @@
-/*
- * THESIS: Present a credible Iowa-only opportunity without competing with the hero’s primary promise.
- * OWN-WORLD: A dark operational panel, cyan availability marker, Oswald heading, and precise mono campaign details.
- * STORY: Visitors recognize the ad offer, understand the honest limit and terms, then claim a spot with one action.
- * FIRST VIEWPORT: The compact panel sits directly below the existing hero CTAs and remains part of server HTML.
- * FORM: A brief-led campaign panel, selected directly for this local extension; no concept seed was needed.
- */
 import HomepageCampaignCta from "@/components/campaign/HomepageCampaignCta";
 import type { HomepageCampaignConfig } from "@/config/site";
 import styles from "./HomepageCampaign.module.css";

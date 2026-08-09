@@ -2,6 +2,7 @@
 
 export type ContactLeadPayload = {
   type: "contact";
+  websiteAddress?: string;
   name: string;
   email: string;
   phone?: string;
@@ -11,10 +12,11 @@ export type ContactLeadPayload = {
 
 export type FreeLandingPageLeadPayload = {
   type: "free-landing-page";
+  websiteAddress?: string;
   businessName: string;
   email: string;
   website?: string;
-  source: "facebook-free-landing-page";
+  source: "homepage-free-landing-page";
   offer: "free-landing-page";
   page: "homepage";
   submittedAt: string;

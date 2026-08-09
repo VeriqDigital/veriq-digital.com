@@ -4,6 +4,7 @@ import { track } from "@vercel/analytics";
 import type { FormEvent, KeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import HoneypotField from "@/components/forms/HoneypotField";
 import useStableModalPosition from "@/components/ui/useStableModalPosition";
 import { submitLead } from "@/lib/submit-lead";
 import type { CampaignTracking } from "./HomepageCampaignCta";
@@ -131,6 +132,7 @@ const FreeLandingPageModal = ({
     const formData = new FormData(event.currentTarget);
     const result = await submitLead({
       type: "free-landing-page",
+      websiteAddress: String(formData.get("websiteAddress") ?? ""),
       businessName: String(formData.get("businessName") ?? ""),
       email: String(formData.get("email") ?? ""),
       website: String(formData.get("website") ?? ""),
@@ -232,6 +234,7 @@ const FreeLandingPageModal = ({
               onSubmit={handleSubmit}
               aria-busy={isSubmitting}
             >
+              <HoneypotField />
               <label>
                 <span>Business name</span>
                 <input

@@ -174,7 +174,7 @@ export default function AboutPage() {
                   fill
                   sizes="(max-width: 480px) 100vw, (max-width: 720px) 92vw, (max-width: 980px) 44vw, 540px"
                   quality={100}
-                  priority
+                  preload
                   className={styles.founderPhoto}
                 />
               </span>

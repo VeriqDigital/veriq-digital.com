@@ -3,6 +3,7 @@
 import type { FormEvent, KeyboardEvent } from "react";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import HoneypotField from "@/components/forms/HoneypotField";
 import BudgetSelect from "@/components/ui/BudgetSelect";
 import useStableModalPosition from "@/components/ui/useStableModalPosition";
 
@@ -196,6 +197,7 @@ const LeadModal = ({
             onSubmit={onSubmit}
             aria-busy={isSubmitting}
           >
+            <HoneypotField />
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block text-sm font-semibold text-white/80">
                 Name

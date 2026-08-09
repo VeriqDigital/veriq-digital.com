@@ -44,7 +44,7 @@ export type HomepageCampaignConfig = {
   description: string;
   supportingText: string;
   ctaLabel: string;
-  source: "facebook-free-landing-page";
+  source: "homepage-free-landing-page";
   offer: "free-landing-page";
   page: "homepage";
 };
@@ -59,20 +59,16 @@ export const homepageCampaign: HomepageCampaignConfig = {
   supportingText:
     "No contracts. No obligation.",
   ctaLabel: "Claim My Spot",
-  source: "facebook-free-landing-page",
+  source: "homepage-free-landing-page",
   offer: "free-landing-page",
   page: "homepage",
 };
 
-export type NavItem =
-  | { label: string; href: string }
-  | { label: string; modal: ModalType };
-
-export const navigation: NavItem[] = [
+export const navigation = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
-];
+] as const satisfies ReadonlyArray<{ label: string; href: string }>;
 
 export const footerLinks = [
   { label: "Services", href: "/services" },

@@ -25,8 +25,8 @@ export const faqs = [
       "We work best with businesses that see their website as more than an online brochure. If you're looking to build trust, improve your digital presence, streamline operations, or create a stronger foundation for growth, we'd love to start the conversation.",
   },
   {
-  question: "Can you work with my existing website or software?",
-  answer:
-    "Absolutely. Not every project starts from scratch. We can improve an existing website, add new features, modernize outdated systems, or build custom software that integrates with the tools your business already relies on.",
-}
+    question: "Can you work with my existing website or software?",
+    answer:
+      "Absolutely. Not every project starts from scratch. We can improve an existing website, add new features, modernize outdated systems, or build custom software that integrates with the tools your business already relies on.",
+  },
 ];

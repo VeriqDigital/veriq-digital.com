@@ -1,28 +1,14 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { navigation, primaryCta, siteConfig } from "@/config/site";
-import type { ModalType } from "./LeadModal";
-import useLeadModal from "./useLeadModal";
-
-const LeadModal = dynamic(() => import("./LeadModal"));
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
-  const {
-    activeModal,
-    closeModal,
-    handleFormSubmit,
-    hasSubmitted,
-    isSubmitting,
-    openModal,
-    submitError,
-  } = useLeadModal();
 
   useEffect(() => {
     lastScrollY.current = window.scrollY;
@@ -128,11 +114,6 @@ const Navbar = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen]);
 
-  const handleModalOpen = (modal: ModalType) => {
-    setIsMenuOpen(false);
-    openModal(modal);
-  };
-
   return (
     <header
       className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-lg"
@@ -151,26 +132,15 @@ const Navbar = () => {
         </Link>
 
         <div className="ml-auto hidden items-center gap-8 md:flex">
-          {navigation.map((item) =>
-            "href" in item ? (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) lg:text-xl"
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => openModal(item.modal)}
-                className="cursor-pointer text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) lg:text-xl"
-              >
-                {item.label}
-              </button>
-            ),
-          )}
+          {navigation.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) lg:text-xl"
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
 
         <div className="flex items-center gap-3">
@@ -208,41 +178,20 @@ const Navbar = () => {
           className="absolute inset-x-4 top-full rounded-lg border border-white/10 bg-black/88 p-2 text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:hidden"
         >
           <div className="grid gap-1">
-            {navigation.map((item) =>
-              "href" in item ? (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="rounded-md px-4 py-3 text-lg font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <button
-                  key={item.label}
-                  type="button"
-                  onClick={() => handleModalOpen(item.modal)}
-                  className="rounded-md px-4 py-3 text-left text-lg font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
-                >
-                  {item.label}
-                </button>
-              ),
-            )}
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsMenuOpen(false)}
+                className="rounded-md px-4 py-3 text-lg font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
         </nav>
       )}
 
-      {activeModal && (
-        <LeadModal
-          activeModal={activeModal}
-          hasSubmitted={hasSubmitted}
-          isSubmitting={isSubmitting}
-          onClose={closeModal}
-          onSubmit={handleFormSubmit}
-          submitError={submitError}
-        />
-      )}
     </header>
   );
 };
