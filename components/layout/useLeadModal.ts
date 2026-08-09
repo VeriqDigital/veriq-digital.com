@@ -49,6 +49,7 @@ const useLeadModal = () => {
     const formData = new FormData(event.currentTarget);
     const payload = {
       type: activeModal,
+      websiteAddress: String(formData.get("websiteAddress") ?? ""),
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       phone: String(formData.get("phone") ?? ""),

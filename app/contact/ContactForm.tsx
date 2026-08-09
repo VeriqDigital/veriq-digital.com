@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { FormEvent } from "react";
+import HoneypotField from "@/components/forms/HoneypotField";
 import BudgetSelect from "@/components/ui/BudgetSelect";
 import { submitLead } from "@/lib/submit-lead";
 import styles from "./contact.module.css";
@@ -19,6 +20,7 @@ const ContactForm = () => {
     const formData = new FormData(form);
     const payload = {
       type: "contact" as const,
+      websiteAddress: String(formData.get("websiteAddress") ?? ""),
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       phone: String(formData.get("phone") ?? ""),
@@ -62,6 +64,7 @@ const ContactForm = () => {
         </div>
       ) : (
         <form className={styles.form} onSubmit={handleSubmit}>
+          <HoneypotField />
           <div className={styles.fieldRow}>
             <label>
               <span>Name</span>
