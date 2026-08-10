@@ -162,7 +162,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className={styles.founder}>
+      <section className={styles.founder} id="founder">
         <Container>
           <div className={styles.founderInner}>
             <div className={styles.founderVisual} aria-hidden="true">

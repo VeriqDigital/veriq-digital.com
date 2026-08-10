@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ResourceAuthor from "@/components/resources/ResourceAuthor";
 import Container from "@/components/ui/Container";
 import articleStyles from "@/components/resources/resources.module.css";
 import { createPageMetadata, serializeJsonLd } from "@/config/seo";
 import { siteConfig } from "@/config/site";
+import { resourceAuthor } from "@/data/resource-author";
 import {
   getRelatedResources,
   getResource,
@@ -53,10 +55,6 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
     ? getResource(article.nextStep.replace("/resources/", ""))
     : undefined;
   const canonicalUrl = `${siteConfig.url}/resources/${article.slug}`;
-  const formattedDate = new Intl.DateTimeFormat("en-US", {
-    dateStyle: "long",
-    timeZone: "UTC",
-  }).format(new Date(`${article.publishedAt}T00:00:00Z`));
   const ArticleContent = article.Content;
   const structuredData = {
     "@context": "https://schema.org",
@@ -67,15 +65,18 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
         headline: article.title,
         description: article.description,
         datePublished: article.publishedAt,
+        ...(article.dateModified
+          ? { dateModified: article.dateModified }
+          : {}),
         mainEntityOfPage: canonicalUrl,
         url: canonicalUrl,
         articleSection: article.category,
         inLanguage: "en-US",
         author: {
-          "@type": "Organization",
-          "@id": `${siteConfig.url}/#organization`,
-          name: siteConfig.name,
-          url: siteConfig.url,
+          "@type": "Person",
+          "@id": resourceAuthor.id,
+          name: resourceAuthor.name,
+          url: resourceAuthor.url,
         },
         publisher: { "@id": `${siteConfig.url}/#organization` },
         image: `${siteConfig.url}/opengraph-image`,
@@ -135,10 +136,10 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
             </div>
             <div className={styles.articleSummary}>
               <p>{article.description}</p>
-              <p className={styles.articleDate}>
-                By <Link href="/">{siteConfig.name}</Link> · Published{" "}
-                <time dateTime={article.publishedAt}>{formattedDate}</time>
-              </p>
+              <ResourceAuthor
+                publishedAt={article.publishedAt}
+                dateModified={article.dateModified}
+              />
             </div>
           </div>
         </Container>

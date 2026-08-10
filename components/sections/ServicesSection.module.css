@@ -58,10 +58,18 @@
   color: var(--muted);
 }
 
-.servicesLink {
+.introLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  justify-self: end;
+  gap: 1rem 1.5rem;
+}
+
+.servicesLink,
+.resourcesLink {
   display: inline-flex;
   align-items: center;
-  justify-self: end;
   gap: 0.75rem;
   border-bottom: 1px solid
     color-mix(in srgb, var(--primary-readable) 65%, transparent);
@@ -72,19 +80,30 @@
   transition: color 200ms ease, border-color 200ms ease;
 }
 
-.servicesLink span {
+.servicesLink span,
+.resourcesLink span {
   color: var(--primary-readable);
 }
 
-.servicesLink:hover {
+.servicesLink:hover,
+.resourcesLink:hover {
   border-color: var(--primary-readable);
   color: var(--foreground);
 }
 
-.servicesLink:focus-visible {
+.servicesLink:focus-visible,
+.resourcesLink:focus-visible {
   border-radius: 0.25rem;
   outline: 3px solid var(--primary-readable);
   outline-offset: 0.35rem;
+}
+
+.resourcesLink {
+  border-bottom-color: color-mix(
+    in srgb,
+    var(--foreground) 25%,
+    transparent
+  );
 }
 
 .serviceGrid {
@@ -307,6 +326,31 @@
   line-height: 1.55;
 }
 
+.cardLink {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.9rem;
+  color: var(--primary);
+  font-size: 0.76rem;
+  font-weight: 750;
+  line-height: 1.25;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--primary) 45%, transparent);
+  text-underline-offset: 0.25rem;
+}
+
+.cardLink:hover {
+  text-decoration-color: currentColor;
+}
+
+.cardLink:focus-visible {
+  border-radius: 0.25rem;
+  outline: 3px solid var(--primary);
+  outline-offset: 0.2rem;
+}
+
 .cardIcon {
   position: absolute;
   top: 1rem;
@@ -364,7 +408,8 @@
     gap: 1.75rem;
   }
 
-  .servicesLink {
+  .introLinks {
+    justify-content: flex-start;
     justify-self: start;
   }
 

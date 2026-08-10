@@ -26,11 +26,20 @@ export type ResourceArticle = {
   intent: string;
   nextStep: string;
   publishedAt: string;
+  /** ISO date for a substantive, verified update; omit for newly published copy. */
+  dateModified?: string;
   tableOfContents: readonly { id: string; label: string }[];
   relatedSlugs: readonly string[];
   Content: ComponentType;
 };
 
+/**
+ * Keyword ownership rule:
+ * `/des-moines-web-design` is the sole primary target for transactional local
+ * service phrases (for example, "Des Moines web design company" or "website
+ * designer Des Moines"). Resources own only the question, cost, comparison,
+ * timeline, or educational intent named by their title and target fields.
+ */
 export const resources: readonly ResourceArticle[] = [
   {
     slug: "how-much-does-a-website-cost-in-des-moines",
@@ -75,9 +84,9 @@ export const resources: readonly ResourceArticle[] = [
     funnel: "Commercial investigation",
     primaryTarget: "how to choose a web designer in Des Moines",
     secondaryTargets: [
-      "local web designer Des Moines",
-      "Des Moines web design company",
-      "website designer Des Moines",
+      "compare Des Moines web designers",
+      "questions to ask a web designer",
+      "evaluating website design providers",
     ],
     intent: "Evaluate providers before hiring.",
     nextStep: "/des-moines-web-design",
@@ -107,9 +116,9 @@ export const resources: readonly ResourceArticle[] = [
     funnel: "Commercial investigation",
     primaryTarget: "local web designer vs large agency",
     secondaryTargets: [
-      "local web designer Des Moines",
       "web design agency comparison",
-      "small business web design Des Moines",
+      "small studio vs large agency",
+      "website provider comparison",
     ],
     intent: "Compare provider models before choosing a partner.",
     nextStep: "/des-moines-web-design",

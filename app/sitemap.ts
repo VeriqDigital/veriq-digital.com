@@ -51,7 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const resourceRoutes: MetadataRoute.Sitemap = resources.map((resource) => ({
     url: `${siteConfig.url}/resources/${resource.slug}`,
-    lastModified: resource.publishedAt,
+    lastModified: resource.dateModified ?? resource.publishedAt,
     changeFrequency: "monthly",
     priority: resource.funnel === "Commercial investigation" ? 0.75 : 0.65,
   }));

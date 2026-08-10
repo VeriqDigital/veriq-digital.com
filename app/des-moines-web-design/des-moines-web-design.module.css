@@ -510,12 +510,12 @@
   gap: 2rem;
   border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
   padding: clamp(1.5rem, 3vw, 2.5rem) 0;
-  transition: padding 250ms ease, color 200ms ease;
+  transition: color 200ms ease, transform 250ms ease;
 }
 
 .guideLinks a:hover {
-  padding-inline: 0.75rem;
   color: var(--primary-readable);
+  transform: translateX(0.5rem);
 }
 
 .guideLinks span {
@@ -732,5 +732,12 @@
   .workImageAsset,
   .guideLinks a {
     transition: none;
+  }
+
+  .primaryAction:hover,
+  .closing a:hover,
+  .workGrid a:hover .workImageAsset,
+  .guideLinks a:hover {
+    transform: none;
   }
 }

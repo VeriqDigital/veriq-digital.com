@@ -96,7 +96,7 @@ const processSteps = [
 export const metadata = createPageMetadata({
   title: "Web Design & Custom Development Services",
   description:
-    "Des Moines web design, website redesign, custom development, SEO, and growth support for businesses across Central Iowa and beyond.",
+    "Explore business websites, custom development, SEO, and ongoing growth support from Veriq Digital in Central Iowa and beyond.",
   path: "/services",
 });
 

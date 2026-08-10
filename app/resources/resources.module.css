@@ -47,7 +47,6 @@
 
 .kicker,
 .articleCategory,
-.articleDate,
 .sectionHeading > p,
 .categoryHeader > p,
 .articleToc > p,
@@ -152,12 +151,12 @@
   gap: clamp(1rem, 3vw, 2.5rem);
   border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
   padding: clamp(1.75rem, 3.5vw, 3rem) 0;
-  transition: padding 250ms ease, color 200ms ease;
+  transition: color 200ms ease, transform 250ms ease;
 }
 
 .resourceRow:hover {
-  padding-inline: 0.75rem;
   color: var(--primary-readable);
+  transform: translateX(0.5rem);
 }
 
 .resourceRow > span {
@@ -265,14 +264,6 @@
   grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.55fr);
   align-items: end;
   gap: clamp(3rem, 8vw, 8rem);
-}
-
-.articleDate {
-  margin-top: 2rem;
-}
-
-.articleDate a:hover {
-  color: var(--primary-readable);
 }
 
 .articleLayout {
@@ -469,5 +460,12 @@
   .indexCta a,
   .articleCta a {
     transition: none;
+  }
+
+  .resourceRow:hover,
+  .resourceCard:hover,
+  .indexCta a:hover,
+  .articleCta a:hover {
+    transform: none;
   }
 }
