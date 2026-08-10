@@ -26,7 +26,7 @@ const serviceChapters = [
   },
   {
     number: "02",
-    id: "custom-software",
+    id: "custom-development",
     title: "Custom Development",
     statement: "Functionality built around the way your business actually works.",
     description:

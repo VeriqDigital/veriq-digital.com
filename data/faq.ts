@@ -27,6 +27,6 @@ export const faqs = [
   {
     question: "What kind of business or project is a good fit?",
     answer:
-      "We work best with established service businesses that need a more credible website, stronger lead generation, continued digital growth, or custom web functionality tied to a clear business need. A rough idea is enough to start—we can help define the right scope and approach.",
+      "We work best with service businesses that need a more credible website, stronger lead generation, continued digital growth, or custom web functionality tied to a clear business need. A rough idea is enough to start—we can help define the right scope and approach.",
   },
 ];
