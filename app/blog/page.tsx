@@ -1,42 +1,34 @@
 /*
-THESIS: A practical field guide, not an SEO archive or generic card wall.
+THESIS: A durable knowledge hub organized by Veriq's expertise, not by a temporary SEO cluster or generic card wall.
 OWN-WORLD: Veriq's light/dark surfaces, cyan linework, condensed headings, and crisp editorial rules.
-STORY: Readers choose a real business question, get a useful answer, and move naturally toward a service decision.
-FIRST VIEWPORT: A compact editorial masthead leads directly into clearly labeled paths for planning and improving a website.
-FORM: An established-world Read-mode extension using the site's asymmetrical article rows and restrained service CTA.
+STORY: Readers choose an expertise area, find a practical answer, and move naturally toward a service decision.
+FIRST VIEWPORT: The established editorial masthead leads into a restrained topic index and subject-led article sections.
+FORM: A scalable topic directory using Veriq's asymmetrical article rows, anchor navigation, and restrained service CTA.
 */
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import { createPageMetadata, serializeJsonLd } from "@/config/seo";
 import { siteConfig } from "@/config/site";
-import { resources, type ResourceCategory } from "@/data/resources";
+import { resources, resourceTopics } from "@/data/resources";
 import styles from "../resources/resources.module.css";
 
 export const metadata = createPageMetadata({
   title: "Website, SEO & Digital Presence Blog",
   description:
-    "Practical guidance from Veriq Digital on websites, web design, SEO, local search, digital presence, and choosing the right approach for your business.",
+    "Practical guidance from Veriq Digital for planning better websites, improving search visibility and user experience, and building a credible digital presence.",
   path: "/blog",
 });
 
-const blogSections: readonly {
-  category: ResourceCategory;
-  heading: string;
-  description: string;
-}[] = [
-  {
-    category: "Buying guide",
-    heading: "Plan the project",
-    description:
-      "Cost, provider fit, and the decisions to make before signing a proposal.",
-  },
-  {
-    category: "Website fundamentals",
-    heading: "Build the foundation",
-    description:
-      "Useful explanations for the website and search questions local business owners actually face.",
-  },
-];
+const publishedTopicSections = resourceTopics
+  .map((topic) => ({
+    ...topic,
+    articles: resources.filter((resource) => resource.topic === topic.name),
+  }))
+  .filter((section) => section.articles.length > 0);
+
+const indexedResources = publishedTopicSections.flatMap(
+  (section) => section.articles,
+);
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -46,13 +38,13 @@ const structuredData = {
       "@id": `${siteConfig.url}/blog#collection`,
       name: "Veriq Digital blog",
       description:
-        "Practical guidance on websites, web design, SEO, local search, and digital presence from Veriq Digital.",
+        "Practical guidance on website planning, search visibility, user experience, technical foundations, and digital presence from Veriq Digital.",
       url: `${siteConfig.url}/blog`,
       inLanguage: "en-US",
       isPartOf: { "@id": `${siteConfig.url}/#website` },
       mainEntity: {
         "@type": "ItemList",
-        itemListElement: resources.map((resource, index) => ({
+        itemListElement: indexedResources.map((resource, index) => ({
           "@type": "ListItem",
           position: index + 1,
           name: resource.title,
@@ -96,47 +88,64 @@ export default function BlogPage() {
               <h1>Practical guidance for a stronger digital presence.</h1>
             </div>
             <p>
-              Clear, useful guidance on website planning, web design, SEO,
-              local search, and the digital decisions growing businesses face.
+              Clear thinking for planning better websites, improving search
+              visibility and user experience, and making sound technical and
+              digital-presence decisions.
             </p>
           </div>
         </Container>
       </header>
 
-      <div className={styles.categorySections}>
-        {blogSections.map((section) => {
-          const categoryResources = resources.filter(
-            (resource) => resource.category === section.category,
-          );
+      {publishedTopicSections.length > 1 ? (
+        <nav className={styles.topicNav} aria-label="Blog topics">
+          <Container>
+            <ul className={styles.topicNavList}>
+              <li>
+                <Link href="#all-articles">All articles</Link>
+              </li>
+              {publishedTopicSections.map((section) => (
+                <li key={section.id}>
+                  <Link href={`#${section.id}`}>{section.shortName}</Link>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </nav>
+      ) : null}
 
-          return (
-            <section key={section.category} className={styles.categorySection}>
-              <Container>
-                <div className={styles.categoryHeader}>
-                  <h2>{section.heading}</h2>
-                  <p>{section.description}</p>
-                </div>
+      <div id="all-articles" className={styles.categorySections}>
+        {publishedTopicSections.map((section) => (
+          <section
+            id={section.id}
+            key={section.id}
+            className={styles.categorySection}
+            aria-labelledby={`${section.id}-title`}
+          >
+            <Container>
+              <div className={styles.categoryHeader}>
+                <h2 id={`${section.id}-title`}>{section.name}</h2>
+                <p>{section.description}</p>
+              </div>
 
-                <div className={styles.resourceList}>
-                  {categoryResources.map((resource, index) => (
-                    <Link
-                      href={`/resources/${resource.slug}`}
-                      key={resource.slug}
-                      className={styles.resourceRow}
-                    >
-                      <span>{String(index + 1).padStart(2, "0")}</span>
-                      <div>
-                        <h3>{resource.title}</h3>
-                        <p>{resource.description}</p>
-                      </div>
-                      <i aria-hidden="true">↗</i>
-                    </Link>
-                  ))}
-                </div>
-              </Container>
-            </section>
-          );
-        })}
+              <div className={styles.resourceList}>
+                {section.articles.map((resource, index) => (
+                  <Link
+                    href={`/resources/${resource.slug}`}
+                    key={resource.slug}
+                    className={styles.resourceRow}
+                  >
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3>{resource.title}</h3>
+                      <p>{resource.description}</p>
+                    </div>
+                    <i aria-hidden="true">↗</i>
+                  </Link>
+                ))}
+              </div>
+            </Container>
+          </section>
+        ))}
       </div>
 
       <section className={styles.indexCta}>
