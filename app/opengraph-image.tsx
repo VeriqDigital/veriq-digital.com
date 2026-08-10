@@ -156,7 +156,7 @@ export default function OpenGraphImage() {
               letterSpacing: "0.01em",
             }}
           >
-            Websites • Software • E-Commerce
+            Websites • Software • Ongoing Support
           </div>
         </div>
 

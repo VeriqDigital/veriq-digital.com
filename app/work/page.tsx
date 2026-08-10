@@ -5,7 +5,7 @@ import { createPageMetadata } from "@/config/seo";
 export const metadata = createPageMetadata({
   title: "Website Design Work & Concepts",
   description:
-    "Explore self-directed website demos by Veriq Digital, including focused concepts for service businesses and local brands.",
+    "Explore website design and digital work by Veriq Digital, including focused concepts for service businesses and local brands.",
   path: "/work",
 });
 

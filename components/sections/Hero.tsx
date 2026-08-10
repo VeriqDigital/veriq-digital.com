@@ -145,9 +145,9 @@ const Hero = ({ campaign }: HeroProps) => {
             <span>built for growth.</span>
           </h1>
           <p className={styles.description}>
-            We build websites, software, and growth systems that help ambitious
-            businesses attract customers, operate more efficiently, and scale
-            with confidence.
+            From polished business websites to fully custom software, we choose
+            the approach around what your business actually needs—then build it
+            to earn trust, do its job, and stay practical to own.
           </p>
           <div className={styles.actions}>
             <Button onClick={() => openModal(primaryCta.modal)}>

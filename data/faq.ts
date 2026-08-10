@@ -1,32 +1,32 @@
 export const faqs = [
   {
-    question: "How much does a project cost?",
+    question: "Do you build custom websites or use Squarespace?",
     answer:
-      "Every business is different, so every project starts with a conversation rather than a fixed package. Whether you need a new website, custom software, or ongoing support, we'll provide a clear proposal based on your goals, timeline, and scope.",
+      "Both. Squarespace is often a strong fit for marketing-focused business websites, while custom web development makes sense when a project needs functionality, integrations, or flexibility that a site builder cannot reasonably provide. We recommend the approach that fits the work rather than selling one platform.",
   },
   {
-    question: "How long does a project take?",
+    question: "How do you decide which platform is right?",
     answer:
-      "Most business websites are completed within 2–6 weeks. More complex software projects vary based on their requirements, but we'll establish a clear timeline and keep you informed from kickoff through launch.",
+      "We look at the functionality you need, how you want to manage content, required integrations, future growth, budget, timeline, and maintenance expectations. You do not need to know the answer before contacting us—that recommendation is part of our job.",
   },
   {
-    question: "Do you only build websites?",
+    question: "Will my website look like a Squarespace template?",
     answer:
-      "No. Websites are often where our partnerships begin, not where they end. We also design and develop custom software, automate business processes, integrate existing tools, and build digital systems that help businesses operate more efficiently as they grow.",
+      "No. Squarespace may provide the underlying content platform, but the design direction comes from your brand, content, customers, and goals. We work within the platform thoughtfully so the finished site feels specific to the business, not like a recycled template.",
   },
   {
-    question: "What happens after launch?",
+    question: "Can you redesign my existing Squarespace website?",
     answer:
-      "Launching a website isn't the finish line. We can continue supporting your business with hosting, maintenance, performance improvements, SEO, analytics, feature development, and ongoing optimization so your digital presence continues to evolve alongside your business.",
+      "Yes. We can keep useful content and structure where it still serves the business, then improve the visual design, messaging, user experience, SEO fundamentals, and paths that turn visits into inquiries.",
   },
   {
-    question: "Is Veriq the right fit for my business?",
+    question: "Can I manage the website myself after launch?",
     answer:
-      "We work best with businesses that see their website as more than an online brochure. If you're looking to build trust, improve your digital presence, streamline operations, or create a stronger foundation for growth, we'd love to start the conversation.",
+      "Yes. Squarespace is especially straightforward for routine content updates. Custom projects can also include a content management system when that is useful, and we can remain available for updates, SEO, maintenance, and continued development on either type of project.",
   },
   {
-    question: "Can you work with my existing website or software?",
+    question: "What should I expect for cost and timeline?",
     answer:
-      "Absolutely. Not every project starts from scratch. We can improve an existing website, add new features, modernize outdated systems, or build custom software that integrates with the tools your business already relies on.",
+      "Every project starts with a conversation rather than a fixed package. Most business websites take 2–6 weeks, while custom software timelines depend on the functionality and integrations involved. Your proposal will define the scope, cost, timeline, and recommended approach before work begins.",
   },
 ];

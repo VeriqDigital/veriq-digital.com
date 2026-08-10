@@ -25,8 +25,9 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
           </Heading>
         </div>
         <p>
-          Focused digital experiences designed to sharpen brands, simplify
-          interactions, and help businesses make a stronger impression online.
+          Business websites and digital experiences shaped around the job at
+          hand—clearer messaging, stronger credibility, better usability, and
+          custom functionality where it adds real value.
         </p>
       </header>
 

@@ -11,17 +11,18 @@ const serviceChapters = [
     title: "Business Websites",
     statement: "A sharper digital presence built to earn attention and trust.",
     description:
-      "We shape your positioning, content, and user experience into a fast, focused website that makes it easy for the right customers to understand your value and take the next step.",
-    note: "Best for businesses that have outgrown a dated, unclear, or hard-to-manage website.",
+      "Not every business needs custom software behind its website. Some need a polished, easy-to-manage Squarespace site. Others benefit from a custom-built marketing site with greater control or integrations. We recommend the approach that fits the business, then design it around your brand, content, customers, and goals.",
+    note: "Best for marketing-focused websites, redesigns, and businesses that need to build trust and generate leads.",
     capabilities: [
       "Strategy & information architecture",
-      "Responsive web design",
-      "Performance & accessibility",
-      "Content systems & CMS setup",
+      "Custom visual & responsive design",
+      "Squarespace development & CMS setup",
+      "Custom Next.js development",
+      "Local & technical SEO foundations",
       "Analytics & conversion tracking",
     ],
     outcome:
-      "A credible website that works as hard as the rest of your business.",
+      "A credible, practical website without paying for complexity you do not need.",
   },
   {
     number: "02",
@@ -29,8 +30,8 @@ const serviceChapters = [
     title: "Custom Software",
     statement: "Tools designed around the way your business actually works.",
     description:
-      "When off-the-shelf software creates more friction than it removes, we design and build focused digital tools around your team, customers, and existing workflow.",
-    note: "Best for teams losing time to manual processes, disconnected tools, or rigid software.",
+      "When a project needs to handle business processes—not just explain the business—custom engineering earns its place. We build focused tools around your team, customers, integrations, and existing workflow.",
+    note: "Best for teams that need application-like functionality or are losing time to manual processes, disconnected tools, or rigid software.",
     capabilities: [
       "Customer & staff portals",
       "Quote and intake systems",
@@ -47,14 +48,15 @@ const serviceChapters = [
     title: "Ongoing Support",
     statement: "A digital presence that keeps improving after launch.",
     description:
-      "Websites and software are living business tools. We stay involved with maintenance, measurement, and thoughtful improvements so your investment remains useful as your company changes.",
+      "Whether you have a Squarespace site, a custom website, or a larger software system, we can stay involved with maintenance, measurement, content, and thoughtful improvements as your business changes.",
     note: "Best for businesses that want a dependable technical partner rather than occasional emergency help.",
     capabilities: [
-      "Hosting, monitoring & maintenance",
+      "Domain & hosting guidance",
+      "Content updates & continued design",
+      "Technical maintenance & monitoring",
       "Performance and security reviews",
       "SEO and content improvements",
       "Analytics and reporting",
-      "Ongoing design & development",
     ],
     outcome:
       "Steady support, clearer decisions, and fewer technical distractions.",
@@ -75,7 +77,7 @@ const processSteps = [
   {
     title: "Develop",
     description:
-      "Build iteratively while working closely together to ensure every feature aligns with your vision.",
+      "Bring the approved direction to life on the chosen platform, with close collaboration and careful testing throughout.",
   },
   {
     title: "Launch",
@@ -148,9 +150,9 @@ export default function ServicesPage() {
               </h1>
               <div className={styles.heroSummary}>
                 <p>
-                  We build the digital systems that help ambitious businesses
-                  attract more customers, operate more efficiently, and grow
-                  with confidence.
+                  From focused business websites to custom digital systems, we
+                  choose the approach based on what will create real value for
+                  the business.
                 </p>
                 <div className={styles.heroActions}>
                   <Link

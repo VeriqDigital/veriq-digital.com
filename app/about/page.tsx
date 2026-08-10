@@ -22,7 +22,7 @@ const beliefs = [
     number: "03",
     title: "Built To Evolve",
     description:
-      "Businesses evolve. Their websites and tools should be able to evolve with them.",
+      "The right foundation should be practical to manage today and capable of supporting what comes next.",
   },
   {
     number: "04",
@@ -46,7 +46,7 @@ const reasons = [
   {
     title: "Built around the business",
     description:
-      "No templates. No recycled strategies. Every recommendation starts with how your business actually operates.",
+      "No recycled strategies or predetermined platforms. Every recommendation starts with how your business actually operates.",
   },
   {
     title: "Support beyond launch",
@@ -129,8 +129,9 @@ export default function AboutPage() {
                 </p>
                 <p>
                   That means understanding the business before choosing the
-                  solution, removing what does not help, and giving every detail
-                  a reason to exist.
+                  solution. The right answer may be a carefully designed
+                  Squarespace site, a custom-built website, or software that
+                  handles a more complex job.
                 </p>
               </div>
             </div>
@@ -195,10 +196,11 @@ export default function AboutPage() {
                 distinctive, and built to support long-term growth.
               </p>
               <p>
-                As a software engineer, I enjoy building websites and software
-                that are fast, thoughtful, and built to last. But more
-                importantly, I enjoy helping businesses become easier to
-                discover, easier to trust, and easier to do business with.
+                My software engineering background lets Veriq handle both
+                straightforward business websites and technically complex
+                projects. The technology can change; the goal is always to make
+                a business easier to discover, easier to trust, and easier to
+                do business with.
               </p>
               <div className={styles.founderRole}>
                 <span>Mick Enev</span>
