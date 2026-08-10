@@ -22,7 +22,7 @@ const beliefs = [
     number: "03",
     title: "Built To Evolve",
     description:
-      "Businesses evolve. Their websites and tools should be able to evolve with them.",
+      "The right foundation should be practical to manage today and capable of supporting what comes next.",
   },
   {
     number: "04",
@@ -46,7 +46,7 @@ const reasons = [
   {
     title: "Built around the business",
     description:
-      "No templates. No recycled strategies. Every recommendation starts with how your business actually operates.",
+      "No recycled strategies or predetermined platforms. Every recommendation starts with how your business actually operates.",
   },
   {
     title: "Support beyond launch",
@@ -58,7 +58,7 @@ const reasons = [
 export const metadata = createPageMetadata({
   title: "About Our Des Moines Digital Studio",
   description:
-    "Meet Veriq Digital founder Mick Enev and learn how this Des Moines studio approaches websites, custom software, and long-term digital support.",
+    "Meet Veriq Digital founder Mick Enev and learn how this Des Moines studio approaches web design, custom development, and long-term growth support.",
   path: "/about",
 });
 
@@ -79,8 +79,8 @@ export default function AboutPage() {
               <div className={styles.heroSummary}>
                 <p>
                   Veriq is an independent digital studio creating websites and
-                  software that help businesses look sharper, work smarter, and
-                  move forward with confidence.
+                  digital experiences that help businesses look sharper, work
+                  smarter, and move forward with confidence.
                 </p>
                 <div className={styles.heroActions}>
                   <Link href="#philosophy" className={styles.primaryLink}>
@@ -129,8 +129,8 @@ export default function AboutPage() {
                 </p>
                 <p>
                   That means understanding the business before choosing the
-                  solution, removing what does not help, and giving every detail
-                  a reason to exist.
+                  approach, removing what does not help, and making every design
+                  and technology decision earn its place.
                 </p>
               </div>
             </div>
@@ -195,10 +195,11 @@ export default function AboutPage() {
                 distinctive, and built to support long-term growth.
               </p>
               <p>
-                As a software engineer, I enjoy building websites and software
-                that are fast, thoughtful, and built to last. But more
-                importantly, I enjoy helping businesses become easier to
-                discover, easier to trust, and easier to do business with.
+                My software engineering background lets Veriq handle both
+                straightforward business websites and technically complex
+                projects. The technology can change; the goal is always to make
+                a business easier to discover, easier to trust, and easier to
+                do business with.
               </p>
               <div className={styles.founderRole}>
                 <span>Mick Enev</span>

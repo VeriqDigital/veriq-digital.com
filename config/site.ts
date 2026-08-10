@@ -5,7 +5,7 @@ export const siteConfig = {
   shortName: "Veriq",
   defaultTitle: "Websites & Custom Software for Growing Businesses | Veriq Digital",
   tagline:
-    "Helping ambitious businesses grow through websites, software, and long-term digital systems.",
+    "Web design, custom development, and growth support built around what the business actually needs.",
   description:
     "Veriq Digital designs websites and custom software that help growing businesses attract customers, improve operations, and build for the long term.",
   url: "https://www.veriqdigital.com",

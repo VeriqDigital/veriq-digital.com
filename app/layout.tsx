@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/opengraph-image",
-        alt: `${siteConfig.name} — web design and custom software studio`,
+        alt: `${siteConfig.name} — web design, development, and growth partner`,
       },
     ],
     locale: siteConfig.locale,

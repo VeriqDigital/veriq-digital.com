@@ -1,32 +1,32 @@
 export const faqs = [
   {
-    question: "How much does a project cost?",
+    question: "Do you build custom websites or use Squarespace?",
     answer:
-      "Every business is different, so every project starts with a conversation rather than a fixed package. Whether you need a new website, custom software, or ongoing support, we'll provide a clear proposal based on your goals, timeline, and scope.",
+      "Both, but the business comes first. Squarespace can be a strong fit for a marketing-focused website that should be straightforward to manage. Custom development makes sense when the experience needs greater flexibility, integrations, or functionality. We recommend the approach that best supports the project rather than selling a preferred platform.",
   },
   {
-    question: "How long does a project take?",
+    question: "How do you decide which approach is right?",
     answer:
-      "Most business websites are completed within 2–6 weeks. More complex software projects vary based on their requirements, but we'll establish a clear timeline and keep you informed from kickoff through launch.",
+      "We look at the website's goals, required functionality, content needs, integrations, future growth, budget, timeline, and maintenance expectations. You do not need to choose an approach before contacting us—making that recommendation is part of our process.",
   },
   {
-    question: "Do you only build websites?",
+    question: "What should I expect for cost and timeline?",
     answer:
-      "No. Websites are often where our partnerships begin, not where they end. We also design and develop custom software, automate business processes, integrate existing tools, and build digital systems that help businesses operate more efficiently as they grow.",
+      "Every project starts with a conversation rather than a fixed package. Most business websites take 2–6 weeks, while custom development timelines depend on the functionality and integrations involved. Your proposal will define the scope, cost, timeline, and recommended approach before work begins.",
   },
   {
     question: "What happens after launch?",
     answer:
-      "Launching a website isn't the finish line. We can continue supporting your business with hosting, maintenance, performance improvements, SEO, analytics, feature development, and ongoing optimization so your digital presence continues to evolve alongside your business.",
+      "Launch can be the start of an ongoing growth partnership. We can continue improving SEO, content, analytics, conversion paths, performance, design, and functionality while handling the maintenance needed to keep the work dependable.",
   },
   {
-    question: "Is Veriq the right fit for my business?",
+    question: "Can you work with my existing website?",
     answer:
-      "We work best with businesses that see their website as more than an online brochure. If you're looking to build trust, improve your digital presence, streamline operations, or create a stronger foundation for growth, we'd love to start the conversation.",
+      "Yes. We can redesign an existing site, improve its messaging and user experience, strengthen SEO foundations, add functionality, or retain the parts that already work. The recommendation depends on the current site and what the business needs next.",
   },
   {
-    question: "Can you work with my existing website or software?",
+    question: "What kind of business or project is a good fit?",
     answer:
-      "Absolutely. Not every project starts from scratch. We can improve an existing website, add new features, modernize outdated systems, or build custom software that integrates with the tools your business already relies on.",
+      "We work best with service businesses that need a more credible website, stronger lead generation, continued digital growth, or custom web functionality tied to a clear business need. A rough idea is enough to start—we can help define the right scope and approach.",
   },
 ];

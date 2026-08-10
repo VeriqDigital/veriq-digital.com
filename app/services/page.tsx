@@ -11,50 +11,54 @@ const serviceChapters = [
     title: "Business Websites",
     statement: "A sharper digital presence built to earn attention and trust.",
     description:
-      "We shape your positioning, content, and user experience into a fast, focused website that makes it easy for the right customers to understand your value and take the next step.",
-    note: "Best for businesses that have outgrown a dated, unclear, or hard-to-manage website.",
+      "A strong business website should clarify your value, build credibility, and turn attention into action. We shape the strategy, content, design, SEO foundations, and conversion paths around those goals, then implement the site in Squarespace or through custom development based on what the work requires.",
+    note: "Best for marketing-focused websites, redesigns, and businesses that need to build trust and generate leads.",
     capabilities: [
       "Strategy & information architecture",
-      "Responsive web design",
-      "Performance & accessibility",
-      "Content systems & CMS setup",
+      "Custom visual & responsive design",
+      "Messaging & conversion paths",
+      "CMS setup & content management",
+      "Local & technical SEO foundations",
       "Analytics & conversion tracking",
     ],
     outcome:
-      "A credible website that works as hard as the rest of your business.",
+      "A credible, effective website built to attract the right customers and remain practical to manage.",
   },
   {
     number: "02",
-    id: "custom-software",
-    title: "Custom Software",
-    statement: "Tools designed around the way your business actually works.",
+    id: "custom-development",
+    title: "Custom Development",
+    statement:
+      "Functionality built around the way your business actually works.",
     description:
-      "When off-the-shelf software creates more friction than it removes, we design and build focused digital tools around your team, customers, and existing workflow.",
-    note: "Best for teams losing time to manual processes, disconnected tools, or rigid software.",
+      "When a website needs to do more than communicate, we design and build the functionality behind it—from quote and intake systems to portals, dashboards, workflow tools, integrations, and application-like web experiences.",
+    note: "Best for projects that need custom functionality, connected systems, or workflows that off-the-shelf tools cannot handle well.",
     capabilities: [
       "Customer & staff portals",
       "Quote and intake systems",
       "Dashboards & reporting tools",
-      "Booking and workflow automation",
-      "API and platform integrations",
+      "Booking & workflow tools",
+      "API integrations & automation",
+      "Custom website functionality",
     ],
     outcome:
-      "Purpose-built software that removes friction instead of adding it.",
+      "Focused technical capability that solves a real business need without adding unnecessary complexity.",
   },
   {
     number: "03",
     id: "ongoing-support",
-    title: "Ongoing Support",
+    title: "Growth & Support",
     statement: "A digital presence that keeps improving after launch.",
     description:
-      "Websites and software are living business tools. We stay involved with maintenance, measurement, and thoughtful improvements so your investment remains useful as your company changes.",
-    note: "Best for businesses that want a dependable technical partner rather than occasional emergency help.",
+      "Launch creates a baseline. We use ongoing SEO, content, analytics, design iteration, maintenance, performance work, and continued development to strengthen results over time.",
+    note: "Best for businesses that want a long-term growth partner rather than occasional updates or emergency technical help.",
     capabilities: [
-      "Hosting, monitoring & maintenance",
-      "Performance and security reviews",
-      "SEO and content improvements",
-      "Analytics and reporting",
-      "Ongoing design & development",
+      "Ongoing SEO & content improvements",
+      "Analytics & conversion optimization",
+      "Performance & technical maintenance",
+      "Content updates & design iteration",
+      "Continued web development",
+      "Domain & hosting guidance",
     ],
     outcome:
       "Steady support, clearer decisions, and fewer technical distractions.",
@@ -75,7 +79,7 @@ const processSteps = [
   {
     title: "Develop",
     description:
-      "Build iteratively while working closely together to ensure every feature aligns with your vision.",
+      "Bring the approved direction to life on the chosen platform, with close collaboration and careful testing throughout.",
   },
   {
     title: "Launch",
@@ -85,14 +89,14 @@ const processSteps = [
   {
     title: "Grow",
     description:
-      "Provide ongoing support, maintenance, and improvements to help your business continue growing.",
+      "Measure performance and keep improving SEO, content, conversion, design, and functionality over time.",
   },
 ] as const;
 
 export const metadata = createPageMetadata({
-  title: "Web Design & Custom Software Services",
+  title: "Web Design & Custom Development Services",
   description:
-    "Explore business websites, redesigns, custom software, and ongoing digital support from Veriq Digital in Central Iowa and beyond.",
+    "Des Moines web design, website redesign, custom development, SEO, and growth support for businesses across Central Iowa and beyond.",
   path: "/services",
 });
 
@@ -148,9 +152,9 @@ export default function ServicesPage() {
               </h1>
               <div className={styles.heroSummary}>
                 <p>
-                  We build the digital systems that help ambitious businesses
-                  attract more customers, operate more efficiently, and grow
-                  with confidence.
+                  We design, build, and improve the websites and digital
+                  experiences that help businesses earn trust, generate
+                  opportunities, and grow.
                 </p>
                 <div className={styles.heroActions}>
                   <Link
