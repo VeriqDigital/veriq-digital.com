@@ -11,52 +11,53 @@ const serviceChapters = [
     title: "Business Websites",
     statement: "A sharper digital presence built to earn attention and trust.",
     description:
-      "Not every business needs custom software behind its website. Some need a polished, easy-to-manage Squarespace site. Others benefit from a custom-built marketing site with greater control or integrations. We recommend the approach that fits the business, then design it around your brand, content, customers, and goals.",
+      "A strong business website should clarify your value, build credibility, and turn attention into action. We shape the strategy, content, design, SEO foundations, and conversion paths around those goals, then implement the site in Squarespace or through custom development based on what the work requires.",
     note: "Best for marketing-focused websites, redesigns, and businesses that need to build trust and generate leads.",
     capabilities: [
       "Strategy & information architecture",
       "Custom visual & responsive design",
-      "Squarespace development & CMS setup",
-      "Custom Next.js development",
+      "Messaging & conversion paths",
+      "CMS setup & content management",
       "Local & technical SEO foundations",
       "Analytics & conversion tracking",
     ],
     outcome:
-      "A credible, practical website without paying for complexity you do not need.",
+      "A credible, effective website built to attract the right customers and remain practical to manage.",
   },
   {
     number: "02",
     id: "custom-software",
-    title: "Custom Software",
-    statement: "Tools designed around the way your business actually works.",
+    title: "Custom Development",
+    statement: "Functionality built around the way your business actually works.",
     description:
-      "When a project needs to handle business processes—not just explain the business—custom engineering earns its place. We build focused tools around your team, customers, integrations, and existing workflow.",
-    note: "Best for teams that need application-like functionality or are losing time to manual processes, disconnected tools, or rigid software.",
+      "When a website needs to do more than communicate, we design and build the functionality behind it—from quote and intake systems to portals, dashboards, workflow tools, integrations, and application-like web experiences.",
+    note: "Best for projects that need custom functionality, connected systems, or workflows that off-the-shelf tools cannot handle well.",
     capabilities: [
       "Customer & staff portals",
       "Quote and intake systems",
       "Dashboards & reporting tools",
-      "Booking and workflow automation",
-      "API and platform integrations",
+      "Booking & workflow tools",
+      "API integrations & automation",
+      "Custom website functionality",
     ],
     outcome:
-      "Purpose-built software that removes friction instead of adding it.",
+      "Focused technical capability that solves a real business need without adding unnecessary complexity.",
   },
   {
     number: "03",
     id: "ongoing-support",
-    title: "Ongoing Support",
+    title: "Growth & Support",
     statement: "A digital presence that keeps improving after launch.",
     description:
-      "Whether you have a Squarespace site, a custom website, or a larger software system, we can stay involved with maintenance, measurement, content, and thoughtful improvements as your business changes.",
-    note: "Best for businesses that want a dependable technical partner rather than occasional emergency help.",
+      "Launch creates a baseline. We use ongoing SEO, content, analytics, design iteration, maintenance, performance work, and continued development to strengthen results over time.",
+    note: "Best for businesses that want a long-term growth partner rather than occasional updates or emergency technical help.",
     capabilities: [
+      "Ongoing SEO & content improvements",
+      "Analytics & conversion optimization",
+      "Performance & technical maintenance",
+      "Content updates & design iteration",
+      "Continued web development",
       "Domain & hosting guidance",
-      "Content updates & continued design",
-      "Technical maintenance & monitoring",
-      "Performance and security reviews",
-      "SEO and content improvements",
-      "Analytics and reporting",
     ],
     outcome:
       "Steady support, clearer decisions, and fewer technical distractions.",
@@ -87,14 +88,14 @@ const processSteps = [
   {
     title: "Grow",
     description:
-      "Provide ongoing support, maintenance, and improvements to help your business continue growing.",
+      "Measure performance and keep improving SEO, content, conversion, design, and functionality over time.",
   },
 ] as const;
 
 export const metadata = createPageMetadata({
-  title: "Web Design & Custom Software Services",
+  title: "Web Design & Custom Development Services",
   description:
-    "Des Moines web design, website redesign, custom software, and ongoing digital support for businesses across Central Iowa and beyond.",
+    "Des Moines web design, website redesign, custom development, SEO, and growth support for businesses across Central Iowa and beyond.",
   path: "/services",
 });
 
@@ -150,9 +151,9 @@ export default function ServicesPage() {
               </h1>
               <div className={styles.heroSummary}>
                 <p>
-                  From focused business websites to custom digital systems, we
-                  choose the approach based on what will create real value for
-                  the business.
+                  We design, build, and improve the websites and digital
+                  experiences that help businesses earn trust, generate
+                  opportunities, and grow.
                 </p>
                 <div className={styles.heroActions}>
                   <Link

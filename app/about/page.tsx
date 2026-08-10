@@ -58,7 +58,7 @@ const reasons = [
 export const metadata = createPageMetadata({
   title: "About Our Des Moines Digital Studio",
   description:
-    "Meet Veriq Digital founder Mick Enev and learn how this Des Moines studio approaches websites, custom software, and long-term digital support.",
+    "Meet Veriq Digital founder Mick Enev and learn how this Des Moines studio approaches web design, custom development, and long-term growth support.",
   path: "/about",
 });
 
@@ -79,8 +79,8 @@ export default function AboutPage() {
               <div className={styles.heroSummary}>
                 <p>
                   Veriq is an independent digital studio creating websites and
-                  software that help businesses look sharper, work smarter, and
-                  move forward with confidence.
+                  digital experiences that help businesses look sharper, work
+                  smarter, and move forward with confidence.
                 </p>
                 <div className={styles.heroActions}>
                   <Link href="#philosophy" className={styles.primaryLink}>
@@ -129,9 +129,8 @@ export default function AboutPage() {
                 </p>
                 <p>
                   That means understanding the business before choosing the
-                  solution. The right answer may be a carefully designed
-                  Squarespace site, a custom-built website, or software that
-                  handles a more complex job.
+                  approach, removing what does not help, and making every design
+                  and technology decision earn its place.
                 </p>
               </div>
             </div>

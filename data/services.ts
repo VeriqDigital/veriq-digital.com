@@ -3,18 +3,18 @@ export const services = [
     icon: "globe",
     title: "Business Websites",
     description:
-      "Polished, easy-to-use websites built on the platform that best fits your goals, content, and long-term needs.",
+      "Strategic, high-quality websites that build credibility, generate leads, and remain practical to manage.",
   },
   {
     icon: "command",
-    title: "Custom Software",
+    title: "Custom Development",
     description:
-      "Customer portals, quote systems, dashboards, booking tools, and internal business software built around your workflow.",
+      "Quote tools, portals, dashboards, integrations, and custom website functionality built around the way your business works.",
   },
   {
     icon: "growth",
-    title: "Ongoing Support",
+    title: "Growth & Support",
     description:
-      "Content, maintenance, analytics, SEO, and continued improvements across websites and custom systems.",
+      "SEO, content, analytics, maintenance, and continued development that keep your digital presence improving.",
   },
 ] as const;
