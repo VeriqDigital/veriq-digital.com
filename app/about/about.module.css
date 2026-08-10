@@ -368,6 +368,7 @@
 }
 
 .founder {
+  scroll-margin-top: 7rem;
   padding: clamp(7rem, 12vw, 12rem) 0;
   background: color-mix(in srgb, var(--foreground) 3%, var(--background));
 }

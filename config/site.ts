@@ -3,11 +3,11 @@ import type { ModalType } from "@/components/layout/LeadModal";
 export const siteConfig = {
   name: "Veriq Digital",
   shortName: "Veriq",
-  defaultTitle: "Des Moines Web Design & Custom Development | Veriq Digital",
+  defaultTitle: "Websites & Custom Software for Growing Businesses | Veriq Digital",
   tagline:
     "Web design, custom development, and growth support built around what the business actually needs.",
   description:
-    "Des Moines web design and custom development partner helping businesses grow through high-performing websites, SEO, and long-term digital support.",
+    "Veriq Digital designs websites and custom software that help growing businesses attract customers, improve operations, and build for the long term.",
   url: "https://www.veriqdigital.com",
   locale: "en_US",
   location: {
@@ -72,6 +72,8 @@ export const navigation = [
 
 export const footerLinks = [
   { label: "Services", href: "/services" },
+  { label: "Des Moines Web Design", href: "/des-moines-web-design" },
+  { label: "Resources", href: "/resources" },
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },

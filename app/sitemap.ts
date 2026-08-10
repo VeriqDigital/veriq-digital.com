@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { projects } from "@/data/projects";
+import { resources } from "@/data/resources";
 
 const staticRoutes: MetadataRoute.Sitemap = [
   {
@@ -12,6 +13,16 @@ const staticRoutes: MetadataRoute.Sitemap = [
     url: `${siteConfig.url}/services`,
     changeFrequency: "monthly",
     priority: 0.9,
+  },
+  {
+    url: `${siteConfig.url}/des-moines-web-design`,
+    changeFrequency: "monthly",
+    priority: 0.95,
+  },
+  {
+    url: `${siteConfig.url}/resources`,
+    changeFrequency: "monthly",
+    priority: 0.75,
   },
   {
     url: `${siteConfig.url}/work`,
@@ -38,5 +49,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     images: [`${siteConfig.url}${project.image}`],
   }));
 
-  return [...staticRoutes, ...projectRoutes];
+  const resourceRoutes: MetadataRoute.Sitemap = resources.map((resource) => ({
+    url: `${siteConfig.url}/resources/${resource.slug}`,
+    lastModified: resource.dateModified ?? resource.publishedAt,
+    changeFrequency: "monthly",
+    priority: resource.funnel === "Commercial investigation" ? 0.75 : 0.65,
+  }));
+
+  return [...staticRoutes, ...resourceRoutes, ...projectRoutes];
 }

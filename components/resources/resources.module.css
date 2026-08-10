@@ -1,0 +1,214 @@
+.articleBody {
+  color: var(--foreground);
+  font-size: clamp(1.02rem, 1.25vw, 1.125rem);
+  line-height: 1.78;
+}
+
+.author {
+  margin-top: 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding-top: 1rem;
+}
+
+.authorLabel,
+.authorDates {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.authorIdentity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  margin-top: 0.55rem;
+}
+
+.authorIdentity a {
+  color: var(--foreground);
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.authorIdentity a:hover {
+  color: var(--primary-readable);
+}
+
+.authorIdentity span,
+.authorBio {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.authorBio {
+  max-width: 34rem;
+  margin-top: 0.7rem;
+}
+
+.authorDates {
+  margin-top: 0.8rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+}
+
+.articleBody a,
+.proseSection a,
+.callout a {
+  color: var(--primary-readable);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--primary-readable) 45%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.articleBody a:hover,
+.proseSection a:hover,
+.callout a:hover {
+  text-decoration-color: currentColor;
+}
+
+.proseSection {
+  scroll-margin-top: 8rem;
+  margin-top: clamp(4.5rem, 8vw, 7rem);
+}
+
+.proseSection:first-child {
+  margin-top: 0;
+}
+
+.proseSection h2 {
+  max-width: 18ch;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-heading);
+  font-size: clamp(2.3rem, 4.7vw, 4.6rem);
+  font-weight: 850;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.proseSection h3,
+.callout h3 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.8rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.55rem, 2.4vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.proseSection p + p,
+.callout p + p {
+  margin-top: 1.2rem;
+}
+
+.proseSection ul,
+.proseSection ol,
+.callout ul,
+.callout ol {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+  padding-left: 1.35rem;
+}
+
+.proseSection li,
+.callout li {
+  padding-left: 0.35rem;
+}
+
+.proseSection li::marker,
+.callout li::marker {
+  color: var(--primary-readable);
+  font-weight: 800;
+}
+
+.callout {
+  margin-top: 2.5rem;
+  border-radius: 0.9rem 0.9rem 3rem 0.9rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.callout h3 {
+  margin-top: 0;
+  color: var(--primary);
+}
+
+.callout a {
+  color: var(--primary);
+}
+
+.tableScroll {
+  width: 100%;
+  margin-top: 2rem;
+  overflow-x: auto;
+  border-radius: 0.8rem;
+  outline-offset: 0.35rem;
+}
+
+.tableScroll:focus-visible {
+  outline: 3px solid var(--primary-readable);
+}
+
+.comparisonTable {
+  width: 100%;
+  min-width: 42rem;
+  border-collapse: collapse;
+  background: color-mix(in srgb, var(--foreground) 3%, var(--background));
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.comparisonTable caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.comparisonTable th,
+.comparisonTable td {
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  padding: 1rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.comparisonTable thead th {
+  background: var(--surface);
+  color: var(--surface-foreground);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.comparisonTable tbody th {
+  width: 22%;
+  color: var(--foreground);
+  font-weight: 750;
+}
+
+@media (max-width: 640px) {
+  .proseSection {
+    margin-top: 4.5rem;
+  }
+
+  .callout {
+    border-bottom-right-radius: 2.25rem;
+  }
+}

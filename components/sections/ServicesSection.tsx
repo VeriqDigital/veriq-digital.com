@@ -47,10 +47,16 @@ const ServicesSection = () => {
             Digital work with <span>real-world weight.</span>
           </h2>
         </div>
-        <Link href="/services" className={styles.servicesLink}>
-          Explore web design, development &amp; growth
-          <span aria-hidden="true">↗</span>
-        </Link>
+        <div className={styles.introLinks}>
+          <Link href="/services" className={styles.servicesLink}>
+            Explore web design, development &amp; growth
+            <span aria-hidden="true">↗</span>
+          </Link>
+          <Link href="/resources" className={styles.resourcesLink}>
+            Browse website guides
+            <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
       </div>
 
       <div className={styles.serviceGrid}>
@@ -63,6 +69,12 @@ const ServicesSection = () => {
             <div>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
+              {"href" in service ? (
+                <Link href={service.href} className={styles.cardLink}>
+                  {service.linkLabel}
+                  <span aria-hidden="true">↗</span>
+                </Link>
+              ) : null}
             </div>
             <span
               className={`${styles.cardIcon} ${styles[service.icon]}`}

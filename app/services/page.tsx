@@ -28,7 +28,8 @@ const serviceChapters = [
     number: "02",
     id: "custom-development",
     title: "Custom Development",
-    statement: "Functionality built around the way your business actually works.",
+    statement:
+      "Functionality built around the way your business actually works.",
     description:
       "When a website needs to do more than communicate, we design and build the functionality behind it—from quote and intake systems to portals, dashboards, workflow tools, integrations, and application-like web experiences.",
     note: "Best for projects that need custom functionality, connected systems, or workflows that off-the-shelf tools cannot handle well.",
@@ -95,7 +96,7 @@ const processSteps = [
 export const metadata = createPageMetadata({
   title: "Web Design & Custom Development Services",
   description:
-    "Des Moines web design, website redesign, custom development, SEO, and growth support for businesses across Central Iowa and beyond.",
+    "Explore business websites, custom development, SEO, and ongoing growth support from Veriq Digital in Central Iowa and beyond.",
   path: "/services",
 });
 
@@ -212,6 +213,15 @@ export default function ServicesPage() {
                   <p className={styles.chapterDescription}>
                     {service.description}
                   </p>
+                  {service.id === "business-websites" ? (
+                    <Link
+                      href="/des-moines-web-design"
+                      className={styles.chapterLink}
+                    >
+                      Explore web design for Des Moines businesses
+                      <span aria-hidden="true">↗</span>
+                    </Link>
+                  ) : null}
                   <div className={styles.fitNote}>
                     <span>Good fit</span>
                     <p>{service.note}</p>
