@@ -48,7 +48,7 @@ const ServicesSection = () => {
           </h2>
         </div>
         <Link href="/services" className={styles.servicesLink}>
-          Explore web design &amp; software services
+          Explore web design, development &amp; growth
           <span aria-hidden="true">↗</span>
         </Link>
       </div>

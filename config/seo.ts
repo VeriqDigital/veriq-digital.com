@@ -22,7 +22,7 @@ export function createPageMetadata({
     : siteConfig.defaultTitle;
   const openGraphImage = image ?? {
     url: "/opengraph-image",
-    alt: `${siteConfig.name} — web design and custom software studio`,
+    alt: `${siteConfig.name} — web design, development, and growth partner`,
   };
   const twitterImage = image ?? {
     url: "/twitter-image",

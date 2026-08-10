@@ -8,7 +8,7 @@ import styles from "./contact.module.css";
 export const metadata = createPageMetadata({
   title: "Contact Our Des Moines Digital Studio",
   description:
-    "Contact Veriq Digital about website design, redesigns, custom software, or ongoing digital support in Des Moines and Central Iowa.",
+    "Contact Veriq Digital about web design, website redesigns, custom development, SEO, or ongoing growth support in Des Moines and Central Iowa.",
   path: "/contact",
 });
 

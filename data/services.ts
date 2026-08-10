@@ -1,20 +1,20 @@
 export const services = [
   {
     icon: "globe",
-    title: "Customer Acquisition",
+    title: "Business Websites",
     description:
-      "Fast, modern websites that build trust and convert visitors into customers.",
+      "Strategic, high-quality websites that build credibility, generate leads, and remain practical to manage.",
   },
   {
     icon: "command",
-    title: "Custom Software",
+    title: "Custom Development",
     description:
-      "Customer portals, quote systems, dashboards, booking tools, and internal business software built around your workflow.",
+      "Quote tools, portals, dashboards, integrations, and custom website functionality built around the way your business works.",
   },
   {
     icon: "growth",
-    title: "Growth Systems",
+    title: "Growth & Support",
     description:
-      "Hosting, maintenance, analytics, SEO, and continuous improvements to keep your business moving forward.",
+      "SEO, content, analytics, maintenance, and continued development that keep your digital presence improving.",
   },
 ] as const;
