@@ -308,6 +308,26 @@
   line-height: 1.72;
 }
 
+.chapterLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--primary-readable) 55%, transparent);
+  padding-bottom: 0.3rem;
+  color: var(--primary-readable);
+  font-size: 0.78rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.chapterLink:hover {
+  border-color: currentColor;
+  color: color-mix(in srgb, var(--foreground) 68%, var(--primary-readable));
+}
+
 .fitNote {
   display: grid;
   grid-template-columns: 5rem 1fr;
@@ -698,6 +718,7 @@
 
   .primaryLink,
   .closingLink,
+  .chapterLink,
   .serviceIndex a {
     transition: none;
   }

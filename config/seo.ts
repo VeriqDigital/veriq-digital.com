@@ -5,6 +5,8 @@ type PageMetadataOptions = {
   title?: string;
   description: string;
   path: string;
+  type?: "website" | "article";
+  publishedTime?: string;
   image?: {
     url: string;
     alt: string;
@@ -15,6 +17,8 @@ export function createPageMetadata({
   title,
   description,
   path,
+  type = "website",
+  publishedTime,
   image,
 }: PageMetadataOptions): Metadata {
   const socialTitle = title
@@ -29,21 +33,35 @@ export function createPageMetadata({
     alt: openGraphImage.alt,
   };
 
+  const openGraph: Metadata["openGraph"] =
+    type === "article"
+      ? {
+          title: socialTitle,
+          description,
+          url: path,
+          siteName: siteConfig.name,
+          images: [openGraphImage],
+          locale: siteConfig.locale,
+          type: "article",
+          publishedTime,
+        }
+      : {
+          title: socialTitle,
+          description,
+          url: path,
+          siteName: siteConfig.name,
+          images: [openGraphImage],
+          locale: siteConfig.locale,
+          type: "website",
+        };
+
   return {
     title: title ? title : { absolute: siteConfig.defaultTitle },
     description,
     alternates: {
       canonical: path,
     },
-    openGraph: {
-      title: socialTitle,
-      description,
-      url: path,
-      siteName: siteConfig.name,
-      images: [openGraphImage],
-      locale: siteConfig.locale,
-      type: "website",
-    },
+    openGraph,
     twitter: {
       card: "summary_large_image",
       title: socialTitle,

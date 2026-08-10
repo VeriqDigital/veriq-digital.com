@@ -92,7 +92,7 @@ const processSteps = [
 export const metadata = createPageMetadata({
   title: "Web Design & Custom Software Services",
   description:
-    "Des Moines web design, website redesign, custom software, and ongoing digital support for businesses across Central Iowa and beyond.",
+    "Explore business websites, redesigns, custom software, and ongoing digital support from Veriq Digital in Central Iowa and beyond.",
   path: "/services",
 });
 
@@ -209,6 +209,15 @@ export default function ServicesPage() {
                   <p className={styles.chapterDescription}>
                     {service.description}
                   </p>
+                  {service.id === "business-websites" ? (
+                    <Link
+                      href="/des-moines-web-design"
+                      className={styles.chapterLink}
+                    >
+                      Explore web design for Des Moines businesses
+                      <span aria-hidden="true">↗</span>
+                    </Link>
+                  ) : null}
                   <div className={styles.fitNote}>
                     <span>Good fit</span>
                     <p>{service.note}</p>
