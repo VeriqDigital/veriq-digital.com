@@ -52,7 +52,7 @@ const ServicesSection = () => {
             Explore web design, development &amp; growth
             <span aria-hidden="true">↗</span>
           </Link>
-          <Link href="/resources" className={styles.resourcesLink}>
+          <Link href="/blog" className={styles.resourcesLink}>
             Browse website guides
             <span aria-hidden="true">↗</span>
           </Link>

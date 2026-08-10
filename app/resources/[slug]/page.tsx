@@ -94,8 +94,8 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
           {
             "@type": "ListItem",
             position: 2,
-            name: "Resources",
-            item: `${siteConfig.url}/resources`,
+            name: "Blog",
+            item: `${siteConfig.url}/blog`,
           },
           {
             "@type": "ListItem",
@@ -124,7 +124,7 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
               </li>
               <li aria-hidden="true">/</li>
               <li>
-                <Link href="/resources">Resources</Link>
+                <Link href="/blog">Blog</Link>
               </li>
             </ol>
           </nav>
