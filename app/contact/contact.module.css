@@ -72,6 +72,66 @@
   line-height: 1.7;
 }
 
+.bookingOption {
+  display: flex;
+  max-width: 31rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  padding: 1.15rem 0;
+}
+
+.bookingOption p {
+  margin-bottom: 0.35rem;
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bookingOption h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+  font-weight: 750;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.bookingOption > a {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.65rem;
+  border-radius: 0.5rem;
+  padding: 0.8rem 0.95rem;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: transform 250ms ease, color 200ms ease;
+}
+
+.bookingOption > a span {
+  color: var(--primary);
+}
+
+.bookingOption > a:hover {
+  color: color-mix(in srgb, var(--background) 72%, var(--primary));
+  transform: translateY(-2px);
+}
+
+.bookingOption > a:focus-visible {
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 3px;
+}
+
 .contactDetails {
   display: grid;
   gap: 1rem;
@@ -396,6 +456,7 @@
   }
 
   .introCopy,
+  .bookingOption,
   .contactDetails {
     grid-column: 2;
   }
@@ -405,8 +466,12 @@
     margin-top: 0;
   }
 
-  .contactDetails {
+  .bookingOption {
     grid-row: 3;
+  }
+
+  .contactDetails {
+    grid-row: 4;
     margin-top: 2rem;
   }
 
@@ -427,6 +492,11 @@
 
   .introCopy {
     margin-top: 1.75rem;
+  }
+
+  .bookingOption {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .fieldRow {
@@ -464,6 +534,7 @@
   }
 
   .contactDetails a,
+  .bookingOption > a,
   .form input,
   .form textarea,
   .formFooter button {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BookingLink from "@/components/ui/BookingLink";
 import Container from "@/components/ui/Container";
 import { createPageMetadata, serializeJsonLd } from "@/config/seo";
 import { siteConfig } from "@/config/site";
@@ -287,10 +288,19 @@ export default function ServicesPage() {
           <div className={styles.closingInner}>
             <p>Have something specific in mind?</p>
             <h2>Let&apos;s BUILD WHAT YOUR BUSINESS NEEDS TO GROW.</h2>
-            <Link href="/contact" className={styles.closingLink}>
-              Start a project
-              <span aria-hidden="true">↗</span>
-            </Link>
+            <div className={styles.closingActions}>
+              <Link href="/contact" className={styles.closingLink}>
+                Start a project
+                <span aria-hidden="true">↗</span>
+              </Link>
+              <BookingLink
+                className={styles.bookingLink}
+                placement="services_closing"
+              >
+                Book a 20-minute call
+                <span aria-hidden="true">↗</span>
+              </BookingLink>
+            </div>
           </div>
         </Container>
       </section>

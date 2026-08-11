@@ -568,6 +568,36 @@
   white-space: nowrap;
 }
 
+.closingActions {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.bookingLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  padding-bottom: 0.25rem;
+  color: var(--surface-foreground);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.bookingLink:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.bookingLink:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 4px;
+}
+
 @keyframes graphicDrift {
   to {
     transform: translate3d(-1rem, 1.5rem, 0) rotate(6deg);
