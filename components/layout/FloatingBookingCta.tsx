@@ -7,48 +7,10 @@ import { siteConfig } from "@/config/site";
 
 const FloatingBookingCta = () => {
   const pathname = usePathname();
-  const [homepageScroll, setHomepageScroll] = useState({
-    pathname: "",
-    eligible: false,
-  });
   const [footerIntersection, setFooterIntersection] = useState({
     pathname: "",
     visible: false,
   });
-
-  useEffect(() => {
-    let frameId: number | null = null;
-
-    const updateHomepageEligibility = () => {
-      const eligible = pathname !== "/" || window.scrollY >= window.innerHeight;
-
-      setHomepageScroll((current) =>
-        current.pathname === pathname && current.eligible === eligible
-          ? current
-          : { pathname, eligible },
-      );
-      frameId = null;
-    };
-
-    const handleViewportChange = () => {
-      if (frameId === null) {
-        frameId = window.requestAnimationFrame(updateHomepageEligibility);
-      }
-    };
-
-    window.addEventListener("scroll", handleViewportChange, { passive: true });
-    window.addEventListener("resize", handleViewportChange);
-    frameId = window.requestAnimationFrame(updateHomepageEligibility);
-
-    return () => {
-      window.removeEventListener("scroll", handleViewportChange);
-      window.removeEventListener("resize", handleViewportChange);
-
-      if (frameId !== null) {
-        window.cancelAnimationFrame(frameId);
-      }
-    };
-  }, [pathname]);
 
   useEffect(() => {
     const footer = document.querySelector("footer");
@@ -74,12 +36,9 @@ const FloatingBookingCta = () => {
     return null;
   }
 
-  const homepageEligible =
-    pathname !== "/" ||
-    (homepageScroll.pathname === pathname && homepageScroll.eligible);
   const footerVisible =
     footerIntersection.pathname === pathname && footerIntersection.visible;
-  const isVisible = homepageEligible && !footerVisible;
+  const isVisible = !footerVisible;
 
   return (
     <BookingLink
