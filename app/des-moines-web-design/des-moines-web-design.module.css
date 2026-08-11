@@ -541,8 +541,6 @@
 }
 
 .faqIntro {
-  position: sticky;
-  top: 8rem;
   align-self: start;
 }
 
@@ -686,10 +684,6 @@
 
   .guideLinks span {
     grid-column: 1 / -1;
-  }
-
-  .faqIntro {
-    position: static;
   }
 
   .closingInner {

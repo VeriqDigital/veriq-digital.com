@@ -13,12 +13,53 @@ import {
 export type ResourceCategory = "Buying guide" | "Website fundamentals";
 export type ResourceFunnel = "Educational" | "Commercial investigation";
 
+export const resourceTopics = [
+  {
+    name: "Web Design",
+    shortName: "Web Design",
+    id: "web-design",
+    description:
+      "Planning, evaluating, and improving websites that support real business goals.",
+  },
+  {
+    name: "SEO & Digital Marketing",
+    shortName: "SEO & Marketing",
+    id: "seo-digital-marketing",
+    description:
+      "Search visibility, discoverability, content, and sustainable digital growth.",
+  },
+  {
+    name: "UI/UX & Conversion",
+    shortName: "UI/UX",
+    id: "ui-ux-conversion",
+    description:
+      "Clearer digital experiences that help visitors understand, trust, and act.",
+  },
+  {
+    name: "Web Development",
+    shortName: "Web Development",
+    id: "web-development",
+    description:
+      "Technical foundations, performance, integrations, and custom functionality.",
+  },
+  {
+    name: "Branding & Digital Presence",
+    shortName: "Branding",
+    id: "branding-digital-presence",
+    description:
+      "How businesses present themselves and build trust across digital channels.",
+  },
+] as const;
+
+export type ResourceTopic = (typeof resourceTopics)[number]["name"];
+
 export type ResourceArticle = {
   slug: string;
   title: string;
   seoTitle: string;
   shortTitle: string;
   description: string;
+  topic: ResourceTopic;
   category: ResourceCategory;
   funnel: ResourceFunnel;
   primaryTarget: string;
@@ -48,6 +89,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Website costs in Des Moines",
     description:
       "A practical guide to website design costs in Des Moines, including the scope, content, functionality, and support choices that shape a proposal.",
+    topic: "Web Design",
     category: "Buying guide",
     funnel: "Commercial investigation",
     primaryTarget: "website cost Des Moines",
@@ -80,6 +122,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Choosing a Des Moines web designer",
     description:
       "A clear framework for comparing Des Moines web designers on business fit, technical quality, ownership, communication, and support.",
+    topic: "Web Design",
     category: "Buying guide",
     funnel: "Commercial investigation",
     primaryTarget: "how to choose a web designer in Des Moines",
@@ -112,6 +155,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Local designer vs. large agency",
     description:
       "Compare the communication, specialization, capacity, process, and support tradeoffs between a local web designer and a large agency.",
+    topic: "Web Design",
     category: "Buying guide",
     funnel: "Commercial investigation",
     primaryTarget: "local web designer vs large agency",
@@ -144,6 +188,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Does your business need a website?",
     description:
       "A practical look at what a business website still does that social profiles and marketplace listings cannot—and when a simple site is enough.",
+    topic: "Branding & Digital Presence",
     category: "Website fundamentals",
     funnel: "Educational",
     primaryTarget: "does a small business need a website in 2026",
@@ -176,6 +221,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Local business website essentials",
     description:
       "The practical pages, trust signals, calls to action, accessibility basics, and local SEO foundations a useful local business website needs.",
+    topic: "Web Design",
     category: "Website fundamentals",
     funnel: "Educational",
     primaryTarget: "what should a local business website include",
@@ -208,6 +254,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Website mistakes that lose customers",
     description:
       "Identify the messaging, mobile, speed, form, trust, and accessibility problems that quietly cause local website visitors to leave.",
+    topic: "UI/UX & Conversion",
     category: "Website fundamentals",
     funnel: "Educational",
     primaryTarget: "website mistakes that cost local businesses customers",
@@ -240,6 +287,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Small business website timelines",
     description:
       "Learn which scope, content, feedback, functionality, and launch decisions determine how long a small business website takes to build.",
+    topic: "Web Design",
     category: "Website fundamentals",
     funnel: "Educational",
     primaryTarget: "how long does it take to build a small business website",
@@ -272,6 +320,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Why your website is not on Google",
     description:
       "A plain-language guide to indexing, crawlability, local relevance, Google Business Profile, authority, competition, and technical SEO.",
+    topic: "SEO & Digital Marketing",
     category: "Website fundamentals",
     funnel: "Educational",
     primaryTarget: "why isn't my business website showing up on Google",

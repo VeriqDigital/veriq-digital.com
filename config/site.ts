@@ -67,13 +67,14 @@ export const homepageCampaign: HomepageCampaignConfig = {
 export const navigation = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
+  { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
 ] as const satisfies ReadonlyArray<{ label: string; href: string }>;
 
 export const footerLinks = [
   { label: "Services", href: "/services" },
   { label: "Des Moines Web Design", href: "/des-moines-web-design" },
-  { label: "Resources", href: "/resources" },
+  { label: "Blog", href: "/blog" },
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
