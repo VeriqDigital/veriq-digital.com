@@ -100,9 +100,6 @@ export default function BlogPage() {
         <nav className={styles.topicNav} aria-label="Blog topics">
           <Container>
             <ul className={styles.topicNavList}>
-              <li>
-                <Link href="#all-articles">All articles</Link>
-              </li>
               {publishedTopicSections.map((section) => (
                 <li key={section.id}>
                   <Link href={`#${section.id}`}>{section.shortName}</Link>
@@ -113,7 +110,7 @@ export default function BlogPage() {
         </nav>
       ) : null}
 
-      <div id="all-articles" className={styles.categorySections}>
+      <div className={styles.categorySections}>
         {publishedTopicSections.map((section) => (
           <section
             id={section.id}
