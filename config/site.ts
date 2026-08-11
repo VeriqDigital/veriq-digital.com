@@ -37,6 +37,11 @@ export const siteConfig = {
       href: "https://www.instagram.com/veriqdigital/",
       ariaLabel: "Visit Veriq Digital on Instagram",
     },
+    {
+      name: "LinkedIn",
+      href: "https://www.linkedin.com/company/veriqdigital",
+      ariaLabel: "Veriq Digital on LinkedIn",
+    },
   ],
 } as const;
 
