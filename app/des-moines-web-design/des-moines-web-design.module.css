@@ -117,7 +117,7 @@
 }
 
 .primaryAction,
-.closing a {
+.closingActions > a:first-child {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -134,7 +134,7 @@
 }
 
 .primaryAction:hover,
-.closing a:hover {
+.closingActions > a:first-child:hover {
   background: var(--primary-hover);
   transform: translateY(-2px);
 }
@@ -615,6 +615,36 @@
 
 .closing h2 {
   color: var(--surface-foreground);
+}
+
+.closingActions {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.closingActions > a:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  padding-bottom: 0.25rem;
+  color: var(--surface-foreground);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.closingActions > a:last-child:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.closingActions > a:last-child:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 4px;
 }
 
 @media (max-width: 960px) {

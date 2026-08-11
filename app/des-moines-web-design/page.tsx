@@ -7,6 +7,7 @@ FORM: An established-world Persuade extension with an outcome-path composition; 
 */
 import Image from "next/image";
 import Link from "next/link";
+import BookingLink from "@/components/ui/BookingLink";
 import Container from "@/components/ui/Container";
 import { createPageMetadata, serializeJsonLd } from "@/config/seo";
 import { siteConfig } from "@/config/site";
@@ -429,9 +430,14 @@ export default function DesMoinesWebDesignPage() {
           <div className={styles.closingInner}>
             <p>Have a website problem worth solving?</p>
             <h2>Build a clearer path from search to customer.</h2>
-            <Link href="/contact">
-              Start a conversation <span aria-hidden="true">↗</span>
-            </Link>
+            <div className={styles.closingActions}>
+              <Link href="/contact">
+                Start a conversation <span aria-hidden="true">↗</span>
+              </Link>
+              <BookingLink placement="des_moines_closing">
+                Book a 20-minute call <span aria-hidden="true">↗</span>
+              </BookingLink>
+            </div>
           </div>
         </Container>
       </section>

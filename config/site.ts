@@ -22,6 +22,10 @@ export const siteConfig = {
     phoneE164: "+18154168926",
     email: "hello@veriqdigital.com",
   },
+  booking: {
+    url: "https://cal.com/mickenev/veriq",
+    durationMinutes: 20,
+  },
   socialLinks: [
     {
       name: "Facebook",
@@ -32,6 +36,11 @@ export const siteConfig = {
       name: "Instagram",
       href: "https://www.instagram.com/veriqdigital/",
       ariaLabel: "Visit Veriq Digital on Instagram",
+    },
+    {
+      name: "LinkedIn",
+      href: "https://www.linkedin.com/company/veriqdigital",
+      ariaLabel: "Veriq Digital on LinkedIn",
     },
   ],
 } as const;

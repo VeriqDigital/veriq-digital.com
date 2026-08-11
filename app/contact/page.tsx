@@ -1,4 +1,5 @@
 import Container from "@/components/ui/Container";
+import BookingLink from "@/components/ui/BookingLink";
 import SocialLinks from "@/components/ui/SocialLinks";
 import { createPageMetadata } from "@/config/seo";
 import { siteConfig } from "@/config/site";
@@ -31,6 +32,19 @@ export default function ContactPage() {
               Tell us what you are building, fixing, or trying to improve. A
               rough idea is enough to start the conversation.
             </p>
+
+            <aside
+              className={styles.bookingOption}
+              aria-labelledby="booking-option-title"
+            >
+              <div>
+                <p>Prefer to talk?</p>
+                <h2 id="booking-option-title">Book a 20-minute intro call.</h2>
+              </div>
+              <BookingLink placement="contact_page">
+                Book a call <span aria-hidden="true">↗</span>
+              </BookingLink>
+            </aside>
 
             <div className={styles.contactDetails}>
               <div>
