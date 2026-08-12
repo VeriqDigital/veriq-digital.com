@@ -149,7 +149,6 @@
   white-space: nowrap;
 }
 
-.topicNavList li:first-child a,
 .topicNav a:hover,
 .topicNav a:focus-visible {
   color: var(--primary-readable);

@@ -61,7 +61,7 @@ const faqs = [
 const featuredProjects = projects.slice(0, 2);
 
 export const metadata = createPageMetadata({
-  title: "Small Business Web Design Built Around Your Business",
+  title: "Small Business Web Design for Growing Businesses",
   description: "Professional small-business web design through Squarespace or custom development, shaped around credibility, leads, usability, SEO foundations, and growth.",
   path: "/small-business-web-design",
 });
