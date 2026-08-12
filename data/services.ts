@@ -4,8 +4,8 @@ export const services = [
     title: "Business Websites",
     description:
       "Strategic, high-quality websites that build credibility, generate leads, and remain practical to manage.",
-    href: "/des-moines-web-design",
-    linkLabel: "Web design for Des Moines businesses",
+    href: "/small-business-web-design",
+    linkLabel: "Small business web design",
   },
   {
     icon: "command",

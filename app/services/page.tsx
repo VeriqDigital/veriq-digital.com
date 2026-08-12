@@ -215,13 +215,22 @@ export default function ServicesPage() {
                     {service.description}
                   </p>
                   {service.id === "business-websites" ? (
-                    <Link
-                      href="/des-moines-web-design"
-                      className={styles.chapterLink}
-                    >
-                      Explore web design for Des Moines businesses
-                      <span aria-hidden="true">↗</span>
-                    </Link>
+                    <>
+                      <Link
+                        href="/small-business-web-design"
+                        className={styles.chapterLink}
+                      >
+                        Explore small business web design
+                        <span aria-hidden="true">↗</span>
+                      </Link>
+                      <Link
+                        href="/des-moines-web-design"
+                        className={styles.chapterLink}
+                      >
+                        Looking for a Des Moines web designer?
+                        <span aria-hidden="true">↗</span>
+                      </Link>
+                    </>
                   ) : null}
                   <div className={styles.fitNote}>
                     <span>Good fit</span>

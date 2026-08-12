@@ -20,6 +20,11 @@ const staticRoutes: MetadataRoute.Sitemap = [
     priority: 0.95,
   },
   {
+    url: siteConfig.url + "/small-business-web-design",
+    changeFrequency: "monthly",
+    priority: 0.95,
+  },
+  {
     url: `${siteConfig.url}/blog`,
     changeFrequency: "monthly",
     priority: 0.75,

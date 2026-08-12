@@ -114,8 +114,8 @@ export default function WebsiteMistakesArticle() {
         <ArticleCallout title="When the site needs more than a patch">
           <p>
             Veriq designs and develops{" "}
-            <Link href="/des-moines-web-design">
-              conversion-focused websites for Des Moines businesses
+            <Link href="/small-business-web-design">
+              credible, conversion-aware websites for small businesses
             </Link>{" "}
             around clear messaging, mobile use, performance, accessibility, and
             dependable lead paths. Bring the current site and the problems you

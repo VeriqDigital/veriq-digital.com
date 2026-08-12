@@ -315,6 +315,15 @@ export default function DesMoinesWebDesignPage() {
                 designing, and building the project, which keeps business
                 context close to the work.
               </p>
+              <p>
+                Businesses outside the local market can explore Veriq&apos;s
+                broader{" "}
+                <Link href="/small-business-web-design">
+                  small business web design service
+                </Link>
+                , which covers the same business-first approach without a
+                geographic focus.
+              </p>
             </div>
           </div>
         </Container>

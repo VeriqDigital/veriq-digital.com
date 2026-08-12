@@ -149,9 +149,9 @@ export default function BlogPage() {
         <Container>
           <div>
             <p>Ready to turn the research into a stronger website?</p>
-            <h2>See how Veriq approaches websites for Des Moines businesses.</h2>
-            <Link href="/des-moines-web-design">
-              Explore Des Moines web design <span aria-hidden="true">↗</span>
+            <h2>See how Veriq approaches websites for small businesses.</h2>
+            <Link href="/small-business-web-design">
+              Explore small business web design <span aria-hidden="true">↗</span>
             </Link>
           </div>
         </Container>

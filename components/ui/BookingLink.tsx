@@ -8,6 +8,7 @@ export type BookingPlacement =
   | "contact_page"
   | "des_moines_closing"
   | "floating_desktop"
+  | "small_business_web_design_closing"
   | "services_closing";
 
 type BookingLinkProps = {
