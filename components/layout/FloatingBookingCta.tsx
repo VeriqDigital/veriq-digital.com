@@ -1,35 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import BookingLink from "@/components/ui/BookingLink";
 import { siteConfig } from "@/config/site";
 
-const desktopMediaQuery = "(min-width: 900px)";
-
-const subscribeToDesktopMediaQuery = (onChange: () => void) => {
-  const mediaQueryList = window.matchMedia(desktopMediaQuery);
-
-  mediaQueryList.addEventListener("change", onChange);
-  return () => mediaQueryList.removeEventListener("change", onChange);
-};
-
-const getDesktopMediaQuerySnapshot = () =>
-  window.matchMedia(desktopMediaQuery).matches;
-
-const getServerDesktopMediaQuerySnapshot = () => false;
-
-type FloatingBookingCtaProps = {
-  mobileMenuOpen: boolean;
-};
-
-const FloatingBookingCta = ({ mobileMenuOpen }: FloatingBookingCtaProps) => {
+const FloatingBookingCta = () => {
   const pathname = usePathname();
-  const isDesktop = useSyncExternalStore(
-    subscribeToDesktopMediaQuery,
-    getDesktopMediaQuerySnapshot,
-    getServerDesktopMediaQuerySnapshot,
-  );
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [footerIntersection, setFooterIntersection] = useState({
     pathname: "",
     visible: false,
@@ -55,6 +33,21 @@ const FloatingBookingCta = ({ mobileMenuOpen }: FloatingBookingCtaProps) => {
     return () => observer.disconnect();
   }, [pathname]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    const syncMenuState = () =>
+      setMobileMenuOpen(root.dataset.mobileMenuOpen === "true");
+    const observer = new MutationObserver(syncMenuState);
+
+    syncMenuState();
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-mobile-menu-open"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   if (pathname === "/contact") {
     return null;
   }
@@ -62,31 +55,36 @@ const FloatingBookingCta = ({ mobileMenuOpen }: FloatingBookingCtaProps) => {
   const footerVisible =
     footerIntersection.pathname === pathname && footerIntersection.visible;
   const isVisible = !footerVisible;
-  const isInteractive = isVisible && (!mobileMenuOpen || isDesktop);
+  const isMobileVisible = isVisible && !mobileMenuOpen;
 
   return (
-    <BookingLink
-      className="floating-booking-cta"
-      ariaLabel={`Book a ${siteConfig.booking.durationMinutes}-minute Veriq intro call (opens in a new tab)`}
-      ariaHidden={!isInteractive}
-      dataMobileMenuOpen={mobileMenuOpen}
-      dataVisible={isVisible}
-      placement="floating_mobile"
-      responsivePlacement={{
-        query: desktopMediaQuery,
-        placement: "floating_desktop",
-      }}
-      tabIndex={isInteractive ? undefined : -1}
-    >
-      <span className="floating-booking-cta__mobile-label">
+    <>
+      <BookingLink
+        className="floating-booking-cta-mobile"
+        ariaLabel={`Book a ${siteConfig.booking.durationMinutes}-minute Veriq intro call (opens in a new tab)`}
+        ariaHidden={!isMobileVisible}
+        dataVisible={isMobileVisible}
+        placement="floating_mobile"
+        tabIndex={isMobileVisible ? undefined : -1}
+      >
         <strong>Book a Call</strong>
-      </span>
-      <span className="floating-booking-cta__desktop-label">
-        <strong>Book a call</strong>
-        <small>{siteConfig.booking.durationMinutes}-minute intro</small>
-      </span>
-      <i aria-hidden="true">↗</i>
-    </BookingLink>
+        <i aria-hidden="true">↗</i>
+      </BookingLink>
+      <BookingLink
+        className="floating-booking-cta"
+        ariaLabel={`Book a ${siteConfig.booking.durationMinutes}-minute Veriq intro call (opens in a new tab)`}
+        ariaHidden={!isVisible}
+        dataVisible={isVisible}
+        placement="floating_desktop"
+        tabIndex={isVisible ? undefined : -1}
+      >
+        <span>
+          <strong>Book a call</strong>
+          <small>{siteConfig.booking.durationMinutes}-minute intro</small>
+        </span>
+        <i aria-hidden="true">↗</i>
+      </BookingLink>
+    </>
   );
 };
 

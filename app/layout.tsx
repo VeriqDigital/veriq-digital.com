@@ -5,6 +5,7 @@ import { Geist, Geist_Mono, Oswald } from "next/font/google";
 import DevelopmentWebVitals from "@/components/analytics/DevelopmentWebVitals";
 import MetaPixel from "@/components/analytics/MetaPixel";
 import Footer from "@/components/layout/Footer";
+import FloatingBookingCta from "@/components/layout/FloatingBookingCta";
 import Navbar from "@/components/layout/Navbar";
 import CursorGlow from "@/components/ui/CursorGlow";
 import ThemeToggle from "@/components/ui/ThemeToggle";
@@ -108,6 +109,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <FloatingBookingCta />
         <ThemeToggle />
         <Analytics />
         <SpeedInsights />
