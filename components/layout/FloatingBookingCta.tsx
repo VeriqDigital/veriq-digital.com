@@ -7,6 +7,7 @@ import { siteConfig } from "@/config/site";
 
 const FloatingBookingCta = () => {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [footerIntersection, setFooterIntersection] = useState({
     pathname: "",
     visible: false,
@@ -32,6 +33,21 @@ const FloatingBookingCta = () => {
     return () => observer.disconnect();
   }, [pathname]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    const syncMenuState = () =>
+      setMobileMenuOpen(root.dataset.mobileMenuOpen === "true");
+    const observer = new MutationObserver(syncMenuState);
+
+    syncMenuState();
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-mobile-menu-open"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   if (pathname === "/contact") {
     return null;
   }
@@ -39,22 +55,36 @@ const FloatingBookingCta = () => {
   const footerVisible =
     footerIntersection.pathname === pathname && footerIntersection.visible;
   const isVisible = !footerVisible;
+  const isMobileVisible = isVisible && !mobileMenuOpen;
 
   return (
-    <BookingLink
-      className="floating-booking-cta"
-      ariaLabel={`Book a ${siteConfig.booking.durationMinutes}-minute Veriq intro call (opens in a new tab)`}
-      ariaHidden={!isVisible}
-      dataVisible={isVisible}
-      placement="floating_desktop"
-      tabIndex={isVisible ? undefined : -1}
-    >
-      <span>
-        <strong>Book a call</strong>
-        <small>{siteConfig.booking.durationMinutes}-minute intro</small>
-      </span>
-      <i aria-hidden="true">↗</i>
-    </BookingLink>
+    <>
+      <BookingLink
+        className="floating-booking-cta-mobile"
+        ariaLabel={`Book a ${siteConfig.booking.durationMinutes}-minute Veriq intro call (opens in a new tab)`}
+        ariaHidden={!isMobileVisible}
+        dataVisible={isMobileVisible}
+        placement="floating_mobile"
+        tabIndex={isMobileVisible ? undefined : -1}
+      >
+        <strong>Book a Call</strong>
+        <i aria-hidden="true">↗</i>
+      </BookingLink>
+      <BookingLink
+        className="floating-booking-cta"
+        ariaLabel={`Book a ${siteConfig.booking.durationMinutes}-minute Veriq intro call (opens in a new tab)`}
+        ariaHidden={!isVisible}
+        dataVisible={isVisible}
+        placement="floating_desktop"
+        tabIndex={isVisible ? undefined : -1}
+      >
+        <span>
+          <strong>Book a call</strong>
+          <small>{siteConfig.booking.durationMinutes}-minute intro</small>
+        </span>
+        <i aria-hidden="true">↗</i>
+      </BookingLink>
+    </>
   );
 };
 

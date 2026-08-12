@@ -114,6 +114,14 @@ const Navbar = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    document.documentElement.dataset.mobileMenuOpen = String(isMenuOpen);
+
+    return () => {
+      delete document.documentElement.dataset.mobileMenuOpen;
+    };
+  }, [isMenuOpen]);
+
   return (
     <header
       className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-lg"
