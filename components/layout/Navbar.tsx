@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import FloatingBookingCta from "@/components/layout/FloatingBookingCta";
 import { navigation, primaryCta, siteConfig } from "@/config/site";
 
 const Navbar = () => {
@@ -115,13 +114,20 @@ const Navbar = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    document.documentElement.dataset.mobileMenuOpen = String(isMenuOpen);
+
+    return () => {
+      delete document.documentElement.dataset.mobileMenuOpen;
+    };
+  }, [isMenuOpen]);
+
   return (
-    <>
-      <header
-        className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-lg"
-        data-scrolled={isScrolled}
-        data-visible={isVisible || isMenuOpen}
-      >
+    <header
+      className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-lg"
+      data-scrolled={isScrolled}
+      data-visible={isVisible || isMenuOpen}
+    >
       <nav
         className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-8 px-6 sm:px-10 lg:px-14 xl:px-20"
         aria-label="Primary"
@@ -194,9 +200,7 @@ const Navbar = () => {
         </nav>
       )}
 
-      </header>
-      <FloatingBookingCta mobileMenuOpen={isMenuOpen} />
-    </>
+    </header>
   );
 };
 
