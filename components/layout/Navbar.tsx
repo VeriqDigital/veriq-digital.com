@@ -114,6 +114,14 @@ const Navbar = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    document.documentElement.dataset.mobileMenuOpen = String(isMenuOpen);
+
+    return () => {
+      delete document.documentElement.dataset.mobileMenuOpen;
+    };
+  }, [isMenuOpen]);
+
   return (
     <header
       className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-lg"
@@ -188,19 +196,6 @@ const Navbar = () => {
                 {item.label}
               </Link>
             ))}
-            <div className="mt-1 border-t border-white/12 pt-2">
-              <a
-                href={"tel:" + siteConfig.contact.phoneE164}
-                onClick={() => setIsMenuOpen(false)}
-                aria-label={"Call Veriq Digital at " + siteConfig.contact.phone}
-                className="flex min-h-12 items-center justify-between gap-4 rounded-md bg-(--primary) px-4 py-3 text-lg font-bold text-black transition hover:bg-(--primary-hover) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--primary)"
-              >
-                <span>Call</span>
-                <span className="text-sm font-semibold">
-                  {siteConfig.contact.phone}
-                </span>
-              </a>
-            </div>
           </div>
         </nav>
       )}

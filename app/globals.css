@@ -207,13 +207,80 @@ body {
   outline-offset: 3px;
 }
 
+.floating-booking-cta-mobile {
+  position: fixed;
+  right: 5.5rem;
+  bottom: max(1.25rem, calc(env(safe-area-inset-bottom) + 0.75rem));
+  z-index: 40;
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--foreground);
+  color: var(--background);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.75rem);
+  transition:
+    opacity 220ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 300ms ease,
+    color 300ms ease;
+}
+
+.floating-booking-cta-mobile[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.floating-booking-cta-mobile strong {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.035em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.floating-booking-cta-mobile i {
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-style: normal;
+}
+
+.floating-booking-cta-mobile:hover {
+  transform: translateY(-2px);
+}
+
+.floating-booking-cta-mobile:focus-visible {
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 3px;
+}
+
+@media (min-width: 640px) {
+  .floating-booking-cta-mobile {
+    right: 7.25rem;
+    bottom: max(1.75rem, calc(env(safe-area-inset-bottom) + 0.75rem));
+  }
+}
+
 @media (min-width: 900px) {
+  .floating-booking-cta-mobile {
+    display: none;
+  }
+
   .floating-booking-cta {
     display: flex;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .floating-booking-cta-mobile,
   .floating-booking-cta {
     transition: none;
   }
