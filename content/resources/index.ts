@@ -1,8 +1,13 @@
 export { default as ChooseWebDesignerArticle } from "./choose-web-designer";
+export { default as CustomWebsiteVsTemplateArticle } from "./custom-website-vs-template";
 export { default as LocalDesignerVsAgencyArticle } from "./local-designer-vs-agency";
 export { default as LocalWebsiteEssentialsArticle } from "./local-website-essentials";
+export { default as ProfessionalSmallBusinessWebsiteArticle } from "./professional-small-business-website";
+export { default as SmallBusinessWebsiteCostArticle } from "./small-business-website-cost";
 export { default as SmallBusinessWebsiteTimelineArticle } from "./small-business-website-timeline";
 export { default as SmallBusinessWebsiteValueArticle } from "./small-business-website-value";
+export { default as WebDesignerVsWebsiteBuilderArticle } from "./web-designer-vs-website-builder";
 export { default as WebsiteCostArticle } from "./website-cost";
 export { default as WebsiteMistakesArticle } from "./website-mistakes";
+export { default as WebsiteNotGettingLeadsArticle } from "./website-not-getting-leads";
 export { default as WebsiteNotOnGoogleArticle } from "./website-not-on-google";

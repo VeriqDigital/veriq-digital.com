@@ -54,6 +54,11 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
   const nextStepResource = article.nextStep.startsWith("/resources/")
     ? getResource(article.nextStep.replace("/resources/", ""))
     : undefined;
+  const isServiceNextStep =
+    article.nextStep === "/des-moines-web-design" ||
+    article.nextStep === "/small-business-web-design";
+  const serviceNextStepIsLocal =
+    article.nextStep === "/des-moines-web-design";
   const canonicalUrl = `${siteConfig.url}/resources/${article.slug}`;
   const ArticleContent = article.Content;
   const structuredData = {
@@ -193,18 +198,22 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
         <Container>
           <div className={styles.articleCtaInner}>
             <p>
-              {article.nextStep === "/des-moines-web-design"
-                ? "Planning a website project in Des Moines?"
+              {isServiceNextStep
+                ? serviceNextStepIsLocal
+                  ? "Planning a website project in Des Moines?"
+                  : "Planning a small-business website project?"
                 : "Continue with the next practical question"}
             </p>
             <h2>
-              {article.nextStep === "/des-moines-web-design"
+              {isServiceNextStep
                 ? "Turn the research into a clear, useful website."
                 : nextStepResource?.title ?? "Keep building a clearer website plan."}
             </h2>
             <Link href={article.nextStep}>
-              {article.nextStep === "/des-moines-web-design"
-                ? "Explore Des Moines web design"
+              {isServiceNextStep
+                ? serviceNextStepIsLocal
+                  ? "Explore Des Moines web design"
+                  : "Explore small business web design"
                 : "Read the next guide"}{" "}
               <span aria-hidden="true">↗</span>
             </Link>

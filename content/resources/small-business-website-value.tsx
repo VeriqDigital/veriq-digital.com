@@ -112,7 +112,7 @@ export default function SmallBusinessWebsiteValueArticle() {
             </Link>{" "}
             to define a sensible first version. If the project calls for a
             custom build, Veriq’s{" "}
-            <Link href="/des-moines-web-design">Des Moines web design service</Link>{" "}
+            <Link href="/small-business-web-design">small business web design service</Link>{" "}
             connects those requirements to a clear design and development
             process.
           </p>

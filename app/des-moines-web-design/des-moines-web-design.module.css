@@ -376,6 +376,13 @@
   margin-top: 1.35rem;
 }
 
+.localCopy a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .processList {
   margin-top: clamp(4rem, 8vw, 7rem);
   border-top: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);

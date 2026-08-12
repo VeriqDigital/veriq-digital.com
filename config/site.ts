@@ -82,6 +82,7 @@ export const navigation = [
 
 export const footerLinks = [
   { label: "Services", href: "/services" },
+  { label: "Small Business Web Design", href: "/small-business-web-design" },
   { label: "Des Moines Web Design", href: "/des-moines-web-design" },
   { label: "Blog", href: "/blog" },
   { label: "Work", href: "/work" },

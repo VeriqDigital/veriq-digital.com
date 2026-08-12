@@ -134,7 +134,7 @@ export default function LocalWebsiteEssentialsArticle() {
               what shapes website cost in Des Moines
             </Link>{" "}
             or see how Veriq plans and builds{" "}
-            <Link href="/des-moines-web-design">custom business websites</Link>.
+            <Link href="/small-business-web-design">professional small-business websites</Link>.
           </p>
         </ArticleCallout>
       </ArticleSection>

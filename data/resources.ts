@@ -1,12 +1,17 @@
 import type { ComponentType } from "react";
 import {
   ChooseWebDesignerArticle,
+  CustomWebsiteVsTemplateArticle,
   LocalDesignerVsAgencyArticle,
   LocalWebsiteEssentialsArticle,
+  ProfessionalSmallBusinessWebsiteArticle,
+  SmallBusinessWebsiteCostArticle,
   SmallBusinessWebsiteTimelineArticle,
   SmallBusinessWebsiteValueArticle,
+  WebDesignerVsWebsiteBuilderArticle,
   WebsiteCostArticle,
   WebsiteMistakesArticle,
+  WebsiteNotGettingLeadsArticle,
   WebsiteNotOnGoogleArticle,
 } from "@/content/resources";
 
@@ -80,8 +85,47 @@ export type ResourceArticle = {
  * service phrases (for example, "Des Moines web design company" or "website
  * designer Des Moines"). Resources own only the question, cost, comparison,
  * timeline, or educational intent named by their title and target fields.
+ * The small-business service page solely owns non-geographic transactional
+ * phrases for small-business website design and development. Resources may
+ * support that page, but must not target the service phrase as their primary
+ * intent.
  */
 export const resources: readonly ResourceArticle[] = [
+  {
+    slug: "how-much-does-a-small-business-website-cost",
+    title: "How Much Does a Small Business Website Cost?",
+    seoTitle: "Small Business Website Cost: A Practical Guide",
+    shortTitle: "Small business website costs",
+    description:
+      "Understand small-business website costs across DIY, professionally built platform sites, custom development, functionality, and ongoing ownership.",
+    topic: "Web Design",
+    category: "Buying guide",
+    funnel: "Commercial investigation",
+    primaryTarget: "small business website cost",
+    secondaryTargets: [
+      "how much does a small business website cost",
+      "small business website pricing",
+      "cost to build a small business website",
+      "professional website cost",
+    ],
+    intent:
+      "Compare website investment levels and total ownership costs before defining a project.",
+    nextStep: "/small-business-web-design",
+    publishedAt: "2026-08-11",
+    tableOfContents: [
+      { id: "useful-range", label: "A realistic market range" },
+      { id: "approaches", label: "Four planning bands" },
+      { id: "project-cost", label: "Project cost drivers" },
+      { id: "ongoing-cost", label: "Ongoing ownership costs" },
+      { id: "budget", label: "Build a first-year budget" },
+    ],
+    relatedSlugs: [
+      "web-designer-vs-website-builder-for-small-business",
+      "custom-website-vs-template-for-small-business",
+      "how-much-does-a-website-cost-in-des-moines",
+    ],
+    Content: SmallBusinessWebsiteCostArticle,
+  },
   {
     slug: "how-much-does-a-website-cost-in-des-moines",
     title: "How Much Does a Website Cost in Des Moines?",
@@ -182,6 +226,76 @@ export const resources: readonly ResourceArticle[] = [
     Content: LocalDesignerVsAgencyArticle,
   },
   {
+    slug: "web-designer-vs-website-builder-for-small-business",
+    title: "Web Designer vs. Website Builder: What Should a Small Business Use?",
+    seoTitle: "Web Designer vs. Website Builder for Small Business",
+    shortTitle: "Web designer vs. website builder",
+    description:
+      "Compare DIY website builders and professional web designers across cost, time, quality, flexibility, maintenance, and business complexity.",
+    topic: "Web Design",
+    category: "Buying guide",
+    funnel: "Commercial investigation",
+    primaryTarget: "web designer vs website builder",
+    secondaryTargets: [
+      "hire web designer vs build website myself",
+      "professional website vs website builder",
+      "should I hire a web designer",
+      "build my own business website",
+    ],
+    intent:
+      "Decide whether to build a business website independently or hire professional help.",
+    nextStep: "/small-business-web-design",
+    publishedAt: "2026-08-11",
+    tableOfContents: [
+      { id: "real-choice", label: "The real choice" },
+      { id: "comparison", label: "Responsibility comparison" },
+      { id: "diy-fit", label: "When DIY fits" },
+      { id: "designer-fit", label: "When a designer fits" },
+      { id: "decision", label: "Choose an operating model" },
+    ],
+    relatedSlugs: [
+      "custom-website-vs-template-for-small-business",
+      "how-much-does-a-small-business-website-cost",
+      "how-to-choose-a-web-designer-in-des-moines",
+    ],
+    Content: WebDesignerVsWebsiteBuilderArticle,
+  },
+  {
+    slug: "custom-website-vs-template-for-small-business",
+    title: "Custom Website vs. Template: What Does a Small Business Need?",
+    seoTitle: "Custom Website vs. Template for Small Business",
+    shortTitle: "Custom website vs. template",
+    description:
+      "Learn when a template or managed platform is enough and when custom website design or development creates meaningful business value.",
+    topic: "Web Development",
+    category: "Buying guide",
+    funnel: "Commercial investigation",
+    primaryTarget: "custom website vs template",
+    secondaryTargets: [
+      "template website vs custom website",
+      "custom website benefits",
+      "does my business need a custom website",
+      "custom website for small business",
+    ],
+    intent:
+      "Choose an implementation level based on business requirements, constraints, and growth plans.",
+    nextStep: "/small-business-web-design",
+    publishedAt: "2026-08-11",
+    tableOfContents: [
+      { id: "terms", label: "Define the spectrum" },
+      { id: "template-fit", label: "When a template fits" },
+      { id: "custom-fit", label: "When custom work fits" },
+      { id: "tradeoffs", label: "Long-term tradeoffs" },
+      { id: "decision", label: "Make the decision" },
+    ],
+    relatedSlugs: [
+      "web-designer-vs-website-builder-for-small-business",
+      "how-much-does-a-small-business-website-cost",
+      "how-long-does-it-take-to-build-a-small-business-website",
+    ],
+    Content: CustomWebsiteVsTemplateArticle,
+  },
+  {
     slug: "does-your-small-business-need-a-website-in-2026",
     title: "Does Your Small Business Still Need a Website in 2026?",
     seoTitle: "Does a Small Business Need a Website in 2026?",
@@ -279,6 +393,75 @@ export const resources: readonly ResourceArticle[] = [
       "how-to-choose-a-web-designer-in-des-moines",
     ],
     Content: WebsiteMistakesArticle,
+  },
+  {
+    slug: "why-isnt-my-website-getting-leads",
+    title: "Why Isn’t My Website Getting Leads?",
+    seoTitle: "Why Your Website Isn’t Generating Leads",
+    shortTitle: "Why your website is not getting leads",
+    description:
+      "Diagnose whether weak website lead generation comes from traffic, search intent, messaging, trust, mobile friction, forms, or measurement.",
+    topic: "UI/UX & Conversion",
+    category: "Website fundamentals",
+    funnel: "Educational",
+    primaryTarget: "why isn't my website getting leads",
+    secondaryTargets: [
+      "website not generating leads",
+      "website not converting",
+      "how to get more leads from website",
+      "website conversion problems",
+    ],
+    intent:
+      "Identify where a website lead path is failing before choosing a redesign or marketing fix.",
+    nextStep: "/small-business-web-design",
+    publishedAt: "2026-08-11",
+    tableOfContents: [
+      { id: "diagnose", label: "Find the break in the path" },
+      { id: "traffic", label: "Traffic quality and intent" },
+      { id: "message", label: "Offer and audience clarity" },
+      { id: "trust-friction", label: "Trust and contact friction" },
+      { id: "measurement", label: "Measure before redesigning" },
+    ],
+    relatedSlugs: [
+      "website-mistakes-that-cost-local-businesses-customers",
+      "why-isnt-my-business-website-showing-up-on-google",
+      "what-makes-a-small-business-website-look-professional",
+    ],
+    Content: WebsiteNotGettingLeadsArticle,
+  },
+  {
+    slug: "what-makes-a-small-business-website-look-professional",
+    title: "What Makes a Small Business Website Look Professional?",
+    seoTitle: "What Makes a Small Business Website Professional?",
+    shortTitle: "What makes a website look professional",
+    description:
+      "Learn how hierarchy, typography, consistency, imagery, trust details, mobile behavior, and performance shape a professional business website.",
+    topic: "Branding & Digital Presence",
+    category: "Website fundamentals",
+    funnel: "Educational",
+    primaryTarget: "what makes a website look professional",
+    secondaryTargets: [
+      "professional small business website",
+      "how to make a business website look professional",
+      "professional website design",
+    ],
+    intent:
+      "Understand the visual, content, and technical qualities that make a business website feel credible.",
+    nextStep: "/small-business-web-design",
+    publishedAt: "2026-08-11",
+    tableOfContents: [
+      { id: "coherence", label: "Professional means coherent" },
+      { id: "hierarchy", label: "Clear visual hierarchy" },
+      { id: "consistency", label: "Consistent design system" },
+      { id: "imagery-trust", label: "Imagery and trust" },
+      { id: "mobile-performance", label: "Mobile and performance" },
+    ],
+    relatedSlugs: [
+      "what-should-a-local-business-website-include",
+      "website-mistakes-that-cost-local-businesses-customers",
+      "why-isnt-my-website-getting-leads",
+    ],
+    Content: ProfessionalSmallBusinessWebsiteArticle,
   },
   {
     slug: "how-long-does-it-take-to-build-a-small-business-website",
