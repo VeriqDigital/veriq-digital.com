@@ -56,9 +56,12 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
     : undefined;
   const isServiceNextStep =
     article.nextStep === "/des-moines-web-design" ||
-    article.nextStep === "/small-business-web-design";
+    article.nextStep === "/small-business-web-design" ||
+    article.nextStep === "/website-redesign";
   const serviceNextStepIsLocal =
     article.nextStep === "/des-moines-web-design";
+  const serviceNextStepIsRedesign =
+    article.nextStep === "/website-redesign";
   const canonicalUrl = `${siteConfig.url}/resources/${article.slug}`;
   const ArticleContent = article.Content;
   const structuredData = {
@@ -201,18 +204,24 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
               {isServiceNextStep
                 ? serviceNextStepIsLocal
                   ? "Planning a website project in Des Moines?"
+                  : serviceNextStepIsRedesign
+                    ? "Considering a website redesign?"
                   : "Planning a small-business website project?"
                 : "Continue with the next practical question"}
             </p>
             <h2>
               {isServiceNextStep
-                ? "Turn the research into a clear, useful website."
+                ? serviceNextStepIsRedesign
+                  ? "Turn the current-site problems into a clear redesign plan."
+                  : "Turn the research into a clear, useful website."
                 : nextStepResource?.title ?? "Keep building a clearer website plan."}
             </h2>
             <Link href={article.nextStep}>
               {isServiceNextStep
                 ? serviceNextStepIsLocal
                   ? "Explore Des Moines web design"
+                  : serviceNextStepIsRedesign
+                    ? "Explore website redesign services"
                   : "Explore small business web design"
                 : "Read the next guide"}{" "}
               <span aria-hidden="true">↗</span>

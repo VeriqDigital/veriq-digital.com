@@ -117,9 +117,9 @@ export default function WebsiteNotGettingLeadsArticle() {
             <Link href="/resources/website-mistakes-that-cost-local-businesses-customers">
               website mistakes that cost businesses customers
             </Link>{" "}
-            or see how Veriq plans{" "}
-            <Link href="/small-business-web-design">
-              small-business websites around credible lead paths
+            or see how Veriq approaches{" "}
+            <Link href="/website-redesign">
+              existing websites that need a clearer lead path
             </Link>
             .
           </p>

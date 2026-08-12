@@ -11,3 +11,8 @@ export { default as WebsiteCostArticle } from "./website-cost";
 export { default as WebsiteMistakesArticle } from "./website-mistakes";
 export { default as WebsiteNotGettingLeadsArticle } from "./website-not-getting-leads";
 export { default as WebsiteNotOnGoogleArticle } from "./website-not-on-google";
+export { default as SignsWebsiteIsOutdatedArticle } from "./signs-website-is-outdated";
+export { default as WebsiteLooksBadOnMobileArticle } from "./website-looks-bad-on-mobile";
+export { default as WebsiteRedesignCostArticle } from "./website-redesign-cost";
+export { default as WebsiteRedesignVsRebuildArticle } from "./website-redesign-vs-rebuild";
+export { default as WhyWebsiteIsSlowArticle } from "./why-website-is-slow";

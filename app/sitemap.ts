@@ -25,6 +25,11 @@ const staticRoutes: MetadataRoute.Sitemap = [
     priority: 0.95,
   },
   {
+    url: siteConfig.url + "/website-redesign",
+    changeFrequency: "monthly",
+    priority: 0.95,
+  },
+  {
     url: `${siteConfig.url}/blog`,
     changeFrequency: "monthly",
     priority: 0.75,

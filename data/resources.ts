@@ -8,11 +8,16 @@ import {
   SmallBusinessWebsiteCostArticle,
   SmallBusinessWebsiteTimelineArticle,
   SmallBusinessWebsiteValueArticle,
+  SignsWebsiteIsOutdatedArticle,
   WebDesignerVsWebsiteBuilderArticle,
   WebsiteCostArticle,
+  WebsiteLooksBadOnMobileArticle,
   WebsiteMistakesArticle,
   WebsiteNotGettingLeadsArticle,
   WebsiteNotOnGoogleArticle,
+  WebsiteRedesignCostArticle,
+  WebsiteRedesignVsRebuildArticle,
+  WhyWebsiteIsSlowArticle,
 } from "@/content/resources";
 
 export type ResourceCategory = "Buying guide" | "Website fundamentals";
@@ -88,7 +93,9 @@ export type ResourceArticle = {
  * The small-business service page solely owns non-geographic transactional
  * phrases for small-business website design and development. Resources may
  * support that page, but must not target the service phrase as their primary
- * intent.
+ * intent. The website-redesign service page solely owns transactional
+ * website-redesign phrases. Redesign resources own only their diagnostic,
+ * comparison, or cost questions.
  */
 export const resources: readonly ResourceArticle[] = [
   {
@@ -378,7 +385,7 @@ export const resources: readonly ResourceArticle[] = [
       "why website visitors do not contact my business",
     ],
     intent: "Diagnose customer-experience and conversion problems.",
-    nextStep: "/des-moines-web-design",
+    nextStep: "/website-redesign",
     publishedAt: "2026-08-09",
     tableOfContents: [
       { id: "message", label: "Unclear message" },
@@ -413,7 +420,7 @@ export const resources: readonly ResourceArticle[] = [
     ],
     intent:
       "Identify where a website lead path is failing before choosing a redesign or marketing fix.",
-    nextStep: "/small-business-web-design",
+    nextStep: "/website-redesign",
     publishedAt: "2026-08-11",
     tableOfContents: [
       { id: "diagnose", label: "Find the break in the path" },
@@ -528,6 +535,182 @@ export const resources: readonly ResourceArticle[] = [
       "does-your-small-business-need-a-website-in-2026",
     ],
     Content: WebsiteNotOnGoogleArticle,
+  },
+  {
+    slug: "signs-your-website-is-outdated",
+    title: "Signs Your Website Is Outdated",
+    seoTitle: "Signs Your Website Is Outdated",
+    shortTitle: "Signs your website is outdated",
+    description:
+      "Identify when an existing website no longer reflects the business, serves customers well, supports updates, or fits the next stage of growth.",
+    topic: "Branding & Digital Presence",
+    category: "Website fundamentals",
+    funnel: "Educational",
+    primaryTarget: "signs your website is outdated",
+    secondaryTargets: [
+      "outdated website",
+      "does my website need a redesign",
+      "when should I redesign my website",
+      "signs you need a new website",
+    ],
+    intent:
+      "Recognize evidence that a current website needs focused improvement or broader redesign.",
+    nextStep: "/resources/website-redesign-vs-rebuild",
+    publishedAt: "2026-08-12",
+    tableOfContents: [
+      { id: "business", label: "Business mismatch" },
+      { id: "customers", label: "Customer problems" },
+      { id: "operations", label: "Editing and maintenance" },
+      { id: "measurement", label: "Measurement and growth" },
+      { id: "age", label: "Age is not the test" },
+      { id: "next-step", label: "Choose the next step" },
+    ],
+    relatedSlugs: [
+      "website-redesign-vs-rebuild",
+      "website-mistakes-that-cost-local-businesses-customers",
+      "why-isnt-my-website-getting-leads",
+    ],
+    Content: SignsWebsiteIsOutdatedArticle,
+  },
+  {
+    slug: "why-is-my-website-slow",
+    title: "Why Is My Website Slow?",
+    seoTitle: "Why Your Website Is Slow",
+    shortTitle: "Why your website is slow",
+    description:
+      "Understand how media, scripts, third-party tools, hosting, plugins, and architecture create a slow business website—and what to fix first.",
+    topic: "Web Development",
+    category: "Website fundamentals",
+    funnel: "Educational",
+    primaryTarget: "why is my website slow",
+    secondaryTargets: [
+      "slow business website",
+      "website performance problems",
+      "improve website speed",
+    ],
+    intent:
+      "Diagnose accessible website performance causes before choosing optimization or redesign.",
+    nextStep: "/resources/website-redesign-vs-rebuild",
+    publishedAt: "2026-08-12",
+    tableOfContents: [
+      { id: "measure", label: "Define the slowdown" },
+      { id: "media", label: "Media and fonts" },
+      { id: "scripts", label: "Scripts and third parties" },
+      { id: "platform", label: "Platform and architecture" },
+      { id: "decision", label: "Optimize or redesign" },
+    ],
+    relatedSlugs: [
+      "website-looks-bad-on-mobile",
+      "website-redesign-vs-rebuild",
+      "website-mistakes-that-cost-local-businesses-customers",
+    ],
+    Content: WhyWebsiteIsSlowArticle,
+  },
+  {
+    slug: "website-looks-bad-on-mobile",
+    title: "Why Does My Website Look Bad on Mobile?",
+    seoTitle: "Why Your Website Looks Bad on Mobile",
+    shortTitle: "Why your website looks bad on mobile",
+    description:
+      "Find the responsive layout, navigation, typography, media, form, and performance problems that make a business website difficult to use on phones.",
+    topic: "UI/UX & Conversion",
+    category: "Website fundamentals",
+    funnel: "Educational",
+    primaryTarget: "website looks bad on mobile",
+    secondaryTargets: [
+      "website not mobile friendly",
+      "mobile website problems",
+      "responsive website problems",
+    ],
+    intent:
+      "Diagnose recurring mobile usability failures and decide whether to repair a component or redesign the system.",
+    nextStep: "/resources/website-redesign-vs-rebuild",
+    publishedAt: "2026-08-12",
+    tableOfContents: [
+      { id: "responsive", label: "Responsive layout" },
+      { id: "navigation", label: "Navigation and touch" },
+      { id: "content", label: "Type, media, and tables" },
+      { id: "forms", label: "Mobile forms" },
+      { id: "performance", label: "Mobile performance" },
+      { id: "decision", label: "Repair or redesign" },
+    ],
+    relatedSlugs: [
+      "why-is-my-website-slow",
+      "website-mistakes-that-cost-local-businesses-customers",
+      "website-redesign-vs-rebuild",
+    ],
+    Content: WebsiteLooksBadOnMobileArticle,
+  },
+  {
+    slug: "website-redesign-vs-rebuild",
+    title: "Website Redesign vs. Rebuild: Which Do You Need?",
+    seoTitle: "Website Redesign vs. Rebuild",
+    shortTitle: "Website redesign vs. rebuild",
+    description:
+      "Compare focused improvements, redesign, restructuring, migration, and rebuilding based on platform limits, technical debt, content, and business needs.",
+    topic: "Web Design",
+    category: "Buying guide",
+    funnel: "Commercial investigation",
+    primaryTarget: "website redesign vs rebuild",
+    secondaryTargets: [
+      "redesign or rebuild website",
+      "should I redesign my website",
+      "should I rebuild my website",
+      "update vs rebuild website",
+    ],
+    intent:
+      "Choose the smallest complete improvement path for an existing website.",
+    nextStep: "/resources/how-much-does-a-website-redesign-cost",
+    publishedAt: "2026-08-12",
+    tableOfContents: [
+      { id: "terms", label: "Define the paths" },
+      { id: "fix", label: "When to fix" },
+      { id: "redesign", label: "When to redesign" },
+      { id: "rebuild", label: "When to rebuild" },
+      { id: "decision", label: "Make the decision" },
+    ],
+    relatedSlugs: [
+      "signs-your-website-is-outdated",
+      "how-much-does-a-website-redesign-cost",
+      "custom-website-vs-template-for-small-business",
+    ],
+    Content: WebsiteRedesignVsRebuildArticle,
+  },
+  {
+    slug: "how-much-does-a-website-redesign-cost",
+    title: "How Much Does a Website Redesign Cost?",
+    seoTitle: "Website Redesign Cost: A Practical Guide",
+    shortTitle: "Website redesign cost",
+    description:
+      "Learn how current-site condition, content, design, migration, integrations, redirects, testing, and support shape website redesign pricing.",
+    topic: "Web Design",
+    category: "Buying guide",
+    funnel: "Commercial investigation",
+    primaryTarget: "website redesign cost",
+    secondaryTargets: [
+      "how much does a website redesign cost",
+      "website redesign pricing",
+      "cost to redesign a website",
+      "small business website redesign cost",
+      "website redesign price",
+    ],
+    intent:
+      "Understand redesign-specific cost drivers before requesting a scoped proposal.",
+    nextStep: "/website-redesign",
+    publishedAt: "2026-08-12",
+    tableOfContents: [
+      { id: "why-prices-vary", label: "Why prices vary" },
+      { id: "cost-drivers", label: "Cost drivers" },
+      { id: "migration", label: "Migration and SEO work" },
+      { id: "proposal", label: "Compare proposals" },
+      { id: "budget", label: "Plan the budget" },
+    ],
+    relatedSlugs: [
+      "website-redesign-vs-rebuild",
+      "how-much-does-a-small-business-website-cost",
+      "how-long-does-it-take-to-build-a-small-business-website",
+    ],
+    Content: WebsiteRedesignCostArticle,
   },
 ];
 

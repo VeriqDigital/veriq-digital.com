@@ -10,7 +10,8 @@ export type BookingPlacement =
   | "floating_desktop"
   | "floating_mobile"
   | "small_business_web_design_closing"
-  | "services_closing";
+  | "services_closing"
+  | "website_redesign_closing";
 
 type BookingLinkProps = {
   children: ReactNode;
