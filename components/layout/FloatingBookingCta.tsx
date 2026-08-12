@@ -5,9 +5,12 @@ import { useEffect, useState } from "react";
 import BookingLink from "@/components/ui/BookingLink";
 import { siteConfig } from "@/config/site";
 
-const FloatingBookingCta = () => {
+type FloatingBookingCtaProps = {
+  mobileMenuOpen: boolean;
+};
+
+const FloatingBookingCta = ({ mobileMenuOpen }: FloatingBookingCtaProps) => {
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [footerIntersection, setFooterIntersection] = useState({
     pathname: "",
     visible: false,
@@ -33,21 +36,6 @@ const FloatingBookingCta = () => {
     return () => observer.disconnect();
   }, [pathname]);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    const syncMenuState = () =>
-      setMobileMenuOpen(root.dataset.mobileMenuOpen === "true");
-    const observer = new MutationObserver(syncMenuState);
-
-    syncMenuState();
-    observer.observe(root, {
-      attributes: true,
-      attributeFilter: ["data-mobile-menu-open"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   if (pathname === "/contact") {
     return null;
   }
@@ -55,36 +43,30 @@ const FloatingBookingCta = () => {
   const footerVisible =
     footerIntersection.pathname === pathname && footerIntersection.visible;
   const isVisible = !footerVisible;
-  const isMobileVisible = isVisible && !mobileMenuOpen;
 
   return (
-    <>
-      <BookingLink
-        className="floating-booking-cta-mobile"
-        ariaLabel={`Book a ${siteConfig.booking.durationMinutes}-minute Veriq intro call (opens in a new tab)`}
-        ariaHidden={!isMobileVisible}
-        dataVisible={isMobileVisible}
-        placement="floating_mobile"
-        tabIndex={isMobileVisible ? undefined : -1}
-      >
+    <BookingLink
+      className="floating-booking-cta"
+      ariaLabel={`Book a ${siteConfig.booking.durationMinutes}-minute Veriq intro call (opens in a new tab)`}
+      ariaHidden={!isVisible}
+      dataMobileMenuOpen={mobileMenuOpen}
+      dataVisible={isVisible}
+      placement="floating_mobile"
+      responsivePlacement={{
+        query: "(min-width: 900px)",
+        placement: "floating_desktop",
+      }}
+      tabIndex={isVisible ? undefined : -1}
+    >
+      <span className="floating-booking-cta__mobile-label">
         <strong>Book a Call</strong>
-        <i aria-hidden="true">↗</i>
-      </BookingLink>
-      <BookingLink
-        className="floating-booking-cta"
-        ariaLabel={`Book a ${siteConfig.booking.durationMinutes}-minute Veriq intro call (opens in a new tab)`}
-        ariaHidden={!isVisible}
-        dataVisible={isVisible}
-        placement="floating_desktop"
-        tabIndex={isVisible ? undefined : -1}
-      >
-        <span>
-          <strong>Book a call</strong>
-          <small>{siteConfig.booking.durationMinutes}-minute intro</small>
-        </span>
-        <i aria-hidden="true">↗</i>
-      </BookingLink>
-    </>
+      </span>
+      <span className="floating-booking-cta__desktop-label">
+        <strong>Book a call</strong>
+        <small>{siteConfig.booking.durationMinutes}-minute intro</small>
+      </span>
+      <i aria-hidden="true">↗</i>
+    </BookingLink>
   );
 };
 

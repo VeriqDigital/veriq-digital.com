@@ -143,73 +143,8 @@ body {
 
 .floating-booking-cta {
   position: fixed;
-  right: 6.75rem;
-  bottom: 1.75rem;
-  z-index: 40;
-  display: none;
-  min-height: 4rem;
-  align-items: center;
-  gap: 1rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-  border-radius: 0.75rem;
-  padding: 0.7rem 0.9rem 0.7rem 1rem;
-  background: var(--foreground);
-  color: var(--background);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(0.75rem);
-  transition:
-    opacity 220ms ease,
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 300ms ease,
-    color 300ms ease;
-}
-
-.floating-booking-cta[data-visible="true"] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-.floating-booking-cta > span {
-  display: grid;
-  gap: 0.15rem;
-}
-
-.floating-booking-cta strong {
-  font-family: var(--font-heading);
-  font-size: 0.95rem;
-  font-weight: 800;
-  letter-spacing: 0.035em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.floating-booking-cta small {
-  color: color-mix(in srgb, var(--background) 70%, transparent);
-  font-size: 0.68rem;
-  line-height: 1.2;
-}
-
-.floating-booking-cta i {
-  color: var(--primary);
-  font-size: 1rem;
-  font-style: normal;
-}
-
-.floating-booking-cta:hover {
-  transform: translateY(-2px);
-}
-
-.floating-booking-cta:focus-visible {
-  outline: 3px solid var(--primary-readable);
-  outline-offset: 3px;
-}
-
-.floating-booking-cta-mobile {
-  position: fixed;
   right: 5.5rem;
+  bottom: 1.25rem;
   bottom: max(1.25rem, calc(env(safe-area-inset-bottom) + 0.75rem));
   z-index: 40;
   display: flex;
@@ -225,6 +160,7 @@ body {
   opacity: 0;
   pointer-events: none;
   transform: translateY(0.75rem);
+  visibility: hidden;
   transition:
     opacity 220ms ease,
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -232,13 +168,30 @@ body {
     color 300ms ease;
 }
 
-.floating-booking-cta-mobile[data-visible="true"] {
+.floating-booking-cta[data-visible="true"] {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
+  visibility: visible;
 }
 
-.floating-booking-cta-mobile strong {
+.floating-booking-cta[data-mobile-menu-open="true"] {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.75rem);
+  visibility: hidden;
+}
+
+.floating-booking-cta__mobile-label {
+  display: block;
+}
+
+.floating-booking-cta__desktop-label {
+  display: none;
+  gap: 0.15rem;
+}
+
+.floating-booking-cta strong {
   font-family: var(--font-heading);
   font-size: 0.82rem;
   font-weight: 800;
@@ -247,40 +200,69 @@ body {
   text-transform: uppercase;
 }
 
-.floating-booking-cta-mobile i {
+.floating-booking-cta__desktop-label small {
+  color: color-mix(in srgb, var(--background) 70%, transparent);
+  font-size: 0.68rem;
+  line-height: 1.2;
+}
+
+.floating-booking-cta i {
   color: var(--primary);
   font-size: 0.9rem;
   font-style: normal;
 }
 
-.floating-booking-cta-mobile:hover {
+.floating-booking-cta:hover {
   transform: translateY(-2px);
 }
 
-.floating-booking-cta-mobile:focus-visible {
+.floating-booking-cta:focus-visible {
   outline: 3px solid var(--primary-readable);
   outline-offset: 3px;
 }
 
 @media (min-width: 640px) {
-  .floating-booking-cta-mobile {
+  .floating-booking-cta {
     right: 7.25rem;
+    bottom: 1.75rem;
     bottom: max(1.75rem, calc(env(safe-area-inset-bottom) + 0.75rem));
   }
 }
 
 @media (min-width: 900px) {
-  .floating-booking-cta-mobile {
+  .floating-booking-cta {
+    right: 6.75rem;
+    bottom: 1.75rem;
+    min-height: 4rem;
+    gap: 1rem;
+    padding: 0.7rem 0.9rem 0.7rem 1rem;
+  }
+
+  .floating-booking-cta[data-visible="true"][data-mobile-menu-open="true"] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  .floating-booking-cta__mobile-label {
     display: none;
   }
 
-  .floating-booking-cta {
-    display: flex;
+  .floating-booking-cta__desktop-label {
+    display: grid;
+  }
+
+  .floating-booking-cta strong {
+    font-size: 0.95rem;
+  }
+
+  .floating-booking-cta i {
+    font-size: 1rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .floating-booking-cta-mobile,
   .floating-booking-cta {
     transition: none;
   }
