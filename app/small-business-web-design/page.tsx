@@ -42,7 +42,7 @@ const faqs = [
   },
   {
     question: "How long does a small-business website take?",
-    answer: "Most business websites are currently described as taking two to six weeks. The actual schedule depends on scope, content readiness, feedback, functionality, integrations, and launch requirements. Custom software timelines depend on the work involved.",
+    answer: "A focused business website can often be completed within several weeks, while the actual schedule depends on scope, content readiness, feedback, functionality, integrations, and launch requirements. Custom software timelines depend on the work involved.",
   },
   {
     question: "Can Veriq redesign an existing business website?",

@@ -267,7 +267,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Custom website vs. template",
     description:
       "Learn when a template or managed platform is enough and when custom website design or development creates meaningful business value.",
-    topic: "Web Development",
+    topic: "Web Design",
     category: "Buying guide",
     funnel: "Commercial investigation",
     primaryTarget: "custom website vs template",
