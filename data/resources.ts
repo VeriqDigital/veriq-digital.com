@@ -307,9 +307,8 @@ export const resources: readonly ResourceArticle[] = [
     funnel: "Educational",
     primaryTarget: "does a small business need a website in 2026",
     secondaryTargets: [
-      "small business website",
-      "website vs social media for business",
-      "local business website",
+      "is a website necessary for a small business",
+      "website vs social media for small business",
     ],
     intent: "Decide whether a website is necessary and what level is appropriate.",
     nextStep: "/resources/what-should-a-local-business-website-include",
@@ -374,7 +373,8 @@ export const resources: readonly ResourceArticle[] = [
     primaryTarget: "website mistakes that cost local businesses customers",
     secondaryTargets: [
       "small business website mistakes",
-      "local website conversion problems",
+      "common local business website mistakes",
+      "website usability mistakes",
       "why website visitors do not contact my business",
     ],
     intent: "Diagnose customer-experience and conversion problems.",
