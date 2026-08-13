@@ -194,48 +194,6 @@
   font-style: normal;
 }
 
-.heroGraphic {
-  position: absolute;
-  top: -9rem;
-  right: -10rem;
-  z-index: -1;
-  width: clamp(25rem, 38vw, 38rem);
-  aspect-ratio: 1;
-  opacity: 0.55;
-  pointer-events: none;
-  animation: graphicDrift 10s ease-in-out infinite alternate;
-}
-
-.graphicOrbit,
-.graphicCore,
-.graphicNode {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.graphicOrbit {
-  inset: 10%;
-  border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-  transform: rotate(28deg) scaleY(0.55);
-}
-
-.graphicCore {
-  inset: 28%;
-  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
-  background: radial-gradient(circle at 32% 27%, color-mix(in srgb, white 45%, transparent), transparent 12%),
-    linear-gradient(145deg, color-mix(in srgb, var(--background) 94%, white), color-mix(in srgb, var(--primary) 20%, var(--background)));
-  box-shadow: 0 2.5rem 5rem color-mix(in srgb, var(--primary) 12%, transparent);
-}
-
-.graphicNode {
-  top: 18%;
-  right: 18%;
-  width: 1rem;
-  aspect-ratio: 1;
-  background: var(--primary);
-  box-shadow: 0 0 1.5rem color-mix(in srgb, var(--primary) 55%, transparent);
-}
-
 .chapters {
   border-top: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
 }
@@ -365,17 +323,6 @@
   transform: rotate(1.25deg);
 }
 
-.capabilityPanel::after {
-  content: "";
-  position: absolute;
-  right: -5rem;
-  bottom: -5rem;
-  width: 12rem;
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--primary) 42%, transparent);
-  border-radius: 50%;
-}
-
 .panelHeading {
   display: flex;
   align-items: center;
@@ -436,18 +383,6 @@
   overflow: hidden;
   border-top: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
   padding: clamp(6rem, 10vw, 10rem) 0 clamp(7.5rem, 12vw, 12rem);
-}
-
-.process::after {
-  content: "";
-  position: absolute;
-  right: -9rem;
-  bottom: -14rem;
-  width: 30rem;
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
 }
 
 .processHeader {
@@ -598,12 +533,6 @@
   outline-offset: 4px;
 }
 
-@keyframes graphicDrift {
-  to {
-    transform: translate3d(-1rem, 1.5rem, 0) rotate(6deg);
-  }
-}
-
 @media (max-width: 960px) {
   .heroInner {
     grid-template-columns: 1fr;
@@ -616,12 +545,6 @@
   .serviceIndex {
     width: min(100%, 34rem);
     margin-left: auto;
-  }
-
-  .heroGraphic {
-    top: -5rem;
-    right: -16rem;
-    opacity: 0.35;
   }
 
   .chapterInner {
@@ -742,10 +665,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroGraphic {
-    animation: none;
-  }
-
   .primaryLink,
   .closingLink,
   .chapterLink,

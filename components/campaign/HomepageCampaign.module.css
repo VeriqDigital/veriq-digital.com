@@ -10,20 +10,6 @@
   padding: clamp(1.15rem, 2.4vw, 1.65rem);
 }
 
-.campaignCard::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 5rem;
-  height: 5rem;
-  border-top: 1px solid color-mix(in srgb, var(--primary) 62%, transparent);
-  border-right: 1px solid color-mix(in srgb, var(--primary) 62%, transparent);
-  pointer-events: none;
-  clip-path: polygon(42% 0, 100% 0, 100% 58%);
-  background: color-mix(in srgb, var(--primary) 10%, transparent);
-}
-
 .campaignHeader,
 .campaignFooter {
   display: flex;

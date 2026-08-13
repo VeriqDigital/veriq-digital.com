@@ -19,6 +19,16 @@
   --radius-md: 10px;
   --radius-lg: 18px;
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+  --lead-panel-background: #121416;
+  --lead-panel-border: rgba(255, 255, 255, 0.14);
+  --lead-control-background: #1a1d20;
+  --lead-control-border: rgba(255, 255, 255, 0.16);
+  --lead-control-border-hover: rgba(255, 255, 255, 0.28);
+  --lead-control-radius: 0.5rem;
+  --lead-label: rgba(244, 245, 245, 0.84);
+  --lead-placeholder: rgba(244, 245, 245, 0.58);
+  --lead-supporting: rgba(244, 245, 245, 0.66);
+  --lead-focus-ring: rgba(78, 242, 242, 0.16);
 }
 
 :root[data-theme="dark"] {

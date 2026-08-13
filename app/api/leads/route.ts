@@ -10,6 +10,7 @@ const contactLeadSchema = z.object({
   email: z.email(),
   phone: z.string().trim().max(40).optional(),
   topic: z.string().trim().max(80).optional(),
+  projectType: z.string().trim().min(1).max(80).optional(),
   message: z.string().trim().min(1).max(2000),
 });
 
@@ -152,6 +153,10 @@ const formatLeadForOwner = (lead: Lead) => {
     rows.push(`Budget: ${lead.topic}`);
   }
 
+  if (lead.projectType) {
+    rows.push(`Project type: ${lead.projectType}`);
+  }
+
   rows.push("", "Message:", lead.message);
 
   return rows.join("\n");
@@ -186,7 +191,9 @@ const getLeadHomePayload = (lead: Lead) => {
     email: lead.email,
     phone: lead.phone,
     company: siteConfig.name,
-    message: lead.message,
+    message: lead.projectType
+      ? `Project type: ${lead.projectType}\n\n${lead.message}`
+      : lead.message,
     estimatedValue: lead.topic
       ? estimatedValuesByBudget[lead.topic]
       : undefined,

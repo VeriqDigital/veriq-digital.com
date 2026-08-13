@@ -13,13 +13,11 @@ export default function OpenGraphImage() {
     (
       <div
         style={{
-          position: "relative",
           display: "flex",
           width: "100%",
           height: "100%",
           flexDirection: "column",
           justifyContent: "space-between",
-          overflow: "hidden",
           padding: "48px 64px 42px",
           backgroundColor: "#111111",
           backgroundImage:
@@ -33,6 +31,8 @@ export default function OpenGraphImage() {
           style={{
             display: "flex",
             alignItems: "center",
+            paddingBottom: 30,
+            borderBottom: "1px solid rgba(247,247,245,0.16)",
             fontSize: 48,
             fontWeight: 900,
             letterSpacing: "-0.035em",
@@ -44,78 +44,8 @@ export default function OpenGraphImage() {
 
         <div
           style={{
-            position: "absolute",
-            top: 142,
-            right: 54,
             display: "flex",
-            width: 350,
-            height: 350,
-            alignItems: "center",
-            justifyContent: "center",
-            border: "2px solid rgba(78,242,242,0.3)",
-            borderRadius: "50%",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: 82,
-              left: 20,
-              display: "flex",
-              width: 310,
-              height: 186,
-              border: "1px solid rgba(78,242,242,0.22)",
-              borderRadius: "50%",
-              transform: "rotate(-14deg)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: 34,
-              right: 46,
-              display: "flex",
-              width: 12,
-              height: 12,
-              borderRadius: "50%",
-              background: "#4ef2f2",
-              boxShadow: "0 0 18px rgba(78,242,242,0.6)",
-            }}
-          />
-          <div
-            style={{
-              display: "flex",
-              width: 218,
-              height: 218,
-              alignItems: "center",
-              justifyContent: "center",
-              border: "1px solid rgba(247,247,245,0.25)",
-              borderRadius: "50%",
-              background:
-                "radial-gradient(circle at 35% 30%, #364348 0%, #172326 45%, #0b0d0e 76%)",
-              boxShadow: "0 0 62px rgba(78,242,242,0.14)",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                width: 12,
-                height: 12,
-                borderRadius: "50%",
-                background: "#4ef2f2",
-                boxShadow: "0 0 24px rgba(78,242,242,0.8)",
-              }}
-            />
-          </div>
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            top: 142,
-            left: 64,
-            display: "flex",
-            width: 760,
+            width: 1040,
             flexDirection: "column",
           }}
         >
@@ -136,22 +66,22 @@ export default function OpenGraphImage() {
               display: "flex",
               marginTop: 22,
               flexDirection: "column",
-              fontSize: 78,
+              fontSize: 82,
               fontWeight: 900,
               letterSpacing: "-0.035em",
               lineHeight: 0.92,
               textTransform: "uppercase",
             }}
           >
-            <span>Digital systems</span>
-            <span style={{ color: "#c3c8ca" }}>Built for growth.</span>
+            <span>A digital presence</span>
+            <span style={{ color: "#c3c8ca" }}>Unlike any other.</span>
           </div>
           <div
             style={{
               display: "flex",
-              marginTop: 24,
+              marginTop: 26,
               color: "#f7f7f5",
-              fontSize: 25,
+              fontSize: 24,
               fontWeight: 700,
               letterSpacing: "0.01em",
             }}
@@ -165,6 +95,8 @@ export default function OpenGraphImage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            paddingTop: 24,
+            borderTop: "1px solid rgba(247,247,245,0.16)",
             color: "#aeb3b7",
             fontSize: 20,
             fontWeight: 700,

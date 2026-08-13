@@ -187,11 +187,6 @@ export default function ServicesPage() {
               ))}
             </nav>
 
-            <div className={styles.heroGraphic} aria-hidden="true">
-              <span className={styles.graphicOrbit} />
-              <span className={styles.graphicCore} />
-              <span className={styles.graphicNode} />
-            </div>
           </div>
         </Container>
       </section>

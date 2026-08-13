@@ -7,6 +7,7 @@ export type ContactLeadPayload = {
   email: string;
   phone?: string;
   topic?: string;
+  projectType?: string;
   message: string;
 };
 

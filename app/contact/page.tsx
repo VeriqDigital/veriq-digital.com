@@ -74,11 +74,6 @@ export default function ContactPage() {
 
           <ContactForm />
 
-          <div className={styles.backdrop} aria-hidden="true">
-            <span className={styles.backdropOrbit} />
-            <span className={styles.backdropCore} />
-            <span className={styles.backdropNode} />
-          </div>
         </div>
       </Container>
     </main>
