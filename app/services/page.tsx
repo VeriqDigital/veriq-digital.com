@@ -224,6 +224,13 @@ export default function ServicesPage() {
                         <span aria-hidden="true">↗</span>
                       </Link>
                       <Link
+                        href="/website-redesign"
+                        className={styles.chapterLink}
+                      >
+                        Improve or replace an existing website
+                        <span aria-hidden="true">↗</span>
+                      </Link>
+                      <Link
                         href="/des-moines-web-design"
                         className={styles.chapterLink}
                       >

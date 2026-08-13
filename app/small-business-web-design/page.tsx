@@ -74,7 +74,7 @@ const structuredData = {
       "@type": "Service",
       "@id": canonicalUrl + "#service",
       name: "Small business web design and development",
-      serviceType: ["Small business website design", "Business website development", "Custom website development", "Squarespace website design", "Website redesign"],
+      serviceType: ["Small business website design", "Business website development", "Custom website development", "Squarespace website design"],
       description: "Website strategy, design, development, launch, and ongoing support for small and growing businesses.",
       url: canonicalUrl,
       provider: { "@id": siteConfig.url + "/#organization" },
@@ -198,6 +198,7 @@ export default function SmallBusinessWebDesignPage() {
             <div>
               <p>A project can start from scratch or from an existing site. A redesign may need clearer messaging, stronger mobile behavior, faster pages, better editing, improved search foundations, or a lead path that matches how customers actually buy.</p>
               <p>The goal is not change for its own sake. Existing content, URLs, analytics, domain access, forms, and useful brand equity should be reviewed before anything is replaced.</p>
+              <Link href="/website-redesign">Explore Veriq&apos;s website redesign approach <span aria-hidden="true">↗</span></Link>
               <Link href="/resources/why-isnt-my-website-getting-leads">Diagnose a website that is not getting leads <span aria-hidden="true">↗</span></Link>
             </div>
           </div>

@@ -113,14 +113,14 @@ export default function WebsiteMistakesArticle() {
         </p>
         <ArticleCallout title="When the site needs more than a patch">
           <p>
-            Veriq designs and develops{" "}
-            <Link href="/small-business-web-design">
-              credible, conversion-aware websites for small businesses
+            Veriq&apos;s{" "}
+            <Link href="/website-redesign">
+              website redesign service
             </Link>{" "}
-            around clear messaging, mobile use, performance, accessibility, and
-            dependable lead paths. Bring the current site and the problems you
-            are seeing; the first step is determining what actually needs to
-            change.
+            addresses clear messaging, mobile use, performance, accessibility,
+            and dependable lead paths together when the problems repeat across
+            an existing site. The first step is still determining what actually
+            needs to change.
           </p>
         </ArticleCallout>
       </ArticleSection>

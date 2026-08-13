@@ -1,0 +1,901 @@
+.page {
+  overflow: clip;
+}
+
+.hero {
+  position: relative;
+  padding: clamp(9rem, 15vw, 12rem) 0 clamp(5.5rem, 10vw, 9rem);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 7rem;
+  right: -13rem;
+  width: clamp(27rem, 46vw, 44rem);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 13rem;
+  right: 1rem;
+  width: clamp(10rem, 17vw, 16rem);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--primary-readable) 38%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: rotate(27deg) scaleY(0.48);
+}
+
+.breadcrumbs,
+.heroGrid {
+  position: relative;
+  z-index: 1;
+}
+
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  list-style: none;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.breadcrumbs a:hover {
+  color: var(--primary-readable);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(19rem, 0.75fr);
+  align-items: end;
+  gap: clamp(3rem, 9vw, 9rem);
+  margin-top: clamp(3rem, 6vw, 5.5rem);
+}
+
+.heroGrid > *,
+.sectionIntro > *,
+.auditGrid > *,
+.preservationGrid > *,
+.exampleGrid > *,
+.faqGrid > *,
+.closingInner > * {
+  min-width: 0;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+}
+
+.kicker,
+.sectionLabel {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.kicker::before {
+  content: "";
+  width: 2.75rem;
+  height: 2px;
+  background: currentColor;
+}
+
+.hero h1 {
+  max-width: 11ch;
+  font-family: var(--font-heading);
+  font-size: clamp(4rem, 8.3vw, 8.2rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.heroLead {
+  max-width: 44rem;
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 1.45vw, 1.25rem);
+  line-height: 1.72;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+}
+
+.primaryAction,
+.closingActions > a:first-child {
+  display: inline-flex;
+  min-height: 3.2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  padding: 0.9rem 1.2rem;
+  background: var(--primary);
+  color: #071011;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background-color 200ms ease, transform 250ms ease;
+}
+
+.primaryAction:hover,
+.closingActions > a:first-child:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.secondaryAction,
+.inlineLink,
+.auditCopy > a,
+.preservationGrid > div > a,
+.exampleGrid > div > a,
+.serviceBridges a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary-readable) 48%, transparent);
+  padding-bottom: 0.25rem;
+  color: var(--foreground);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.secondaryAction:hover,
+.inlineLink:hover,
+.auditCopy > a:hover,
+.preservationGrid > div > a:hover,
+.exampleGrid > div > a:hover,
+.serviceBridges a:hover {
+  border-color: var(--primary-readable);
+  color: var(--primary-readable);
+}
+
+.dossier {
+  overflow: hidden;
+  border-radius: 0.9rem 0.9rem 4.5rem 0.9rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--surface);
+  color: var(--surface-foreground);
+  box-shadow: 0 2.5rem 6rem rgba(0, 0, 0, 0.13);
+  transform: rotate(1deg);
+}
+
+.dossierHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.dossierHeading i {
+  color: var(--primary);
+  font-style: normal;
+}
+
+.dossier dl {
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+}
+
+.dossier dl > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.35fr) minmax(0, 1fr);
+  gap: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+  padding: 1rem 0;
+}
+
+.dossier dt {
+  color: color-mix(in srgb, var(--surface-foreground) 48%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dossier dd {
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.dossier > p {
+  margin-top: 1.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 62%, transparent);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.signals,
+.decision,
+.audit,
+.workScope,
+.platform,
+.process,
+.example,
+.resources,
+.faq {
+  padding: clamp(5.5rem, 10vw, 9rem) 0;
+}
+
+.signals,
+.workScope,
+.example,
+.faq {
+  background: color-mix(in srgb, var(--foreground) 3%, var(--background));
+}
+
+.sectionIntro,
+.decisionHeader,
+.platformHeader,
+.processHeader,
+.resourcesHeader {
+  display: grid;
+  grid-template-columns: minmax(11rem, 0.34fr) minmax(0, 0.66fr);
+  gap: clamp(3rem, 10vw, 9rem);
+}
+
+.sectionIntro h2,
+.decisionHeader h2,
+.auditCopy h2,
+.platformHeader h2,
+.processHeader h2,
+.preservation h2,
+.example h2,
+.resourcesHeader h2,
+.faq h2,
+.closing h2 {
+  max-width: 14ch;
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 5.8vw, 5.6rem);
+  font-weight: 875;
+  line-height: 0.93;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+.sectionIntro > div > p {
+  max-width: 44rem;
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.signalList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 17%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--foreground) 17%, transparent);
+}
+
+.signalList article {
+  display: grid;
+  min-height: 14rem;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  align-content: start;
+  gap: 0.8rem 1rem;
+  border-right: 1px solid color-mix(in srgb, var(--foreground) 17%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 17%, transparent);
+  padding: clamp(1.5rem, 3.5vw, 3rem);
+}
+
+.signalList span {
+  grid-row: 1 / span 2;
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.signalList h3,
+.scopeGrid h3,
+.platformRows h3,
+.processList h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 2.8vw, 2.7rem);
+  font-weight: 800;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+.signalList p,
+.scopeGrid p,
+.platformRows p,
+.processList p {
+  max-width: 35rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.decision {
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+.pathLedger {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 24%, transparent);
+}
+
+.pathLedger article {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.3fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 24%, transparent);
+  padding: clamp(1.75rem, 3.5vw, 3rem) 0;
+}
+
+.pathLedger h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(2.1rem, 4vw, 4rem);
+  font-weight: 850;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.pathLedger dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.pathLedger dt {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pathLedger dd {
+  margin-top: 0.7rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.decision > div > .inlineLink,
+.platform > div > .inlineLink {
+  margin-top: 2rem;
+}
+
+.audit {
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.auditGrid,
+.preservationGrid,
+.exampleGrid,
+.faqGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
+  align-items: start;
+  gap: clamp(3rem, 10vw, 9rem);
+}
+
+.audit .sectionLabel,
+.preservation .sectionLabel {
+  color: var(--primary);
+}
+
+.auditCopy h2 {
+  margin-top: 1.5rem;
+  color: var(--surface-foreground);
+}
+
+.auditCopy > p,
+.preservationGrid > div > p,
+.exampleGrid > div > p {
+  max-width: 40rem;
+  margin-top: 1.5rem;
+  color: color-mix(in srgb, var(--surface-foreground) 67%, transparent);
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+.auditCopy > a,
+.preservationGrid > div > a {
+  margin-top: 1.75rem;
+  border-color: color-mix(in srgb, var(--primary) 52%, transparent);
+  color: var(--surface-foreground);
+}
+
+.auditCopy > a:hover,
+.preservationGrid > div > a:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.auditList {
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 18%, transparent);
+  list-style: none;
+}
+
+.auditList li {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 18%, transparent);
+  padding: 1.15rem 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2.2vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.auditList span {
+  padding-top: 0.2rem;
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+}
+
+.scopeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 5rem);
+  margin-top: clamp(4rem, 8vw, 7rem);
+}
+
+.scopeGrid article {
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 23%, transparent);
+  padding-top: 1.25rem;
+}
+
+.scopeGrid h3 {
+  max-width: 15ch;
+}
+
+.scopeGrid p {
+  margin-top: 1rem;
+}
+
+.preservation {
+  padding: clamp(5.5rem, 10vw, 9rem) 0;
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.preservation h2 {
+  margin-top: 1.5rem;
+  color: var(--surface-foreground);
+}
+
+.preservationList {
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 18%, transparent);
+}
+
+.preservationList > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.3fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 18%, transparent);
+  padding: 1.15rem 0;
+}
+
+.preservationList dt {
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.preservationList dd {
+  color: color-mix(in srgb, var(--surface-foreground) 67%, transparent);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.platformRows {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+}
+
+.platformRows article {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.42fr) minmax(0, 0.58fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+}
+
+.process {
+  background: color-mix(in srgb, var(--foreground) 3%, var(--background));
+}
+
+.processList {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  list-style: none;
+}
+
+.processList li {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 1.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+}
+
+.processList li > span {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.processList li > div {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.4fr) minmax(0, 0.6fr);
+  gap: 2rem;
+}
+
+.exampleGrid {
+  grid-template-columns: minmax(0, 0.58fr) minmax(20rem, 0.42fr);
+  align-items: center;
+}
+
+.exampleImage {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  background: var(--surface);
+}
+
+.exampleImage img {
+  object-fit: cover;
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.exampleImage:hover img {
+  transform: scale(1.025);
+}
+
+.exampleGrid > div > p {
+  color: var(--muted);
+}
+
+.exampleGrid > div > h2 {
+  margin-top: 1.5rem;
+}
+
+.exampleGrid > div > a {
+  margin-top: 1.75rem;
+}
+
+.resourceLinks {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+.resourceLinks a {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.2fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  padding: clamp(1.4rem, 3vw, 2.25rem) 0;
+  transition: color 200ms ease, transform 250ms ease;
+}
+
+.resourceLinks a:hover {
+  color: var(--primary-readable);
+  transform: translateX(0.5rem);
+}
+
+.resourceLinks span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.resourceLinks strong {
+  font-family: var(--font-heading);
+  font-size: clamp(1.55rem, 2.8vw, 2.5rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.resourceLinks i {
+  color: var(--primary-readable);
+  font-style: normal;
+}
+
+.serviceBridges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 3rem;
+  margin-top: 2.5rem;
+}
+
+.faqList {
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+.faqList details {
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+.faqList summary {
+  display: grid;
+  cursor: pointer;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  list-style: none;
+  font-family: var(--font-heading);
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  font-weight: 750;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.faqList summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqList summary i {
+  color: var(--primary-readable);
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.faqList details[open] summary i {
+  transform: rotate(45deg);
+}
+
+.faqList details > p {
+  max-width: 44rem;
+  padding: 0 3rem 1.75rem 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.closing {
+  padding: clamp(5.5rem, 10vw, 9rem) 0;
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.closingInner {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.3fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.closingInner > p {
+  align-self: start;
+  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.closing h2 {
+  color: var(--surface-foreground);
+}
+
+.closingActions {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.closingActions > a:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  padding-bottom: 0.25rem;
+  color: var(--surface-foreground);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.closingActions > a:last-child:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible,
+.inlineLink:focus-visible,
+.auditCopy > a:focus-visible,
+.preservationGrid > div > a:focus-visible,
+.exampleGrid > div > a:focus-visible,
+.resourceLinks a:focus-visible,
+.serviceBridges a:focus-visible,
+.closingActions a:focus-visible,
+.breadcrumbs a:focus-visible,
+.exampleImage:focus-visible,
+.faqList summary:focus-visible {
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 4px;
+}
+
+.auditCopy > a:focus-visible,
+.preservationGrid > div > a:focus-visible,
+.closingActions a:focus-visible {
+  outline-color: var(--primary);
+}
+
+@media (max-width: 960px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .dossier {
+    width: min(100%, 42rem);
+    margin-left: auto;
+  }
+
+  .scopeGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .closingInner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .closingInner > p {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero::before {
+    right: -22rem;
+  }
+
+  .hero::after {
+    display: none;
+  }
+
+  .sectionIntro,
+  .decisionHeader,
+  .platformHeader,
+  .processHeader,
+  .resourcesHeader,
+  .auditGrid,
+  .preservationGrid,
+  .exampleGrid,
+  .faqGrid,
+  .closingInner {
+    grid-template-columns: 1fr;
+  }
+
+  .signalList,
+  .scopeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .signalList article {
+    min-height: auto;
+  }
+
+  .pathLedger article,
+  .platformRows article {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .processList li > div {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .resourceLinks a {
+    grid-template-columns: 1fr auto;
+    gap: 0.7rem 1rem;
+  }
+
+  .resourceLinks span {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: clamp(3.35rem, 16.5vw, 4.7rem);
+  }
+
+  .heroActions,
+  .primaryAction {
+    width: 100%;
+  }
+
+  .dossier {
+    border-bottom-right-radius: 3rem;
+    transform: none;
+  }
+
+  .dossier dl > div,
+  .preservationList > div {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .pathLedger dl {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .processList li {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .faqList details > p {
+    padding-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryAction,
+  .closingActions a,
+  .resourceLinks a,
+  .exampleImage img {
+    transition: none;
+  }
+
+  .primaryAction:hover,
+  .closingActions a:hover,
+  .resourceLinks a:hover,
+  .exampleImage:hover img {
+    transform: none;
+  }
+}
