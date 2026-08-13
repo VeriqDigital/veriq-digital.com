@@ -1,10 +1,3 @@
-/*
-THESIS: Turn a technical website audit into a clear triage order for a business owner, refusing a dense developer dashboard.
-OWN-WORLD: Veriq's light/dark surfaces, cyan signals, condensed headings, mono measurement labels, fine rules, and restrained panels.
-STORY: A visitor enters a URL, sees the honest demo boundary, understands six areas of site health, explores prioritized sample findings, and can ask Veriq for help.
-FIRST VIEWPORT: Direct audit copy and the URL form occupy the left; a compact sample scorecard proves the result format on the right.
-FORM: A prioritized triage board, fourth in the grounded structure list, moving from overall health to category evidence and an action queue; seed e38a36de.
-*/
 import BookingLink from "@/components/ui/BookingLink";
 import Container from "@/components/ui/Container";
 import AuditForm from "@/components/website-audit/AuditForm";
@@ -13,40 +6,8 @@ import AuditResults from "@/components/website-audit/AuditResults";
 import { demoAuditResult } from "@/components/website-audit/demo-audit";
 import { createPageMetadata, serializeJsonLd } from "@/config/seo";
 import { siteConfig } from "@/config/site";
+import { auditCategoryRegistry } from "@/lib/website-audit/categories";
 import styles from "@/components/website-audit/website-audit.module.css";
-
-const auditCategories = [
-  {
-    label: "Search visibility",
-    description:
-      "Whether search engines can discover, understand, and index the pages that matter.",
-  },
-  {
-    label: "Performance",
-    description:
-      "How quickly useful content appears and whether the experience stays stable as it loads.",
-  },
-  {
-    label: "Mobile experience",
-    description:
-      "How comfortably visitors can read, navigate, and take action on smaller screens.",
-  },
-  {
-    label: "Accessibility",
-    description:
-      "Whether structure, contrast, forms, and controls work for a wider range of people.",
-  },
-  {
-    label: "Conversion / UX",
-    description:
-      "How clearly the site explains the offer, builds confidence, and guides the next step.",
-  },
-  {
-    label: "Technical health",
-    description:
-      "The crawl, security, metadata, link, and page foundations that keep a site dependable.",
-  },
-] as const;
 
 const processSteps = [
   {
@@ -56,7 +17,7 @@ const processSteps = [
   {
     title: "We analyze the essentials",
     description:
-      "The future audit engine will evaluate the signals that affect visibility, usability, performance, and customer action.",
+      "Veriq checks measurable signals that affect visibility, usability, performance, and customer action.",
   },
   {
     title: "Get a clear action order",
@@ -68,7 +29,7 @@ const processSteps = [
 export const metadata = createPageMetadata({
   title: "Free Website Audit for Growing Businesses",
   description:
-    "Explore Veriq's free website audit experience for SEO, performance, mobile usability, accessibility, conversion UX, and technical health.",
+    "Run a free website audit covering SEO, performance, mobile usability, accessibility, conversion UX, and technical health.",
   path: "/website-audit",
 });
 
@@ -80,9 +41,9 @@ const structuredData = {
   url: canonicalUrl,
   name: "Free Website Audit for Growing Businesses",
   description:
-    "A Veriq website audit experience covering search visibility, performance, mobile usability, accessibility, conversion UX, and technical health.",
+    "A free Veriq website audit covering search visibility, performance, mobile usability, accessibility, conversion UX, and technical health.",
   isPartOf: { "@id": `${siteConfig.url}/#website` },
-  about: auditCategories.map((category) => category.label),
+  about: auditCategoryRegistry.map((category) => category.pageLabel),
   inLanguage: "en-US",
 };
 
@@ -127,9 +88,9 @@ export default function WebsiteAuditPage() {
               </p>
             </div>
             <dl className={styles.checkList}>
-              {auditCategories.map((category) => (
-                <div key={category.label}>
-                  <dt>{category.label}</dt>
+              {auditCategoryRegistry.map((category) => (
+                <div key={category.id}>
+                  <dt>{category.pageLabel}</dt>
                   <dd>{category.description}</dd>
                 </div>
               ))}
@@ -165,7 +126,7 @@ export default function WebsiteAuditPage() {
           aria-label="Sample website audit results"
         >
           <Container>
-            <AuditResults result={demoAuditResult} />
+            <AuditResults result={demoAuditResult} variant="sample" />
           </Container>
         </section>
 
@@ -194,4 +155,3 @@ export default function WebsiteAuditPage() {
     </>
   );
 }
-

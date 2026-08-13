@@ -9,34 +9,64 @@ type FullReportFormProps = {
   auditId: string;
 };
 
+type ReportFormState =
+  | { status: "idle"; message: "" }
+  | { status: "submitting"; message: "" }
+  | { status: "success"; message: string }
+  | { status: "error"; message: string };
+
 export default function FullReportForm({ auditId }: FullReportFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState("");
+  const [formState, setFormState] = useState<ReportFormState>({
+    status: "idle",
+    message: "",
+  });
+  const isSubmitting = formState.status === "submitting";
+  const isComplete = formState.status === "success";
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setMessage("");
-    setIsSubmitting(true);
 
-    try {
-      const form = event.currentTarget;
-      const formData = new FormData(form);
-      const result = await submitFullReportRequest({
-        auditId,
-        name: String(formData.get("name") ?? ""),
-        email: String(formData.get("email") ?? ""),
-      });
-
-      setMessage(result.message);
-    } catch {
-      setMessage("The report request could not be prepared. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+    if (isSubmitting || isComplete) {
+      return;
     }
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    setFormState({ status: "submitting", message: "" });
+    const result = await submitFullReportRequest({
+      auditId,
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      website: String(formData.get("website") ?? ""),
+    });
+
+    if (!result.ok) {
+      setFormState({ status: "error", message: result.message });
+      return;
+    }
+
+    form.reset();
+    setFormState({ status: "success", message: result.message });
   };
 
   return (
-    <form className={styles.reportForm} onSubmit={handleSubmit}>
+    <form
+      className={styles.reportForm}
+      onSubmit={handleSubmit}
+      aria-busy={isSubmitting}
+    >
+      <div className={styles.reportHoneypot} aria-hidden="true">
+        <label>
+          Leave this field empty
+          <input
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            disabled={isSubmitting || isComplete}
+          />
+        </label>
+      </div>
       <div className={styles.reportFields}>
         <label>
           <span>Name</span>
@@ -45,7 +75,9 @@ export default function FullReportForm({ auditId }: FullReportFormProps) {
             name="name"
             autoComplete="name"
             placeholder="Your name"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isComplete}
+            maxLength={120}
+            aria-describedby={`${auditId}-report-privacy`}
           />
         </label>
         <label>
@@ -54,25 +86,36 @@ export default function FullReportForm({ auditId }: FullReportFormProps) {
             required
             name="email"
             type="email"
+            inputMode="email"
             autoComplete="email"
             placeholder="you@example.com"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isComplete}
+            maxLength={254}
+            aria-describedby={`${auditId}-report-privacy`}
           />
         </label>
       </div>
       <div className={styles.reportFormFooter}>
-        <p>
-          Preview only — report delivery is not connected, and this form does
-          not send or store your details yet.
+        <p id={`${auditId}-report-privacy`}>
+          We’ll use your name and email to send this report and record delivery.
+          No mailing list.
         </p>
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Preparing preview…" : "Send My Full Report"}
+        <button type="submit" disabled={isSubmitting || isComplete}>
+          {isComplete
+            ? "Report Sent"
+            : isSubmitting
+              ? "Sending Report…"
+              : "Email My Report"}
           <span aria-hidden="true">↗</span>
         </button>
       </div>
-      {message ? (
-        <p className={styles.reportNotice} role="status">
-          {message}
+      {formState.message ? (
+        <p
+          className={styles.reportNotice}
+          data-state={formState.status}
+          role={formState.status === "error" ? "alert" : "status"}
+        >
+          {formState.message}
         </p>
       ) : null}
     </form>

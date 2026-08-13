@@ -127,6 +127,8 @@
 .reportFields input:focus-visible,
 .urlFieldRow button:focus-visible,
 .reportFormFooter button:focus-visible,
+.shareReport button:focus-visible,
+.reportPrimaryAction:focus-visible,
 .serviceCtaLink:focus-visible,
 .auditPreview a:focus-visible,
 .inputNotice a:focus-visible {
@@ -140,6 +142,8 @@
 
 .urlFieldRow button,
 .reportFormFooter button,
+.shareReport button,
+.reportPrimaryAction,
 .serviceCtaLink {
   display: inline-flex;
   min-height: 3.75rem;
@@ -162,6 +166,8 @@
 
 .urlFieldRow button:hover,
 .reportFormFooter button:hover,
+.shareReport button:hover,
+.reportPrimaryAction:hover,
 .serviceCtaLink:hover {
   background: var(--primary-hover);
   transform: translateY(-2px);
@@ -201,6 +207,11 @@
 .inputNotice strong {
   color: var(--foreground);
   overflow-wrap: anywhere;
+}
+
+.inputNotice {
+  color: var(--primary-readable);
+  font-weight: 700;
 }
 
 .inputNotice a {
@@ -333,21 +344,36 @@
   font-size: 0.72rem;
 }
 
-.scoreTrack,
-.categoryTrack {
-  overflow: hidden;
+.scoreMeter,
+.categoryMeter {
+  display: block;
+  width: 100%;
   height: 3px;
+  border: 0;
+  appearance: none;
   background: color-mix(in srgb, var(--surface-foreground) 15%, transparent);
+  color: var(--primary);
 }
 
-.scoreTrack {
+.scoreMeter {
   margin-top: 1.25rem;
 }
 
-.scoreTrack span,
-.categoryTrack span {
-  display: block;
+.scoreMeter::-webkit-meter-bar,
+.categoryMeter::-webkit-meter-bar {
   height: 100%;
+  border: 0;
+  background: color-mix(in srgb, var(--surface-foreground) 15%, transparent);
+}
+
+.scoreMeter::-webkit-meter-optimum-value,
+.categoryMeter::-webkit-meter-optimum-value,
+.scoreMeter::-webkit-meter-suboptimum-value,
+.categoryMeter::-webkit-meter-suboptimum-value,
+.scoreMeter::-webkit-meter-even-less-good-value,
+.categoryMeter::-webkit-meter-even-less-good-value,
+.scoreMeter::-moz-meter-bar,
+.categoryMeter::-moz-meter-bar {
   background: var(--primary);
 }
 
@@ -389,7 +415,7 @@
   font-size: 1rem;
 }
 
-.categoryScoresCompact .categoryTrack {
+.categoryScoresCompact .categoryMeter {
   margin-top: 0.7rem;
 }
 
@@ -653,6 +679,10 @@
   gap: 1rem;
 }
 
+.categoryScoreHeading > div {
+  min-width: 0;
+}
+
 .categoryScoreHeading h3 {
   font-family: var(--font-heading);
   font-size: clamp(1.45rem, 2.7vw, 2.2rem);
@@ -690,8 +720,32 @@
   font-size: 0.56rem;
 }
 
-.categoryScores .categoryTrack {
+.categoryScores .categoryMeter {
   margin-top: 1.5rem;
+}
+
+.categoryScoreHeading > .categoryUnavailable {
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.categoryScoreHeading > .categoryUnavailable strong {
+  line-height: 0.7;
+}
+
+.categoryScoreHeading > .categoryUnavailable span {
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.unavailableMeter {
+  min-height: 3px;
+  margin-top: 1.5rem;
+  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
+  font-size: 0.68rem;
+  line-height: 1.5;
 }
 
 .categoryScore > small {
@@ -706,6 +760,14 @@
   display: grid;
   gap: 1rem;
   margin-top: 3rem;
+}
+
+.emptyFindings {
+  margin-top: 3rem;
+  border-block: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 67%, transparent);
+  padding: 1.5rem 0;
+  line-height: 1.65;
 }
 
 .findingCard {
@@ -772,6 +834,7 @@
   line-height: 0.98;
   text-transform: uppercase;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
 .findingLead p,
@@ -858,6 +921,33 @@
   padding: clamp(1.5rem, 4vw, 3.5rem);
 }
 
+.resultNotices {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 67%, transparent);
+  padding-top: 1.25rem;
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.resultNotices li {
+  position: relative;
+  padding-inline-start: 1rem;
+}
+
+.resultNotices li::before {
+  content: "";
+  position: absolute;
+  top: 0.65em;
+  left: 0;
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
 .fullReport > div:first-child > p {
   color: #005d60;
 }
@@ -877,7 +967,17 @@
 }
 
 .reportForm {
+  position: relative;
   align-self: center;
+}
+
+.reportHoneypot {
+  position: absolute;
+  top: auto;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 .reportFields {
@@ -940,6 +1040,104 @@
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.5;
+}
+
+.reportNotice[data-state="error"] {
+  color: #742017;
+}
+
+.reportNotice[data-state="success"] {
+  color: #0b4f42;
+}
+
+.reportPage {
+  min-height: 70vh;
+}
+
+.reportHero {
+  padding: clamp(9rem, 14vw, 12rem) 0 clamp(4rem, 7vw, 6rem);
+}
+
+.reportHeroInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 2rem clamp(3rem, 8vw, 8rem);
+}
+
+.reportEyebrow {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.13em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.reportHero h1,
+.reportStatus h1 {
+  max-width: 13ch;
+  margin-top: 1rem;
+  font-family: var(--font-heading);
+  font-size: clamp(3.2rem, 7vw, 5.75rem);
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  line-height: 0.93;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.reportUrl {
+  max-width: 72ch;
+  margin-top: 1.25rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.shareReport {
+  display: grid;
+  justify-items: end;
+  gap: 0.55rem;
+}
+
+.shareReport button,
+.reportPrimaryAction {
+  min-height: 3.25rem;
+}
+
+.shareReport > p {
+  min-height: 1.15rem;
+  max-width: 30ch;
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-align: right;
+}
+
+.reportStatus {
+  max-width: 60rem;
+  border-block: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding: clamp(2rem, 5vw, 4rem) 0;
+}
+
+.reportStatusDescription {
+  max-width: 64ch;
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.reportStatusActions {
+  margin-top: 1.75rem;
+}
+
+.reportPrimaryAction {
+  width: fit-content;
 }
 
 .serviceCta {
@@ -1019,6 +1217,19 @@
   .serviceCtaInner {
     align-items: start;
   }
+
+  .reportHeroInner {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .shareReport {
+    justify-items: start;
+  }
+
+  .shareReport > p {
+    text-align: left;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1050,6 +1261,8 @@
 
   .urlFieldRow button,
   .reportFormFooter button,
+  .shareReport button,
+  .reportPrimaryAction,
   .serviceCtaLink {
     width: 100%;
   }
@@ -1125,6 +1338,15 @@
     border-radius: 14px;
   }
 
+  .reportHero {
+    padding-top: 8.5rem;
+  }
+
+  .reportHero h1,
+  .reportStatus h1 {
+    font-size: clamp(3rem, 15vw, 4.25rem);
+  }
+
   .reportFormFooter {
     align-items: stretch;
   }
@@ -1146,12 +1368,16 @@
   .reportFields input,
   .urlFieldRow button,
   .reportFormFooter button,
+  .shareReport button,
+  .reportPrimaryAction,
   .serviceCtaLink {
     transition: none;
   }
 
   .urlFieldRow button:hover,
   .reportFormFooter button:hover,
+  .shareReport button:hover,
+  .reportPrimaryAction:hover,
   .serviceCtaLink:hover {
     transform: none;
   }

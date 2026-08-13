@@ -1,9 +1,9 @@
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Oswald } from "next/font/google";
 import DevelopmentWebVitals from "@/components/analytics/DevelopmentWebVitals";
 import MetaPixel from "@/components/analytics/MetaPixel";
+import PrivacyAwareAnalytics from "@/components/analytics/PrivacyAwareAnalytics";
+import PrivacyAwareSpeedInsights from "@/components/analytics/PrivacyAwareSpeedInsights";
 import Footer from "@/components/layout/Footer";
 import FloatingBookingCta from "@/components/layout/FloatingBookingCta";
 import Navbar from "@/components/layout/Navbar";
@@ -111,8 +111,8 @@ export default function RootLayout({
         <Footer />
         <FloatingBookingCta />
         <ThemeToggle />
-        <Analytics />
-        <SpeedInsights />
+        <PrivacyAwareAnalytics />
+        <PrivacyAwareSpeedInsights />
       </body>
     </html>
   );

@@ -1,3 +1,4 @@
+import { getAuditCategory } from "@/lib/website-audit/categories";
 import type { AuditFinding, AuditSeverity } from "./types";
 import styles from "./website-audit.module.css";
 
@@ -15,11 +16,13 @@ type FindingCardProps = {
 };
 
 export default function FindingCard({ finding }: FindingCardProps) {
+  const category = getAuditCategory(finding.category);
+
   return (
     <article className={styles.findingCard} data-severity={finding.severity}>
       <header className={styles.findingHeader}>
         <span className={styles.severityLabel}>{severityLabels[finding.severity]}</span>
-        <span>{finding.categoryLabel}</span>
+        <span>{category.label}</span>
       </header>
       <div className={styles.findingLead}>
         <h3>{finding.title}</h3>
@@ -65,4 +68,3 @@ export default function FindingCard({ finding }: FindingCardProps) {
     </article>
   );
 }
-

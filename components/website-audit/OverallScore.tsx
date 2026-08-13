@@ -21,13 +21,19 @@ export default function OverallScore({
         <p>Overall website score</p>
         <span>{interpretation}</span>
       </div>
-      <div className={styles.scoreValue} aria-label={`${score} out of 100, ${interpretation}`}>
+      <div className={styles.scoreValue}>
         <strong>{score}</strong>
         <span>/100</span>
       </div>
-      <div className={styles.scoreTrack} aria-hidden="true">
-        <span style={{ width: `${score}%` }} />
-      </div>
+      <meter
+        className={styles.scoreMeter}
+        min={0}
+        max={100}
+        value={score}
+        aria-label={`Overall website score: ${score} out of 100, ${interpretation}`}
+      >
+        {score} out of 100
+      </meter>
       {!compact && summary ? (
         <p className={styles.scoreExplanation}>{summary}</p>
       ) : null}

@@ -1,50 +1,61 @@
-import type { WebsiteAuditResult } from "./types";
-import { clampNormalizedScore } from "./types";
+import { normalizeAuditResult } from "@/lib/website-audit/result-schema";
 
-export const demoAuditResult: WebsiteAuditResult = {
+export const demoAuditResult = normalizeAuditResult({
   id: "demo_01JVERIQAUDITPREVIEW",
   status: "demo",
   auditedUrl: "https://northstarheating.example/",
   createdAt: "2026-08-12T12:00:00.000Z",
-  overallScore: clampNormalizedScore(66),
+  overallScore: 66,
   overallSummary:
     "The foundation is workable, but a few high-impact issues are getting in the way of visibility, speed, and customer action.",
   categoryScores: [
     {
       id: "seo",
-      label: "SEO",
-      score: clampNormalizedScore(72),
+      available: true,
+      score: 72,
       summary: "A solid base with a few important discovery gaps.",
+      checksRun: 8,
+      checksUnavailable: 0,
     },
     {
       id: "performance",
-      label: "Performance",
-      score: clampNormalizedScore(54),
+      available: true,
+      score: 54,
       summary: "Mobile visitors wait too long for the main content.",
+      checksRun: 5,
+      checksUnavailable: 0,
     },
     {
       id: "mobile-experience",
-      label: "Mobile experience",
-      score: clampNormalizedScore(67),
+      available: true,
+      score: 67,
       summary: "Usable overall, with friction around key actions.",
+      checksRun: 3,
+      checksUnavailable: 0,
     },
     {
       id: "accessibility",
-      label: "Accessibility",
-      score: clampNormalizedScore(82),
+      available: true,
+      score: 82,
       summary: "Most essentials are in place; a few controls need attention.",
+      checksRun: 5,
+      checksUnavailable: 0,
     },
     {
       id: "conversion-ux",
-      label: "Conversion / UX",
-      score: clampNormalizedScore(48),
+      available: true,
+      score: 48,
       summary: "The next step is easy to miss on high-intent pages.",
+      checksRun: 3,
+      checksUnavailable: 0,
     },
     {
       id: "technical-health",
-      label: "Technical health",
-      score: clampNormalizedScore(76),
+      available: true,
+      score: 76,
       summary: "Generally healthy, with one serious indexing risk.",
+      checksRun: 7,
+      checksUnavailable: 0,
     },
   ],
   summary: {
@@ -57,7 +68,6 @@ export const demoAuditResult: WebsiteAuditResult = {
     {
       id: "demo-indexing-block",
       category: "technical-health",
-      categoryLabel: "Technical health",
       severity: "critical",
       title: "A key service page is blocked from search results",
       explanation:
@@ -72,7 +82,6 @@ export const demoAuditResult: WebsiteAuditResult = {
     {
       id: "demo-mobile-load",
       category: "performance",
-      categoryLabel: "Performance",
       severity: "high",
       title: "Your main content loads slowly on mobile",
       explanation:
@@ -90,7 +99,6 @@ export const demoAuditResult: WebsiteAuditResult = {
     {
       id: "demo-primary-action",
       category: "conversion-ux",
-      categoryLabel: "Conversion / UX",
       severity: "high",
       title: "The primary next step is difficult to find",
       explanation:
@@ -105,7 +113,6 @@ export const demoAuditResult: WebsiteAuditResult = {
     {
       id: "demo-page-title",
       category: "seo",
-      categoryLabel: "SEO",
       severity: "medium",
       title: "The homepage title does not describe the main service",
       explanation:
@@ -120,7 +127,6 @@ export const demoAuditResult: WebsiteAuditResult = {
     {
       id: "demo-tap-targets",
       category: "mobile-experience",
-      categoryLabel: "Mobile experience",
       severity: "medium",
       title: "Some mobile controls are difficult to tap",
       explanation:
@@ -138,7 +144,6 @@ export const demoAuditResult: WebsiteAuditResult = {
     {
       id: "demo-form-labels",
       category: "accessibility",
-      categoryLabel: "Accessibility",
       severity: "passed",
       title: "Contact fields have useful accessible labels",
       explanation:
@@ -149,4 +154,9 @@ export const demoAuditResult: WebsiteAuditResult = {
         "Keep the labels in place and include them when new fields are added.",
     },
   ],
-};
+  notices: [
+    "Sample data only. No real website was analyzed for this preview.",
+    "Automated accessibility checks do not certify WCAG or legal compliance.",
+  ],
+  methodologyVersion: "v1",
+});

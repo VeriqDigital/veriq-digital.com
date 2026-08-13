@@ -1,4 +1,5 @@
 import CategoryScores from "./CategoryScores";
+import { formatCount } from "./format-count";
 import OverallScore from "./OverallScore";
 import type { WebsiteAuditResult } from "./types";
 import styles from "./website-audit.module.css";
@@ -13,17 +14,16 @@ export default function AuditPreview({ result }: AuditPreviewProps) {
       <header>
         <div>
           <span>Sample audit</span>
-          <p>Demo report preview</p>
+          <p>Example report preview</p>
         </div>
         <span className={styles.previewStatus}>Demo data</span>
       </header>
       <OverallScore score={result.overallScore} compact />
       <CategoryScores scores={result.categoryScores} compact />
       <footer>
-        <span>{result.summary.criticalIssues} critical issue</span>
+        <span>{formatCount(result.summary.criticalIssues, "critical issue")}</span>
         <a href="#sample-audit-results">View sample findings ↘</a>
       </footer>
     </aside>
   );
 }
-
