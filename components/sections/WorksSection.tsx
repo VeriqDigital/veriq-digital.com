@@ -23,8 +23,9 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
           </Heading>
         </div>
         <p>
-          Websites and experiences catered to the needs of our clients. No two
-          clients are the same, therefore no two projects are identical.
+          Business websites built around the job at hand. Clearer messaging,
+          stronger credibility, better usability, and custom functionality where
+          it adds real value.
         </p>
       </header>
 
