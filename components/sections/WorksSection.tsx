@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { projects } from "@/data/projects";
-import WorksBackdrop from "./WorksBackdrop";
 import styles from "./WorksSection.module.css";
 
 type WorksSectionProps = {
@@ -13,7 +12,6 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
 
   return (
     <div className={styles.works}>
-      <WorksBackdrop />
       <header className={styles.header}>
         <div>
           <p className={styles.eyebrow}>
@@ -25,9 +23,9 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
           </Heading>
         </div>
         <p>
-          Business websites and digital experiences shaped around the job at
-          hand—clearer messaging, stronger credibility, better usability, and
-          custom functionality where it adds real value.
+          Business websites built around the job at hand. Clearer messaging,
+          stronger credibility, better usability, and custom functionality where
+          it adds real value.
         </p>
       </header>
 
@@ -47,8 +45,8 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
                   index === 0
                     ? "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 79vw, 980px"
                     : index === 1
-                    ? "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 66vw, 780px"
-                    : "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 70vw, 900px"
+                      ? "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 66vw, 780px"
+                      : "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 70vw, 900px"
                 }
                 className={styles.image}
               />

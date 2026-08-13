@@ -9,31 +9,6 @@
   color: var(--surface-foreground);
 }
 
-.footer::before {
-  content: "";
-  position: absolute;
-  top: -14rem;
-  right: -13rem;
-  width: 34rem;
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--surface-foreground) 8%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.footer::after {
-  content: "";
-  position: absolute;
-  top: 2rem;
-  right: 4rem;
-  width: 12rem;
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--primary) 24%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: rotate(32deg) scaleY(0.48);
-}
-
 .inner {
   position: relative;
   z-index: 1;
@@ -220,14 +195,6 @@
 @media (max-width: 760px) {
   .footer {
     padding-top: 5rem;
-  }
-
-  .footer::before {
-    right: -24rem;
-  }
-
-  .footer::after {
-    display: none;
   }
 
   .top {

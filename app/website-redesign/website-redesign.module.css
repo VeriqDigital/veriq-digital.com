@@ -7,31 +7,6 @@
   padding: clamp(9rem, 15vw, 12rem) 0 clamp(5.5rem, 10vw, 9rem);
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  top: 7rem;
-  right: -13rem;
-  width: clamp(27rem, 46vw, 44rem);
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.hero::after {
-  content: "";
-  position: absolute;
-  top: 13rem;
-  right: 1rem;
-  width: clamp(10rem, 17vw, 16rem);
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--primary-readable) 38%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: rotate(27deg) scaleY(0.48);
-}
-
 .breadcrumbs,
 .heroGrid {
   position: relative;
@@ -797,14 +772,6 @@
 }
 
 @media (max-width: 720px) {
-  .hero::before {
-    right: -22rem;
-  }
-
-  .hero::after {
-    display: none;
-  }
-
   .sectionIntro,
   .decisionHeader,
   .platformHeader,

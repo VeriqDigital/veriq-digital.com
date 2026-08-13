@@ -33,7 +33,7 @@ export default function Home() {
             ) : null
           }
         />
-        <Section id="services" compactTop>
+        <Section id="services">
           <ServicesSection />
         </Section>
         <Section id="works">

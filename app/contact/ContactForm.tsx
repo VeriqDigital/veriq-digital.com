@@ -1,47 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import type { FormEvent } from "react";
 import HoneypotField from "@/components/forms/HoneypotField";
+import useContactLeadForm from "@/components/forms/useContactLeadForm";
 import BudgetSelect from "@/components/ui/BudgetSelect";
-import { submitLead } from "@/lib/submit-lead";
 import styles from "./contact.module.css";
 
 const ContactForm = () => {
-  const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSubmitError("");
-
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    const payload = {
-      type: "contact" as const,
-      websiteAddress: String(formData.get("websiteAddress") ?? ""),
-      name: String(formData.get("name") ?? ""),
-      email: String(formData.get("email") ?? ""),
-      phone: String(formData.get("phone") ?? ""),
-      topic: String(formData.get("topic") ?? ""),
-      message: String(formData.get("message") ?? ""),
-    };
-
-    setIsSubmitting(true);
-
-    const result = await submitLead(payload);
-
-    setIsSubmitting(false);
-
-    if (!result.ok) {
-      setSubmitError(result.message);
-      return;
-    }
-
-    form.reset();
-    setHasSubmitted(true);
-  };
+  const {
+    hasSubmitted,
+    handleSubmit,
+    isSubmitting,
+    resetSubmission,
+    submitError,
+  } = useContactLeadForm();
 
   return (
     <section className={styles.formPanel} aria-labelledby="contact-form-title">
@@ -58,7 +29,7 @@ const ContactForm = () => {
           <span aria-hidden="true">✓</span>
           <p>Thanks, your message is in.</p>
           <small>We&apos;ll get back to you within one business day.</small>
-          <button type="button" onClick={() => setHasSubmitted(false)}>
+          <button type="button" onClick={resetSubmission}>
             Send another message
           </button>
         </div>

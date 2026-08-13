@@ -168,48 +168,6 @@
   font-size: 0.75rem;
 }
 
-.heroGraphic {
-  position: absolute;
-  top: -10rem;
-  right: -13rem;
-  z-index: -1;
-  width: clamp(27rem, 40vw, 40rem);
-  aspect-ratio: 1;
-  opacity: 0.5;
-  pointer-events: none;
-  animation: heroGraphicFloat 10s ease-in-out infinite alternate;
-}
-
-.graphicOuter,
-.graphicInner,
-.graphicNode {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.graphicOuter {
-  inset: 10%;
-  border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-  transform: rotate(31deg) scaleY(0.54);
-}
-
-.graphicInner {
-  inset: 30%;
-  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
-  background: radial-gradient(circle at 32% 27%, color-mix(in srgb, white 50%, transparent), transparent 11%),
-    linear-gradient(145deg, color-mix(in srgb, var(--background) 94%, white), color-mix(in srgb, var(--primary) 20%, var(--background)));
-  box-shadow: 0 2.5rem 5rem color-mix(in srgb, var(--primary) 12%, transparent);
-}
-
-.graphicNode {
-  top: 18%;
-  right: 17%;
-  width: 1rem;
-  aspect-ratio: 1;
-  background: var(--primary);
-  box-shadow: 0 0 1.5rem color-mix(in srgb, var(--primary) 58%, transparent);
-}
-
 .philosophy {
   scroll-margin-top: 7rem;
   padding: clamp(7rem, 12vw, 12rem) 0;
@@ -394,28 +352,6 @@
     linear-gradient(90deg, color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px),
     var(--background);
   background-size: 3.5rem 3.5rem;
-}
-
-.founderVisual::after {
-  content: "";
-  position: absolute;
-  right: -5rem;
-  bottom: -5rem;
-  width: 15rem;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--primary) 24%, transparent);
-  filter: blur(2.5rem);
-}
-
-.founderOrbit {
-  position: absolute;
-  width: 72%;
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--foreground) 19%, transparent);
-  border-radius: 50%;
-  transform: rotate(-27deg) scaleY(0.53);
-  animation: founderOrbit 11s ease-in-out infinite alternate;
 }
 
 .founderMonogram {
@@ -618,18 +554,6 @@
   background: #202727;
 }
 
-@keyframes heroGraphicFloat {
-  to {
-    transform: translate3d(-1.25rem, 1.75rem, 0) rotate(6deg);
-  }
-}
-
-@keyframes founderOrbit {
-  to {
-    transform: rotate(-12deg) scaleY(0.6);
-  }
-}
-
 @media (max-width: 980px) {
   .heroInner {
     grid-template-columns: 1fr;
@@ -638,12 +562,6 @@
   .heroAside {
     width: min(100%, 34rem);
     margin-left: auto;
-  }
-
-  .heroGraphic {
-    top: -6rem;
-    right: -18rem;
-    opacity: 0.34;
   }
 
   .beliefGrid {
@@ -768,11 +686,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroGraphic,
-  .founderOrbit {
-    animation: none;
-  }
-
   .primaryLink,
   .textLink,
   .closingLink {

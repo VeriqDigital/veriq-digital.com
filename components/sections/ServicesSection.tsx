@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { services } from "@/data/services";
-import ServicesBackdrop from "./ServicesBackdrop";
 import styles from "./ServicesSection.module.css";
 
 type ServiceIconProps = {
@@ -36,7 +35,6 @@ const ServiceIcon = ({ name }: ServiceIconProps) => {
 const ServicesSection = () => {
   return (
     <div className={styles.services}>
-      <ServicesBackdrop />
       <div className={styles.intro}>
         <div>
           <p className={styles.eyebrow}>
@@ -44,7 +42,7 @@ const ServicesSection = () => {
             What we do
           </p>
           <h2 className={styles.heading}>
-            Digital work with <span>real-world weight.</span>
+            Digital work with <span>real world results.</span>
           </h2>
         </div>
         <div className={styles.introLinks}>
