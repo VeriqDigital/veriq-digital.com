@@ -6,7 +6,6 @@ export default function NotFound() {
   return (
     <main id="main-content" className={styles.page}>
       <div className={styles.grid} aria-hidden="true" />
-
       <Container>
         <div className={styles.layout}>
           <div className={styles.content}>
@@ -36,16 +35,6 @@ export default function NotFound() {
                 View our work <span aria-hidden="true">→</span>
               </Link>
             </div>
-          </div>
-
-          <div className={styles.orbitGraphic} aria-hidden="true">
-            <div className={styles.orbitOuter}>
-              <span className={styles.nodePrimary} />
-            </div>
-            <div className={styles.orbitInner}>
-              <span className={styles.nodeDark} />
-            </div>
-            <div className={styles.core}>?</div>
           </div>
         </div>
       </Container>

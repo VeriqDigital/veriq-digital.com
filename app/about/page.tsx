@@ -101,11 +101,6 @@ export default function AboutPage() {
               <span>Built to last</span>
             </div>
 
-            <div className={styles.heroGraphic} aria-hidden="true">
-              <span className={styles.graphicOuter} />
-              <span className={styles.graphicInner} />
-              <span className={styles.graphicNode} />
-            </div>
           </div>
         </Container>
       </section>
@@ -166,7 +161,6 @@ export default function AboutPage() {
         <Container>
           <div className={styles.founderInner}>
             <div className={styles.founderVisual} aria-hidden="true">
-              <span className={styles.founderOrbit} />
               <span className={styles.founderMonogram}>
                 <Image
                   src="/mick.png"
