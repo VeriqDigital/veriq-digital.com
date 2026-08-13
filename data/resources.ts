@@ -579,7 +579,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Why your website is slow",
     description:
       "Understand how media, scripts, third-party tools, hosting, plugins, and architecture create a slow business website—and what to fix first.",
-    topic: "Web Development",
+    topic: "Web Design",
     category: "Website fundamentals",
     funnel: "Educational",
     primaryTarget: "why is my website slow",

@@ -25,7 +25,7 @@ export default function WebsiteRedesignCostArticle() {
           remain, and separate real platform limitations from fixable problems.
           A useful estimate starts with that evidence rather than a page count.
         </p>
-        <ArticleCallout title="There is no responsible price before the audit">
+        <ArticleCallout title="A useful redesign estimate starts with understanding the current site">
           <p>
             Veriq does not publish a fixed redesign package or invent a project
             total before understanding the current site. A proposal should
