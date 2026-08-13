@@ -111,6 +111,11 @@ export default function WebsiteMistakesArticle() {
           may be enough. If the problems repeat across the site, a redesign may
           be more efficient than patching each symptom.
         </p>
+        <p>
+          Veriq&apos;s <Link href="/website-audit">free website audit preview</Link>{" "}
+          shows how search, speed, mobile use, accessibility, technical health,
+          and conversion findings can be organized into one action order.
+        </p>
         <ArticleCallout title="When the site needs more than a patch">
           <p>
             Veriq&apos;s{" "}

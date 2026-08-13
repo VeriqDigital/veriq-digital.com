@@ -1,0 +1,1158 @@
+.page {
+  overflow: clip;
+}
+
+.hero {
+  position: relative;
+  padding: clamp(9rem, 14vw, 12rem) 0 clamp(5rem, 9vw, 8rem);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 7rem;
+  right: -13rem;
+  width: 31rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--primary-readable) 20%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.heroGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(25rem, 0.95fr);
+  align-items: center;
+  gap: clamp(3rem, 8vw, 7rem);
+}
+
+.heroCopy {
+  max-width: 48rem;
+}
+
+.heroEyebrow,
+.demoLabel,
+.resultSectionHeading > p,
+.fullReport > div:first-child > p,
+.sectionIntro > p:first-child,
+.serviceCtaInner > div:first-child > p {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.13em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.heroEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.heroEyebrow span {
+  width: 2.5rem;
+  height: 2px;
+  background: var(--primary-readable);
+}
+
+.heroCopy h1 {
+  max-width: 11ch;
+  margin-top: 1.25rem;
+  font-family: var(--font-heading);
+  font-size: clamp(3.65rem, 7.5vw, 6rem);
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  line-height: 0.91;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.heroDescription {
+  max-width: 62ch;
+  margin-top: 1.75rem;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 1.5vw, 1.24rem);
+  line-height: 1.7;
+}
+
+.auditForm {
+  max-width: 46rem;
+  margin-top: 2.25rem;
+}
+
+.auditForm > label {
+  display: block;
+  margin-bottom: 0.65rem;
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.urlFieldRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+}
+
+.urlFieldRow input,
+.reportFields input {
+  width: 100%;
+  min-height: 3.75rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent);
+  border-radius: 10px;
+  background: var(--background);
+  color: var(--foreground);
+  padding: 0.9rem 1rem;
+  font: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.urlFieldRow input::placeholder,
+.reportFields input::placeholder {
+  color: color-mix(in srgb, var(--foreground) 58%, transparent);
+}
+
+.urlFieldRow input:hover,
+.urlFieldRow input:focus,
+.reportFields input:hover,
+.reportFields input:focus {
+  border-color: var(--primary-readable);
+}
+
+.urlFieldRow input:focus-visible,
+.reportFields input:focus-visible,
+.urlFieldRow button:focus-visible,
+.reportFormFooter button:focus-visible,
+.serviceCtaLink:focus-visible,
+.auditPreview a:focus-visible,
+.inputNotice a:focus-visible {
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 3px;
+}
+
+.urlFieldRow input[aria-invalid="true"] {
+  border-color: #b42318;
+}
+
+.urlFieldRow button,
+.reportFormFooter button,
+.serviceCtaLink {
+  display: inline-flex;
+  min-height: 3.75rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #071010;
+  padding: 0.9rem 1.25rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 850;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  transition: background-color 180ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.urlFieldRow button:hover,
+.reportFormFooter button:hover,
+.serviceCtaLink:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.urlFieldRow button:disabled,
+.reportFormFooter button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+  transform: none;
+}
+
+.formMeta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.formMeta > p:last-child {
+  min-height: 1.15rem;
+  text-align: right;
+}
+
+.inputError {
+  color: #9f261c;
+  font-weight: 700;
+}
+
+:global(:root[data-theme="dark"]) .inputError {
+  color: #ffaaa2;
+}
+
+.inputNotice strong {
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.inputNotice a {
+  color: var(--primary-readable);
+  font-weight: 750;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.auditPreview {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--surface-foreground);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28);
+}
+
+.auditPreview::before {
+  content: "";
+  position: absolute;
+  top: -5rem;
+  right: -5rem;
+  width: 12rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--primary) 28%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.auditPreview > header,
+.auditPreview > footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+}
+
+.auditPreview > header {
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+}
+
+.auditPreview > header > div > span,
+.previewStatus,
+.auditPreview > footer {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.auditPreview > header > div > span {
+  color: var(--primary);
+}
+
+.auditPreview > header p {
+  margin-top: 0.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
+  font-size: 0.72rem;
+}
+
+.previewStatus {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--primary);
+  padding: 0.45rem 0.65rem;
+}
+
+.overallScoreCompact,
+.overallScore {
+  min-width: 0;
+}
+
+.overallScoreCompact {
+  padding: 1.5rem 1.25rem 1.35rem;
+}
+
+.overallScore {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.scoreHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.scoreHeading p {
+  color: color-mix(in srgb, var(--surface-foreground) 65%, transparent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.scoreHeading > span {
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.scoreValue {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.scoreValue strong {
+  font-family: var(--font-heading);
+  font-size: clamp(4.25rem, 8vw, 7.25rem);
+  font-weight: 850;
+  letter-spacing: -0.035em;
+  line-height: 0.88;
+}
+
+.overallScoreCompact .scoreValue strong {
+  font-size: clamp(4rem, 8vw, 5.5rem);
+}
+
+.scoreValue > span {
+  padding-bottom: 0.5rem;
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.scoreTrack,
+.categoryTrack {
+  overflow: hidden;
+  height: 3px;
+  background: color-mix(in srgb, var(--surface-foreground) 15%, transparent);
+}
+
+.scoreTrack {
+  margin-top: 1.25rem;
+}
+
+.scoreTrack span,
+.categoryTrack span {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+}
+
+.scoreExplanation {
+  max-width: 48ch;
+  margin-top: 1.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.categoryScoresCompact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+}
+
+.categoryScoresCompact .categoryScore {
+  border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+  padding: 0.85rem;
+}
+
+.categoryScoresCompact .categoryScoreHeading {
+  align-items: flex-end;
+}
+
+.compactCategoryLabel {
+  display: block;
+  color: color-mix(in srgb, var(--surface-foreground) 72%, transparent);
+  font-family: var(--font-sans);
+  font-size: 0.67rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.categoryScoresCompact .categoryScoreHeading > p strong {
+  font-size: 1rem;
+}
+
+.categoryScoresCompact .categoryTrack {
+  margin-top: 0.7rem;
+}
+
+.auditPreview > footer {
+  align-items: center;
+  color: color-mix(in srgb, var(--surface-foreground) 54%, transparent);
+}
+
+.auditPreview > footer a {
+  color: var(--primary);
+}
+
+.checksSection,
+.processSection,
+.serviceCta {
+  padding: clamp(5rem, 9vw, 8rem) 0;
+}
+
+.checksSection {
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+.sectionIntro {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.32fr) minmax(18rem, 0.68fr);
+  align-items: start;
+  gap: 1.5rem clamp(2rem, 7vw, 7rem);
+}
+
+.sectionIntro h2,
+.resultsHeader h2,
+.resultSectionHeading h2,
+.fullReport h2,
+.serviceCtaInner h2 {
+  font-family: var(--font-heading);
+  font-weight: 820;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.sectionIntro h2 {
+  max-width: 17ch;
+  font-size: clamp(2.6rem, 5vw, 4.75rem);
+}
+
+.sectionIntro > p:last-child {
+  grid-column: 2;
+  max-width: 66ch;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.checkList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.checkList > div {
+  min-height: 12rem;
+  border-right: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.checkList dt {
+  font-family: var(--font-heading);
+  font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+  font-weight: 780;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.checkList dd {
+  max-width: 36ch;
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.processSection {
+  background: color-mix(in srgb, var(--surface) 4%, var(--background));
+}
+
+.processLayout {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.75fr) minmax(24rem, 1.25fr);
+  gap: clamp(3rem, 9vw, 9rem);
+}
+
+.processLayout .sectionIntro {
+  display: block;
+}
+
+.processLayout .sectionIntro h2 {
+  margin-top: 1rem;
+}
+
+.processList {
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+.processList li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  padding: 1.6rem 0;
+}
+
+.processList > li > span {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+}
+
+.processList h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 780;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.processList p {
+  max-width: 52ch;
+  margin-top: 0.65rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.resultsSection {
+  background: var(--surface);
+  color: var(--surface-foreground);
+  padding: clamp(5rem, 9vw, 8rem) 0;
+}
+
+.resultsShell {
+  min-width: 0;
+}
+
+.resultsHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(18rem, 0.45fr);
+  align-items: end;
+  gap: 2rem clamp(3rem, 9vw, 9rem);
+}
+
+.resultsHeader h2 {
+  max-width: 16ch;
+  margin-top: 1rem;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+}
+
+.resultsHeader > p {
+  max-width: 54ch;
+  color: color-mix(in srgb, var(--surface-foreground) 65%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.scoreOverview {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.8fr) minmax(24rem, 1.2fr);
+  margin-top: clamp(3rem, 6vw, 5rem);
+  border: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+}
+
+.scoreOverview > .overallScore {
+  border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+}
+
+.resultSummary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.resultSummary > div {
+  display: flex;
+  min-height: 10rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.resultSummary > div:nth-child(odd) {
+  border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+}
+
+.resultSummary > div:nth-child(-n + 2) {
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+}
+
+.resultSummary dt {
+  max-width: 10ch;
+  color: color-mix(in srgb, var(--surface-foreground) 62%, transparent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.resultSummary dd {
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 820;
+  line-height: 0.8;
+}
+
+.resultSection {
+  margin-top: clamp(5rem, 10vw, 9rem);
+}
+
+.resultSectionHeading {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.32fr) minmax(0, 0.68fr);
+  gap: 1.5rem clamp(2rem, 7vw, 7rem);
+}
+
+.resultSectionHeading > p,
+.fullReport > div:first-child > p,
+.demoLabel {
+  color: var(--primary);
+}
+
+.resultSectionHeading h2 {
+  max-width: 22ch;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.categoryScores {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 3rem;
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+}
+
+.categoryScores .categoryScore {
+  min-height: 12rem;
+  border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.categoryScoreHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.categoryScoreHeading h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.45rem, 2.7vw, 2.2rem);
+  font-weight: 760;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.categoryScoreHeading > div > p {
+  max-width: 43ch;
+  margin-top: 0.7rem;
+  color: color-mix(in srgb, var(--surface-foreground) 62%, transparent);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.categoryScoreHeading > p {
+  display: flex;
+  align-items: baseline;
+  flex: none;
+  gap: 0.18rem;
+}
+
+.categoryScoreHeading > p strong {
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  font-weight: 800;
+  line-height: 0.9;
+}
+
+.categoryScoreHeading > p span {
+  color: color-mix(in srgb, var(--surface-foreground) 48%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+}
+
+.categoryScores .categoryTrack {
+  margin-top: 1.5rem;
+}
+
+.categoryScore > small {
+  display: block;
+  margin-top: 0.65rem;
+  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
+  font-size: 0.68rem;
+  font-weight: 650;
+}
+
+.findingsList {
+  display: grid;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.findingCard {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface-foreground) 2.5%, transparent);
+}
+
+.findingHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 13%, transparent);
+  padding: 0.85rem 1.15rem;
+  color: color-mix(in srgb, var(--surface-foreground) 54%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.severityLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--surface-foreground);
+}
+
+.severityLabel::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #f3b43f;
+}
+
+.findingCard[data-severity="critical"] .severityLabel::before {
+  background: #ff7066;
+}
+
+.findingCard[data-severity="high"] .severityLabel::before {
+  background: #ffad66;
+}
+
+.findingCard[data-severity="passed"] .severityLabel::before {
+  background: var(--primary);
+}
+
+.findingLead {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.72fr) minmax(18rem, 0.58fr);
+  gap: 1.5rem clamp(2rem, 7vw, 7rem);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.findingLead h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  font-weight: 780;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.findingLead p,
+.findingDetails p {
+  color: color-mix(in srgb, var(--surface-foreground) 67%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.findingDetails {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 13%, transparent);
+}
+
+.findingDetails > div {
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.findingDetails > div:first-child {
+  border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 13%, transparent);
+}
+
+.findingDetails h4 {
+  margin-bottom: 0.65rem;
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.technicalDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 13%, transparent);
+  background: color-mix(in srgb, black 18%, transparent);
+}
+
+.technicalDetails > div {
+  min-width: min(100%, 16rem);
+  flex: 1;
+  padding: 1rem 1.25rem;
+}
+
+.technicalDetails > div + div {
+  border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 13%, transparent);
+}
+
+.technicalDetails dt {
+  color: color-mix(in srgb, var(--surface-foreground) 48%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.technicalDetails dd {
+  margin-top: 0.45rem;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.technicalDetails dd small {
+  display: block;
+  margin-top: 0.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+}
+
+.fullReport {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.68fr) minmax(24rem, 1fr);
+  gap: clamp(2.5rem, 8vw, 8rem);
+  margin-top: clamp(5rem, 10vw, 9rem);
+  border-radius: 16px;
+  background: var(--primary);
+  color: #071010;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.fullReport > div:first-child > p {
+  color: #005d60;
+}
+
+.fullReport h2 {
+  max-width: 14ch;
+  margin-top: 1rem;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+}
+
+.fullReport > div:first-child > p:last-child {
+  max-width: 52ch;
+  margin-top: 1.25rem;
+  color: #174547;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.reportForm {
+  align-self: center;
+}
+
+.reportFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.reportFields label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.reportFields input {
+  border-color: rgba(7, 16, 16, 0.3);
+  background: #f7ffff;
+  color: #071010;
+}
+
+.reportFields input::placeholder {
+  color: rgba(7, 16, 16, 0.58);
+}
+
+.reportFormFooter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.reportFormFooter > p {
+  color: #174547;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.reportFormFooter button {
+  border: 1px solid #071010;
+  background: #071010;
+  color: #f4ffff;
+}
+
+.reportFormFooter button:hover {
+  background: #203637;
+}
+
+.reportFormFooter button:focus-visible,
+.reportFields input:focus-visible {
+  outline-color: #071010;
+}
+
+.reportNotice {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(7, 16, 16, 0.24);
+  padding-top: 0.85rem;
+  color: #153f41;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.serviceCta {
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+.serviceCtaInner {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.9fr) minmax(20rem, 0.72fr);
+  align-items: end;
+  gap: 2rem clamp(3rem, 9vw, 9rem);
+}
+
+.serviceCtaInner h2 {
+  max-width: 16ch;
+  margin-top: 1rem;
+  font-size: clamp(2.75rem, 5.5vw, 5rem);
+}
+
+.serviceCtaInner > div:last-child > p {
+  max-width: 57ch;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.serviceCtaLink {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 1050px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(21rem, 0.82fr);
+    gap: 3rem;
+  }
+
+  .fullReport {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .heroGrid,
+  .processLayout,
+  .resultsHeader,
+  .scoreOverview,
+  .findingLead,
+  .serviceCtaInner {
+    grid-template-columns: 1fr;
+  }
+
+  .heroCopy h1 {
+    max-width: 12ch;
+  }
+
+  .auditPreview {
+    width: min(100%, 39rem);
+  }
+
+  .checkList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .processLayout {
+    gap: 3rem;
+  }
+
+  .scoreOverview > .overallScore {
+    border-right: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  }
+
+  .findingLead {
+    gap: 1rem;
+  }
+
+  .serviceCtaInner {
+    align-items: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 8.5rem;
+  }
+
+  .hero::before {
+    display: none;
+  }
+
+  .heroGrid {
+    gap: 2.5rem;
+  }
+
+  .heroCopy h1 {
+    font-size: clamp(3.2rem, 16vw, 4.5rem);
+  }
+
+  .urlFieldRow,
+  .sectionIntro,
+  .resultSectionHeading,
+  .categoryScores,
+  .findingDetails,
+  .reportFields,
+  .reportFormFooter {
+    grid-template-columns: 1fr;
+  }
+
+  .urlFieldRow button,
+  .reportFormFooter button,
+  .serviceCtaLink {
+    width: 100%;
+  }
+
+  .formMeta {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .formMeta > p:last-child {
+    text-align: left;
+  }
+
+  .auditPreview > footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sectionIntro > p:last-child {
+    grid-column: auto;
+  }
+
+  .checkList {
+    grid-template-columns: 1fr;
+  }
+
+  .checkList > div {
+    min-height: 0;
+  }
+
+  .resultsHeader {
+    align-items: start;
+  }
+
+  .resultSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .resultSummary > div {
+    min-height: 7rem;
+    border-right: 0 !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  }
+
+  .resultSummary > div:last-child {
+    border-bottom: 0;
+  }
+
+  .categoryScores {
+    border-left: 0;
+  }
+
+  .categoryScores .categoryScore {
+    min-height: 0;
+    border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  }
+
+  .findingDetails > div:first-child {
+    border-right: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 13%, transparent);
+  }
+
+  .technicalDetails {
+    display: block;
+  }
+
+  .technicalDetails > div + div {
+    border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 13%, transparent);
+    border-left: 0;
+  }
+
+  .fullReport {
+    border-radius: 14px;
+  }
+
+  .reportFormFooter {
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 420px) {
+  .categoryScoresCompact {
+    grid-template-columns: 1fr;
+  }
+
+  .findingHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .urlFieldRow input,
+  .reportFields input,
+  .urlFieldRow button,
+  .reportFormFooter button,
+  .serviceCtaLink {
+    transition: none;
+  }
+
+  .urlFieldRow button:hover,
+  .reportFormFooter button:hover,
+  .serviceCtaLink:hover {
+    transform: none;
+  }
+}

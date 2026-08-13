@@ -30,6 +30,11 @@ const staticRoutes: MetadataRoute.Sitemap = [
     priority: 0.95,
   },
   {
+    url: siteConfig.url + "/website-audit",
+    changeFrequency: "monthly",
+    priority: 0.9,
+  },
+  {
     url: `${siteConfig.url}/blog`,
     changeFrequency: "monthly",
     priority: 0.75,

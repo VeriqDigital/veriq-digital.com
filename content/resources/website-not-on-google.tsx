@@ -169,7 +169,10 @@ export default function WebsiteNotOnGoogleArticle() {
         </p>
         <ArticleCallout title="Strengthen the foundation first">
           <p>
-            Review{" "}
+            Use Veriq&apos;s{" "}
+            <Link href="/website-audit">free website audit preview</Link> to see
+            how indexing, technical health, and other site findings can be
+            prioritized together. Then review{" "}
             <Link href="/resources/what-should-a-local-business-website-include">
               the essentials of a local business website
             </Link>{" "}

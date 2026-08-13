@@ -113,7 +113,10 @@ export default function WebsiteNotGettingLeadsArticle() {
         </p>
         <ArticleCallout title="When the whole customer path needs attention">
           <p>
-            Review the broader list of{" "}
+            Start with Veriq&apos;s{" "}
+            <Link href="/website-audit">free website audit preview</Link> to see
+            how a prioritized report can separate technical, usability, and
+            conversion issues. Then review the broader list of{" "}
             <Link href="/resources/website-mistakes-that-cost-local-businesses-customers">
               website mistakes that cost businesses customers
             </Link>{" "}
