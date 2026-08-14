@@ -3,7 +3,10 @@ import { after, test } from "node:test";
 import type { PrimaryCrawlData } from "../../lib/website-audit/crawler";
 import {
   closeRenderedMobileBrowserForTesting,
+  interpretRenderedMobileMeasurement,
   runRenderedMobileAudit,
+  type RenderedControlMeasurement,
+  type RenderedMobileMeasurement,
 } from "../../lib/website-audit/providers/rendered-mobile";
 
 const primary = (body: string): PrimaryCrawlData =>
@@ -11,99 +14,142 @@ const primary = (body: string): PrimaryCrawlData =>
     submittedUrl: "https://example.com/",
     finalUrl: "https://example.com/",
     redirectCount: 0,
-    html: `<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>html,body{margin:0}</style></head><body>${body}</body></html>`,
+    html: `<!doctype html><html><body>${body}</body></html>`,
     primaryPage: {},
   }) as PrimaryCrawlData;
 
+const measurement = (
+  overrides: Partial<RenderedMobileMeasurement> = {},
+): RenderedMobileMeasurement => ({
+  viewportWidth: 390,
+  documentWidth: 390,
+  horizontalOverflowPixels: 0,
+  horizontalScrollPixels: 0,
+  wideElementCount: 0,
+  fixedWidthElementCount: 0,
+  overflowingImageCount: 0,
+  clippedBaseImportantElementCount: 0,
+  navigationMateriallyOutside: false,
+  controls: [],
+  tinyTextCount: 0,
+  textSampleCount: 12,
+  ...overrides,
+});
+
+const control = (
+  overrides: Partial<RenderedControlMeasurement>,
+): RenderedControlMeasurement => ({
+  elementKind: "other",
+  href: null,
+  role: null,
+  tabIndex: -1,
+  disabled: false,
+  hiddenInput: false,
+  blocked: false,
+  width: 12,
+  height: 12,
+  hasAdequateLabelTarget: false,
+  primaryAction: false,
+  materiallyOutside: false,
+  insideNavigation: false,
+  importantElement: false,
+  ...overrides,
+});
+
 after(() => closeRenderedMobileBrowserForTesting());
 
-test("measures responsive and broken mobile layouts at one bounded viewport", async () => {
-  const responsive = await runRenderedMobileAudit(
-    primary('<main style="max-width:100%"><h1>Responsive page</h1></main>'),
+test("interprets responsive, catastrophic, image, clipped, and harmless-overflow fixtures", () => {
+  const responsive = interpretRenderedMobileMeasurement(measurement());
+  const severeOverflow = interpretRenderedMobileMeasurement(
+    measurement({
+      documentWidth: 1_000,
+      horizontalOverflowPixels: 610,
+      horizontalScrollPixels: 610,
+      wideElementCount: 2,
+      fixedWidthElementCount: 1,
+    }),
   );
-  const severeOverflow = await runRenderedMobileAudit(
-    primary('<main style="width:1000px"><h1>Broken page</h1></main>'),
+  const overflowingImage = interpretRenderedMobileMeasurement(
+    measurement({ overflowingImageCount: 1 }),
   );
-  const overflowingImage = await runRenderedMobileAudit(
-    primary(
-      '<main><img alt="Example" width="800" height="200" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'200\'/%3E"></main>',
-    ),
+  const clippedNavigation = interpretRenderedMobileMeasurement(
+    measurement({
+      clippedBaseImportantElementCount: 2,
+      navigationMateriallyOutside: true,
+      controls: [
+        control({
+          elementKind: "anchor",
+          href: "/contact",
+          primaryAction: true,
+          materiallyOutside: true,
+          insideNavigation: true,
+        }),
+      ],
+    }),
   );
-  const clippedNavigation = await runRenderedMobileAudit(
-    primary(
-      '<nav style="width:700px"><a href="/contact">Contact us</a></nav><main><h1>Page</h1></main>',
-    ),
+  const tinyOverflow = interpretRenderedMobileMeasurement(
+    measurement({
+      documentWidth: 396,
+      horizontalOverflowPixels: 6,
+      horizontalScrollPixels: 6,
+    }),
   );
-  const tinyOverflow = await runRenderedMobileAudit(
-    primary('<main style="width:396px"><h1>Small rounding difference</h1></main>'),
+
+  assert.equal(responsive.horizontalOverflowPixels, 0);
+  assert.equal(severeOverflow.horizontalOverflowPixels, 610);
+  assert.equal(severeOverflow.fixedWidthElementCount, 1);
+  assert.equal(overflowingImage.overflowingImageCount, 1);
+  assert.equal(clippedNavigation.clippedNavigation, true);
+  assert.equal(clippedNavigation.clippedImportantElementCount, 3);
+  assert.equal(clippedNavigation.offscreenPrimaryActionCount, 1);
+  assert.equal(tinyOverflow.horizontalOverflowPixels, 6);
+});
+
+test("counts only genuinely interactive controls as extremely small", () => {
+  const metrics = interpretRenderedMobileMeasurement(
+    measurement({
+      controls: [
+        control({ elementKind: "button" }),
+        control({ elementKind: "button", disabled: true }),
+        control({ elementKind: "button", blocked: true }),
+        control({ role: "button", tabIndex: 0, blocked: true }),
+        control({ role: "button" }),
+        control({ elementKind: "anchor", href: "/ignored", blocked: true }),
+        control({
+          elementKind: "input",
+          hasAdequateLabelTarget: true,
+        }),
+      ],
+    }),
   );
 
-  for (const result of [
-    responsive,
-    severeOverflow,
-    overflowingImage,
-    clippedNavigation,
-    tinyOverflow,
-  ]) {
-    assert.equal(result.available, true);
-  }
+  assert.equal(metrics.interactiveControlCount, 2);
+  assert.equal(metrics.seriousTapTargetCount, 1);
+});
 
-  if (
-    !responsive.available ||
-    !severeOverflow.available ||
-    !overflowingImage.available ||
-    !clippedNavigation.available ||
-    !tinyOverflow.available
-  ) {
-    return;
-  }
+test(
+  "degrades immediately when the configured browser executable is unavailable",
+  { timeout: 2_000 },
+  async () => {
+    const previousChromePath = process.env.WEBSITE_AUDIT_CHROME_PATH;
 
-  assert.equal(responsive.metrics.horizontalOverflowPixels, 0);
-  assert.ok(severeOverflow.metrics.horizontalOverflowPixels >= 600);
-  assert.ok(severeOverflow.metrics.fixedWidthElementCount >= 1);
-  assert.ok(overflowingImage.metrics.overflowingImageCount >= 1);
-  assert.equal(clippedNavigation.metrics.clippedNavigation, true);
-  assert.ok(tinyOverflow.metrics.horizontalOverflowPixels <= 8);
+    try {
+      process.env.WEBSITE_AUDIT_CHROME_PATH = "Z:\\missing\\chrome.exe";
+      const unavailable = await runRenderedMobileAudit(
+        primary("<main><h1>Provider fallback</h1></main>"),
+        { timeoutMs: 500 },
+      );
 
-  const previousChromePath = process.env.WEBSITE_AUDIT_CHROME_PATH;
-
-  try {
-    await closeRenderedMobileBrowserForTesting();
-    process.env.WEBSITE_AUDIT_CHROME_PATH = "Z:\\missing\\chrome.exe";
-    const unavailable = await runRenderedMobileAudit(
-      primary("<main><h1>Provider fallback</h1></main>"),
-    );
-
-    assert.deepEqual(unavailable, {
-      available: false,
-      reason: "browser_unavailable",
-    });
-  } finally {
-    if (previousChromePath === undefined) {
-      delete process.env.WEBSITE_AUDIT_CHROME_PATH;
-    } else {
-      process.env.WEBSITE_AUDIT_CHROME_PATH = previousChromePath;
+      assert.deepEqual(unavailable, {
+        available: false,
+        reason: "browser_unavailable",
+      });
+    } finally {
+      if (previousChromePath === undefined) {
+        delete process.env.WEBSITE_AUDIT_CHROME_PATH;
+      } else {
+        process.env.WEBSITE_AUDIT_CHROME_PATH = previousChromePath;
+      }
     }
-  }
-});
-
-test("counts only genuinely interactive controls as extremely small", async () => {
-  const result = await runRenderedMobileAudit(
-    primary(`
-      <style>.tiny { display: inline-block; width: 12px; height: 12px; padding: 0; }</style>
-      <button class="tiny" aria-label="Real action"></button>
-      <button class="tiny" disabled aria-label="Disabled action"></button>
-      <button class="tiny" aria-disabled="true" aria-label="ARIA-disabled action"></button>
-      <span class="tiny" role="button" aria-hidden="true"></span>
-      <span class="tiny" role="button">Non-focusable decorative role</span>
-      <a class="tiny" href="/ignored" style="pointer-events:none" aria-label="Decorative link"></a>
-      <input id="consent" type="checkbox"><label for="consent">I agree</label>
-    `),
-  );
-
-  assert.equal(result.available, true);
-  if (!result.available) return;
-
-  assert.equal(result.metrics.interactiveControlCount, 2);
-  assert.equal(result.metrics.seriousTapTargetCount, 1);
-});
+  },
+);

@@ -22,6 +22,38 @@ const renderedUserAgent =
 let browserPromise: Promise<Browser> | null = null;
 let renderInProgress = false;
 
+export type RenderedControlMeasurement = Readonly<{
+  elementKind: "anchor" | "button" | "input" | "select" | "textarea" | "other";
+  href: string | null;
+  role: string | null;
+  tabIndex: number;
+  disabled: boolean;
+  hiddenInput: boolean;
+  blocked: boolean;
+  width: number;
+  height: number;
+  hasAdequateLabelTarget: boolean;
+  primaryAction: boolean;
+  materiallyOutside: boolean;
+  insideNavigation: boolean;
+  importantElement: boolean;
+}>;
+
+export type RenderedMobileMeasurement = Readonly<{
+  viewportWidth: number;
+  documentWidth: number;
+  horizontalOverflowPixels: number;
+  horizontalScrollPixels: number;
+  wideElementCount: number;
+  fixedWidthElementCount: number;
+  overflowingImageCount: number;
+  clippedBaseImportantElementCount: number;
+  navigationMateriallyOutside: boolean;
+  controls: readonly RenderedControlMeasurement[];
+  tinyTextCount: number;
+  textSampleCount: number;
+}>;
+
 const sanitizeHtml = (html: string, finalUrl: string) => {
   const $ = load(html);
 
@@ -112,7 +144,19 @@ const launchBrowser = async () => {
     args: chromium.args,
     executablePath: await getExecutablePath(),
     headless: true,
+    timeout: defaultTimeoutMs,
   });
+};
+
+const discardPendingBrowser = () => {
+  const pendingBrowser = browserPromise;
+  browserPromise = null;
+
+  if (pendingBrowser) {
+    void pendingBrowser
+      .then((browser) => browser.close())
+      .catch(() => undefined);
+  }
 };
 
 const getBrowser = async () => {
@@ -278,6 +322,61 @@ export function normalizeRenderedMobileMetrics(
   };
 }
 
+export function interpretRenderedMobileMeasurement(
+  measurement: RenderedMobileMeasurement,
+): RenderedMobileMetrics {
+  const interactiveControls = measurement.controls.filter((control) => {
+    if (control.blocked) return false;
+
+    if (control.elementKind === "anchor") {
+      const href = control.href?.trim();
+      return Boolean(href && !href.toLowerCase().startsWith("javascript:"));
+    }
+
+    if (
+      ["button", "input", "select", "textarea"].includes(control.elementKind)
+    ) {
+      return !control.disabled && !control.hiddenInput;
+    }
+
+    return (
+      ["button", "link"].includes(control.role ?? "") && control.tabIndex >= 0
+    );
+  });
+  const offscreenPrimaryActions = interactiveControls.filter(
+    (control) => control.primaryAction && control.materiallyOutside,
+  );
+  const seriousTapTargets = interactiveControls.filter(
+    (control) =>
+      !control.hasAdequateLabelTarget &&
+      control.width < 20 &&
+      control.height < 20,
+  );
+
+  return normalizeRenderedMobileMetrics({
+    viewportWidth: measurement.viewportWidth,
+    documentWidth: measurement.documentWidth,
+    horizontalOverflowPixels: measurement.horizontalOverflowPixels,
+    horizontalScrollPixels: measurement.horizontalScrollPixels,
+    wideElementCount: measurement.wideElementCount,
+    fixedWidthElementCount: measurement.fixedWidthElementCount,
+    overflowingImageCount: measurement.overflowingImageCount,
+    clippedImportantElementCount:
+      measurement.clippedBaseImportantElementCount +
+      offscreenPrimaryActions.filter((control) => !control.importantElement).length,
+    clippedNavigation:
+      measurement.navigationMateriallyOutside ||
+      interactiveControls.some(
+        (control) => control.insideNavigation && control.materiallyOutside,
+      ),
+    offscreenPrimaryActionCount: offscreenPrimaryActions.length,
+    seriousTapTargetCount: seriousTapTargets.length,
+    interactiveControlCount: interactiveControls.length,
+    tinyTextCount: measurement.tinyTextCount,
+    textSampleCount: measurement.textSampleCount,
+  });
+}
+
 const measurePage = async (
   primary: PrimaryCrawlData,
   signal: AbortSignal,
@@ -335,7 +434,7 @@ const measurePage = async (
     });
     await page.waitForTimeout(200);
 
-    const metrics = await page.evaluate(() => {
+    const measurement = await page.evaluate(() => {
       const viewportWidth = window.screen.width || 390;
       const documentWidth = Math.max(
         document.documentElement.scrollWidth,
@@ -433,50 +532,18 @@ const measurePage = async (
           !isInsideHorizontalClip(element) &&
           materiallyOutside(element),
       );
-      const isGenuinelyInteractive = (element: HTMLElement) => {
-        if (
-          element.closest('[aria-hidden="true"], [inert]') ||
-          element.getAttribute("aria-disabled") === "true" ||
-          getComputedStyle(element).pointerEvents === "none"
-        ) {
-          return false;
-        }
-
-        if (element instanceof HTMLAnchorElement) {
-          const href = element.getAttribute("href")?.trim();
-          return Boolean(href && !href.toLowerCase().startsWith("javascript:"));
-        }
-
-        if (
-          element instanceof HTMLButtonElement ||
-          element instanceof HTMLInputElement ||
-          element instanceof HTMLSelectElement ||
-          element instanceof HTMLTextAreaElement
-        ) {
-          return !element.disabled &&
-            !(element instanceof HTMLInputElement && element.type === "hidden");
-        }
-
-        return (
-          ["button", "link"].includes(element.getAttribute("role") ?? "") &&
-          element.tabIndex >= 0
-        );
-      };
-      const interactive = visibleElements.filter(isGenuinelyInteractive);
-      const primaryActions = interactive.filter((element) =>
-        actionPattern.test(
-          `${element.textContent ?? ""} ${element.getAttribute("aria-label") ?? ""} ${element.getAttribute("href") ?? ""}`,
-        ),
-      );
       const navigationElements = visibleElements.filter((element) =>
         element.matches("nav, [role=navigation]"),
       );
-      const importantElements = visibleElements.filter(
-        (element) =>
-          element.matches("main, h1, nav, [role=navigation]") ||
-          primaryActions.includes(element),
+      const baseImportantElements = visibleElements.filter((element) =>
+        element.matches("main, h1, nav, [role=navigation]"),
       );
-      const seriousTapTargets = interactive.filter((element) => {
+      const controlElements = visibleElements.filter((element) =>
+        element.matches(
+          "a, button, input, select, textarea, [role=button], [role=link]",
+        ),
+      );
+      const controls = controlElements.map((element) => {
         const rect = element.getBoundingClientRect();
         const associatedLabels =
           element instanceof HTMLInputElement ? [...(element.labels ?? [])] : [];
@@ -484,8 +551,48 @@ const measurePage = async (
           const labelRect = label.getBoundingClientRect();
           return labelRect.width >= 20 || labelRect.height >= 20;
         });
+        const elementKind = element instanceof HTMLAnchorElement
+          ? "anchor"
+          : element instanceof HTMLButtonElement
+            ? "button"
+            : element instanceof HTMLInputElement
+              ? "input"
+              : element instanceof HTMLSelectElement
+                ? "select"
+                : element instanceof HTMLTextAreaElement
+                  ? "textarea"
+                  : "other";
 
-        return !hasAdequateLabelTarget && rect.width < 20 && rect.height < 20;
+        return {
+          elementKind,
+          href: element.getAttribute("href"),
+          role: element.getAttribute("role"),
+          tabIndex: element.tabIndex,
+          disabled:
+            (element instanceof HTMLButtonElement ||
+              element instanceof HTMLInputElement ||
+              element instanceof HTMLSelectElement ||
+              element instanceof HTMLTextAreaElement) &&
+            element.disabled,
+          hiddenInput:
+            element instanceof HTMLInputElement && element.type === "hidden",
+          blocked: Boolean(
+            element.closest('[aria-hidden="true"], [inert]') ||
+              element.getAttribute("aria-disabled") === "true" ||
+              getComputedStyle(element).pointerEvents === "none",
+          ),
+          width: rect.width,
+          height: rect.height,
+          hasAdequateLabelTarget,
+          primaryAction: actionPattern.test(
+            `${element.textContent ?? ""} ${element.getAttribute("aria-label") ?? ""} ${element.getAttribute("href") ?? ""}`,
+          ),
+          materiallyOutside: materiallyOutside(element),
+          insideNavigation: Boolean(element.closest("nav, [role=navigation]")),
+          importantElement: element.matches(
+            "main, h1, nav, [role=navigation]",
+          ),
+        };
       });
       const textElements = visibleElements
         .filter((element) => {
@@ -509,23 +616,18 @@ const measurePage = async (
         wideElementCount: wideElements.length,
         fixedWidthElementCount: fixedWidthElements.length,
         overflowingImageCount: overflowingImages.length,
-        clippedImportantElementCount: importantElements.filter(materiallyOutside).length,
-        clippedNavigation:
-          navigationElements.some(materiallyOutside) ||
-          navigationElements.some((navigation) =>
-            interactive.some(
-              (element) => navigation.contains(element) && materiallyOutside(element),
-            ),
-          ),
-        offscreenPrimaryActionCount: primaryActions.filter(materiallyOutside).length,
-        seriousTapTargetCount: seriousTapTargets.length,
-        interactiveControlCount: interactive.length,
+        clippedBaseImportantElementCount:
+          baseImportantElements.filter(materiallyOutside).length,
+        navigationMateriallyOutside: navigationElements.some(materiallyOutside),
+        controls,
         tinyTextCount: tinyText.length,
         textSampleCount: textElements.length,
       };
     });
 
-    return normalizeRenderedMobileMetrics(metrics);
+    return interpretRenderedMobileMeasurement(
+      measurement as RenderedMobileMeasurement,
+    );
   } finally {
     signal.removeEventListener("abort", closeOnAbort);
     await context.close().catch(() => undefined);
@@ -550,6 +652,10 @@ export async function runRenderedMobileAudit(
   try {
     return { available: true, metrics: await measurePage(primary, signal) };
   } catch (error) {
+    if (signal.aborted) {
+      discardPendingBrowser();
+    }
+
     const reason =
       signal.aborted ||
       (error instanceof Error && /timeout/i.test(`${error.name} ${error.message}`))
@@ -576,6 +682,12 @@ export async function closeRenderedMobileBrowserForTesting(): Promise<void> {
   browserPromise = null;
 
   if (pendingBrowser) {
-    await pendingBrowser.then((browser) => browser.close()).catch(() => undefined);
+    const closeWhenReady = pendingBrowser
+      .then((browser) => browser.close())
+      .catch(() => undefined);
+    await Promise.race([
+      closeWhenReady,
+      new Promise<void>((resolve) => setTimeout(resolve, 1_000)),
+    ]);
   }
 }

@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
@@ -33,6 +33,21 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Locate system Chrome for rendered-mobile smoke test
+        shell: bash
+        run: |
+          chrome_path="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          if [[ -z "$chrome_path" ]]; then
+            echo "No system Chrome/Chromium executable is available on this runner." >&2
+            exit 1
+          fi
+          echo "Using $($chrome_path --version) at $chrome_path"
+          echo "WEBSITE_AUDIT_CHROME_PATH=$chrome_path" >> "$GITHUB_ENV"
+
+      - name: Rendered-mobile browser smoke test
+        run: npm run test:browser-smoke
+        timeout-minutes: 1
 
       - name: Build
         run: npm run build

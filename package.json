@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --incremental false",
-    "test": "tsx --test tests/website-audit/*.test.ts"
+    "test": "tsx --test tests/website-audit/*.test.ts",
+    "test:browser-smoke": "tsx --test tests/browser/*.test.ts"
   },
   "dependencies": {
     "@sparticuz/chromium": "143.0.4",
