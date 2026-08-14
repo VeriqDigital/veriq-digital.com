@@ -3,9 +3,52 @@ import { toNormalizedScore } from "../result-schema";
 
 const endpoint = "https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed";
 const responseLimitBytes = 6 * 1024 * 1024;
-const defaultTimeoutMs = 32_000;
+const defaultTimeoutMs = 36_000;
+const defaultRetryDelayMs = 250;
+const maximumAttempts = 2;
 
 type UnknownRecord = Record<string, unknown>;
+
+class PageSpeedResponseTooLargeError extends Error {}
+
+type PageSpeedFailure =
+  | "http_status"
+  | "timeout"
+  | "network_error"
+  | "invalid_json"
+  | "response_too_large"
+  | "missing_lighthouse_data"
+  | "lighthouse_runtime_error"
+  | "missing_performance_score";
+
+const logProviderFailure = (
+  failure: PageSpeedFailure,
+  details: Readonly<Record<string, unknown>>,
+) => {
+  // Never log the target URL, API key, response body, or upstream message.
+  console.warn("Website audit PageSpeed provider unavailable", {
+    failure,
+    ...details,
+  });
+};
+
+const waitForRetry = (delayMs: number, signal: AbortSignal) =>
+  new Promise<void>((resolve, reject) => {
+    if (signal.aborted) {
+      reject(signal.reason);
+      return;
+    }
+
+    const onAbort = () => {
+      clearTimeout(timeout);
+      reject(signal.reason);
+    };
+    const timeout = setTimeout(() => {
+      signal.removeEventListener("abort", onAbort);
+      resolve();
+    }, delayMs);
+    signal.addEventListener("abort", onAbort, { once: true });
+  });
 
 const asRecord = (value: unknown): UnknownRecord | null =>
   typeof value === "object" && value !== null ? (value as UnknownRecord) : null;
@@ -58,7 +101,7 @@ async function readLimitedJson(response: Response): Promise<unknown> {
 
     if (totalBytes > responseLimitBytes) {
       await reader.cancel();
-      throw new Error("PageSpeed response exceeded the allowed size.");
+      throw new PageSpeedResponseTooLargeError();
     }
 
     chunks.push(value);
@@ -82,6 +125,7 @@ export async function runPageSpeedAudit(
     signal?: AbortSignal;
     fetchImpl?: typeof fetch;
     timeoutMs?: number;
+    retryDelayMs?: number;
   } = {},
 ): Promise<PageSpeedData> {
   if (!options.apiKey) {
@@ -99,81 +143,153 @@ export async function runPageSpeedAudit(
   const signal = options.signal
     ? AbortSignal.any([options.signal, timeoutSignal])
     : timeoutSignal;
+  const fetchImpl = options.fetchImpl ?? fetch;
+  const retryDelayMs = options.retryDelayMs ?? defaultRetryDelayMs;
+  const startedAt = Date.now();
 
-  try {
-    const response = await (options.fetchImpl ?? fetch)(requestUrl, {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-      signal,
-    });
-
-    if (response.status === 429) {
-      return { available: false, reason: "rate_limited" };
-    }
-
-    if (!response.ok) {
-      console.warn("Website audit PageSpeed request failed", {
-        status: response.status,
+  for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
+    try {
+      const response = await fetchImpl(requestUrl, {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+        signal,
       });
+
+      if (response.status === 429) {
+        logProviderFailure("http_status", {
+          status: 429,
+          attempt,
+          durationMs: Date.now() - startedAt,
+          willRetry: false,
+        });
+        return { available: false, reason: "rate_limited" };
+      }
+
+      if (!response.ok) {
+        const willRetry = response.status >= 500 && attempt < maximumAttempts;
+        logProviderFailure("http_status", {
+          status: response.status,
+          attempt,
+          durationMs: Date.now() - startedAt,
+          willRetry,
+        });
+        await response.body?.cancel().catch(() => undefined);
+
+        if (willRetry) {
+          await waitForRetry(retryDelayMs, signal);
+          continue;
+        }
+
+        return { available: false, reason: "provider_error" };
+      }
+
+      let payload: UnknownRecord | null;
+
+      try {
+        payload = asRecord(await readLimitedJson(response));
+      } catch (error) {
+        if (signal.aborted) throw signal.reason;
+        const failure =
+          error instanceof PageSpeedResponseTooLargeError
+            ? "response_too_large"
+            : "invalid_json";
+        logProviderFailure(failure, {
+          attempt,
+          durationMs: Date.now() - startedAt,
+          willRetry: false,
+        });
+        return { available: false, reason: "provider_error" };
+      }
+
+      const lighthouse = asRecord(payload?.lighthouseResult);
+      const categories = asRecord(lighthouse?.categories);
+      const audits = asRecord(lighthouse?.audits);
+
+      if (!categories || !audits) {
+        logProviderFailure(
+          asRecord(lighthouse?.runtimeError)
+            ? "lighthouse_runtime_error"
+            : "missing_lighthouse_data",
+          {
+            attempt,
+            durationMs: Date.now() - startedAt,
+            willRetry: false,
+          },
+        );
+        return { available: false, reason: "provider_error" };
+      }
+
+      const performanceScore = readCategoryScore(categories, "performance");
+
+      if (performanceScore === null) {
+        logProviderFailure("missing_performance_score", {
+          attempt,
+          durationMs: Date.now() - startedAt,
+          willRetry: false,
+        });
+        return { available: false, reason: "provider_error" };
+      }
+
+      const loadingExperience = asRecord(payload?.loadingExperience);
+      const fieldMetrics = asRecord(loadingExperience?.metrics);
+      const fieldInp = asRecord(fieldMetrics?.INTERACTION_TO_NEXT_PAINT);
+      const fieldInpValue = readNumber(fieldInp?.percentile);
+
+      return {
+        available: true,
+        performanceScore,
+        accessibilityScore: readCategoryScore(categories, "accessibility"),
+        seoScore: readCategoryScore(categories, "seo"),
+        metrics: {
+          lcp: readMetric(audits, "largest-contentful-paint"),
+          cls: readMetric(audits, "cumulative-layout-shift"),
+          inp:
+            fieldInpValue === null
+              ? undefined
+              : { numericValue: fieldInpValue, displayValue: `${Math.round(fieldInpValue)} ms` },
+          fcp: readMetric(audits, "first-contentful-paint"),
+          tbt: readMetric(audits, "total-blocking-time"),
+          speedIndex: readMetric(audits, "speed-index"),
+        },
+        audits: {
+          viewport: readAuditScore(audits, "viewport"),
+          tapTargets: readAuditScore(audits, "tap-targets"),
+          contentWidth: readAuditScore(audits, "content-width"),
+          colorContrast: readAuditScore(audits, "color-contrast"),
+          linkName: readAuditScore(audits, "link-name"),
+          buttonName: readAuditScore(audits, "button-name"),
+        },
+      };
+    } catch (error) {
+      if (
+        signal.aborted ||
+        (error instanceof DOMException &&
+          ["AbortError", "TimeoutError"].includes(error.name))
+      ) {
+        logProviderFailure("timeout", {
+          attempt,
+          durationMs: Date.now() - startedAt,
+          willRetry: false,
+        });
+        return { available: false, reason: "timeout" };
+      }
+
+      const willRetry = error instanceof TypeError && attempt < maximumAttempts;
+      logProviderFailure("network_error", {
+        errorName: error instanceof Error ? error.name : "UnknownError",
+        attempt,
+        durationMs: Date.now() - startedAt,
+        willRetry,
+      });
+
+      if (willRetry) {
+        await waitForRetry(retryDelayMs, signal);
+        continue;
+      }
+
       return { available: false, reason: "provider_error" };
     }
-
-    const payload = asRecord(await readLimitedJson(response));
-    const lighthouse = asRecord(payload?.lighthouseResult);
-    const categories = asRecord(lighthouse?.categories);
-    const audits = asRecord(lighthouse?.audits);
-
-    if (!categories || !audits) {
-      return { available: false, reason: "provider_error" };
-    }
-
-    const performanceScore = readCategoryScore(categories, "performance");
-
-    if (performanceScore === null) {
-      return { available: false, reason: "provider_error" };
-    }
-
-    const loadingExperience = asRecord(payload?.loadingExperience);
-    const fieldMetrics = asRecord(loadingExperience?.metrics);
-    const fieldInp = asRecord(fieldMetrics?.INTERACTION_TO_NEXT_PAINT);
-    const fieldInpValue = readNumber(fieldInp?.percentile);
-
-    return {
-      available: true,
-      performanceScore,
-      accessibilityScore: readCategoryScore(categories, "accessibility"),
-      seoScore: readCategoryScore(categories, "seo"),
-      metrics: {
-        lcp: readMetric(audits, "largest-contentful-paint"),
-        cls: readMetric(audits, "cumulative-layout-shift"),
-        inp:
-          fieldInpValue === null
-            ? undefined
-            : { numericValue: fieldInpValue, displayValue: `${Math.round(fieldInpValue)} ms` },
-        fcp: readMetric(audits, "first-contentful-paint"),
-        tbt: readMetric(audits, "total-blocking-time"),
-        speedIndex: readMetric(audits, "speed-index"),
-      },
-      audits: {
-        viewport: readAuditScore(audits, "viewport"),
-        tapTargets: readAuditScore(audits, "tap-targets"),
-        contentWidth: readAuditScore(audits, "content-width"),
-        colorContrast: readAuditScore(audits, "color-contrast"),
-        linkName: readAuditScore(audits, "link-name"),
-        buttonName: readAuditScore(audits, "button-name"),
-      },
-    };
-  } catch (error) {
-    if (
-      error instanceof DOMException &&
-      ["AbortError", "TimeoutError"].includes(error.name)
-    ) {
-      return { available: false, reason: "timeout" };
-    }
-
-    console.warn("Website audit PageSpeed provider error", {
-      reason: error instanceof Error ? error.name : "unknown",
-    });
-    return { available: false, reason: "provider_error" };
   }
+
+  return { available: false, reason: "provider_error" };
 }

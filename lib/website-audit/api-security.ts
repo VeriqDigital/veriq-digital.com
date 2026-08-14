@@ -302,7 +302,7 @@ type LocalRateLimitBucket = {
 
 export const auditCreationRateLimit = Object.freeze({
   limit: 5,
-  windowMs: 60 * 60 * 1_000,
+  windowMs: 15 * 60 * 1_000,
 });
 
 const recentRequestsByClient = new Map<string, LocalRateLimitBucket>();

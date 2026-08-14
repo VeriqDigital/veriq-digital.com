@@ -433,11 +433,36 @@ const measurePage = async (
           !isInsideHorizontalClip(element) &&
           materiallyOutside(element),
       );
-      const interactive = visibleElements.filter((element) =>
-        element.matches(
-          'a[href], button, input:not([type="hidden"]), select, textarea, [role="button"], [role="link"]',
-        ),
-      );
+      const isGenuinelyInteractive = (element: HTMLElement) => {
+        if (
+          element.closest('[aria-hidden="true"], [inert]') ||
+          element.getAttribute("aria-disabled") === "true" ||
+          getComputedStyle(element).pointerEvents === "none"
+        ) {
+          return false;
+        }
+
+        if (element instanceof HTMLAnchorElement) {
+          const href = element.getAttribute("href")?.trim();
+          return Boolean(href && !href.toLowerCase().startsWith("javascript:"));
+        }
+
+        if (
+          element instanceof HTMLButtonElement ||
+          element instanceof HTMLInputElement ||
+          element instanceof HTMLSelectElement ||
+          element instanceof HTMLTextAreaElement
+        ) {
+          return !element.disabled &&
+            !(element instanceof HTMLInputElement && element.type === "hidden");
+        }
+
+        return (
+          ["button", "link"].includes(element.getAttribute("role") ?? "") &&
+          element.tabIndex >= 0
+        );
+      };
+      const interactive = visibleElements.filter(isGenuinelyInteractive);
       const primaryActions = interactive.filter((element) =>
         actionPattern.test(
           `${element.textContent ?? ""} ${element.getAttribute("aria-label") ?? ""} ${element.getAttribute("href") ?? ""}`,
@@ -453,7 +478,14 @@ const measurePage = async (
       );
       const seriousTapTargets = interactive.filter((element) => {
         const rect = element.getBoundingClientRect();
-        return rect.width < 20 && rect.height < 20;
+        const associatedLabels =
+          element instanceof HTMLInputElement ? [...(element.labels ?? [])] : [];
+        const hasAdequateLabelTarget = associatedLabels.some((label) => {
+          const labelRect = label.getBoundingClientRect();
+          return labelRect.width >= 20 || labelRect.height >= 20;
+        });
+
+        return !hasAdequateLabelTarget && rect.width < 20 && rect.height < 20;
       });
       const textElements = visibleElements
         .filter((element) => {

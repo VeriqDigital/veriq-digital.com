@@ -110,8 +110,16 @@ may be fulfilled through the same DNS-revalidated, public-IP-pinned HTTP
 transport used by the crawler; every other browser request is blocked. The
 render measures material horizontal overflow, fixed-width containers,
 overflowing images, clipped important content and actions, extremely small tap
-targets, and very small text. A provider timeout or browser failure reduces
+targets on genuinely interactive controls, and very small text. Disabled,
+decorative, inert, and otherwise non-actionable elements are excluded. A
+provider timeout or browser failure reduces
 evidence coverage rather than failing the whole audit.
+
+PageSpeed uses a 36-second total provider budget. One fast retry is allowed for
+transient network or upstream 5xx failures within that same budget; quota,
+client-error, invalid-result, and timeout responses are not retried. Safe
+provider logs classify the failure without recording the audited URL, API key,
+or upstream response content.
 
 Scoring methodology v2 uses explicit check weights inside six canonical
 categories and explicit category weights for the overall score. Missing checks
@@ -134,7 +142,7 @@ Production is fail-closed. `WEBSITE_AUDIT_ENABLED=true` is honored only when
 private Blob storage, PageSpeed, Resend, Redis, hashing, retention, quota, and
 cron settings are valid. Creation, execution, and report-email routes use an
 atomic Redis fixed-window limiter; the process-local map remains supplemental
-burst protection. Audit creation allows five requests per client per one-hour
+burst protection. Audit creation allows five requests per client per 15-minute
 fixed window, and rate-limit responses include the remaining wait in
 `Retry-After`. Audit execution and report email also have independent global
 24-hour quotas. If Redis is unavailable, a quota cannot be verified, or any

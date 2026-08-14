@@ -86,3 +86,24 @@ test("measures responsive and broken mobile layouts at one bounded viewport", as
     }
   }
 });
+
+test("counts only genuinely interactive controls as extremely small", async () => {
+  const result = await runRenderedMobileAudit(
+    primary(`
+      <style>.tiny { display: inline-block; width: 12px; height: 12px; padding: 0; }</style>
+      <button class="tiny" aria-label="Real action"></button>
+      <button class="tiny" disabled aria-label="Disabled action"></button>
+      <button class="tiny" aria-disabled="true" aria-label="ARIA-disabled action"></button>
+      <span class="tiny" role="button" aria-hidden="true"></span>
+      <span class="tiny" role="button">Non-focusable decorative role</span>
+      <a class="tiny" href="/ignored" style="pointer-events:none" aria-label="Decorative link"></a>
+      <input id="consent" type="checkbox"><label for="consent">I agree</label>
+    `),
+  );
+
+  assert.equal(result.available, true);
+  if (!result.available) return;
+
+  assert.equal(result.metrics.interactiveControlCount, 2);
+  assert.equal(result.metrics.seriousTapTargetCount, 1);
+});

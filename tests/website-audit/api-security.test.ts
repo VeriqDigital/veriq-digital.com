@@ -77,7 +77,7 @@ test("enforces content type and actual body byte limits", async () => {
 const auditCreationLimit = {
   scope: "create-audit-test",
   limit: 5,
-  windowMs: 60 * 60 * 1_000,
+  windowMs: 15 * 60 * 1_000,
 } as const;
 
 const createRateLimitRequest = () =>
@@ -85,14 +85,14 @@ const createRateLimitRequest = () =>
     headers: { "X-Forwarded-For": "203.0.113.9" },
   });
 
-test("uses a five-audit one-hour creation limit", () => {
+test("uses a five-audit fifteen-minute creation limit", () => {
   assert.deepEqual(auditCreationRateLimit, {
     limit: 5,
-    windowMs: 60 * 60 * 1_000,
+    windowMs: 15 * 60 * 1_000,
   });
 });
 
-test("allows audit creation requests under the hourly client limit", async () => {
+test("allows audit creation requests under the fifteen-minute client limit", async () => {
   const request = createRateLimitRequest();
 
   for (let requestNumber = 0; requestNumber < 4; requestNumber += 1) {
@@ -126,7 +126,7 @@ test("rate limits requests above the boundary and returns the actual wait", asyn
       );
       return (
         error.status === 429 &&
-        retryAfter === "3595" &&
+        retryAfter === "895" &&
         responseRetryAfter === retryAfter &&
         !error.message.includes("203.0.113.9")
       );
@@ -134,7 +134,7 @@ test("rate limits requests above the boundary and returns the actual wait", asyn
   );
 });
 
-test("resets the local fixed window when the hour expires", async () => {
+test("resets the local fixed window when fifteen minutes expire", async () => {
   const request = new Request("https://www.veriqdigital.com/api/website-audits", {
     headers: { "X-Forwarded-For": "203.0.113.9" },
   });
