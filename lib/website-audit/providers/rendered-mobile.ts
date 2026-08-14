@@ -137,12 +137,13 @@ const getExecutablePath = async () => {
   return chromium.executablePath();
 };
 
-const launchBrowser = async () => {
+const launchBrowser = async (browserExecutablePathForTesting?: string) => {
   chromium.setGraphicsMode = false;
 
   return playwrightChromium.launch({
-    args: chromium.args,
-    executablePath: await getExecutablePath(),
+    args: browserExecutablePathForTesting ? [] : chromium.args,
+    executablePath:
+      browserExecutablePathForTesting ?? (await getExecutablePath()),
     headless: true,
     timeout: defaultTimeoutMs,
   });
@@ -159,9 +160,9 @@ const discardPendingBrowser = () => {
   }
 };
 
-const getBrowser = async () => {
+const getBrowser = async (browserExecutablePathForTesting?: string) => {
   if (!browserPromise) {
-    browserPromise = launchBrowser().catch((error) => {
+    browserPromise = launchBrowser(browserExecutablePathForTesting).catch((error) => {
       browserPromise = null;
       throw error;
     });
@@ -171,13 +172,16 @@ const getBrowser = async () => {
 
   if (!browser.isConnected()) {
     browserPromise = null;
-    return getBrowser();
+    return getBrowser(browserExecutablePathForTesting);
   }
 
   return browser;
 };
 
-const waitForBrowser = async (signal: AbortSignal) => {
+const waitForBrowser = async (
+  signal: AbortSignal,
+  browserExecutablePathForTesting?: string,
+) => {
   if (signal.aborted) {
     throw signal.reason instanceof Error
       ? signal.reason
@@ -197,7 +201,10 @@ const waitForBrowser = async (signal: AbortSignal) => {
   signal.addEventListener("abort", onAbort, { once: true });
 
   try {
-    return await Promise.race([getBrowser(), aborted]);
+    return await Promise.race([
+      getBrowser(browserExecutablePathForTesting),
+      aborted,
+    ]);
   } finally {
     signal.removeEventListener("abort", onAbort);
   }
@@ -380,8 +387,12 @@ export function interpretRenderedMobileMeasurement(
 const measurePage = async (
   primary: PrimaryCrawlData,
   signal: AbortSignal,
+  browserExecutablePathForTesting?: string,
 ): Promise<RenderedMobileMetrics> => {
-  const browser = await waitForBrowser(signal);
+  const browser = await waitForBrowser(
+    signal,
+    browserExecutablePathForTesting,
+  );
   const context = await browser.newContext({
     viewport,
     deviceScaleFactor: 1,
@@ -636,7 +647,11 @@ const measurePage = async (
 
 export async function runRenderedMobileAudit(
   primary: PrimaryCrawlData,
-  options: Readonly<{ signal?: AbortSignal; timeoutMs?: number }> = {},
+  options: Readonly<{
+    signal?: AbortSignal;
+    timeoutMs?: number;
+    browserExecutablePathForTesting?: string;
+  }> = {},
 ): Promise<RenderedMobileData> {
   if (renderInProgress) {
     return { available: false, reason: "busy" };
@@ -650,7 +665,14 @@ export async function runRenderedMobileAudit(
   setMaxListeners(maximumStylesheets + maximumImages + 10, signal);
 
   try {
-    return { available: true, metrics: await measurePage(primary, signal) };
+    return {
+      available: true,
+      metrics: await measurePage(
+        primary,
+        signal,
+        options.browserExecutablePathForTesting,
+      ),
+    };
   } catch (error) {
     if (signal.aborted) {
       discardPendingBrowser();
