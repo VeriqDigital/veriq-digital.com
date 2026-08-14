@@ -242,22 +242,8 @@ export async function readBoundedJsonRequest(
     throw new AuditApiError(413, "REQUEST_TOO_LARGE", "The request is too large.");
   }
 
-  const rawBody = await request.text().catch(() => {
-    throw new AuditApiError(
-      400,
-      "INVALID_REQUEST_BODY",
-      "The request body could not be read.",
-    );
-  });
-
-  if (new TextEncoder().encode(rawBody).byteLength > options.maxBytes) {
-    throw new AuditApiError(413, "REQUEST_TOO_LARGE", "The request is too large.");
-  }
-
-  if (!rawBody.trim()) {
-    if (options.allowEmpty) {
-      return null;
-    }
+  if (!request.body) {
+    if (options.allowEmpty) return null;
 
     throw new AuditApiError(
       400,
@@ -273,6 +259,61 @@ export async function readBoundedJsonRequest(
       415,
       "UNSUPPORTED_MEDIA_TYPE",
       "The request must use application/json.",
+    );
+  }
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let receivedBytes = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      receivedBytes += value.byteLength;
+      if (receivedBytes > options.maxBytes) {
+        await reader.cancel().catch(() => undefined);
+        throw new AuditApiError(
+          413,
+          "REQUEST_TOO_LARGE",
+          "The request is too large.",
+        );
+      }
+
+      chunks.push(value);
+    }
+  } catch (error) {
+    if (error instanceof AuditApiError) throw error;
+
+    throw new AuditApiError(
+      400,
+      "INVALID_REQUEST_BODY",
+      "The request body could not be read.",
+    );
+  } finally {
+    reader.releaseLock();
+  }
+
+  const encodedBody = new Uint8Array(receivedBytes);
+  let offset = 0;
+
+  for (const chunk of chunks) {
+    encodedBody.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  const rawBody = new TextDecoder().decode(encodedBody);
+
+  if (!rawBody.trim()) {
+    if (options.allowEmpty) {
+      return null;
+    }
+
+    throw new AuditApiError(
+      400,
+      "INVALID_REQUEST_BODY",
+      "A JSON request body is required.",
     );
   }
 

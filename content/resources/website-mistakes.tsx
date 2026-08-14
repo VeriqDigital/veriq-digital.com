@@ -3,6 +3,7 @@ import {
   ArticleCallout,
   ArticleSection,
 } from "@/components/resources/ArticleElements";
+import WebsiteAuditDiscoveryLink from "@/components/resources/WebsiteAuditDiscoveryLink";
 
 export default function WebsiteMistakesArticle() {
   return (
@@ -112,7 +113,10 @@ export default function WebsiteMistakesArticle() {
           be more efficient than patching each symptom.
         </p>
         <p>
-          Veriq&apos;s <Link href="/website-audit">free website audit preview</Link>{" "}
+          Veriq&apos;s{" "}
+          <WebsiteAuditDiscoveryLink>
+            free website audit preview
+          </WebsiteAuditDiscoveryLink>{" "}
           shows how search, speed, mobile use, accessibility, technical health,
           and conversion findings can be organized into one action order.
         </p>

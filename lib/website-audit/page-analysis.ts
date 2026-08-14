@@ -115,17 +115,33 @@ export function parsePageSnapshot({
   const internalLinks = new Set<string>();
   let contactLinkCount = 0;
   let actionLinkCount = 0;
+  const countedActions = new Set<unknown>();
 
   $("a[href]").each((_, element) => {
-    const href = ($(element).attr("href") ?? "").trim();
-    const text = normalizeText($(element).text());
+    const link = $(element);
+    const href = (link.attr("href") ?? "").trim();
+    const text = normalizeText(link.text());
+    const unavailableAction =
+      link.closest(
+        '[hidden], [inert], [aria-hidden="true" i], [aria-disabled="true" i]',
+      ).length > 0 ||
+      link
+        .parents()
+        .addBack()
+        .toArray()
+        .some((candidate) =>
+          /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test(
+            $(candidate).attr("style") ?? "",
+          ),
+        );
 
     if (/^(tel:|mailto:)/i.test(href)) {
       contactLinkCount += 1;
     }
 
-    if (actionTextPattern.test(`${text} ${href}`)) {
+    if (!unavailableAction && actionTextPattern.test(`${text} ${href}`)) {
       actionLinkCount += 1;
+      countedActions.add(element);
     }
 
     const resolvedUrl = resolveUrl(href, resolutionBase);
@@ -137,6 +153,73 @@ export function parsePageSnapshot({
     ) {
       resolvedUrl.hash = "";
       internalLinks.add(resolvedUrl.toString());
+    }
+  });
+
+  $("button, input, [role]").each((_, element) => {
+    if (countedActions.has(element)) return;
+
+    const control = $(element);
+    const tagName = element.tagName.toLowerCase();
+    const type = (control.attr("type") ?? "").toLowerCase();
+    const role = (control.attr("role") ?? "").toLowerCase();
+    const isNativeButton =
+      tagName === "button" ||
+      (tagName === "input" && ["button", "submit"].includes(type));
+    const tabIndex = Number(control.attr("tabindex"));
+    const isInteractiveAriaButton =
+      role === "button" &&
+      (tagName === "button" ||
+        tagName === "a" ||
+        (control.attr("tabindex") !== undefined &&
+          Number.isInteger(tabIndex) &&
+          tabIndex >= 0));
+
+    if (!isNativeButton && !isInteractiveAriaButton) return;
+
+    const unavailableAncestor = control.closest(
+      '[hidden], [inert], [aria-hidden="true" i], [aria-disabled="true" i], fieldset[disabled]',
+    );
+    const hiddenByInlineStyle = control
+      .parents()
+      .addBack()
+      .toArray()
+      .some((candidate) =>
+        /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test(
+          $(candidate).attr("style") ?? "",
+        ),
+      );
+
+    if (
+      control.is("[disabled]") ||
+      unavailableAncestor.length > 0 ||
+      hiddenByInlineStyle
+    ) {
+      return;
+    }
+
+    const labelledByText = (control.attr("aria-labelledby") ?? "")
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((id) =>
+        normalizeText(
+          $("[id]")
+            .filter((_, candidate) => $(candidate).attr("id") === id)
+            .first()
+            .text(),
+        ),
+      )
+      .join(" ");
+    const accessibleName = normalizeText(
+      control.attr("aria-label") ||
+        labelledByText ||
+        (tagName === "input" ? control.attr("value") : control.text()) ||
+        control.attr("title"),
+    );
+
+    if (accessibleName && actionTextPattern.test(accessibleName)) {
+      actionLinkCount += 1;
+      countedActions.add(element);
     }
   });
 

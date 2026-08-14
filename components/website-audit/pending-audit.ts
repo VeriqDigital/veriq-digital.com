@@ -7,14 +7,36 @@ export type PendingWebsiteAudit = Readonly<{
   createdAt: number;
 }>;
 
-const getStorage = () =>
-  typeof window === "undefined" ? null : window.sessionStorage;
+type PendingAuditStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
+
+const getStorage = (): PendingAuditStorage | null => {
+  try {
+    return typeof window === "undefined" ? null : window.sessionStorage;
+  } catch {
+    return null;
+  }
+};
+
+const removeStoredValue = (
+  storage: PendingAuditStorage | null,
+  key: string,
+) => {
+  try {
+    storage?.removeItem(key);
+  } catch {
+    // Pending-audit recovery is optional and must never block navigation.
+  }
+};
 
 export function savePendingWebsiteAudit(pending: PendingWebsiteAudit): void {
-  getStorage()?.setItem(
-    `${storageKeyPrefix}${pending.id}`,
-    JSON.stringify(pending),
-  );
+  try {
+    getStorage()?.setItem(
+      `${storageKeyPrefix}${pending.id}`,
+      JSON.stringify(pending),
+    );
+  } catch {
+    // Quota and privacy errors only disable best-effort recovery.
+  }
 }
 
 export function readPendingWebsiteAudit(
@@ -23,7 +45,13 @@ export function readPendingWebsiteAudit(
 ): PendingWebsiteAudit | null {
   const storage = getStorage();
   const key = `${storageKeyPrefix}${auditId}`;
-  const raw = storage?.getItem(key);
+  let raw: string | null | undefined;
+
+  try {
+    raw = storage?.getItem(key);
+  } catch {
+    return null;
+  }
 
   if (!raw) return null;
 
@@ -38,17 +66,17 @@ export function readPendingWebsiteAudit(
       !Number.isFinite(value.createdAt) ||
       now - value.createdAt > maximumPendingAgeMs
     ) {
-      storage?.removeItem(key);
+      removeStoredValue(storage, key);
       return null;
     }
 
     return value as PendingWebsiteAudit;
   } catch {
-    storage?.removeItem(key);
+    removeStoredValue(storage, key);
     return null;
   }
 }
 
 export function clearPendingWebsiteAudit(auditId: string): void {
-  getStorage()?.removeItem(`${storageKeyPrefix}${auditId}`);
+  removeStoredValue(getStorage(), `${storageKeyPrefix}${auditId}`);
 }

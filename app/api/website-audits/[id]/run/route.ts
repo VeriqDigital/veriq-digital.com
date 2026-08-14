@@ -14,8 +14,11 @@ import { WebsiteCrawlError } from "@/lib/website-audit/crawler";
 import { runWebsiteAudit } from "@/lib/website-audit/orchestrator";
 import { normalizeAuditResult } from "@/lib/website-audit/result-schema";
 import {
+  reconcilePersistedAuditResult,
+  shouldTerminallyFailAudit,
+} from "@/lib/website-audit/run-lifecycle";
+import {
   AuditStorageConflictError,
-  AuditStorageUnavailableError,
   isValidAuditId,
   readAuditResult,
   readAuditState,
@@ -66,27 +69,22 @@ const finishFromPersistedResult = async (
   id: string,
   storedState: StoredAuditState,
 ) => {
-  const result = await readCompletedResult(id);
-
-  if (storedState.state.status === "running") {
-    try {
+  const storedResult = await readCompletedResult(id);
+  const result = await reconcilePersistedAuditResult({
+    result: storedResult,
+    readState: async () => ({
+      status: storedState.state.status,
+      etag: storedState.etag,
+    }),
+    readPersistedResult: () => readCompletedResult(id).catch(() => null),
+    transitionToCompleted: async (finalUrl, expectedEtag) => {
       await transitionAuditState(
         id,
-        { status: "completed", finalUrl: result.auditedUrl },
-        { expectedEtag: storedState.etag },
+        { status: "completed", finalUrl },
+        { expectedEtag },
       );
-    } catch (error) {
-      if (!(error instanceof AuditStorageConflictError)) {
-        throw error;
-      }
-
-      const latest = await readAuditState(id);
-
-      if (latest?.state.status !== "completed") {
-        throw error;
-      }
-    }
-  }
+    },
+  });
 
   return completedResponse(id, result);
 };
@@ -155,6 +153,7 @@ const handleAlreadyRunning = async (id: string, storedState: StoredAuditState) =
 export async function POST(request: Request, { params }: RouteContext) {
   const { id } = await params;
   let runningState: StoredAuditState | null = null;
+  let resultPersisted = false;
 
   try {
     assertWebsiteAuditAvailable();
@@ -263,34 +262,55 @@ export async function POST(request: Request, { params }: RouteContext) {
 
     try {
       await writeAuditResult(id, result);
+      resultPersisted = true;
     } catch (error) {
       if (!(error instanceof AuditStorageConflictError)) {
         throw error;
       }
 
+      // An immutable-write conflict means a result already exists. From this
+      // point onward, state/control-plane errors must not mark the audit failed.
+      resultPersisted = true;
       result = await readCompletedResult(id);
     }
 
-    const latest = await readAuditState(id);
-
-    if (!latest) {
-      throw new AuditStorageUnavailableError();
-    }
-
-    if (latest.state.status === "running") {
-      await transitionAuditState(
-        id,
-        { status: "completed", finalUrl: result.auditedUrl },
-        { expectedEtag: latest.etag },
-      );
-    } else if (latest.state.status !== "completed") {
-      throw new AuditStorageConflictError();
-    }
+    result = await reconcilePersistedAuditResult({
+      result,
+      readState: async () => {
+        const latest = await readAuditState(id);
+        return latest
+          ? { status: latest.state.status, etag: latest.etag }
+          : null;
+      },
+      readPersistedResult: async () => {
+        const persisted = await readAuditResult(id, normalizeAuditResult);
+        return persisted?.result ?? null;
+      },
+      transitionToCompleted: async (finalUrl, expectedEtag) => {
+        await transitionAuditState(
+          id,
+          { status: "completed", finalUrl },
+          { expectedEtag },
+        );
+      },
+    });
 
     console.info("Website audit completed", { auditId: id });
     return completedResponse(id, result);
   } catch (error) {
     if (runningState) {
+      if (!shouldTerminallyFailAudit(resultPersisted, error)) {
+        logUnexpectedAuditApiError("run-completion", error, id);
+        return auditErrorResponse(
+          new AuditApiError(
+            503,
+            "AUDIT_COMPLETION_PENDING",
+            "The audit result was saved and its status is still being finalized. Please try again.",
+            { headers: { "Retry-After": "3" } },
+          ),
+        );
+      }
+
       const latest = await readAuditState(id).catch(() => null);
 
       if (latest?.state.status === "running") {

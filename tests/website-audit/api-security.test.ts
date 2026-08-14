@@ -50,27 +50,134 @@ test("accepts the browser Host origin when the framework normalizes request URLs
   assert.doesNotThrow(() => assertTrustedMutationRequest(request));
 });
 
-test("enforces content type and actual body byte limits", async () => {
+test("reads valid bounded JSON", async () => {
+  const request = new Request("https://www.veriqdigital.com/api/website-audits", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: "https://example.com" }),
+  });
+
+  assert.deepEqual(
+    await readBoundedJsonRequest(request, { maxBytes: 100 }),
+    { url: "https://example.com" },
+  );
+});
+
+test("rejects an unsupported request content type before reading its body", async () => {
   const wrongType = new Request("https://www.veriqdigital.com/api/website-audits", {
     method: "POST",
     headers: { "Content-Type": "text/plain" },
-    body: "{}",
-  });
-  const oversized = new Request("https://www.veriqdigital.com/api/website-audits", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ url: "x".repeat(100) }),
-  });
+    body: new ReadableStream({
+      pull(controller) {
+        controller.enqueue(new TextEncoder().encode("{}"));
+        controller.close();
+      },
+    }),
+    duplex: "half",
+  } as RequestInit & { duplex: "half" });
 
   await assert.rejects(
     readBoundedJsonRequest(wrongType, { maxBytes: 100 }),
     (error: unknown) =>
       error instanceof AuditApiError && error.status === 415,
   );
+});
+
+test("rejects a declared oversized JSON body without consuming it", async () => {
+  const oversized = new Request("https://www.veriqdigital.com/api/website-audits", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Content-Length": "101",
+    },
+    body: new ReadableStream({
+      pull(controller) {
+        controller.enqueue(new TextEncoder().encode("{}"));
+        controller.close();
+      },
+    }),
+    duplex: "half",
+  } as RequestInit & { duplex: "half" });
+
   await assert.rejects(
-    readBoundedJsonRequest(oversized, { maxBytes: 20 }),
+    readBoundedJsonRequest(oversized, { maxBytes: 100 }),
     (error: unknown) =>
       error instanceof AuditApiError && error.status === 413,
+  );
+});
+
+test("stops a chunked JSON body as soon as its encoded bytes exceed the limit", async () => {
+  let chunksRead = 0;
+  const chunks = ["{\"url\":\"", "x".repeat(20), "never-read\"}"];
+  const request = new Request("https://www.veriqdigital.com/api/website-audits", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: new ReadableStream({
+      pull(controller) {
+        const chunk = chunks[chunksRead];
+        chunksRead += 1;
+        if (chunk === undefined) {
+          controller.close();
+        } else {
+          controller.enqueue(new TextEncoder().encode(chunk));
+        }
+      },
+    }),
+    duplex: "half",
+  } as RequestInit & { duplex: "half" });
+
+  await assert.rejects(
+    readBoundedJsonRequest(request, { maxBytes: 20 }),
+    (error: unknown) =>
+      error instanceof AuditApiError && error.status === 413,
+  );
+  assert.equal(chunksRead, 2);
+});
+
+test("enforces the request limit on multibyte UTF-8 bytes", async () => {
+  const raw = JSON.stringify({ value: "é" });
+  const request = new Request("https://www.veriqdigital.com/api/website-audits", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: raw,
+  });
+
+  await assert.rejects(
+    readBoundedJsonRequest(request, { maxBytes: raw.length }),
+    (error: unknown) =>
+      error instanceof AuditApiError && error.status === 413,
+  );
+});
+
+test("preserves allowEmpty behavior for an absent body", async () => {
+  const request = new Request("https://www.veriqdigital.com/api/website-audits", {
+    method: "POST",
+  });
+
+  assert.equal(
+    await readBoundedJsonRequest(request, { allowEmpty: true, maxBytes: 100 }),
+    null,
+  );
+});
+
+test("maps request stream read failures to the stable invalid-body error", async () => {
+  const request = new Request("https://www.veriqdigital.com/api/website-audits", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: new ReadableStream({
+      pull(controller) {
+        controller.error(new Error("stream failed"));
+      },
+    }),
+    duplex: "half",
+  } as RequestInit & { duplex: "half" });
+
+  await assert.rejects(
+    readBoundedJsonRequest(request, { maxBytes: 100 }),
+    (error: unknown) =>
+      error instanceof AuditApiError &&
+      error.status === 400 &&
+      error.code === "INVALID_REQUEST_BODY",
   );
 });
 

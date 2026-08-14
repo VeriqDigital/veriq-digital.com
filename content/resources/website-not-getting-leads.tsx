@@ -3,6 +3,7 @@ import {
   ArticleCallout,
   ArticleSection,
 } from "@/components/resources/ArticleElements";
+import WebsiteAuditDiscoveryLink from "@/components/resources/WebsiteAuditDiscoveryLink";
 
 export default function WebsiteNotGettingLeadsArticle() {
   return (
@@ -114,7 +115,10 @@ export default function WebsiteNotGettingLeadsArticle() {
         <ArticleCallout title="When the whole customer path needs attention">
           <p>
             Start with Veriq&apos;s{" "}
-            <Link href="/website-audit">free website audit preview</Link> to see
+            <WebsiteAuditDiscoveryLink>
+              free website audit preview
+            </WebsiteAuditDiscoveryLink>{" "}
+            to see
             how a prioritized report can separate technical, usability, and
             conversion issues. Then review the broader list of{" "}
             <Link href="/resources/website-mistakes-that-cost-local-businesses-customers">
