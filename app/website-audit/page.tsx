@@ -1,0 +1,172 @@
+import BookingLink from "@/components/ui/BookingLink";
+import Container from "@/components/ui/Container";
+import AuditForm from "@/components/website-audit/AuditForm";
+import AuditPreview from "@/components/website-audit/AuditPreview";
+import AuditResults from "@/components/website-audit/AuditResults";
+import { demoAuditResult } from "@/components/website-audit/demo-audit";
+import { createPageMetadata, serializeJsonLd } from "@/config/seo";
+import { siteConfig } from "@/config/site";
+import { auditCategoryRegistry } from "@/lib/website-audit/categories";
+import {
+  isWebsiteAuditDiscoverable,
+  isWebsiteAuditEnabled,
+} from "@/lib/website-audit/runtime-config";
+import styles from "@/components/website-audit/website-audit.module.css";
+
+const processSteps = [
+  {
+    title: "Enter your website",
+    description: "Share the public URL you want Veriq to analyze.",
+  },
+  {
+    title: "We analyze the essentials",
+    description:
+      "Veriq checks measurable signals that affect visibility, usability, performance, and customer action.",
+  },
+  {
+    title: "Get a clear action order",
+    description:
+      "See what is working, what needs attention, and which fixes should come first.",
+  },
+] as const;
+
+export const metadata = {
+  ...createPageMetadata({
+  title: "Free Website Audit for Growing Businesses",
+  description:
+    "Run a free website audit covering SEO, performance, mobile usability, accessibility, conversion UX, and technical health.",
+  path: "/website-audit",
+  }),
+  robots: {
+    index: isWebsiteAuditDiscoverable(),
+    follow: isWebsiteAuditDiscoverable(),
+  },
+};
+
+const canonicalUrl = `${siteConfig.url}/website-audit`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${canonicalUrl}#webpage`,
+  url: canonicalUrl,
+  name: "Free Website Audit for Growing Businesses",
+  description:
+    "A free Veriq website audit covering search visibility, performance, mobile usability, accessibility, conversion UX, and technical health.",
+  isPartOf: { "@id": `${siteConfig.url}/#website` },
+  about: auditCategoryRegistry.map((category) => category.pageLabel),
+  inLanguage: "en-US",
+};
+
+export default function WebsiteAuditPage() {
+  if (!isWebsiteAuditEnabled()) {
+    notFound();
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
+      />
+      <main id="main-content" className={styles.page}>
+        <section className={styles.hero} aria-labelledby="audit-title">
+          <Container>
+            <div className={styles.heroGrid}>
+              <div className={styles.heroCopy}>
+                <p className={styles.heroEyebrow}>
+                  <span aria-hidden="true" />
+                  Free website audit
+                </p>
+                <h1 id="audit-title">How good is your website, really?</h1>
+                <p className={styles.heroDescription}>
+                  Get a clear website audit covering SEO, performance, mobile
+                  usability, accessibility, technical health, and opportunities
+                  to turn more visitors into customers.
+                </p>
+                <AuditForm />
+              </div>
+              <AuditPreview result={demoAuditResult} />
+            </div>
+          </Container>
+        </section>
+
+        <section className={styles.checksSection} aria-labelledby="checks-title">
+          <Container>
+            <div className={styles.sectionIntro}>
+              <p>What we check</p>
+              <h2 id="checks-title">Six parts of one customer experience.</h2>
+              <p>
+                A website can look polished and still be difficult to find,
+                slow to use, or unclear about what a customer should do next.
+                The audit keeps those connected problems in one view.
+              </p>
+            </div>
+            <dl className={styles.checkList}>
+              {auditCategoryRegistry.map((category) => (
+                <div key={category.id}>
+                  <dt>{category.pageLabel}</dt>
+                  <dd>{category.description}</dd>
+                </div>
+              ))}
+            </dl>
+          </Container>
+        </section>
+
+        <section className={styles.processSection} aria-labelledby="process-title">
+          <Container>
+            <div className={styles.processLayout}>
+              <div className={styles.sectionIntro}>
+                <p>How it works</p>
+                <h2 id="process-title">From a URL to a useful next step.</h2>
+              </div>
+              <ol className={styles.processList}>
+                {processSteps.map((step, index) => (
+                  <li key={step.title}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3>{step.title}</h3>
+                      <p>{step.description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </Container>
+        </section>
+
+        <section
+          className={styles.resultsSection}
+          id="sample-audit-results"
+          aria-label="Sample website audit results"
+        >
+          <Container>
+            <AuditResults result={demoAuditResult} variant="sample" />
+          </Container>
+        </section>
+
+        <section className={styles.serviceCta} aria-labelledby="service-cta-title">
+          <Container>
+            <div className={styles.serviceCtaInner}>
+              <div>
+                <p>Need help with the fixes?</p>
+                <h2 id="service-cta-title">Want Veriq to improve the site with you?</h2>
+              </div>
+              <div>
+                <p>
+                  Veriq designs and develops high-quality websites for businesses
+                  that need stronger performance, usability, search foundations,
+                  and conversion paths — built around how the business actually works.
+                </p>
+                <BookingLink placement="website_audit_closing" className={styles.serviceCtaLink}>
+                  Book a {siteConfig.booking.durationMinutes}-minute intro call
+                  <span aria-hidden="true">↗</span>
+                </BookingLink>
+              </div>
+            </div>
+          </Container>
+        </section>
+      </main>
+    </>
+  );
+}
+import { notFound } from "next/navigation";

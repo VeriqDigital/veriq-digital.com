@@ -3,6 +3,7 @@ import {
   ArticleCallout,
   ArticleSection,
 } from "@/components/resources/ArticleElements";
+import WebsiteAuditDiscoveryLink from "@/components/resources/WebsiteAuditDiscoveryLink";
 
 export default function WebsiteMistakesArticle() {
   return (
@@ -110,6 +111,14 @@ export default function WebsiteMistakesArticle() {
           effects. If the underlying structure is sound, targeted improvements
           may be enough. If the problems repeat across the site, a redesign may
           be more efficient than patching each symptom.
+        </p>
+        <p>
+          Veriq&apos;s{" "}
+          <WebsiteAuditDiscoveryLink>
+            free website audit preview
+          </WebsiteAuditDiscoveryLink>{" "}
+          shows how search, speed, mobile use, accessibility, technical health,
+          and conversion findings can be organized into one action order.
         </p>
         <ArticleCallout title="When the site needs more than a patch">
           <p>

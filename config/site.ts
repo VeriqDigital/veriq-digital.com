@@ -73,21 +73,31 @@ export const homepageCampaign: HomepageCampaignConfig = {
   page: "homepage",
 };
 
+const auditNavigationEnabled =
+  process.env.NEXT_PUBLIC_WEBSITE_AUDIT_DISCOVERY_ENABLED === "true";
+
 export const navigation = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
+  ...(auditNavigationEnabled
+    ? [{ label: "Free Audit", href: "/website-audit" } as const]
+    : []),
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
 ] as const satisfies ReadonlyArray<{ label: string; href: string }>;
 
 export const footerLinks = [
   { label: "Services", href: "/services" },
+  ...(auditNavigationEnabled
+    ? [{ label: "Free Website Audit", href: "/website-audit" } as const]
+    : []),
   { label: "Small Business Web Design", href: "/small-business-web-design" },
   { label: "Des Moines Web Design", href: "/des-moines-web-design" },
   { label: "Blog", href: "/blog" },
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "Privacy", href: "/privacy" },
 ] as const satisfies ReadonlyArray<{ label: string; href: string }>;
 
 export const primaryCta = {

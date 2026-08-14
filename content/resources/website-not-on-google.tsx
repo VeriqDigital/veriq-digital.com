@@ -3,6 +3,7 @@ import {
   ArticleCallout,
   ArticleSection,
 } from "@/components/resources/ArticleElements";
+import WebsiteAuditDiscoveryLink from "@/components/resources/WebsiteAuditDiscoveryLink";
 
 export default function WebsiteNotOnGoogleArticle() {
   return (
@@ -169,7 +170,13 @@ export default function WebsiteNotOnGoogleArticle() {
         </p>
         <ArticleCallout title="Strengthen the foundation first">
           <p>
-            Review{" "}
+            Use Veriq&apos;s{" "}
+            <WebsiteAuditDiscoveryLink>
+              free website audit preview
+            </WebsiteAuditDiscoveryLink>{" "}
+            to see
+            how indexing, technical health, and other site findings can be
+            prioritized together. Then review{" "}
             <Link href="/resources/what-should-a-local-business-website-include">
               the essentials of a local business website
             </Link>{" "}

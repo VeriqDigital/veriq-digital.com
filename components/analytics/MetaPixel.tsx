@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import { analyticsConfig } from "@/config/analytics";
+import { isWebsiteAuditReportPath } from "./analytics-privacy";
 
 type MetaPixelFunction = (...args: unknown[]) => void;
 
@@ -21,9 +22,11 @@ const MetaPixel = () => {
   const pathname = usePathname();
   const [isReady, setIsReady] = useState(false);
   const lastTrackedPath = useRef<string | null>(null);
+  const isAuditReport = isWebsiteAuditReportPath(pathname);
 
   useEffect(() => {
     if (
+      isAuditReport ||
       !isReady ||
       !window.fbq ||
       !pathname ||
@@ -34,7 +37,11 @@ const MetaPixel = () => {
 
     window.fbq("track", "PageView");
     lastTrackedPath.current = pathname;
-  }, [isReady, pathname]);
+  }, [isAuditReport, isReady, pathname]);
+
+  if (isAuditReport) {
+    return null;
+  }
 
   return (
     <>

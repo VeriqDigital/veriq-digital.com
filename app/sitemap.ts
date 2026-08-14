@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { projects } from "@/data/projects";
 import { resources } from "@/data/resources";
+import { isWebsiteAuditDiscoverable } from "@/lib/website-audit/runtime-config";
 
 const staticRoutes: MetadataRoute.Sitemap = [
   {
@@ -29,6 +30,15 @@ const staticRoutes: MetadataRoute.Sitemap = [
     changeFrequency: "monthly",
     priority: 0.95,
   },
+  ...(isWebsiteAuditDiscoverable()
+    ? [
+        {
+          url: siteConfig.url + "/website-audit",
+          changeFrequency: "monthly" as const,
+          priority: 0.9,
+        },
+      ]
+    : []),
   {
     url: `${siteConfig.url}/blog`,
     changeFrequency: "monthly",
@@ -48,6 +58,11 @@ const staticRoutes: MetadataRoute.Sitemap = [
     url: `${siteConfig.url}/contact`,
     changeFrequency: "yearly",
     priority: 0.7,
+  },
+  {
+    url: `${siteConfig.url}/privacy`,
+    changeFrequency: "yearly",
+    priority: 0.3,
   },
 ];
 
