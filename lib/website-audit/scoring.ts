@@ -291,7 +291,7 @@ export function buildAuditResult({
       ).length,
     },
     findings,
-    notices: [...new Set([...notices, ...coverageNotices])],
+    notices: [...new Set([...notices, ...coverageNotices])].slice(0, 8),
     methodologyVersion: "v2",
   });
 }

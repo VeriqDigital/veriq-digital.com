@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   AuditApiError,
+  auditCreationRateLimit,
   assertWebsiteAuditAvailable,
   assertTrustedMutationRequest,
   auditDataResponse,
@@ -34,8 +35,7 @@ export async function POST(request: Request) {
     assertTrustedMutationRequest(request);
     await enforceAuditRateLimit(request, {
       scope: "create-audit",
-      limit: 4,
-      windowMs: 10 * 60 * 1000,
+      ...auditCreationRateLimit,
     });
 
     const parsedBody = submissionSchema.safeParse(

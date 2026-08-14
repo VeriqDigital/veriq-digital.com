@@ -2,6 +2,7 @@ import { buildAuditChecks } from "./checks";
 import { completeWebsiteCrawl, fetchPrimaryAuditPage } from "./crawler";
 import type { WebsiteAuditResult } from "./model";
 import { runPageSpeedAudit } from "./providers/pagespeed";
+import { runRenderedMobileAudit } from "./providers/rendered-mobile";
 import { buildAuditResult } from "./scoring";
 
 const auditDeadlineMs = 45_000;
@@ -78,7 +79,7 @@ export async function runWebsiteAudit({
     () => fetchPrimaryAuditPage(submittedUrl, signal),
     (value) => ({ redirectCount: value.redirectCount }),
   );
-  const [crawl, pageSpeed] = await Promise.all([
+  const [crawl, pageSpeed, renderedMobile] = await Promise.all([
     runAuditStage(
       id,
       "first-party-crawl",
@@ -101,8 +102,24 @@ export async function runWebsiteAudit({
         reason: value.available ? undefined : value.reason,
       }),
     ),
+    runAuditStage(
+      id,
+      "rendered-mobile",
+      () => runRenderedMobileAudit(primary, { signal }),
+      (value) => ({
+        available: value.available,
+        reason: value.available ? undefined : value.reason,
+        overflowPixels: value.available
+          ? value.metrics.horizontalOverflowPixels
+          : undefined,
+      }),
+    ),
   ]);
-  const { checks, notices } = buildAuditChecks(crawl, pageSpeed);
+  const { checks, notices } = buildAuditChecks(
+    crawl,
+    pageSpeed,
+    renderedMobile,
+  );
   const result = buildAuditResult({
     id,
     auditedUrl: primary.finalUrl,

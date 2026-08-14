@@ -295,7 +295,17 @@ type RateLimitOptions = Readonly<{
   capacityMessage?: string;
 }>;
 
-const recentRequestsByClient = new Map<string, number[]>();
+type LocalRateLimitBucket = {
+  count: number;
+  expiresAt: number;
+};
+
+export const auditCreationRateLimit = Object.freeze({
+  limit: 5,
+  windowMs: 60 * 60 * 1_000,
+});
+
+const recentRequestsByClient = new Map<string, LocalRateLimitBucket>();
 const maximumTrackedClients = 2_000;
 
 const getClientAddress = (request: Request) => {
@@ -334,14 +344,13 @@ const enforceLocalAuditRateLimit = (
   }
 
   const key = getHashedClientIdentifier(request, options.scope);
-  const windowStart = now - options.windowMs;
 
   if (
     !recentRequestsByClient.has(key) &&
     recentRequestsByClient.size >= maximumTrackedClients
   ) {
-    for (const [identifier, timestamps] of recentRequestsByClient) {
-      if (timestamps.every((timestamp) => timestamp <= windowStart)) {
+    for (const [identifier, bucket] of recentRequestsByClient) {
+      if (bucket.expiresAt <= now) {
         recentRequestsByClient.delete(identifier);
       }
     }
@@ -354,16 +363,18 @@ const enforceLocalAuditRateLimit = (
     }
   }
 
-  const recentRequests = (recentRequestsByClient.get(key) ?? []).filter(
-    (timestamp) => timestamp > windowStart,
-  );
+  const existingBucket = recentRequestsByClient.get(key);
+  const bucket =
+    existingBucket && existingBucket.expiresAt > now
+      ? existingBucket
+      : { count: 0, expiresAt: now + options.windowMs };
 
-  if (recentRequests.length >= options.limit) {
+  if (bucket.count >= options.limit) {
     const retryAfterSeconds = Math.max(
       1,
-      Math.ceil((recentRequests[0] + options.windowMs - now) / 1000),
+      Math.ceil((bucket.expiresAt - now) / 1000),
     );
-    recentRequestsByClient.set(key, recentRequests);
+    recentRequestsByClient.set(key, bucket);
 
     throw new AuditApiError(
       429,
@@ -373,8 +384,8 @@ const enforceLocalAuditRateLimit = (
     );
   }
 
-  recentRequests.push(now);
-  recentRequestsByClient.set(key, recentRequests);
+  bucket.count += 1;
+  recentRequestsByClient.set(key, bucket);
 };
 
 export async function enforceAuditRateLimit(

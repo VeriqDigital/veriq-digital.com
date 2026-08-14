@@ -45,6 +45,11 @@ const nextConfig: NextConfig = {
   experimental: {
     webVitalsAttribution: isDevelopment ? ["CLS", "LCP", "INP"] : [],
   },
+  outputFileTracingIncludes: {
+    "/api/website-audits/\\[id\\]/run": [
+      "./node_modules/@sparticuz/chromium/bin/**/*",
+    ],
+  },
   images: {
     qualities: [75, 100],
   },

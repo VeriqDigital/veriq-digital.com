@@ -31,6 +31,7 @@ export type PrimaryCrawlData = Readonly<{
   submittedUrl: string;
   finalUrl: string;
   redirectCount: number;
+  html: string;
   primaryPage: PageSnapshot;
 }>;
 
@@ -471,6 +472,7 @@ export async function fetchPrimaryAuditPage(
       submittedUrl: response.requestedUrl,
       finalUrl: response.finalUrl,
       redirectCount: response.redirects.length,
+      html,
       primaryPage: parsePageSnapshot({
         url: response.finalUrl,
         statusCode: response.status,

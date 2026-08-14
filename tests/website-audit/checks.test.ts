@@ -2,7 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { buildAuditChecks } from "../../lib/website-audit/checks";
 import type { CrawlAuditData } from "../../lib/website-audit/crawl-types";
+import type {
+  PageSpeedData,
+  RenderedMobileData,
+  RenderedMobileMetrics,
+} from "../../lib/website-audit/model";
 import type { PageSnapshot } from "../../lib/website-audit/page-analysis";
+import { buildAuditResult } from "../../lib/website-audit/scoring";
 
 const makePage = (overrides: Partial<PageSnapshot> = {}): PageSnapshot => ({
   url: "https://example.com/",
@@ -51,6 +57,64 @@ const makeCrawl = (primaryPage = makePage()): CrawlAuditData => ({
   sitemapStatus: "present",
   brokenLinks: { tested: 1, broken: [], unavailable: 0 },
 });
+
+const pageSpeed: PageSpeedData = {
+  available: true,
+  performanceScore: 95,
+  accessibilityScore: 95,
+  seoScore: 95,
+  metrics: {},
+  audits: {
+    tapTargets: 100,
+    contentWidth: 100,
+    colorContrast: 100,
+    linkName: 100,
+    buttonName: 100,
+  },
+};
+
+const makeRenderedMobile = (
+  overrides: Partial<RenderedMobileMetrics> = {},
+): RenderedMobileData => ({
+  available: true,
+  metrics: {
+    viewportWidth: 390,
+    documentWidth: 390,
+    horizontalOverflowPixels: 0,
+    horizontalScrollPixels: 0,
+    wideElementCount: 0,
+    fixedWidthElementCount: 0,
+    overflowingImageCount: 0,
+    clippedImportantElementCount: 0,
+    clippedNavigation: false,
+    offscreenPrimaryActionCount: 0,
+    seriousTapTargetCount: 0,
+    interactiveControlCount: 4,
+    tinyTextCount: 0,
+    textSampleCount: 20,
+    ...overrides,
+  },
+});
+
+const buildResultWithRenderedMobile = (renderedMobile: RenderedMobileData) => {
+  const { checks, notices } = buildAuditChecks(
+    makeCrawl(),
+    pageSpeed,
+    renderedMobile,
+  );
+
+  return {
+    checks,
+    result: buildAuditResult({
+      id: "a6799d85-eab3-4fa7-aefd-131b0d9b2cb2",
+      auditedUrl: "https://example.com/",
+      createdAt: "2026-08-12T12:00:00.000Z",
+      completedAt: "2026-08-12T12:00:10.000Z",
+      checks,
+      notices,
+    }),
+  };
+};
 
 test("representative direct checks cover every canonical category", () => {
   const { checks, notices } = buildAuditChecks(makeCrawl(), {
@@ -135,4 +199,128 @@ test("robots blocking and cross-page canonicals stay explicit and conservative",
   assert.equal(byId.get("seo-robots-access")?.status, "failed");
   assert.equal(byId.get("seo-robots-access")?.finding?.severity, "high");
   assert.equal(byId.get("seo-canonical")?.status, "opportunity");
+});
+
+test("a responsive rendered page keeps the objective mobile checks healthy", () => {
+  const { checks, result } = buildResultWithRenderedMobile(makeRenderedMobile());
+  const renderedChecks = checks.filter((check) =>
+    check.id.startsWith("mobile-rendered-"),
+  );
+  const mobile = result.categoryScores.find(
+    (category) => category.id === "mobile-experience",
+  );
+
+  assert.ok(renderedChecks.every((check) => check.status === "passed"));
+  assert.ok((mobile?.score ?? 0) >= 90);
+});
+
+test("catastrophic horizontal overflow cannot receive a 90+ mobile score", () => {
+  const audit = buildResultWithRenderedMobile(
+    makeRenderedMobile({
+      documentWidth: 1_000,
+      horizontalOverflowPixels: 610,
+      horizontalScrollPixels: 610,
+      wideElementCount: 2,
+      fixedWidthElementCount: 1,
+    }),
+  );
+  const widthCheck = audit.checks.find(
+    (check) => check.id === "mobile-rendered-width",
+  );
+  const mobile = audit.result.categoryScores.find(
+    (category) => category.id === "mobile-experience",
+  );
+
+  assert.equal(widthCheck?.finding?.severity, "critical");
+  assert.ok((mobile?.score ?? 100) <= 49);
+  assert.ok((mobile?.score ?? 100) < 90);
+});
+
+test("a fixed-width container wider than the viewport is a rendered failure", () => {
+  const { checks } = buildResultWithRenderedMobile(
+    makeRenderedMobile({
+      documentWidth: 620,
+      horizontalOverflowPixels: 230,
+      horizontalScrollPixels: 230,
+      wideElementCount: 1,
+      fixedWidthElementCount: 1,
+    }),
+  );
+  const widthCheck = checks.find(
+    (check) => check.id === "mobile-rendered-width",
+  );
+
+  assert.equal(widthCheck?.status, "failed");
+  assert.match(widthCheck?.finding?.observedValue ?? "", /fixed-width/);
+});
+
+test("overflowing images and clipped navigation produce specific findings", () => {
+  const { checks, result } = buildResultWithRenderedMobile(
+    makeRenderedMobile({
+      overflowingImageCount: 2,
+      clippedImportantElementCount: 2,
+      clippedNavigation: true,
+      offscreenPrimaryActionCount: 1,
+    }),
+  );
+  const imageCheck = checks.find(
+    (check) => check.id === "mobile-rendered-images",
+  );
+  const contentCheck = checks.find(
+    (check) => check.id === "mobile-rendered-important-content",
+  );
+  const conversion = result.categoryScores.find(
+    (category) => category.id === "conversion-ux",
+  );
+
+  assert.match(imageCheck?.finding?.title ?? "", /Images overflow/);
+  assert.equal(contentCheck?.finding?.severity, "high");
+  assert.ok((conversion?.score ?? 100) <= 79);
+});
+
+test("harmless tiny overflow stays within the rendered tolerance", () => {
+  const { checks } = buildResultWithRenderedMobile(
+    makeRenderedMobile({
+      documentWidth: 396,
+      horizontalOverflowPixels: 6,
+      horizontalScrollPixels: 6,
+    }),
+  );
+  const widthCheck = checks.find(
+    (check) => check.id === "mobile-rendered-width",
+  );
+
+  assert.equal(widthCheck?.status, "passed");
+});
+
+test("rendered-check unavailability reduces evidence without scoring failure", () => {
+  const audit = buildResultWithRenderedMobile({
+    available: false,
+    reason: "render_error",
+  });
+  const renderedChecks = audit.checks.filter((check) =>
+    check.id.startsWith("mobile-rendered-"),
+  );
+  const mobile = audit.result.categoryScores.find(
+    (category) => category.id === "mobile-experience",
+  );
+
+  assert.ok(renderedChecks.every((check) => check.status === "unavailable"));
+  assert.equal(mobile?.evidenceLevel, "partial");
+  assert.ok(audit.result.notices.some((notice) => notice.includes("Rendered mobile")));
+  assert.ok(audit.result.notices.length <= 8);
+});
+
+test("rendered mobile scoring remains deterministic", () => {
+  const rendered = makeRenderedMobile({
+    documentWidth: 700,
+    horizontalOverflowPixels: 310,
+    horizontalScrollPixels: 310,
+    wideElementCount: 1,
+  });
+
+  assert.deepEqual(
+    buildResultWithRenderedMobile(rendered),
+    buildResultWithRenderedMobile(rendered),
+  );
 });

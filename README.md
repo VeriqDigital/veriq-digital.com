@@ -103,6 +103,16 @@ and never loads third-party page assets or executes browser JavaScript. Google
 PageSpeed Insights is the only external audit provider and receives the already
 validated final public URL.
 
+Mobile layout validation uses one bounded 390px Chromium render. It renders the
+already validated primary HTML with scripts, frames, refresh navigation, and
+active content removed. A maximum of 16 same-origin stylesheets and six images
+may be fulfilled through the same DNS-revalidated, public-IP-pinned HTTP
+transport used by the crawler; every other browser request is blocked. The
+render measures material horizontal overflow, fixed-width containers,
+overflowing images, clipped important content and actions, extremely small tap
+targets, and very small text. A provider timeout or browser failure reduces
+evidence coverage rather than failing the whole audit.
+
 Scoring methodology v2 uses explicit check weights inside six canonical
 categories and explicit category weights for the overall score. Missing checks
 reduce evidence coverage and pull partial results toward a conservative prior;
@@ -124,7 +134,9 @@ Production is fail-closed. `WEBSITE_AUDIT_ENABLED=true` is honored only when
 private Blob storage, PageSpeed, Resend, Redis, hashing, retention, quota, and
 cron settings are valid. Creation, execution, and report-email routes use an
 atomic Redis fixed-window limiter; the process-local map remains supplemental
-burst protection. Audit execution and report email also have independent global
+burst protection. Audit creation allows five requests per client per one-hour
+fixed window, and rate-limit responses include the remaining wait in
+`Retry-After`. Audit execution and report email also have independent global
 24-hour quotas. If Redis is unavailable, a quota cannot be verified, or any
 required configuration is absent, the affected route returns `503` with a
 `Retry-After` header and performs no outbound audit or email work.
@@ -146,6 +158,13 @@ GOOGLE_PAGESPEED_API_KEY=<quota-restricted API key>
 RESEND_API_KEY=<transactional email key>
 EMAIL_FROM=<verified sender>
 ```
+
+The rendered-mobile provider bundles the Chrome 143 serverless binary and uses
+the existing 60-second Node.js audit route; it requires no additional Vercel
+environment variable. Local or non-Vercel runtimes can set
+`WEBSITE_AUDIT_CHROME_PATH` when Chrome or Edge is not installed in a standard
+location. Allocate normal browser-capable function memory (at least 512 MB;
+more is preferable for cold starts).
 
 Vercel supplies the OIDC credential to Functions at request time. For local
 development, use `vercel env pull` or configure the optional

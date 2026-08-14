@@ -75,6 +75,39 @@ test("distributed limiter uses one atomic Redis script and returns TTL", async (
   assert.deepEqual(result, { count: 3, retryAfterSeconds: 42 });
 });
 
+test("distributed fixed window expires and resets its count", async () => {
+  let now = 0;
+  let count = 0;
+  let expiresAt = 0;
+  const windowMs = 60 * 60 * 1_000;
+  const consume = () =>
+    consumeDistributedLimit({
+      key: "website-audit:create-audit:test",
+      windowMs,
+      redisUrl: "https://redis.example.com",
+      redisToken: "secret",
+      fetchImplementation: async (_input, init) => {
+        const command = JSON.parse(String(init?.body)) as unknown[];
+        assert.equal(command[0], "EVAL");
+        assert.match(String(command[1]), /PEXPIRE/);
+
+        if (expiresAt <= now) {
+          count = 0;
+          expiresAt = now + windowMs;
+        }
+
+        count += 1;
+        return Response.json({ result: [count, expiresAt - now] });
+      },
+    });
+
+  assert.deepEqual(await consume(), { count: 1, retryAfterSeconds: 3_600 });
+  now = windowMs - 1_000;
+  assert.deepEqual(await consume(), { count: 2, retryAfterSeconds: 1 });
+  now = windowMs;
+  assert.deepEqual(await consume(), { count: 1, retryAfterSeconds: 3_600 });
+});
+
 test("distributed limiter fails closed on provider errors", async () => {
   await assert.rejects(
     consumeDistributedLimit({

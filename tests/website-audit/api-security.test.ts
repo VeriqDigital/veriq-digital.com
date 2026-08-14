@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { afterEach, test } from "node:test";
 import {
   AuditApiError,
+  auditCreationRateLimit,
   assertTrustedMutationRequest,
   auditErrorResponse,
   createReportEmailIdempotencyKey,
@@ -73,21 +74,79 @@ test("enforces content type and actual body byte limits", async () => {
   );
 });
 
-test("rate limits hashed client buckets without returning raw identifiers", async () => {
+const auditCreationLimit = {
+  scope: "create-audit-test",
+  limit: 5,
+  windowMs: 60 * 60 * 1_000,
+} as const;
+
+const createRateLimitRequest = () =>
+  new Request("https://www.veriqdigital.com/api/website-audits", {
+    headers: { "X-Forwarded-For": "203.0.113.9" },
+  });
+
+test("uses a five-audit one-hour creation limit", () => {
+  assert.deepEqual(auditCreationRateLimit, {
+    limit: 5,
+    windowMs: 60 * 60 * 1_000,
+  });
+});
+
+test("allows audit creation requests under the hourly client limit", async () => {
+  const request = createRateLimitRequest();
+
+  for (let requestNumber = 0; requestNumber < 4; requestNumber += 1) {
+    await enforceAuditRateLimit(request, auditCreationLimit, 1_000 + requestNumber);
+  }
+});
+
+test("allows the fifth audit creation at the limit boundary", async () => {
+  const request = createRateLimitRequest();
+
+  for (let requestNumber = 0; requestNumber < 5; requestNumber += 1) {
+    await enforceAuditRateLimit(request, auditCreationLimit, 1_000 + requestNumber);
+  }
+});
+
+test("rate limits requests above the boundary and returns the actual wait", async () => {
+  const request = createRateLimitRequest();
+
+  for (let requestNumber = 0; requestNumber < 5; requestNumber += 1) {
+    await enforceAuditRateLimit(request, auditCreationLimit, 1_000 + requestNumber);
+  }
+
+  await assert.rejects(
+    enforceAuditRateLimit(request, auditCreationLimit, 6_000),
+    (error: unknown) => {
+      if (!(error instanceof AuditApiError)) return false;
+
+      const retryAfter = new Headers(error.headers).get("Retry-After");
+      const responseRetryAfter = auditErrorResponse(error).headers.get(
+        "Retry-After",
+      );
+      return (
+        error.status === 429 &&
+        retryAfter === "3595" &&
+        responseRetryAfter === retryAfter &&
+        !error.message.includes("203.0.113.9")
+      );
+    },
+  );
+});
+
+test("resets the local fixed window when the hour expires", async () => {
   const request = new Request("https://www.veriqdigital.com/api/website-audits", {
     headers: { "X-Forwarded-For": "203.0.113.9" },
   });
-  const options = { scope: "test", limit: 2, windowMs: 60_000 } as const;
 
-  await enforceAuditRateLimit(request, options, 1_000);
-  await enforceAuditRateLimit(request, options, 2_000);
+  for (let requestNumber = 0; requestNumber < 5; requestNumber += 1) {
+    await enforceAuditRateLimit(request, auditCreationLimit, 1_000 + requestNumber);
+  }
 
-  await assert.rejects(
-    enforceAuditRateLimit(request, options, 3_000),
-    (error: unknown) =>
-      error instanceof AuditApiError &&
-      error.status === 429 &&
-      !error.message.includes("203.0.113.9"),
+  await enforceAuditRateLimit(
+    request,
+    auditCreationLimit,
+    1_000 + auditCreationLimit.windowMs,
   );
 });
 

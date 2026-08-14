@@ -107,3 +107,30 @@ export type PageSpeedUnavailable = Readonly<{
 }>;
 
 export type PageSpeedData = PageSpeedAuditData | PageSpeedUnavailable;
+
+export type RenderedMobileMetrics = Readonly<{
+  viewportWidth: number;
+  documentWidth: number;
+  horizontalOverflowPixels: number;
+  horizontalScrollPixels: number;
+  wideElementCount: number;
+  fixedWidthElementCount: number;
+  overflowingImageCount: number;
+  clippedImportantElementCount: number;
+  clippedNavigation: boolean;
+  offscreenPrimaryActionCount: number;
+  seriousTapTargetCount: number;
+  interactiveControlCount: number;
+  tinyTextCount: number;
+  textSampleCount: number;
+}>;
+
+export type RenderedMobileData =
+  | Readonly<{
+      available: true;
+      metrics: RenderedMobileMetrics;
+    }>
+  | Readonly<{
+      available: false;
+      reason: "browser_unavailable" | "busy" | "timeout" | "render_error";
+    }>;

@@ -20,12 +20,19 @@ export type WebsiteAuditState = Readonly<{
 export class AuditApiError extends Error {
   readonly code: string;
   readonly status: number;
+  readonly retryAfterSeconds: number | null;
 
-  constructor(message: string, code = "AUDIT_REQUEST_FAILED", status = 500) {
+  constructor(
+    message: string,
+    code = "AUDIT_REQUEST_FAILED",
+    status = 500,
+    retryAfterSeconds: number | null = null,
+  ) {
     super(message);
     this.name = "AuditApiError";
     this.code = code;
     this.status = status;
+    this.retryAfterSeconds = retryAfterSeconds;
   }
 }
 
@@ -48,25 +55,64 @@ const isAuditStatus = (value: unknown): value is PersistedAuditStatus =>
 const parseJson = async (response: Response): Promise<unknown> =>
   response.json().catch(() => null);
 
-const getApiError = (response: Response, body: unknown) => {
+const readRetryAfterSeconds = (response: Response) => {
+  const value = response.headers.get("Retry-After")?.trim();
+
+  if (!value) return null;
+
+  if (/^\d+$/.test(value)) {
+    return Math.min(7 * 24 * 60 * 60, Math.max(1, Number(value)));
+  }
+
+  const retryAt = Date.parse(value);
+  return Number.isFinite(retryAt)
+    ? Math.min(
+        7 * 24 * 60 * 60,
+        Math.max(1, Math.ceil((retryAt - Date.now()) / 1_000)),
+      )
+    : null;
+};
+
+export const formatAuditRetryMessage = (retryAfterSeconds: number | null) => {
+  if (retryAfterSeconds === null) {
+    return "You've reached the audit limit. Please try again later.";
+  }
+
+  if (retryAfterSeconds < 60) {
+    return "You've reached the audit limit. Try again in less than a minute.";
+  }
+
+  const minutes = Math.ceil(retryAfterSeconds / 60);
+
+  return `You've reached the audit limit. Try again in about ${minutes} minute${minutes === 1 ? "" : "s"}.`;
+};
+
+export const getAuditApiError = (response: Response, body: unknown) => {
   const error = isRecord(body) && isRecord(body.error) ? body.error : null;
   const code = error && isNonEmptyString(error.code)
     ? error.code
     : "AUDIT_REQUEST_FAILED";
-  const message = error && isNonEmptyString(error.message)
-    ? error.message
-    : response.status === 429
-      ? "Too many audits were requested. Please wait a few minutes and try again."
-      : "The audit could not be completed. Please try again.";
+  const retryAfterSeconds = readRetryAfterSeconds(response);
+  const message =
+    response.status === 429
+      ? formatAuditRetryMessage(retryAfterSeconds)
+      : error && isNonEmptyString(error.message)
+        ? error.message
+        : "The audit could not be completed. Please try again.";
 
-  return new AuditApiError(message, code, response.status);
+  return new AuditApiError(
+    message,
+    code,
+    response.status,
+    retryAfterSeconds,
+  );
 };
 
 const getData = async (response: Response) => {
   const body = await parseJson(response);
 
   if (!response.ok) {
-    throw getApiError(response, body);
+    throw getAuditApiError(response, body);
   }
 
   if (!isRecord(body) || !isRecord(body.data)) {

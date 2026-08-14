@@ -6,6 +6,7 @@ import type {
   AuditSeverity,
   PageSpeedData,
   PageSpeedMetric,
+  RenderedMobileData,
 } from "./model";
 import { hasObviousHeadingSkip } from "./page-analysis";
 
@@ -676,17 +677,18 @@ function buildPerformanceChecks(pageSpeed: PageSpeedData): AuditCheckResult[] {
 function buildMobileChecks(
   crawl: CrawlAuditData,
   pageSpeed: PageSpeedData,
+  renderedMobile: RenderedMobileData,
 ): AuditCheckResult[] {
   const page = crawl.primaryPage;
   const responsiveRatio =
     page.imageCount === 0 ? 1 : page.responsiveImageCount / page.imageCount;
   const checks: AuditCheckResult[] = [
     page.hasViewport
-      ? check({ id: "mobile-viewport", category: "mobile-experience", weight: 35, status: "passed", score: 100 })
+      ? check({ id: "mobile-viewport", category: "mobile-experience", weight: 15, status: "passed", score: 100 })
       : check({
           id: "mobile-viewport",
           category: "mobile-experience",
-          weight: 35,
+          weight: 15,
           status: "failed",
           score: 15,
           finding: {
@@ -700,11 +702,11 @@ function buildMobileChecks(
           },
         }),
     responsiveRatio >= 0.5
-      ? check({ id: "mobile-responsive-images", category: "mobile-experience", weight: 10, status: "passed", score: 100 })
+      ? check({ id: "mobile-responsive-images", category: "mobile-experience", weight: 5, status: "passed", score: 100 })
       : check({
           id: "mobile-responsive-images",
           category: "mobile-experience",
-          weight: 10,
+          weight: 5,
           status: "opportunity",
           score: 75,
           finding: {
@@ -721,53 +723,241 @@ function buildMobileChecks(
 
   if (!pageSpeed.available) {
     checks.push(
-      unavailableCheck("mobile-pagespeed-performance", "mobile-experience", 35),
-      unavailableCheck("mobile-tap-targets", "mobile-experience", 10),
-      unavailableCheck("mobile-content-width", "mobile-experience", 10),
+      unavailableCheck("mobile-pagespeed-performance", "mobile-experience", 20),
+      unavailableCheck("mobile-tap-targets", "mobile-experience", 5),
+      unavailableCheck("mobile-content-width", "mobile-experience", 5),
+    );
+  } else {
+    checks.push(
+      check({
+        id: "mobile-pagespeed-performance",
+        category: "mobile-experience",
+        weight: 20,
+        status: pageSpeed.performanceScore >= 75 ? "passed" : "failed",
+        score: pageSpeed.performanceScore,
+      }),
+    );
+
+    for (const [id, score, title] of [
+      ["mobile-tap-targets", pageSpeed.audits.tapTargets, "Some mobile controls may be difficult to tap"],
+      ["mobile-content-width", pageSpeed.audits.contentWidth, "Page content may extend beyond the mobile viewport"],
+    ] as const) {
+      if (score === null || score === undefined) {
+        checks.push(unavailableCheck(id, "mobile-experience", 5));
+      } else if (score >= 90) {
+        checks.push(check({ id, category: "mobile-experience", weight: 5, status: "passed", score }));
+      } else {
+        checks.push(
+          check({
+            id,
+            category: "mobile-experience",
+            weight: 5,
+            status: "failed",
+            score,
+            finding: {
+              severity: score < 50 ? "high" : "medium",
+              title,
+              explanation:
+                "Google's mobile Lighthouse test detected a measurable layout or control-sizing issue.",
+              whyItMatters:
+                "Mobile visitors need content and controls that fit the viewport and work comfortably by touch.",
+              recommendation:
+                "Review the affected elements at common phone widths and with enlarged text, then rerun the mobile audit.",
+            },
+          }),
+        );
+      }
+    }
+  }
+
+  if (!renderedMobile.available) {
+    checks.push(
+      unavailableCheck("mobile-rendered-width", "mobile-experience", 25),
+      unavailableCheck("mobile-rendered-important-content", "mobile-experience", 10),
+      unavailableCheck("mobile-rendered-images", "mobile-experience", 5),
+      unavailableCheck("mobile-rendered-controls", "mobile-experience", 5),
+      unavailableCheck("mobile-rendered-text-size", "mobile-experience", 5),
     );
     return checks;
   }
 
+  const metrics = renderedMobile.metrics;
+  const materialOverflow = Math.max(
+    metrics.horizontalOverflowPixels,
+    metrics.horizontalScrollPixels,
+  );
+  const catastrophicOverflow =
+    metrics.horizontalScrollPixels >= 160 ||
+    metrics.horizontalOverflowPixels >= 200 ||
+    (metrics.fixedWidthElementCount > 0 && materialOverflow >= 120);
+  const majorOverflow =
+    materialOverflow > 8 || metrics.fixedWidthElementCount > 0;
+
   checks.push(
-    check({
-      id: "mobile-pagespeed-performance",
-      category: "mobile-experience",
-      weight: 35,
-      status: pageSpeed.performanceScore >= 75 ? "passed" : "failed",
-      score: pageSpeed.performanceScore,
-    }),
+    !majorOverflow && materialOverflow <= 8
+      ? check({
+          id: "mobile-rendered-width",
+          category: "mobile-experience",
+          weight: 25,
+          status: "passed",
+          score: 100,
+        })
+      : check({
+          id: "mobile-rendered-width",
+          category: "mobile-experience",
+          weight: 25,
+          status: "failed",
+          score: catastrophicOverflow ? 10 : materialOverflow >= 48 ? 40 : 72,
+          finding: {
+            severity: catastrophicOverflow
+              ? "critical"
+              : materialOverflow >= 48
+                ? "high"
+                : "medium",
+            title: "The rendered page is wider than a mobile screen",
+            explanation:
+              "The mobile render found page content extending materially beyond the usable viewport. Tiny subpixel differences are ignored.",
+            whyItMatters:
+              "Visitors may need to scroll sideways or may miss content that starts outside the visible mobile layout.",
+            recommendation:
+              "Use responsive containers, allow flexible content to shrink, and remove fixed widths that exceed the mobile viewport.",
+            observedValue: `${metrics.documentWidth}px document at a ${metrics.viewportWidth}px viewport (${materialOverflow}px overflow; ${metrics.fixedWidthElementCount} fixed-width elements detected).`,
+            recommendedValue: `No more than 8px incidental overflow at a ${metrics.viewportWidth}px viewport.`,
+          },
+        }),
   );
 
-  for (const [id, score, title] of [
-    ["mobile-tap-targets", pageSpeed.audits.tapTargets, "Some mobile controls may be difficult to tap"],
-    ["mobile-content-width", pageSpeed.audits.contentWidth, "Page content may extend beyond the mobile viewport"],
-  ] as const) {
-    if (score === null || score === undefined) {
-      checks.push(unavailableCheck(id, "mobile-experience", 10));
-    } else if (score >= 90) {
-      checks.push(check({ id, category: "mobile-experience", weight: 10, status: "passed", score }));
-    } else {
-      checks.push(
-        check({
-          id,
+  const importantContentClipped =
+    metrics.clippedImportantElementCount > 0 ||
+    metrics.clippedNavigation ||
+    metrics.offscreenPrimaryActionCount > 0;
+  checks.push(
+    importantContentClipped
+      ? check({
+          id: "mobile-rendered-important-content",
           category: "mobile-experience",
           weight: 10,
           status: "failed",
-          score,
+          score:
+            metrics.clippedNavigation || metrics.offscreenPrimaryActionCount > 0
+              ? 30
+              : 60,
           finding: {
-            severity: score < 50 ? "high" : "medium",
-            title,
+            severity:
+              metrics.clippedNavigation || metrics.offscreenPrimaryActionCount > 0
+                ? "high"
+                : "medium",
+            title: "Important content is cut off in the mobile layout",
             explanation:
-              "Google's mobile Lighthouse test detected a measurable layout or control-sizing issue.",
+              "The rendered mobile check found navigation, primary content, or an action extending substantially outside the visible viewport.",
             whyItMatters:
-              "Mobile visitors need content and controls that fit the viewport and work comfortably by touch.",
+              "Customers cannot reliably use content or controls they cannot see or reach on a phone.",
             recommendation:
-              "Review the affected elements at common phone widths and with enlarged text, then rerun the mobile audit.",
+              "Keep navigation, headings, primary content, and customer actions within the viewport at common phone widths.",
+            observedValue: `${metrics.clippedImportantElementCount} important elements clipped; ${metrics.offscreenPrimaryActionCount} primary actions off-screen.`,
+          },
+        })
+      : check({
+          id: "mobile-rendered-important-content",
+          category: "mobile-experience",
+          weight: 10,
+          status: "passed",
+          score: 100,
+        }),
+  );
+
+  checks.push(
+    metrics.overflowingImageCount === 0
+      ? check({
+          id: "mobile-rendered-images",
+          category: "mobile-experience",
+          weight: 5,
+          status: "passed",
+          score: 100,
+        })
+      : check({
+          id: "mobile-rendered-images",
+          category: "mobile-experience",
+          weight: 5,
+          status: "failed",
+          score: metrics.overflowingImageCount >= 3 ? 35 : 65,
+          finding: {
+            severity: metrics.overflowingImageCount >= 3 ? "high" : "medium",
+            title: "Images overflow the mobile viewport",
+            explanation: `${metrics.overflowingImageCount} rendered images extend materially outside the usable mobile width.`,
+            whyItMatters:
+              "Oversized images can create sideways scrolling and hide meaningful visual content.",
+            recommendation:
+              "Constrain content images to their container with responsive dimensions such as max-width: 100% and height: auto.",
           },
         }),
-      );
-    }
-  }
+  );
+
+  const seriousTapRatio =
+    metrics.interactiveControlCount === 0
+      ? null
+      : metrics.seriousTapTargetCount / metrics.interactiveControlCount;
+  checks.push(
+    seriousTapRatio === null
+      ? unavailableCheck("mobile-rendered-controls", "mobile-experience", 5)
+      : seriousTapRatio === 0
+        ? check({
+            id: "mobile-rendered-controls",
+            category: "mobile-experience",
+            weight: 5,
+            status: "passed",
+            score: 100,
+          })
+        : check({
+            id: "mobile-rendered-controls",
+            category: "mobile-experience",
+            weight: 5,
+            status: "failed",
+            score: seriousTapRatio >= 0.3 ? 45 : 72,
+            finding: {
+              severity: seriousTapRatio >= 0.3 ? "high" : "medium",
+              title: "Some rendered mobile controls are extremely small",
+              explanation: `${metrics.seriousTapTargetCount} of ${metrics.interactiveControlCount} visible controls rendered below 20px in both width and height.`,
+              whyItMatters:
+                "Very small controls are difficult to activate accurately on a touchscreen.",
+              recommendation:
+                "Increase the clickable area of affected links and buttons while preserving clear spacing between controls.",
+            },
+          }),
+  );
+
+  const tinyTextRatio =
+    metrics.textSampleCount === 0
+      ? null
+      : metrics.tinyTextCount / metrics.textSampleCount;
+  checks.push(
+    tinyTextRatio === null
+      ? unavailableCheck("mobile-rendered-text-size", "mobile-experience", 5)
+      : tinyTextRatio <= 0.1
+        ? check({
+            id: "mobile-rendered-text-size",
+            category: "mobile-experience",
+            weight: 5,
+            status: "passed",
+            score: 100,
+          })
+        : check({
+            id: "mobile-rendered-text-size",
+            category: "mobile-experience",
+            weight: 5,
+            status: "failed",
+            score: tinyTextRatio >= 0.25 ? 55 : 78,
+            finding: {
+              severity: tinyTextRatio >= 0.25 ? "medium" : "low",
+              title: "A meaningful share of mobile text renders very small",
+              explanation: `${metrics.tinyTextCount} of ${metrics.textSampleCount} sampled text elements rendered below 12px.`,
+              whyItMatters:
+                "Very small text can be difficult to read without zooming on a phone.",
+              recommendation:
+                "Increase the affected text to a comfortable mobile size and verify it with browser text scaling enabled.",
+            },
+          }),
+  );
 
   return checks;
 }
@@ -930,11 +1120,14 @@ function buildAccessibilityChecks(
   return checks;
 }
 
-function buildConversionChecks(crawl: CrawlAuditData): AuditCheckResult[] {
+function buildConversionChecks(
+  crawl: CrawlAuditData,
+  renderedMobile: RenderedMobileData,
+): AuditCheckResult[] {
   const page = crawl.primaryPage;
   const hasContactPath = page.contactLinkCount > 0 || page.formCount > 0;
 
-  return [
+  const checks: AuditCheckResult[] = [
     page.actionLinkCount > 0
       ? check({ id: "conversion-action-path", category: "conversion-ux", weight: 55, status: "passed", score: 100 })
       : check({
@@ -974,6 +1167,49 @@ function buildConversionChecks(crawl: CrawlAuditData): AuditCheckResult[] {
           },
         }),
   ];
+
+  if (page.actionLinkCount > 0) {
+    if (!renderedMobile.available) {
+      checks.push(
+        unavailableCheck(
+          "conversion-mobile-action-usability",
+          "conversion-ux",
+          15,
+        ),
+      );
+    } else if (renderedMobile.metrics.offscreenPrimaryActionCount > 0) {
+      checks.push(
+        check({
+          id: "conversion-mobile-action-usability",
+          category: "conversion-ux",
+          weight: 15,
+          status: "failed",
+          score: 25,
+          finding: {
+            severity: "high",
+            title: "A primary customer action is cut off on mobile",
+            explanation: `${renderedMobile.metrics.offscreenPrimaryActionCount} detected customer actions rendered substantially outside the usable mobile viewport.`,
+            whyItMatters:
+              "A contact, booking, quote, or purchase action cannot help customers if it is not reachable in the mobile layout.",
+            recommendation:
+              "Keep the primary customer action fully visible and usable at common phone widths.",
+          },
+        }),
+      );
+    } else {
+      checks.push(
+        check({
+          id: "conversion-mobile-action-usability",
+          category: "conversion-ux",
+          weight: 15,
+          status: "passed",
+          score: 100,
+        }),
+      );
+    }
+  }
+
+  return checks;
 }
 
 function buildTechnicalChecks(crawl: CrawlAuditData): AuditCheckResult[] {
@@ -1132,6 +1368,10 @@ function buildTechnicalChecks(crawl: CrawlAuditData): AuditCheckResult[] {
 export function buildAuditChecks(
   crawl: CrawlAuditData,
   pageSpeed: PageSpeedData,
+  renderedMobile: RenderedMobileData = {
+    available: false,
+    reason: "browser_unavailable",
+  },
 ): { checks: readonly AuditCheckResult[]; notices: readonly string[] } {
   const notices = [
     "Automated accessibility checks identify detectable issues but do not certify WCAG conformance or legal compliance.",
@@ -1152,13 +1392,19 @@ export function buildAuditChecks(
     );
   }
 
+  if (!renderedMobile.available) {
+    notices.unshift(
+      "Rendered mobile validation was unavailable. Render-dependent checks were excluded and evidence coverage was reduced rather than scored as zero or perfect.",
+    );
+  }
+
   return {
     checks: [
       ...buildSeoChecks(crawl, pageSpeed),
       ...buildPerformanceChecks(pageSpeed),
-      ...buildMobileChecks(crawl, pageSpeed),
+      ...buildMobileChecks(crawl, pageSpeed, renderedMobile),
       ...buildAccessibilityChecks(crawl, pageSpeed),
-      ...buildConversionChecks(crawl),
+      ...buildConversionChecks(crawl, renderedMobile),
       ...buildTechnicalChecks(crawl),
     ],
     notices,
