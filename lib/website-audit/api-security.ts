@@ -253,14 +253,7 @@ export async function readBoundedJsonRequest(
   }
 
   const contentType = request.headers.get("content-type")?.toLowerCase() ?? "";
-
-  if (!contentType.startsWith("application/json")) {
-    throw new AuditApiError(
-      415,
-      "UNSUPPORTED_MEDIA_TYPE",
-      "The request must use application/json.",
-    );
-  }
+  const isJsonContent = contentType.startsWith("application/json");
 
   const reader = request.body.getReader();
   const chunks: Uint8Array[] = [];
@@ -278,6 +271,15 @@ export async function readBoundedJsonRequest(
           413,
           "REQUEST_TOO_LARGE",
           "The request is too large.",
+        );
+      }
+
+      if (!isJsonContent && value.byteLength > 0) {
+        await reader.cancel().catch(() => undefined);
+        throw new AuditApiError(
+          415,
+          "UNSUPPORTED_MEDIA_TYPE",
+          "The request must use application/json.",
         );
       }
 

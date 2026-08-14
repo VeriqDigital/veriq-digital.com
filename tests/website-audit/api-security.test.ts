@@ -63,10 +63,9 @@ test("reads valid bounded JSON", async () => {
   );
 });
 
-test("rejects an unsupported request content type before reading its body", async () => {
+test("rejects a non-empty request body without application/json", async () => {
   const wrongType = new Request("https://www.veriqdigital.com/api/website-audits", {
     method: "POST",
-    headers: { "Content-Type": "text/plain" },
     body: new ReadableStream({
       pull(controller) {
         controller.enqueue(new TextEncoder().encode("{}"));
@@ -149,7 +148,7 @@ test("enforces the request limit on multibyte UTF-8 bytes", async () => {
   );
 });
 
-test("preserves allowEmpty behavior for an absent body", async () => {
+test("accepts an empty POST without Content-Type when allowEmpty is true", async () => {
   const request = new Request("https://www.veriqdigital.com/api/website-audits", {
     method: "POST",
   });
@@ -157,6 +156,37 @@ test("preserves allowEmpty behavior for an absent body", async () => {
   assert.equal(
     await readBoundedJsonRequest(request, { allowEmpty: true, maxBytes: 100 }),
     null,
+  );
+});
+
+test("accepts a zero-byte stream without Content-Type when allowEmpty is true", async () => {
+  const request = new Request("https://www.veriqdigital.com/api/website-audits", {
+    method: "POST",
+    body: new ReadableStream({
+      start(controller) {
+        controller.close();
+      },
+    }),
+    duplex: "half",
+  } as RequestInit & { duplex: "half" });
+
+  assert.equal(
+    await readBoundedJsonRequest(request, { allowEmpty: true, maxBytes: 100 }),
+    null,
+  );
+});
+
+test("rejects an empty POST when allowEmpty is false", async () => {
+  const request = new Request("https://www.veriqdigital.com/api/website-audits", {
+    method: "POST",
+  });
+
+  await assert.rejects(
+    readBoundedJsonRequest(request, { allowEmpty: false, maxBytes: 100 }),
+    (error: unknown) =>
+      error instanceof AuditApiError &&
+      error.status === 400 &&
+      error.code === "INVALID_REQUEST_BODY",
   );
 });
 
