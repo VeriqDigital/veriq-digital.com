@@ -26,7 +26,7 @@ the deployment provider:
 RESEND_API_KEY=
 EMAIL_FROM=
 BUSINESS_OWNER_EMAIL=
-BLOB_READ_WRITE_TOKEN=
+BLOB_STORE_ID=
 GOOGLE_PAGESPEED_API_KEY=
 WEBSITE_AUDIT_ENABLED=false
 WEBSITE_AUDIT_DISCOVERY_ENABLED=false
@@ -43,8 +43,13 @@ UPSTASH_REDIS_REST_TOKEN=
 - `RESEND_API_KEY` authorizes transactional email delivery.
 - `EMAIL_FROM` is the verified sender used for owner notifications and replies.
 - `BUSINESS_OWNER_EMAIL` receives every valid lead submission.
-- `BLOB_READ_WRITE_TOKEN` stores audit state, results, and explicit report-email
-  requests in a private Vercel Blob store. It is required in production.
+- `BLOB_STORE_ID` selects the attached private Vercel Blob store. In Vercel
+  Functions, `@vercel/blob` uses the request-scoped Vercel OIDC credential; do
+  not add a long-lived `VERCEL_OIDC_TOKEN` to production configuration.
+- `BLOB_READ_WRITE_TOKEN` remains an optional fallback for local or non-Vercel
+  runtimes because the installed Blob SDK supports it. Production accepts
+  either the OIDC store configuration or this fallback, and remains disabled
+  when neither is present.
 - `GOOGLE_PAGESPEED_API_KEY` enables mobile Lighthouse performance,
   accessibility, and SEO measurements through the official PageSpeed Insights
   API and is required before production launch.
@@ -136,11 +141,15 @@ WEBSITE_AUDIT_HASH_SECRET=<32+ random characters>
 CRON_SECRET=<16+ random characters>
 UPSTASH_REDIS_REST_URL=<server-only Redis REST URL>
 UPSTASH_REDIS_REST_TOKEN=<server-only standard token>
-BLOB_READ_WRITE_TOKEN=<private Blob store token>
+BLOB_STORE_ID=<attached private Blob store ID>
 GOOGLE_PAGESPEED_API_KEY=<quota-restricted API key>
 RESEND_API_KEY=<transactional email key>
 EMAIL_FROM=<verified sender>
 ```
+
+Vercel supplies the OIDC credential to Functions at request time. For local
+development, use `vercel env pull` or configure the optional
+`BLOB_READ_WRITE_TOKEN` fallback; never commit either credential.
 
 `vercel.json` runs the authenticated retention purge daily. Audit state,
 results, and pseudonymous delivery receipts become unreadable at the configured

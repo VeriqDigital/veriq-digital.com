@@ -10,6 +10,7 @@ import {
   auditStatuses,
   reportRequestStatuses,
 } from "./store-types";
+import { getWebsiteAuditBlobAuthOptions } from "./blob-config";
 import type {
   AuditFailure,
   AuditReportStore,
@@ -218,14 +219,14 @@ const parseJson = (serialized: string): unknown => {
 const getEtag = (serialized: string) =>
   createHash("sha256").update(serialized).digest("hex");
 
-const getBlobToken = () => {
-  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+const requireBlobAuthOptions = () => {
+  const authOptions = getWebsiteAuditBlobAuthOptions();
 
-  if (!token) {
+  if (!authOptions) {
     throw new AuditStorageUnavailableError();
   }
 
-  return token;
+  return authOptions;
 };
 
 const getStatePath = (auditId: string) => `${auditId}/state.json`;
@@ -260,7 +261,7 @@ const readBlobJson = async (relativePath: string): Promise<StoredJson | null> =>
   try {
     const result = await get(getBlobPath(relativePath), {
       access: "private",
-      token: getBlobToken(),
+      ...requireBlobAuthOptions(),
       useCache: false,
     });
 
@@ -292,7 +293,7 @@ const writeBlobJson = async (
       Buffer.from(serialized),
       {
         access: "private",
-        token: getBlobToken(),
+        ...requireBlobAuthOptions(),
         addRandomSuffix: false,
         allowOverwrite: options.immutable ? false : true,
         cacheControlMaxAge: options.immutable ? 31_536_000 : 60,

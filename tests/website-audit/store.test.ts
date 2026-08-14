@@ -3,6 +3,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, test } from "node:test";
+import { getWebsiteAuditBlobAuthOptions } from "../../lib/website-audit/blob-config";
 import {
   AuditStateTransitionError,
   AuditStorageConflictError,
@@ -44,6 +45,23 @@ test("generates and validates opaque UUID audit IDs", () => {
   assert.equal(isValidAuditId(auditId), true);
   assert.equal(isValidAuditId("../state.json"), false);
   assert.equal(isValidAuditId("00000000-0000-0000-0000-000000000000"), false);
+});
+
+test("uses the attached store for OIDC and preserves the token fallback", () => {
+  assert.deepEqual(
+    getWebsiteAuditBlobAuthOptions({
+      BLOB_STORE_ID: " store_website_audits ",
+      BLOB_READ_WRITE_TOKEN: "vercel_blob_rw_fallback",
+    }),
+    { storeId: "store_website_audits" },
+  );
+  assert.deepEqual(
+    getWebsiteAuditBlobAuthOptions({
+      BLOB_READ_WRITE_TOKEN: " vercel_blob_rw_fallback ",
+    }),
+    { token: "vercel_blob_rw_fallback" },
+  );
+  assert.equal(getWebsiteAuditBlobAuthOptions({}), null);
 });
 
 test("creates, reads, and transitions audit state with optimistic ETags", async () => {
@@ -254,10 +272,12 @@ test("expired audit state becomes unreadable at the retention boundary", async (
 
 test("fails closed in production when Blob storage is not configured", async () => {
   const previousNodeEnvironment = process.env.NODE_ENV;
+  const previousBlobStoreId = process.env.BLOB_STORE_ID;
   const previousBlobToken = process.env.BLOB_READ_WRITE_TOKEN;
 
   try {
     Reflect.set(process.env, "NODE_ENV", "production");
+    Reflect.deleteProperty(process.env, "BLOB_STORE_ID");
     Reflect.deleteProperty(process.env, "BLOB_READ_WRITE_TOKEN");
 
     const store = createAuditReportStore({
@@ -279,6 +299,12 @@ test("fails closed in production when Blob storage is not configured", async () 
       Reflect.deleteProperty(process.env, "BLOB_READ_WRITE_TOKEN");
     } else {
       Reflect.set(process.env, "BLOB_READ_WRITE_TOKEN", previousBlobToken);
+    }
+
+    if (previousBlobStoreId === undefined) {
+      Reflect.deleteProperty(process.env, "BLOB_STORE_ID");
+    } else {
+      Reflect.set(process.env, "BLOB_STORE_ID", previousBlobStoreId);
     }
   }
 });

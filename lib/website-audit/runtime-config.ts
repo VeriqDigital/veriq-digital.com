@@ -1,3 +1,5 @@
+import { getWebsiteAuditBlobAuthOptions } from "./blob-config";
+
 const positiveInteger = (value: string | undefined, maximum: number) => {
   const parsed = Number(value);
 
@@ -42,9 +44,9 @@ export function getWebsiteAuditRuntimeConfig(
         environment.WEBSITE_AUDIT_ENABLED === "true"
           ? null
           : "WEBSITE_AUDIT_ENABLED",
-        environment.BLOB_READ_WRITE_TOKEN?.trim()
+        getWebsiteAuditBlobAuthOptions(environment)
           ? null
-          : "BLOB_READ_WRITE_TOKEN",
+          : "BLOB_STORE_ID or BLOB_READ_WRITE_TOKEN",
         environment.GOOGLE_PAGESPEED_API_KEY?.trim()
           ? null
           : "GOOGLE_PAGESPEED_API_KEY",

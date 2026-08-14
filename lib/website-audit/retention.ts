@@ -1,4 +1,5 @@
 import { del, list } from "@vercel/blob";
+import { getWebsiteAuditBlobAuthOptions } from "./blob-config";
 import { getWebsiteAuditRuntimeConfig } from "./runtime-config";
 
 const auditBlobPrefix = "website-audits/";
@@ -21,9 +22,15 @@ export async function purgeExpiredWebsiteAudits(options: Readonly<{
   >();
   let cursor: string | undefined;
   let truncatedBoundaryAuditId: string | null = null;
+  const authOptions = getWebsiteAuditBlobAuthOptions();
+
+  if (!authOptions) {
+    throw new Error("Website audit Blob storage is not configured.");
+  }
 
   for (let page = 0; page < maximumListPages; page += 1) {
     const result = await list({
+      ...authOptions,
       prefix: auditBlobPrefix,
       limit: 1_000,
       cursor,
@@ -61,7 +68,7 @@ export async function purgeExpiredWebsiteAudits(options: Readonly<{
 
   for (const [, blobs] of expired) {
     const pathnames = blobs.map((blob) => blob.pathname);
-    await del(pathnames);
+    await del(pathnames, authOptions);
     blobsDeleted += pathnames.length;
   }
 
