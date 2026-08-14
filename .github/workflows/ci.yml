@@ -34,20 +34,31 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Locate system Chrome for rendered-mobile smoke test
+      - name: Inspect system browsers for rendered-mobile smoke test
         shell: bash
         run: |
-          chrome_path="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
-          if [[ -z "$chrome_path" ]]; then
-            echo "No system Chrome/Chromium executable is available on this runner." >&2
+          echo "Google Chrome executable:"
+          which google-chrome || true
+          google-chrome --version || true
+          echo "Chromium executable:"
+          which chromium || true
+          chromium --version || true
+
+          chromium_path="/usr/bin/chromium"
+          if [[ ! -x "$chromium_path" ]]; then
+            echo "The expected GitHub runner Chromium executable at $chromium_path is unavailable or not executable." >&2
             exit 1
           fi
-          echo "Using $($chrome_path --version) at $chrome_path"
-          echo "WEBSITE_AUDIT_CHROME_PATH=$chrome_path" >> "$GITHUB_ENV"
+
+          ls -l "$chromium_path"
+          echo "Using $($chromium_path --version) at $chromium_path"
+          echo "CI_RENDERED_MOBILE_CHROME_PATH=$chromium_path" >> "$GITHUB_ENV"
 
       - name: Rendered-mobile browser smoke test
         run: npm run test:browser-smoke
         timeout-minutes: 1
+        env:
+          DEBUG: pw:browser
 
       - name: Build
         run: npm run build
