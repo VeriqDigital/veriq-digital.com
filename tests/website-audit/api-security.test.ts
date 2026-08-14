@@ -73,17 +73,17 @@ test("enforces content type and actual body byte limits", async () => {
   );
 });
 
-test("rate limits hashed client buckets without returning raw identifiers", () => {
+test("rate limits hashed client buckets without returning raw identifiers", async () => {
   const request = new Request("https://www.veriqdigital.com/api/website-audits", {
     headers: { "X-Forwarded-For": "203.0.113.9" },
   });
   const options = { scope: "test", limit: 2, windowMs: 60_000 } as const;
 
-  enforceAuditRateLimit(request, options, 1_000);
-  enforceAuditRateLimit(request, options, 2_000);
+  await enforceAuditRateLimit(request, options, 1_000);
+  await enforceAuditRateLimit(request, options, 2_000);
 
-  assert.throws(
-    () => enforceAuditRateLimit(request, options, 3_000),
+  await assert.rejects(
+    enforceAuditRateLimit(request, options, 3_000),
     (error: unknown) =>
       error instanceof AuditApiError &&
       error.status === 429 &&

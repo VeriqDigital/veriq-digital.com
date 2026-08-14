@@ -20,6 +20,8 @@ const categoryScoreSchema = z
     id: categorySchema,
     available: z.boolean(),
     score: scoreSchema.nullable(),
+    evidenceLevel: z.enum(["full", "partial", "unavailable"]),
+    evidenceCoverage: scoreSchema,
     summary: boundedText(240),
     checksRun: z.number().finite().int().min(0).max(100),
     checksUnavailable: z.number().finite().int().min(0).max(100),
@@ -29,6 +31,23 @@ const categoryScoreSchema = z
       context.addIssue({
         code: "custom",
         message: "Available category scores must contain a score.",
+      });
+    }
+
+    if (
+      (value.evidenceLevel === "unavailable") !==
+      (value.evidenceCoverage === 0)
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "Unavailable categories must have zero evidence coverage.",
+      });
+    }
+
+    if (value.evidenceLevel === "full" && value.evidenceCoverage !== 100) {
+      context.addIssue({
+        code: "custom",
+        message: "Fully evaluated categories must have full evidence coverage.",
       });
     }
   });
@@ -65,6 +84,7 @@ export const websiteAuditResultSchema = z
     createdAt: z.iso.datetime(),
     completedAt: z.iso.datetime().optional(),
     overallScore: scoreSchema,
+    evidenceCoverage: scoreSchema,
     overallSummary: boundedText(400),
     categoryScores: z.array(categoryScoreSchema).length(auditCategoryIds.length),
     summary: z.object({
@@ -136,4 +156,3 @@ export function toNormalizedScore(value: number): number {
 
   return Math.min(100, Math.max(0, Math.round(value)));
 }
-

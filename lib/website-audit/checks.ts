@@ -534,7 +534,7 @@ function buildSeoChecks(
           category: "seo",
           weight: 2,
           status: "opportunity",
-          score: 100,
+          score: 96,
           finding: {
             severity: "opportunity",
             title: "No JSON-LD structured data was detected",

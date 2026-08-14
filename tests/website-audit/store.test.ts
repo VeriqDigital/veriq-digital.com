@@ -149,8 +149,7 @@ test("writes report-request receipts separately from public audit data", async (
 
   const storedReceipt = await store.writeReportRequestReceipt({
     auditId: created.state.id,
-    name: "Ada Lovelace",
-    email: "ada@example.com",
+    recipientHash: "a".repeat(64),
     status: "sent",
     providerMessageId: "resend_123",
   });
@@ -162,11 +161,15 @@ test("writes report-request receipts separately from public audit data", async (
     `${storedReceipt.receipt.id}.json`,
   );
   const rawReceipt = JSON.parse(await readFile(receiptPath, "utf8")) as {
-    email: string;
+    recipientHash: string;
+    name?: string;
+    email?: string;
   };
   const publicResult = await store.readResult(created.state.id);
 
-  assert.equal(rawReceipt.email, "ada@example.com");
+  assert.equal(rawReceipt.recipientHash, "a".repeat(64));
+  assert.equal(rawReceipt.name, undefined);
+  assert.equal(rawReceipt.email, undefined);
   assert.deepEqual(publicResult?.result, { overallScore: 90 });
   assert.equal("email" in (publicResult?.result as object), false);
 });
@@ -193,6 +196,60 @@ test("requires a safe failure reason when transitioning to failed", async () => 
 
   assert.equal(failed.state.status, "failed");
   assert.equal(failed.state.failure?.code, "FETCH_FAILED");
+});
+
+test("atomically requeues one stale run while preserving attempt history", async () => {
+  const { store } = await createLocalStore();
+  const created = await store.createState({
+    submittedUrl: "https://example.com",
+  });
+  const firstRun = await store.transitionState(
+    created.state.id,
+    { status: "running" },
+    { expectedEtag: created.etag },
+  );
+  const recovered = await store.transitionState(
+    created.state.id,
+    { status: "queued" },
+    { expectedEtag: firstRun.etag },
+  );
+  const secondRun = await store.transitionState(
+    created.state.id,
+    { status: "running" },
+    { expectedEtag: recovered.etag },
+  );
+
+  assert.equal(firstRun.state.runAttempts, 1);
+  assert.equal(recovered.state.status, "queued");
+  assert.equal(recovered.state.startedAt, undefined);
+  assert.equal(secondRun.state.runAttempts, 2);
+  await assert.rejects(
+    store.transitionState(
+      created.state.id,
+      { status: "queued" },
+      { expectedEtag: firstRun.etag },
+    ),
+    AuditStorageConflictError,
+  );
+});
+
+test("expired audit state becomes unreadable at the retention boundary", async () => {
+  const rootDirectory = await mkdtemp(
+    path.join(os.tmpdir(), "veriq-audit-retention-"),
+  );
+  temporaryDirectories.push(rootDirectory);
+  let now = new Date("2026-08-01T00:00:00.000Z");
+  const store = createAuditReportStore({
+    localDirectory: rootDirectory,
+    now: () => now,
+    retentionDays: 1,
+  });
+  const created = await store.createState({
+    submittedUrl: "https://example.com",
+  });
+
+  now = new Date("2026-08-02T00:00:00.000Z");
+  assert.equal(await store.readState(created.state.id), null);
 });
 
 test("fails closed in production when Blob storage is not configured", async () => {

@@ -1,5 +1,6 @@
 import {
   AuditApiError,
+  assertWebsiteAuditAvailable,
   auditDataResponse,
   auditErrorResponse,
   createReportUrl,
@@ -23,6 +24,7 @@ export async function GET(request: Request, { params }: RouteContext) {
   const { id } = await params;
 
   try {
+    assertWebsiteAuditAvailable();
     if (!isValidAuditId(id)) {
       throw new AuditApiError(400, "INVALID_AUDIT_ID", "The report ID is invalid.");
     }

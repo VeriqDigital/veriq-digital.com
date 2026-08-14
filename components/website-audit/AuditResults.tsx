@@ -48,7 +48,11 @@ export default function AuditResults({ result, variant }: AuditResultsProps) {
       </header>
 
       <div className={styles.scoreOverview}>
-        <OverallScore score={result.overallScore} summary={result.overallSummary} />
+        <OverallScore
+          score={result.overallScore}
+          evidenceCoverage={result.evidenceCoverage}
+          summary={result.overallSummary}
+        />
         <dl className={styles.resultSummary} aria-label="Audit summary">
           <div>
             <dt>

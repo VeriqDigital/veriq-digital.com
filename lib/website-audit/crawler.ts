@@ -4,7 +4,7 @@ import type { PageSnapshot } from "./page-analysis";
 import type { CrawlAuditData, ResourceDiscoveryStatus } from "./crawl-types";
 
 const auditUserAgent =
-  "VeriqAuditBot/1.0 (+https://veriq.digital/website-audit)";
+  "VeriqAuditBot/1.0 (+https://www.veriqdigital.com/website-audit)";
 const primaryPageLimit = 1024 * 1024;
 const secondaryPageLimit = 768 * 1024;
 const discoveryResourceLimit = 512 * 1024;

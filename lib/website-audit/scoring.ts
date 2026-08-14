@@ -27,8 +27,12 @@ const summarizeCategory = (score: number | null) => {
     return "Strong measurable foundations with only minor issues detected.";
   }
 
-  if (score >= 75) {
+  if (score >= 80) {
     return "Generally healthy, with a few worthwhile improvements.";
+  }
+
+  if (score >= 70) {
+    return "A fair foundation with some meaningful improvements needed.";
   }
 
   if (score >= 50) {
@@ -43,8 +47,12 @@ const summarizeOverall = (score: number) => {
     return "The checks completed in this audit found a strong website foundation with only minor opportunities.";
   }
 
-  if (score >= 75) {
+  if (score >= 80) {
     return "The website is generally healthy, with a focused set of improvements worth addressing.";
+  }
+
+  if (score >= 70) {
+    return "The website has a fair foundation, with meaningful improvements needed in measured areas.";
   }
 
   if (score >= 50) {
@@ -86,20 +94,53 @@ const scoreCategory = (
     (total, check) => total + check.weight,
     0,
   );
-  const score =
+  const totalWeight = categoryChecks.reduce(
+    (total, check) => total + check.weight,
+    0,
+  );
+  const evidenceCoverage =
+    totalWeight > 0 ? toNormalizedScore((availableWeight / totalWeight) * 100) : 0;
+  const rawScore =
     availableWeight > 0
-      ? toNormalizedScore(
-          availableChecks.reduce(
-            (total, check) => total + (check.score ?? 0) * check.weight,
-            0,
-          ) / availableWeight,
-        )
+      ? availableChecks.reduce(
+          (total, check) => total + (check.score ?? 0) * check.weight,
+          0,
+        ) / availableWeight
       : null;
+  const categoryFindings = availableChecks.flatMap((check) =>
+    check.finding ? [check.finding] : [],
+  );
+  let score =
+    rawScore === null
+      ? null
+      : rawScore * (evidenceCoverage / 100) +
+        65 * (1 - evidenceCoverage / 100);
+
+  if (score !== null) {
+    const ceilings = [100];
+
+    if (evidenceCoverage < 100 || availableChecks.length < 3) ceilings.push(89);
+    if (categoryId === "conversion-ux") ceilings.push(85);
+    if (categoryFindings.some((finding) => finding.severity === "high")) {
+      ceilings.push(79);
+    }
+    if (categoryFindings.some((finding) => finding.severity === "critical")) {
+      ceilings.push(49);
+    }
+    score = toNormalizedScore(Math.min(score, ...ceilings));
+  }
 
   return {
     id: categoryId,
     available: score !== null,
     score,
+    evidenceLevel:
+      evidenceCoverage === 0
+        ? "unavailable"
+        : evidenceCoverage === 100
+          ? "full"
+          : "partial",
+    evidenceCoverage,
     summary: summarizeCategory(score),
     checksRun: availableChecks.length,
     checksUnavailable: categoryChecks.length - availableChecks.length,
@@ -132,12 +173,14 @@ type BuildAuditResultOptions = {
 };
 
 /**
- * Scoring methodology v1:
+ * Scoring methodology v2:
  * - Each check declares a positive weight and a normalized 0–100 result.
- * - Unavailable checks are removed from their category denominator.
- * - Category scores are weighted means of available checks only.
- * - The overall score uses the registry's explicit category weights and
- *   reweights around any category with no available evidence.
+ * - Missing evidence reduces coverage and pulls partial results toward a
+ *   conservative evidence prior; it is never scored as zero or perfect.
+ * - Sparse and partial categories cannot score 90+, while critical/high
+ *   findings apply centralized severity ceilings.
+ * - The overall score uses explicit category weights and total evidence
+ *   coverage so unavailable data cannot make an excellent score easier.
  */
 export function buildAuditResult({
   id,
@@ -168,33 +211,59 @@ export function buildAuditResult({
         .overallWeight,
     0,
   );
+  const totalOverallWeight = auditCategoryRegistry.reduce(
+    (total, category) => total + category.overallWeight,
+    0,
+  );
+  const evidenceCoverage = toNormalizedScore(
+    (categoryScores.reduce((total, category) => {
+      const categoryWeight = auditCategoryRegistry.find(
+        (entry) => entry.id === category.id,
+      )!.overallWeight;
+
+      return total + categoryWeight * (category.evidenceCoverage / 100);
+    }, 0) /
+      totalOverallWeight) *
+      100,
+  );
 
   if (availableOverallWeight === 0) {
     throw new TypeError("An audit result requires at least one scored category.");
   }
 
-  const overallScore = toNormalizedScore(
+  const rawOverallScore =
     availableCategories.reduce((total, category) => {
       const categoryWeight = auditCategoryRegistry.find(
         (entry) => entry.id === category.id,
       )!.overallWeight;
 
       return total + category.score * categoryWeight;
-    }, 0) / availableOverallWeight,
+    }, 0) / availableOverallWeight;
+  const hasCriticalFinding = normalizedChecks.some(
+    (check) => check.finding?.severity === "critical",
+  );
+  const overallScore = toNormalizedScore(
+    Math.min(
+      rawOverallScore * (evidenceCoverage / 100) +
+        65 * (1 - evidenceCoverage / 100),
+      hasCriticalFinding ? 79 : 100,
+    ),
   );
   const findings = prioritizeFindings(normalizedChecks);
   const allFindings = normalizedChecks.flatMap((check) =>
     check.finding ? [check.finding] : [],
   );
-  const unavailableCategories = categoryScores.filter(
-    (category) => !category.available,
+  const limitedCategories = categoryScores.filter(
+    (category) => category.evidenceLevel !== "full",
   );
-  const coverageNotices = unavailableCategories.map((category) => {
+  const coverageNotices = limitedCategories.map((category) => {
     const label = auditCategoryRegistry.find(
       (entry) => entry.id === category.id,
     )!.label;
 
-    return `${label} was not included in the overall score because no reliable measurement was available.`;
+    return category.evidenceLevel === "unavailable"
+      ? `${label} was unavailable and reduced overall evidence coverage rather than being scored as zero or perfect.`
+      : `${label} was partially evaluated (${category.evidenceCoverage}% evidence coverage); its score reflects reduced confidence.`;
   });
 
   return normalizeAuditResult({
@@ -204,6 +273,7 @@ export function buildAuditResult({
     createdAt,
     completedAt,
     overallScore,
+    evidenceCoverage,
     overallSummary: summarizeOverall(overallScore),
     categoryScores,
     summary: {
@@ -222,6 +292,6 @@ export function buildAuditResult({
     },
     findings,
     notices: [...new Set([...notices, ...coverageNotices])],
-    methodologyVersion: "v1",
+    methodologyVersion: "v2",
   });
 }

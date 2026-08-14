@@ -28,6 +28,16 @@ EMAIL_FROM=
 BUSINESS_OWNER_EMAIL=
 BLOB_READ_WRITE_TOKEN=
 GOOGLE_PAGESPEED_API_KEY=
+WEBSITE_AUDIT_ENABLED=false
+WEBSITE_AUDIT_DISCOVERY_ENABLED=false
+NEXT_PUBLIC_WEBSITE_AUDIT_DISCOVERY_ENABLED=false
+WEBSITE_AUDIT_RETENTION_DAYS=30
+WEBSITE_AUDIT_DAILY_RUN_LIMIT=100
+WEBSITE_AUDIT_DAILY_EMAIL_LIMIT=100
+WEBSITE_AUDIT_HASH_SECRET=
+CRON_SECRET=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
 
 - `RESEND_API_KEY` authorizes transactional email delivery.
@@ -37,8 +47,7 @@ GOOGLE_PAGESPEED_API_KEY=
   requests in a private Vercel Blob store. It is required in production.
 - `GOOGLE_PAGESPEED_API_KEY` enables mobile Lighthouse performance,
   accessibility, and SEO measurements through the official PageSpeed Insights
-  API. Audits still complete without it, but provider-dependent checks are
-  marked unavailable and excluded from scoring.
+  API and is required before production launch.
 
 LeadHome mirroring is optional. To enable it, set both `LEADHOME_URL` and
 `LEADHOME_SOURCE_TOKEN`. Leaving both unset keeps Resend intake working; setting
@@ -79,30 +88,78 @@ the server, every DNS answer must be public, and each request connects to the
 validated IP while preserving TLS hostname verification. Redirects repeat the
 same validation and may not use custom ports or private/internal destinations.
 
-The direct crawler reads the submitted HTML page, `robots.txt`, a same-origin
-sitemap, at most two safe same-origin HTML pages, and at most eight sampled
-first-party links. It skips query-string and sensitive application paths for
-optional crawling, respects crawl rules, limits redirects and response sizes,
+The direct crawler reads the submitted HTML page first, then `robots.txt`, a
+same-origin sitemap, at most two safe same-origin HTML pages, and at most eight
+sampled first-party links. Robots rules therefore do not prevent the
+user-requested primary fetch; they govern only optional same-origin page and link
+crawling. The crawler skips query-string and sensitive application paths for
+optional crawling, respects those rules, limits redirects and response sizes,
 and never loads third-party page assets or executes browser JavaScript. Google
 PageSpeed Insights is the only external audit provider and receives the already
 validated final public URL.
 
-Scoring methodology v1 uses explicit check weights inside six canonical
-categories and explicit category weights for the overall score. Scores are
-normalized to finite integers from 0–100 at the result boundary. An unavailable
-check or provider is removed from its denominator; it is never silently scored
-as zero. Conversion/UX findings are deliberately conservative, source-based
-recommendations rather than a visual critique. Automated accessibility checks
-do not certify WCAG or legal compliance.
+Scoring methodology v2 uses explicit check weights inside six canonical
+categories and explicit category weights for the overall score. Missing checks
+reduce evidence coverage and pull partial results toward a conservative prior;
+they are never silently zero or perfect. Partial/sparse categories cannot score
+90+, severe findings impose centralized ceilings, and the source-only
+Conversion/UX category has a conservative ceiling. Automated accessibility
+checks do not certify WCAG or legal compliance.
 
 Known limitations: the crawler analyzes server-returned HTML rather than a
-fully rendered browser, PageSpeed runs mobile only, rate limiting is best-effort
-per runtime instance, compression is not scored because crawler requests use
-identity encoding, and the v1 job is request-bound rather than queue-backed.
+fully rendered browser, PageSpeed runs mobile only, compression is not scored
+because crawler requests use identity encoding, and execution remains
+request-bound rather than queue-backed. `ReportView` owns starting, polling, and
+recovering jobs; optimistic Blob ETags preserve atomic claims and stale runs are
+re-queued once before failing safely.
+
+### Production launch controls
+
+Production is fail-closed. `WEBSITE_AUDIT_ENABLED=true` is honored only when
+private Blob storage, PageSpeed, Resend, Redis, hashing, retention, quota, and
+cron settings are valid. Creation, execution, and report-email routes use an
+atomic Redis fixed-window limiter; the process-local map remains supplemental
+burst protection. Audit execution and report email also have independent global
+24-hour quotas. If Redis is unavailable, a quota cannot be verified, or any
+required configuration is absent, the affected route returns `503` with a
+`Retry-After` header and performs no outbound audit or email work.
+
+Use these launch values as a deliberate starting point and tune them against
+observed traffic and provider budgets:
+
+```bash
+WEBSITE_AUDIT_ENABLED=true
+WEBSITE_AUDIT_RETENTION_DAYS=30
+WEBSITE_AUDIT_DAILY_RUN_LIMIT=100
+WEBSITE_AUDIT_DAILY_EMAIL_LIMIT=100
+WEBSITE_AUDIT_HASH_SECRET=<32+ random characters>
+CRON_SECRET=<16+ random characters>
+UPSTASH_REDIS_REST_URL=<server-only Redis REST URL>
+UPSTASH_REDIS_REST_TOKEN=<server-only standard token>
+BLOB_READ_WRITE_TOKEN=<private Blob store token>
+GOOGLE_PAGESPEED_API_KEY=<quota-restricted API key>
+RESEND_API_KEY=<transactional email key>
+EMAIL_FROM=<verified sender>
+```
+
+`vercel.json` runs the authenticated retention purge daily. Audit state,
+results, and pseudonymous delivery receipts become unreadable at the configured
+retention boundary and Blob objects are deleted by the purge. Report delivery
+stores only a keyed recipient hash, status, timestamp, audit ID, and provider
+message ID; raw name and email values exist only during the Resend request.
+
+Keep both discovery flags false until the production smoke checklist passes:
+
+```bash
+WEBSITE_AUDIT_DISCOVERY_ENABLED=false
+NEXT_PUBLIC_WEBSITE_AUDIT_DISCOVERY_ENABLED=false
+```
+
+With those flags false, the route remains out of navigation and the sitemap,
+and is disallowed/noindexed. After launch verification, set both to `true` in
+the same production build. The server-side feature gate remains authoritative.
+
 Report URLs are unguessable share links, not authenticated private documents;
-they are marked `noindex` and analytics record only the route template. A
-durable queue and distributed rate limiter can replace those isolated
-boundaries later without changing the public result format. Automated retention
-cleanup is deferred in v1; configure an appropriate private Blob lifecycle or
-add a scheduled purge for audit results and report-request receipts before a
-high-volume rollout.
+they remain `noindex`, and analytics record only the route template. A durable
+queue can replace the request-bound execution boundary later without changing
+the public result format.

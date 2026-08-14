@@ -699,6 +699,23 @@
   line-height: 1.55;
 }
 
+.evidenceLabel {
+  display: block;
+  margin-top: 0.55rem;
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.categoryScoresCompact .evidenceLabel {
+  margin-top: 0.35rem;
+  font-size: 0.52rem;
+}
+
 .categoryScoreHeading > p {
   display: flex;
   align-items: baseline;
@@ -1015,6 +1032,18 @@
   color: #174547;
   font-size: 0.7rem;
   line-height: 1.5;
+}
+
+.reportFormFooter > p a {
+  color: inherit;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.reportFormFooter > p a:focus-visible {
+  outline: 3px solid #071010;
+  outline-offset: 3px;
 }
 
 .reportFormFooter button {

@@ -7,6 +7,10 @@ import { demoAuditResult } from "@/components/website-audit/demo-audit";
 import { createPageMetadata, serializeJsonLd } from "@/config/seo";
 import { siteConfig } from "@/config/site";
 import { auditCategoryRegistry } from "@/lib/website-audit/categories";
+import {
+  isWebsiteAuditDiscoverable,
+  isWebsiteAuditEnabled,
+} from "@/lib/website-audit/runtime-config";
 import styles from "@/components/website-audit/website-audit.module.css";
 
 const processSteps = [
@@ -26,12 +30,18 @@ const processSteps = [
   },
 ] as const;
 
-export const metadata = createPageMetadata({
+export const metadata = {
+  ...createPageMetadata({
   title: "Free Website Audit for Growing Businesses",
   description:
     "Run a free website audit covering SEO, performance, mobile usability, accessibility, conversion UX, and technical health.",
   path: "/website-audit",
-});
+  }),
+  robots: {
+    index: isWebsiteAuditDiscoverable(),
+    follow: isWebsiteAuditDiscoverable(),
+  },
+};
 
 const canonicalUrl = `${siteConfig.url}/website-audit`;
 const structuredData = {
@@ -48,6 +58,10 @@ const structuredData = {
 };
 
 export default function WebsiteAuditPage() {
+  if (!isWebsiteAuditEnabled()) {
+    notFound();
+  }
+
   return (
     <>
       <script
@@ -155,3 +169,4 @@ export default function WebsiteAuditPage() {
     </>
   );
 }
+import { notFound } from "next/navigation";

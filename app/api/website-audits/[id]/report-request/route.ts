@@ -3,12 +3,15 @@ import { z } from "zod";
 import { siteConfig } from "@/config/site";
 import {
   AuditApiError,
+  assertWebsiteAuditAvailable,
   assertTrustedMutationRequest,
   auditDataResponse,
   auditErrorResponse,
   createReportEmailIdempotencyKey,
+  createReportRecipientHash,
   createReportUrl,
   enforceAuditRateLimit,
+  enforceGlobalReportEmailQuota,
   logUnexpectedAuditApiError,
   readBoundedJsonRequest,
 } from "@/lib/website-audit/api-security";
@@ -39,13 +42,14 @@ export async function POST(request: Request, { params }: RouteContext) {
   const { id } = await params;
 
   try {
+    assertWebsiteAuditAvailable();
     assertTrustedMutationRequest(request);
 
     if (!isValidAuditId(id)) {
       throw new AuditApiError(400, "INVALID_AUDIT_ID", "The report ID is invalid.");
     }
 
-    enforceAuditRateLimit(request, {
+    await enforceAuditRateLimit(request, {
       scope: `request-report:${id}`,
       limit: 3,
       windowMs: 60 * 60 * 1000,
@@ -102,10 +106,10 @@ export async function POST(request: Request, { params }: RouteContext) {
     const apiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.EMAIL_FROM;
     const reportUrl = createReportUrl(id, request);
+    const recipientHash = createReportRecipientHash(parsedBody.data.email);
     const receiptBase = {
       auditId: id,
-      name: parsedBody.data.name,
-      email: parsedBody.data.email,
+      recipientHash,
     } as const;
 
     if (!apiKey || !fromEmail) {
@@ -123,6 +127,7 @@ export async function POST(request: Request, { params }: RouteContext) {
     }
 
     const resend = new Resend(apiKey);
+    await enforceGlobalReportEmailQuota(request);
     const emailResult = await resend.emails
       .send(
         {

@@ -26,6 +26,7 @@ export type AuditState = Readonly<{
   completedAt?: string;
   failedAt?: string;
   failure?: AuditFailure;
+  runAttempts: number;
 }>;
 
 export type StoredAuditState = Readonly<{
@@ -66,11 +67,10 @@ export const reportRequestStatuses = ["requested", "sent", "failed"] as const;
 export type ReportRequestStatus = (typeof reportRequestStatuses)[number];
 
 export type ReportRequestReceipt = Readonly<{
-  schemaVersion: 1;
+  schemaVersion: 2;
   id: string;
   auditId: string;
-  name: string;
-  email: string;
+  recipientHash: string;
   status: ReportRequestStatus;
   requestedAt: string;
   providerMessageId?: string;
@@ -79,8 +79,7 @@ export type ReportRequestReceipt = Readonly<{
 export type WriteReportRequestReceiptInput = Readonly<{
   auditId: string;
   requestId?: string;
-  name: string;
-  email: string;
+  recipientHash: string;
   status: ReportRequestStatus;
   providerMessageId?: string;
 }>;
@@ -96,6 +95,7 @@ export type AuditReportStoreOptions = Readonly<{
    */
   localDirectory?: string;
   now?: () => Date;
+  retentionDays?: number;
 }>;
 
 export type AuditReportStore = Readonly<{

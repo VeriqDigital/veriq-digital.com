@@ -6,10 +6,14 @@ import Container from "@/components/ui/Container";
 import AuditResults from "./AuditResults";
 import {
   AuditApiError,
-  getWebsiteAudit,
-  runWebsiteAudit,
+  createWebsiteAudit,
 } from "./audit-submission";
 import type { WebsiteAuditState } from "./audit-submission";
+import {
+  clearPendingWebsiteAudit,
+  readPendingWebsiteAudit,
+} from "./pending-audit";
+import { advanceWebsiteAuditReport } from "./report-controller";
 import ShareReportLink from "./ShareReportLink";
 import styles from "./website-audit.module.css";
 
@@ -24,7 +28,6 @@ type ReportViewState =
   | { status: "error"; message: string };
 
 const pollDelayMs = 2500;
-const staleRunRecoveryMs = 2 * 60 * 1000;
 
 const getDisplayUrl = (value: string) => {
   try {
@@ -66,57 +69,15 @@ export default function ReportView({ auditId }: ReportViewProps) {
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout> | undefined;
     let isActive = true;
+    let attemptedCreationRecovery = false;
 
     const loadReport = async () => {
       try {
-        let audit = await getWebsiteAudit(auditId, controller.signal);
-
-        // Recover a share link that was opened after creation but before the
-        // originating tab could claim the request-bound audit job.
-        const runningAgeMs =
-          audit.status === "running"
-            ? Date.now() - Date.parse(audit.updatedAt)
-            : 0;
-        const shouldClaimRun =
-          audit.status === "queued" ||
-          (audit.status === "running" &&
-            Number.isFinite(runningAgeMs) &&
-            runningAgeMs > staleRunRecoveryMs);
-
-        if (shouldClaimRun) {
-          const statusBeforeRun = audit.status;
-
-          try {
-            const result = await runWebsiteAudit(auditId, controller.signal);
-            audit = await getWebsiteAudit(auditId, controller.signal);
-
-            if (!audit.result && audit.status === "completed") {
-              audit = { ...audit, result };
-            }
-          } catch (error) {
-            if (!(error instanceof AuditApiError)) {
-              throw error;
-            }
-
-            try {
-              audit = await getWebsiteAudit(auditId, controller.signal);
-            } catch {
-              throw error;
-            }
-
-            if (
-              audit.status === statusBeforeRun &&
-              ![
-                "AUDIT_STATE_CONFLICT",
-                "INVALID_AUDIT_RESPONSE",
-                "AUDIT_INTERRUPTED",
-                "AUDIT_STILL_RUNNING",
-              ].includes(error.code)
-            ) {
-              throw error;
-            }
-          }
-        }
+        const audit = await advanceWebsiteAuditReport(
+          auditId,
+          controller.signal,
+        );
+        clearPendingWebsiteAudit(auditId);
 
         if (!isActive) {
           return;
@@ -135,7 +96,43 @@ export default function ReportView({ auditId }: ReportViewProps) {
           return;
         }
 
-        if (error instanceof AuditApiError && error.status === 404) {
+        if (
+          error instanceof AuditApiError &&
+          error.status === 404 &&
+          !attemptedCreationRecovery
+        ) {
+          const pending = readPendingWebsiteAudit(auditId);
+
+          if (pending) {
+            attemptedCreationRecovery = true;
+
+            try {
+              await createWebsiteAudit(
+                pending.normalizedUrl,
+                pending.id,
+                controller.signal,
+              );
+              await loadReport();
+              return;
+            } catch (recoveryError) {
+              if (
+                recoveryError instanceof DOMException &&
+                recoveryError.name === "AbortError"
+              ) {
+                return;
+              }
+
+              setViewState({
+                status: "error",
+                message:
+                  recoveryError instanceof AuditApiError
+                    ? `Your report ID was preserved, but recovery is waiting on the audit service: ${recoveryError.message}`
+                    : "Your report ID was preserved, but the interrupted audit could not be recovered yet.",
+              });
+              return;
+            }
+          }
+
           setViewState({ status: "not-found" });
           return;
         }

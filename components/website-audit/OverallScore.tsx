@@ -4,12 +4,14 @@ import styles from "./website-audit.module.css";
 
 type OverallScoreProps = {
   score: NormalizedScore;
+  evidenceCoverage?: NormalizedScore;
   summary?: string;
   compact?: boolean;
 };
 
 export default function OverallScore({
   score,
+  evidenceCoverage,
   summary,
   compact = false,
 }: OverallScoreProps) {
@@ -19,7 +21,10 @@ export default function OverallScore({
     <div className={compact ? styles.overallScoreCompact : styles.overallScore}>
       <div className={styles.scoreHeading}>
         <p>Overall website score</p>
-        <span>{interpretation}</span>
+        <span>
+          {interpretation}
+          {evidenceCoverage !== undefined ? ` · ${evidenceCoverage}% evidence` : ""}
+        </span>
       </div>
       <div className={styles.scoreValue}>
         <strong>{score}</strong>

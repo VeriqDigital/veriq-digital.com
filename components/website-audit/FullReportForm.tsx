@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { submitFullReportRequest } from "./report-submission";
@@ -97,8 +98,9 @@ export default function FullReportForm({ auditId }: FullReportFormProps) {
       </div>
       <div className={styles.reportFormFooter}>
         <p id={`${auditId}-report-privacy`}>
-          We’ll use your name and email to send this report and record delivery.
-          No mailing list.
+          We use your name and email only to send this report. We retain a
+          pseudonymous delivery receipt, not the raw values. No mailing list. See
+          our <Link href="/privacy">privacy policy</Link>.
         </p>
         <button type="submit" disabled={isSubmitting || isComplete}>
           {isComplete

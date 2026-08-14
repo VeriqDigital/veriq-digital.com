@@ -5,9 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import {
   AuditApiError,
+  createWebsiteAuditId,
   createWebsiteAudit,
-  runWebsiteAudit,
 } from "./audit-submission";
+import {
+  clearPendingWebsiteAudit,
+  savePendingWebsiteAudit,
+} from "./pending-audit";
 import { normalizeWebsiteUrl } from "./url";
 import styles from "./website-audit.module.css";
 
@@ -15,7 +19,6 @@ type AuditFormState =
   | { status: "idle" }
   | { status: "validating"; message: string }
   | { status: "submitting"; message: string }
-  | { status: "analyzing"; message: string }
   | { status: "completed"; message: string }
   | { status: "failed"; message: string };
 
@@ -23,7 +26,6 @@ const buttonLabels: Record<AuditFormState["status"], string> = {
   idle: "Audit My Website",
   validating: "Checking URL…",
   submitting: "Starting Audit…",
-  analyzing: "Analyzing Website…",
   completed: "Opening Report…",
   failed: "Try Audit Again",
 };
@@ -33,7 +35,7 @@ export default function AuditForm() {
   const requestController = useRef<AbortController | null>(null);
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [formState, setFormState] = useState<AuditFormState>({ status: "idle" });
-  const isBusy = ["validating", "submitting", "analyzing", "completed"].includes(
+  const isBusy = ["validating", "submitting", "completed"].includes(
     formState.status,
   );
 
@@ -66,21 +68,23 @@ export default function AuditForm() {
     });
     const controller = new AbortController();
     requestController.current = controller;
+    const auditId = createWebsiteAuditId();
+    const reportUrl = `/website-audit/report/${auditId}`;
+    savePendingWebsiteAudit({
+      id: auditId,
+      normalizedUrl: validation.normalizedUrl,
+      createdAt: Date.now(),
+    });
 
     try {
       const audit = await createWebsiteAudit(
         validation.normalizedUrl,
+        auditId,
         controller.signal,
       );
       setFormState({
-        status: "analyzing",
-        message:
-          "Analyzing your website. Performance data can take a little longer to return…",
-      });
-      await runWebsiteAudit(audit.id, controller.signal);
-      setFormState({
         status: "completed",
-        message: "Audit complete. Opening your report…",
+        message: "Audit created. Opening your recoverable report…",
       });
       router.push(audit.reportUrl);
     } catch (error) {
@@ -88,13 +92,22 @@ export default function AuditForm() {
         return;
       }
 
-      setFormState({
-        status: "failed",
-        message:
-          error instanceof AuditApiError
-            ? error.message
-            : "The audit could not be completed. Please try again.",
-      });
+      if (error instanceof AuditApiError && error.code === "NETWORK_ERROR") {
+        setFormState({
+          status: "completed",
+          message: "Opening your report to recover the interrupted request…",
+        });
+        router.push(reportUrl);
+      } else {
+        clearPendingWebsiteAudit(auditId);
+        setFormState({
+          status: "failed",
+          message:
+            error instanceof AuditApiError
+              ? error.message
+              : "The audit could not be created. Please try again.",
+        });
+      }
     } finally {
       requestController.current = null;
     }

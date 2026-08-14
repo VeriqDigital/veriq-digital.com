@@ -19,6 +19,12 @@ export default function CategoryScores({
         const interpretation = category.score === null
           ? null
           : getScoreInterpretation(category.score);
+        const evidenceLabel =
+          category.evidenceLevel === "full"
+            ? "Full evidence"
+            : category.evidenceLevel === "partial"
+              ? `Partial · ${category.evidenceCoverage}% evidence`
+              : "Evidence unavailable";
 
         return (
           <article className={styles.categoryScore} key={category.id}>
@@ -32,6 +38,7 @@ export default function CategoryScores({
                   <h3>{definition.label}</h3>
                 )}
                 {!compact ? <p>{category.summary}</p> : null}
+                <span className={styles.evidenceLabel}>{evidenceLabel}</span>
               </div>
               {category.available && category.score !== null && interpretation ? (
                 <p>
@@ -53,7 +60,7 @@ export default function CategoryScores({
                 min={0}
                 max={100}
                 value={category.score}
-                aria-label={`${definition.label}: ${category.score} out of 100, ${interpretation}`}
+                aria-label={`${definition.label}: ${category.score} out of 100, ${interpretation}; ${evidenceLabel}`}
               >
                 {category.score} out of 100
               </meter>

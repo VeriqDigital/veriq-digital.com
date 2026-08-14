@@ -1,10 +1,12 @@
 import { z } from "zod";
 import {
   AuditApiError,
+  assertWebsiteAuditAvailable,
   assertTrustedMutationRequest,
   auditDataResponse,
   auditErrorResponse,
   enforceAuditRateLimit,
+  enforceGlobalAuditRunQuota,
   logUnexpectedAuditApiError,
   readBoundedJsonRequest,
 } from "@/lib/website-audit/api-security";
@@ -102,25 +104,44 @@ const handleAlreadyRunning = async (id: string, storedState: StoredAuditState) =
     Number.isFinite(updatedAt) &&
     Date.now() - updatedAt > staleRunningThresholdMs
   ) {
-    await transitionAuditState(
-      id,
-      {
-        status: "failed",
-        failure: {
-          code: "AUDIT_INTERRUPTED",
-          message: "The audit was interrupted before it could finish. Please submit a new audit.",
-          retryable: true,
+    if (storedState.state.runAttempts >= 2) {
+      await transitionAuditState(
+        id,
+        {
+          status: "failed",
+          failure: {
+            code: "AUDIT_INTERRUPTED",
+            message:
+              "The audit was interrupted more than once and could not be recovered.",
+            retryable: true,
+          },
         },
-      },
-      { expectedEtag: storedState.etag },
-    ).catch((error: unknown) => {
-      if (!(error instanceof AuditStorageConflictError)) throw error;
-    });
+        { expectedEtag: storedState.etag },
+      ).catch((error: unknown) => {
+        if (!(error instanceof AuditStorageConflictError)) throw error;
+      });
 
-    throw new AuditApiError(
-      503,
-      "AUDIT_INTERRUPTED",
-      "The audit was interrupted before it could finish. Please submit a new audit.",
+      throw new AuditApiError(
+        503,
+        "AUDIT_INTERRUPTED",
+        "The audit was interrupted more than once and could not be recovered.",
+      );
+    }
+
+    try {
+      await transitionAuditState(
+        id,
+        { status: "queued" },
+        { expectedEtag: storedState.etag },
+      );
+    } catch (error) {
+      if (!(error instanceof AuditStorageConflictError)) throw error;
+    }
+
+    return auditDataResponse(
+      { id, status: "queued" },
+      202,
+      { "Retry-After": "1" },
     );
   }
 
@@ -136,13 +157,14 @@ export async function POST(request: Request, { params }: RouteContext) {
   let runningState: StoredAuditState | null = null;
 
   try {
+    assertWebsiteAuditAvailable();
     assertTrustedMutationRequest(request);
 
     if (!isValidAuditId(id)) {
       throw new AuditApiError(400, "INVALID_AUDIT_ID", "The report ID is invalid.");
     }
 
-    enforceAuditRateLimit(request, {
+    await enforceAuditRateLimit(request, {
       scope: `run-audit:${id}`,
       limit: 8,
       windowMs: 10 * 60 * 1000,
@@ -215,6 +237,8 @@ export async function POST(request: Request, { params }: RouteContext) {
 
     console.info("Website audit started", { auditId: id });
 
+    await enforceGlobalAuditRunQuota(request);
+
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), auditExecutionTimeoutMs);
     let result: WebsiteAuditResult;
@@ -270,6 +294,23 @@ export async function POST(request: Request, { params }: RouteContext) {
       const latest = await readAuditState(id).catch(() => null);
 
       if (latest?.state.status === "running") {
+        const shouldRequeueWithoutExecution =
+          error instanceof AuditApiError &&
+          [
+            "AUDIT_CAPACITY_REACHED",
+            "AUDIT_CONTROLS_UNAVAILABLE",
+          ].includes(error.code);
+
+        if (shouldRequeueWithoutExecution) {
+          await transitionAuditState(
+            id,
+            { status: "queued" },
+            { expectedEtag: latest.etag },
+          ).catch(() => undefined);
+          logUnexpectedAuditApiError("run", error, id);
+          return auditErrorResponse(error);
+        }
+
         const timedOut =
           (error instanceof WebsiteCrawlError &&
             error.code === "AUDIT_TIMEOUT") ||

@@ -39,7 +39,7 @@ const maxReceiptBytes = 64 * 1024;
 
 const allowedTransitions: Readonly<Record<AuditStatus, readonly AuditStatus[]>> = {
   queued: ["running", "failed"],
-  running: ["completed", "failed"],
+  running: ["queued", "completed", "failed"],
   completed: [],
   failed: [],
 };
@@ -155,7 +155,11 @@ const parseAuditState = (value: unknown, expectedId: string): AuditState => {
     (value.startedAt !== undefined && !isIsoDate(value.startedAt)) ||
     (value.completedAt !== undefined && !isIsoDate(value.completedAt)) ||
     (value.failedAt !== undefined && !isIsoDate(value.failedAt)) ||
-    (value.failure !== undefined && !isAuditFailure(value.failure))
+    (value.failure !== undefined && !isAuditFailure(value.failure)) ||
+    typeof value.runAttempts !== "number" ||
+    !Number.isSafeInteger(value.runAttempts) ||
+    value.runAttempts < 0 ||
+    value.runAttempts > 10
   ) {
     throw new AuditStorageValidationError(
       "The stored audit state is invalid.",
@@ -415,6 +419,19 @@ export const createAuditReportStore = (
 ): AuditReportStore => {
   const backend = getBackend(options);
   const now = options.now ?? (() => new Date());
+  const retentionDays =
+    options.retentionDays ??
+    Number(process.env.WEBSITE_AUDIT_RETENTION_DAYS || 30);
+
+  if (
+    !Number.isSafeInteger(retentionDays) ||
+    retentionDays <= 0 ||
+    retentionDays > 90
+  ) {
+    throw new AuditStorageValidationError(
+      "Audit retention must be between 1 and 90 days.",
+    );
+  }
 
   const readJson = (relativePath: string) =>
     backend.kind === "blob"
@@ -446,8 +463,16 @@ export const createAuditReportStore = (
       return null;
     }
 
+    const state = parseAuditState(parseJson(stored.serialized), auditId);
+    const expiresAt =
+      Date.parse(state.createdAt) + retentionDays * 24 * 60 * 60 * 1_000;
+
+    if (now().getTime() >= expiresAt) {
+      return null;
+    }
+
     return {
-      state: parseAuditState(parseJson(stored.serialized), auditId),
+      state,
       etag: stored.etag,
     };
   };
@@ -472,6 +497,7 @@ export const createAuditReportStore = (
       normalizedUrl: input.normalizedUrl,
       createdAt: timestamp,
       updatedAt: timestamp,
+      runAttempts: 0,
     };
     const serialized = serializeJson(state, maxStateBytes);
     const etag = await writeJson(getStatePath(id), serialized, {
@@ -538,10 +564,16 @@ export const createAuditReportStore = (
         transition.normalizedUrl ?? current.state.normalizedUrl,
       finalUrl: transition.finalUrl ?? current.state.finalUrl,
       updatedAt: timestamp,
+      runAttempts:
+        transition.status === "running"
+          ? current.state.runAttempts + 1
+          : current.state.runAttempts,
       startedAt:
         transition.status === "running"
           ? current.state.startedAt ?? timestamp
-          : current.state.startedAt,
+          : transition.status === "queued"
+            ? undefined
+            : current.state.startedAt,
       completedAt:
         transition.status === "completed"
           ? timestamp
@@ -622,13 +654,9 @@ export const createAuditReportStore = (
       );
     }
 
-    if (!isNonEmptyString(input.name, 120)) {
-      throw new AuditStorageValidationError("The report requester name is invalid.");
-    }
-
-    if (!isNonEmptyString(input.email, 320)) {
+    if (!/^[a-f0-9]{64}$/.test(input.recipientHash)) {
       throw new AuditStorageValidationError(
-        "The report requester email is invalid.",
+        "The report recipient hash is invalid.",
       );
     }
 
@@ -645,11 +673,10 @@ export const createAuditReportStore = (
     }
 
     const receipt: ReportRequestReceipt = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       id: requestId,
       auditId: input.auditId,
-      name: input.name.trim(),
-      email: input.email.trim(),
+      recipientHash: input.recipientHash,
       status: input.status,
       requestedAt: getNow(now),
       providerMessageId: input.providerMessageId,

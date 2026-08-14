@@ -1,5 +1,6 @@
 export type {
   AuditCategoryScore,
+  AuditEvidenceLevel,
   AuditFinding,
   AuditSeverity,
   AuditSummary,
@@ -11,7 +12,8 @@ export type { AuditCategoryId } from "@/lib/website-audit/categories";
 
 export const getScoreInterpretation = (score: number) => {
   if (score >= 90) return "Excellent";
-  if (score >= 75) return "Good";
-  if (score >= 50) return "Needs improvement";
-  return "Poor";
+  if (score >= 80) return "Good";
+  if (score >= 70) return "Fair";
+  if (score >= 50) return "Needs work";
+  return "Significant issues";
 };

@@ -1,5 +1,10 @@
-import { createHash } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { siteConfig } from "@/config/site";
+import {
+  consumeDistributedLimit,
+  DistributedLimitUnavailableError,
+} from "./distributed-rate-limit";
+import { getWebsiteAuditRuntimeConfig } from "./runtime-config";
 import {
   AuditStateNotFoundError,
   AuditStateTransitionError,
@@ -286,18 +291,23 @@ type RateLimitOptions = Readonly<{
   limit: number;
   scope: string;
   windowMs: number;
+  global?: boolean;
+  capacityMessage?: string;
 }>;
 
 const recentRequestsByClient = new Map<string, number[]>();
 const maximumTrackedClients = 2_000;
 
-const getHashedClientIdentifier = (request: Request, scope: string) => {
+const getClientAddress = (request: Request) => {
   const forwardedAddress = request.headers
     .get("x-forwarded-for")
     ?.split(",")[0]
     ?.trim();
-  const clientAddress =
-    forwardedAddress || request.headers.get("x-real-ip")?.trim() || "unknown";
+  return forwardedAddress || request.headers.get("x-real-ip")?.trim() || "unknown";
+};
+
+const getHashedClientIdentifier = (request: Request, scope: string) => {
+  const clientAddress = getClientAddress(request);
 
   return createHash("sha256")
     .update(`${scope}\0${clientAddress}`)
@@ -305,16 +315,15 @@ const getHashedClientIdentifier = (request: Request, scope: string) => {
 };
 
 /**
- * Best-effort serverless burst protection. The hash avoids retaining raw IPs,
- * but the map is per process and forwarded headers are trusted only as far as
- * the hosting proxy guarantees them. A platform-level distributed rule is
- * still recommended for sustained production abuse.
+ * Supplemental serverless burst protection. The hash avoids retaining raw
+ * IPs, but this map is intentionally not the production enforcement boundary;
+ * every production call also consumes the atomic Redis-backed limit below.
  */
-export function enforceAuditRateLimit(
+const enforceLocalAuditRateLimit = (
   request: Request,
   options: RateLimitOptions,
   now = Date.now(),
-): void {
+) => {
   if (
     !Number.isSafeInteger(options.limit) ||
     options.limit <= 0 ||
@@ -366,6 +375,134 @@ export function enforceAuditRateLimit(
 
   recentRequests.push(now);
   recentRequestsByClient.set(key, recentRequests);
+};
+
+export async function enforceAuditRateLimit(
+  request: Request,
+  options: RateLimitOptions,
+  now = Date.now(),
+): Promise<void> {
+  enforceLocalAuditRateLimit(request, options, now);
+  const config = getWebsiteAuditRuntimeConfig();
+
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+
+  if (!config.redisUrl || !config.redisToken || !config.hashSecret) {
+    throw new AuditApiError(
+      503,
+      "AUDIT_CONTROLS_UNAVAILABLE",
+      "Website audits are temporarily unavailable because abuse controls are not configured.",
+      { headers: { "Retry-After": "300" } },
+    );
+  }
+
+  const subject = options.global ? "global" : getClientAddress(request);
+  const identifier = createHmac("sha256", config.hashSecret)
+    .update(`${options.scope}\0${subject}`)
+    .digest("hex");
+
+  try {
+    const result = await consumeDistributedLimit({
+      key: `website-audit:${options.scope}:${identifier}`,
+      windowMs: options.windowMs,
+      redisUrl: config.redisUrl,
+      redisToken: config.redisToken,
+    });
+
+    if (result.count > options.limit) {
+      throw new AuditApiError(
+        options.global ? 503 : 429,
+        options.global ? "AUDIT_CAPACITY_REACHED" : "RATE_LIMITED",
+        options.capacityMessage ??
+          (options.global
+            ? "Website audit capacity has been reached. Please try again later."
+            : "Too many requests. Please wait and try again."),
+        { headers: { "Retry-After": String(result.retryAfterSeconds) } },
+      );
+    }
+  } catch (error) {
+    if (error instanceof AuditApiError) {
+      throw error;
+    }
+
+    if (error instanceof DistributedLimitUnavailableError) {
+      throw new AuditApiError(
+        503,
+        "AUDIT_CONTROLS_UNAVAILABLE",
+        "Website audits are temporarily unavailable because abuse controls could not be verified.",
+        { headers: { "Retry-After": "60" } },
+      );
+    }
+
+    throw error;
+  }
+}
+
+export async function enforceGlobalAuditRunQuota(request: Request): Promise<void> {
+  const limit = getWebsiteAuditRuntimeConfig().dailyRunLimit;
+
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+
+  if (!limit) {
+    throw new AuditApiError(
+      503,
+      "AUDIT_CONTROLS_UNAVAILABLE",
+      "Website audits are temporarily unavailable because the outbound quota is not configured.",
+    );
+  }
+
+  await enforceAuditRateLimit(request, {
+    scope: "outbound-daily",
+    limit,
+    windowMs: 24 * 60 * 60 * 1_000,
+    global: true,
+    capacityMessage:
+      "Today’s website audit capacity has been reached. Please try again tomorrow.",
+  });
+}
+
+export async function enforceGlobalReportEmailQuota(
+  request: Request,
+): Promise<void> {
+  const limit = getWebsiteAuditRuntimeConfig().dailyEmailLimit;
+
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+
+  if (!limit) {
+    throw new AuditApiError(
+      503,
+      "AUDIT_CONTROLS_UNAVAILABLE",
+      "Report delivery is temporarily unavailable because the email quota is not configured.",
+    );
+  }
+
+  await enforceAuditRateLimit(request, {
+    scope: "report-email-daily",
+    limit,
+    windowMs: 24 * 60 * 60 * 1_000,
+    global: true,
+    capacityMessage:
+      "Today’s report-email capacity has been reached. Your report link still works.",
+  });
+}
+
+export function assertWebsiteAuditAvailable(): void {
+  const config = getWebsiteAuditRuntimeConfig();
+
+  if (!config.enabled) {
+    throw new AuditApiError(
+      503,
+      "AUDIT_FEATURE_DISABLED",
+      "Website audits are not available yet.",
+      { headers: { "Retry-After": "3600" } },
+    );
+  }
 }
 
 export function createReportUrl(auditId: string, request?: Request): string {
@@ -386,6 +523,40 @@ export function createReportEmailIdempotencyKey(
     .digest("hex");
 
   return `website-audit/${auditId}/${recipientHash}`;
+}
+
+export function createReportRecipientHash(email: string): string {
+  const secret = getWebsiteAuditRuntimeConfig().hashSecret;
+
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new AuditApiError(
+        503,
+        "AUDIT_CONTROLS_UNAVAILABLE",
+        "Report delivery is temporarily unavailable.",
+      );
+    }
+
+    return createHash("sha256")
+      .update(email.trim().toLowerCase())
+      .digest("hex");
+  }
+
+  return createHmac("sha256", secret)
+    .update(email.trim().toLowerCase())
+    .digest("hex");
+}
+
+export function isValidCronAuthorization(request: Request): boolean {
+  const secret = process.env.CRON_SECRET?.trim();
+  const authorization = request.headers.get("authorization") ?? "";
+  const expected = secret ? `Bearer ${secret}` : "";
+
+  if (!secret || authorization.length !== expected.length) {
+    return false;
+  }
+
+  return timingSafeEqual(Buffer.from(authorization), Buffer.from(expected));
 }
 
 export function resetAuditRateLimitsForTesting(): void {

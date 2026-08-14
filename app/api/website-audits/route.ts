@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   AuditApiError,
+  assertWebsiteAuditAvailable,
   assertTrustedMutationRequest,
   auditDataResponse,
   auditErrorResponse,
@@ -10,21 +11,28 @@ import {
   readBoundedJsonRequest,
 } from "@/lib/website-audit/api-security";
 import { parsePublicAuditUrl, resolvePublicHost } from "@/lib/website-audit/security";
-import { createAuditState } from "@/lib/website-audit/store";
+import {
+  AuditStorageConflictError,
+  createAuditState,
+  isValidAuditId,
+  readAuditState,
+} from "@/lib/website-audit/store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const submissionSchema = z
   .object({
+    auditId: z.string().refine(isValidAuditId),
     url: z.string().trim().min(1).max(2048),
   })
   .strict();
 
 export async function POST(request: Request) {
   try {
+    assertWebsiteAuditAvailable();
     assertTrustedMutationRequest(request);
-    enforceAuditRateLimit(request, {
+    await enforceAuditRateLimit(request, {
       scope: "create-audit",
       limit: 4,
       windowMs: 10 * 60 * 1000,
@@ -46,17 +54,38 @@ export async function POST(request: Request) {
     await resolvePublicHost(auditUrl.hostname);
 
     const normalizedUrl = auditUrl.toString();
-    const stored = await createAuditState({
-      submittedUrl: normalizedUrl,
-      normalizedUrl,
-    });
+    let stored;
+
+    try {
+      stored = await createAuditState({
+        id: parsedBody.data.auditId,
+        submittedUrl: normalizedUrl,
+        normalizedUrl,
+      });
+    } catch (error) {
+      if (!(error instanceof AuditStorageConflictError)) {
+        throw error;
+      }
+
+      const existing = await readAuditState(parsedBody.data.auditId);
+
+      if (!existing || existing.state.normalizedUrl !== normalizedUrl) {
+        throw new AuditApiError(
+          409,
+          "AUDIT_ID_CONFLICT",
+          "This audit request could not be recovered safely.",
+        );
+      }
+
+      stored = existing;
+    }
 
     console.info("Website audit queued", { auditId: stored.state.id });
 
     return auditDataResponse(
       {
         id: stored.state.id,
-        status: "queued",
+        status: stored.state.status,
         reportUrl: createReportUrl(stored.state.id, request),
       },
       202,

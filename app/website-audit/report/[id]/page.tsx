@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReportView from "@/components/website-audit/ReportView";
+import { isWebsiteAuditEnabled } from "@/lib/website-audit/runtime-config";
 import styles from "@/components/website-audit/website-audit.module.css";
 
 const auditIdPattern =
@@ -23,7 +24,7 @@ export default async function WebsiteAuditReportPage({
 }) {
   const { id } = await params;
 
-  if (!auditIdPattern.test(id)) {
+  if (!isWebsiteAuditEnabled() || !auditIdPattern.test(id)) {
     notFound();
   }
 

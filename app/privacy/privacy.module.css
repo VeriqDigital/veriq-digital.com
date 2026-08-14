@@ -1,0 +1,92 @@
+.page {
+  padding: clamp(9rem, 14vw, 12rem) 0 clamp(5rem, 9vw, 8rem);
+}
+
+.header {
+  max-width: 58rem;
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.header > p:first-child {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.header h1 {
+  margin-top: 1rem;
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.header > p:last-child {
+  margin-top: 1.4rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.content {
+  display: grid;
+  max-width: 68rem;
+  margin-top: clamp(3rem, 6vw, 5rem);
+}
+
+.content section {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.34fr) minmax(0, 0.66fr);
+  gap: 1.25rem clamp(2rem, 7vw, 7rem);
+  padding: 2rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+}
+
+.content h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
+  font-weight: 780;
+  line-height: 1.05;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.content p {
+  max-width: 70ch;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.content p + p {
+  grid-column: 2;
+  margin-top: 0.5rem;
+}
+
+.content a {
+  color: var(--primary-readable);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.content a:focus-visible {
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  .content section {
+    grid-template-columns: 1fr;
+  }
+
+  .content p + p {
+    grid-column: 1;
+  }
+}

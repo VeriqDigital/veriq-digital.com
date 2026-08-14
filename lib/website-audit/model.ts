@@ -10,10 +10,14 @@ export type AuditSeverity =
 
 export type NormalizedScore = number;
 
+export type AuditEvidenceLevel = "full" | "partial" | "unavailable";
+
 export type AuditCategoryScore = Readonly<{
   id: AuditCategoryId;
   available: boolean;
   score: NormalizedScore | null;
+  evidenceLevel: AuditEvidenceLevel;
+  evidenceCoverage: NormalizedScore;
   summary: string;
   checksRun: number;
   checksUnavailable: number;
@@ -52,6 +56,7 @@ export type WebsiteAuditResult = Readonly<{
   createdAt: string;
   completedAt?: string;
   overallScore: NormalizedScore;
+  evidenceCoverage: NormalizedScore;
   overallSummary: string;
   categoryScores: readonly AuditCategoryScore[];
   summary: AuditSummary;
@@ -102,4 +107,3 @@ export type PageSpeedUnavailable = Readonly<{
 }>;
 
 export type PageSpeedData = PageSpeedAuditData | PageSpeedUnavailable;
-

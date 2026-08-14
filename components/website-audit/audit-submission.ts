@@ -31,7 +31,7 @@ export class AuditApiError extends Error {
 
 type CreateAuditResult = Readonly<{
   id: string;
-  status: "queued";
+  status: PersistedAuditStatus;
   reportUrl: string;
 }>;
 
@@ -94,12 +94,14 @@ const assertAuditId = (value: unknown): string => {
 
 export async function createWebsiteAudit(
   normalizedUrl: string,
+  auditId: string,
   signal?: AbortSignal,
 ): Promise<CreateAuditResult> {
+  const id = assertAuditId(auditId);
   const response = await fetch("/api/website-audits", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ url: normalizedUrl }),
+    body: JSON.stringify({ auditId: id, url: normalizedUrl }),
     cache: "no-store",
     signal,
   }).catch((error: unknown) => {
@@ -114,7 +116,7 @@ export async function createWebsiteAudit(
     );
   });
   const data = await getData(response);
-  const id = assertAuditId(data.id);
+  const returnedId = assertAuditId(data.id);
   const expectedReportUrl = `/website-audit/report/${id}`;
   let returnedReportPath = "";
 
@@ -127,7 +129,11 @@ export async function createWebsiteAudit(
     }
   }
 
-  if (data.status !== "queued" || returnedReportPath !== expectedReportUrl) {
+  if (
+    returnedId !== id ||
+    !isAuditStatus(data.status) ||
+    returnedReportPath !== expectedReportUrl
+  ) {
     throw new AuditApiError(
       "The audit service returned an unexpected response. Please try again.",
       "INVALID_AUDIT_RESPONSE",
@@ -135,13 +141,13 @@ export async function createWebsiteAudit(
     );
   }
 
-  return { id, status: "queued", reportUrl: expectedReportUrl };
+  return { id, status: data.status, reportUrl: expectedReportUrl };
 }
 
 export async function runWebsiteAudit(
   auditId: string,
   signal?: AbortSignal,
-): Promise<WebsiteAuditResult> {
+): Promise<WebsiteAuditResult | null> {
   const id = assertAuditId(auditId);
   const response = await fetch(`/api/website-audits/${id}/run`, {
     method: "POST",
@@ -161,12 +167,12 @@ export async function runWebsiteAudit(
   });
   const data = await getData(response);
 
-  if (response.status === 202 && data.id === id && data.status === "running") {
-    throw new AuditApiError(
-      "The website audit is still running.",
-      "AUDIT_STILL_RUNNING",
-      202,
-    );
+  if (
+    response.status === 202 &&
+    data.id === id &&
+    (data.status === "queued" || data.status === "running")
+  ) {
+    return null;
   }
 
   if (data.id !== id || data.status !== "completed") {
@@ -192,6 +198,10 @@ export async function runWebsiteAudit(
       502,
     );
   }
+}
+
+export function createWebsiteAuditId(): string {
+  return assertAuditId(crypto.randomUUID());
 }
 
 export async function getWebsiteAudit(
