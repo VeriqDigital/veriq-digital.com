@@ -141,12 +141,12 @@ const Navbar = () => {
           {siteConfig.shortName}
         </Link>
 
-        <div className="ml-auto hidden items-center gap-8 md:flex">
+        <div className="ml-auto hidden items-center gap-7 lg:flex xl:gap-8">
           {navigation.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-lg font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) lg:text-xl"
+              className="text-base font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) xl:text-lg"
             >
               {item.label}
             </Link>
@@ -164,7 +164,7 @@ const Navbar = () => {
 
           <button
             type="button"
-            className="cursor-pointer flex size-11 items-center justify-center rounded-full border border-current/15 text-(--nav-muted) transition hover:border-(--primary-readable) hover:text-(--primary-readable) md:hidden"
+            className="cursor-pointer flex size-11 items-center justify-center rounded-full border border-current/15 text-(--nav-muted) transition hover:border-(--primary-readable) hover:text-(--primary-readable) lg:hidden"
             aria-label={
               isMenuOpen ? "Close navigation menu" : "Open navigation menu"
             }
@@ -185,7 +185,7 @@ const Navbar = () => {
         <nav
           id="mobile-navigation"
           aria-label="Mobile navigation"
-          className="absolute inset-x-4 top-full rounded-lg border border-white/10 bg-black/88 p-2 text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:hidden"
+          className="absolute inset-x-4 top-full rounded-lg border border-white/10 bg-black/88 p-2 text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:hidden"
         >
           <div className="grid gap-1">
             {navigation.map((item) => (

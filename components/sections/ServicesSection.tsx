@@ -24,10 +24,18 @@ const ServiceIcon = ({ name }: ServiceIconProps) => {
     );
   }
 
+  if (name === "search") {
+    return (
+      <svg viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m15.5 15.5 4.5 4.5M10.5 7.5v6M7.5 10.5h6" />
+      </svg>
+    );
+  }
+
   return (
     <svg viewBox="0 0 24 24">
-      <path d="m4 17 5.2-5.2 3.4 3.4L20 7.8" />
-      <path d="M14.5 7.8H20v5.5" />
+      <path d="M6.5 4.5h11v15h-11zM9 8h6M9 12h6M9 16h3" />
     </svg>
   );
 };
@@ -42,7 +50,7 @@ const ServicesSection = () => {
             What we do
           </p>
           <h2 className={styles.heading}>
-            Digital work with <span>real world results.</span>
+            What Veriq can help <span>you improve.</span>
           </h2>
         </div>
         <div className={styles.introLinks}>
@@ -67,12 +75,15 @@ const ServicesSection = () => {
             <div>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
-              {"href" in service ? (
-                <Link href={service.href} className={styles.cardLink}>
-                  {service.linkLabel}
-                  <span aria-hidden="true">↗</span>
-                </Link>
-              ) : null}
+              <ul className={styles.capabilities} aria-label={`${service.title} capabilities`}>
+                {service.capabilities.map((capability) => (
+                  <li key={capability}>{capability}</li>
+                ))}
+              </ul>
+              <Link href={service.href} className={styles.cardLink}>
+                {service.linkLabel}
+                <span aria-hidden="true">↗</span>
+              </Link>
             </div>
             <span
               className={`${styles.cardIcon} ${styles[service.icon]}`}

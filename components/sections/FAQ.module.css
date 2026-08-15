@@ -1,0 +1,124 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+  align-items: end;
+  gap: clamp(2.5rem, 8vw, 8rem);
+}
+
+.header > div:first-child > p {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.header h2 {
+  max-width: 12ch;
+  margin-top: 1.15rem;
+  font-family: var(--font-heading);
+  font-size: clamp(3.2rem, 6vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.header > div:last-child > p {
+  max-width: 40rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.header a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary-readable) 55%, transparent);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.header a span {
+  color: var(--primary-readable);
+}
+
+.header a:focus-visible,
+.questions summary:focus-visible {
+  border-radius: 0.25rem;
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 0.3rem;
+}
+
+.questions {
+  margin-top: clamp(3.5rem, 6vw, 6rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+.questions details {
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+.questions summary {
+  display: flex;
+  min-height: 5.5rem;
+  cursor: pointer;
+  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.35rem, 2.3vw, 2.1rem);
+  font-weight: 750;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.questions summary::-webkit-details-marker {
+  display: none;
+}
+
+.questions summary i {
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex: none;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  border-radius: 50%;
+  color: var(--primary-readable);
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  font-style: normal;
+  transition: transform 180ms ease;
+}
+
+.questions details[open] summary i {
+  transform: rotate(45deg);
+}
+
+.questions details > p {
+  max-width: 70ch;
+  padding: 0 0 1.75rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+@media (max-width: 720px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .questions summary i {
+    transition: none;
+  }
+}

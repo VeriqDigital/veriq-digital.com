@@ -1,32 +1,42 @@
 export const faqs = [
   {
+    question: "How much does a website cost?",
+    answer:
+      "Cost depends on the scope, content, design requirements, page types, integrations, migration, and custom functionality. Veriq defines those requirements before providing a proposal instead of forcing every project into the same package.",
+  },
+  {
+    question: "How long does a website take?",
+    answer:
+      "Most business websites take 2–6 weeks. Content readiness, feedback timing, platform, integrations, and functionality can change the schedule. The proposal sets a realistic timeline before work begins.",
+  },
+  {
     question: "Do you build custom websites or use Squarespace?",
     answer:
-      "Both, but the business comes first. Squarespace can be a strong fit for a marketing-focused website that should be straightforward to manage. Custom development makes sense when the experience needs greater flexibility, integrations, or functionality. We recommend the approach that best supports the project rather than selling a preferred platform.",
+      "Both. Squarespace can be a strong fit for a marketing-focused website that should be straightforward to manage. Custom development makes sense when the experience needs more flexibility, integrations, specialized content, or functionality. The recommendation follows the business need.",
   },
   {
-    question: "How do you decide which approach is right?",
+    question: "Can you redesign an existing website?",
     answer:
-      "We look at the website's goals, required functionality, content needs, integrations, future growth, budget, timeline, and maintenance expectations. You do not need to choose an approach before contacting us—making that recommendation is part of our process.",
+      "Yes. Veriq can improve messaging, structure, visual design, mobile usability, performance, accessibility, SEO foundations, editing, or functionality while preserving the parts of the existing site that still work.",
   },
   {
-    question: "What should I expect for cost and timeline?",
+    question: "Do you provide SEO?",
     answer:
-      "Every project starts with a conversation rather than a fixed package. Most business websites take 2–6 weeks, while custom development timelines depend on the functionality and integrations involved. Your proposal will define the scope, cost, timeline, and recommended approach before work begins.",
+      "Yes. Website projects include search-conscious structure and technical foundations. Veriq can also continue with local and technical SEO, content improvements, internal linking, analytics, and ongoing optimization after launch.",
   },
   {
-    question: "What happens after launch?",
+    question: "Can you maintain the site after launch?",
     answer:
-      "Launch can be the start of an ongoing growth partnership. We can continue improving SEO, content, analytics, conversion paths, performance, design, and functionality while handling the maintenance needed to keep the work dependable.",
+      "Yes. Ongoing support can cover hosting guidance, maintenance, content updates, performance work, analytics, SEO, design improvements, and continued development. The support model is shaped around what the business actually needs.",
   },
   {
-    question: "Can you work with my existing website?",
+    question: "Do I own my website?",
     answer:
-      "Yes. We can redesign an existing site, improve its messaging and user experience, strengthen SEO foundations, add functionality, or retain the parts that already work. The recommendation depends on the current site and what the business needs next.",
+      "Ownership, account access, hosting, third-party licenses, and ongoing responsibilities are documented in the proposal and project agreement. Veriq aims to leave the business with clear control of its website and core business accounts rather than unclear dependencies.",
   },
   {
-    question: "What kind of business or project is a good fit?",
+    question: "Can Veriq work with businesses outside Des Moines?",
     answer:
-      "We work best with service businesses that need a more credible website, stronger lead generation, continued digital growth, or custom web functionality tied to a clear business need. A rough idea is enough to start—we can help define the right scope and approach.",
+      "Yes. Veriq is based in Des Moines and works with businesses locally and remotely. The process is designed for clear communication, focused feedback, and collaborative decisions regardless of location.",
   },
-];
+] as const;

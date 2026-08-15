@@ -1,10 +1,10 @@
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: 100svh;
+  min-height: min(58rem, 100svh);
   overflow: hidden;
   border-bottom: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
-  padding: clamp(8.5rem, 13vh, 10rem) 0 clamp(5rem, 9vh, 7rem);
+  padding: clamp(8rem, 11vh, 9rem) 0 clamp(4.5rem, 7vh, 6rem);
   background: var(--background);
 }
 
@@ -22,7 +22,7 @@
 
 .layout {
   display: grid;
-  min-height: calc(100svh - clamp(13.5rem, 22vh, 17rem));
+  min-height: 0;
   grid-template-columns: minmax(0, 1.15fr) minmax(24rem, 0.85fr);
   align-items: center;
   gap: clamp(3rem, 6vw, 6rem);
@@ -33,12 +33,12 @@
 }
 
 .title {
-  max-width: 9ch;
+  max-width: 10.5ch;
   font-family: var(--font-heading);
-  font-size: clamp(3.8rem, 6.8vw, 6rem);
+  font-size: clamp(3.6rem, 6.2vw, 6rem);
   font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
   text-transform: uppercase;
   text-wrap: balance;
 }
@@ -47,10 +47,10 @@
   display: block;
   margin-top: 0.1em;
   color: var(--muted);
-  font-size: 0.77em;
+  font-size: 0.7em;
   font-weight: 700;
-  line-height: 0.96;
-  letter-spacing: -0.03em;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
 }
 
 .description {
@@ -66,6 +66,33 @@
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 2rem;
+}
+
+.context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.context li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.context li::before {
+  content: "";
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--primary-readable);
 }
 
 @media (max-width: 1020px) {
@@ -102,11 +129,16 @@
   }
 
   .title {
-    font-size: clamp(3.4rem, 16.5vw, 5.25rem);
+    font-size: clamp(3.15rem, 15vw, 4.8rem);
   }
 
   .actions {
     align-items: stretch;
+    flex-direction: column;
+  }
+
+  .context {
+    align-items: flex-start;
     flex-direction: column;
   }
 }
