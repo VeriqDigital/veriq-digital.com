@@ -19,7 +19,7 @@ const Hero = ({ auditEnabled, campaign }: HeroProps) => {
           <div className={styles.content}>
             <h1 className={styles.title}>
               Get found. Earn trust.
-              <span>Turn interest into action.</span>
+              <span>Turn leads into customers.</span>
             </h1>
             <p className={styles.description}>
               Veriq designs and builds custom and Squarespace websites with
