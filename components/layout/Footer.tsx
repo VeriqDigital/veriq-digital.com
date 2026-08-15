@@ -5,7 +5,7 @@ import styles from "./Footer.module.css";
 
 const Footer = () => {
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} data-site-footer>
       <div className={styles.inner}>
         <div className={styles.top}>
           <div className={styles.brand}>

@@ -75,17 +75,22 @@ const readRetryAfterSeconds = (response: Response) => {
 
 export const formatAuditRetryMessage = (retryAfterSeconds: number | null) => {
   if (retryAfterSeconds === null) {
-    return "You've reached the audit limit. Please try again later.";
+    return "You can run another audit later.";
   }
 
   if (retryAfterSeconds < 60) {
-    return "You've reached the audit limit. Try again in less than a minute.";
+    return "You can run another audit in less than a minute.";
   }
 
   const minutes = Math.ceil(retryAfterSeconds / 60);
 
-  return `You've reached the audit limit. Try again in about ${minutes} minute${minutes === 1 ? "" : "s"}.`;
+  return `You can run another audit in about ${minutes} minute${minutes === 1 ? "" : "s"}.`;
 };
+
+export const getAuditRetrySecondsRemaining = (
+  retryAt: number,
+  now = Date.now(),
+) => Math.max(0, Math.ceil((retryAt - now) / 1_000));
 
 export const getAuditApiError = (response: Response, body: unknown) => {
   const error = isRecord(body) && isRecord(body.error) ? body.error : null;

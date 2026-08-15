@@ -214,6 +214,11 @@
   font-weight: 700;
 }
 
+.rateLimitNotice {
+  color: var(--muted);
+  font-weight: 650;
+}
+
 .inputNotice a {
   color: var(--primary-readable);
   font-weight: 750;

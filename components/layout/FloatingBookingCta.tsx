@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import BookingLink from "@/components/ui/BookingLink";
 import { siteConfig } from "@/config/site";
 
+export const siteFooterSelector = "footer[data-site-footer]";
+export const mobileBookingObstructionSelector =
+  "[data-floating-booking-mobile-obstruction]";
+
 const FloatingBookingCta = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,9 +16,11 @@ const FloatingBookingCta = () => {
     pathname: "",
     visible: false,
   });
+  const [mobileObstructionIntersection, setMobileObstructionIntersection] =
+    useState({ pathname: "", visible: false });
 
   useEffect(() => {
-    const footer = document.querySelector("footer");
+    const footer = document.querySelector(siteFooterSelector);
 
     if (!footer) {
       return;
@@ -29,6 +35,28 @@ const FloatingBookingCta = () => {
     });
 
     observer.observe(footer);
+
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  useEffect(() => {
+    const obstruction = document.querySelector(
+      mobileBookingObstructionSelector,
+    );
+
+    if (!obstruction) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setMobileObstructionIntersection((current) =>
+        current.pathname === pathname && current.visible === entry.isIntersecting
+          ? current
+          : { pathname, visible: entry.isIntersecting },
+      );
+    });
+
+    observer.observe(obstruction);
 
     return () => observer.disconnect();
   }, [pathname]);
@@ -54,8 +82,12 @@ const FloatingBookingCta = () => {
 
   const footerVisible =
     footerIntersection.pathname === pathname && footerIntersection.visible;
+  const mobileObstructionVisible =
+    mobileObstructionIntersection.pathname === pathname &&
+    mobileObstructionIntersection.visible;
   const isVisible = !footerVisible;
-  const isMobileVisible = isVisible && !mobileMenuOpen;
+  const isMobileVisible =
+    isVisible && !mobileMenuOpen && !mobileObstructionVisible;
 
   return (
     <>
