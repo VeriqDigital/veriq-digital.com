@@ -14,10 +14,12 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
     <div className={styles.works}>
       <header className={styles.header}>
         <div>
-          <p className={styles.eyebrow}>
-            <span aria-hidden="true" />
-            Selected work
-          </p>
+          {headingLevel === "h1" ? (
+            <p className={styles.eyebrow}>
+              <span aria-hidden="true" />
+              Selected work
+            </p>
+          ) : null}
           <Heading>
             Built to be <span>used, remembered,</span> and trusted.
           </Heading>

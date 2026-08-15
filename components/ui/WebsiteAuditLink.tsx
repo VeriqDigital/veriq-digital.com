@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 export type WebsiteAuditPlacement =
+  | "homepage_hero"
   | "homepage_quality"
   | "homepage_seo"
   | "homepage_audit"

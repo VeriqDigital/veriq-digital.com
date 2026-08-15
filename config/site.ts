@@ -80,7 +80,7 @@ export const navigation = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   ...(auditNavigationEnabled
-    ? [{ label: "Free Audit", href: "/website-audit" } as const]
+    ? [{ label: "Website Audit", href: "/website-audit" } as const]
     : []),
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },

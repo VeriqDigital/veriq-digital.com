@@ -1,14 +1,16 @@
 import type { ReactNode } from "react";
 import HeroInquiryForm from "@/components/forms/HeroInquiryForm";
-import Button from "@/components/ui/Button";
+import Button, { getButtonClassName } from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
+import WebsiteAuditLink from "@/components/ui/WebsiteAuditLink";
 import styles from "./Hero.module.css";
 
 type HeroProps = {
+  auditEnabled: boolean;
   campaign?: ReactNode;
 };
 
-const Hero = ({ campaign }: HeroProps) => {
+const Hero = ({ auditEnabled, campaign }: HeroProps) => {
   return (
     <section className={styles.hero}>
       <div className={styles.grid} aria-hidden="true" />
@@ -26,9 +28,18 @@ const Hero = ({ campaign }: HeroProps) => {
             </p>
             <div className={styles.actions}>
               <Button href="/contact">Start a project</Button>
-              <Button href="/work" variant="secondary">
-                View our work
-              </Button>
+              {auditEnabled ? (
+                <WebsiteAuditLink
+                  placement="homepage_hero"
+                  className={getButtonClassName("secondary")}
+                >
+                  Audit your website
+                </WebsiteAuditLink>
+              ) : (
+                <Button href="/work" variant="secondary">
+                  View our work
+                </Button>
+              )}
             </div>
             <ul className={styles.context} aria-label="Veriq at a glance">
               <li>Based in Des Moines</li>
