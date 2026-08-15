@@ -8,7 +8,33 @@ export const healthConstraintCaps = Object.freeze({
   incompletePerfection: 99,
 });
 
-export const materialCategoryGuardrail = 89;
+/**
+ * Weighted scoring measures breadth, while this ceiling prevents a confirmed
+ * failure in one major system from being hidden by unrelated perfect areas.
+ */
+export function getMaterialCategoryHealthCap(categoryScore: number): number {
+  if (!Number.isFinite(categoryScore)) {
+    throw new TypeError("Material category scores must be finite.");
+  }
+
+  if (categoryScore >= 90) return 100;
+  if (categoryScore >= 80) return 94;
+  if (categoryScore >= 70) return 89;
+  if (categoryScore >= 60) return 84;
+  if (categoryScore >= 50) return 79;
+  return 74;
+}
+
+export function getAdditionalWeakCategoryAdjustment(
+  categoryScore: number,
+): number {
+  if (categoryScore < 50) return 5;
+  if (categoryScore < 60) return 4;
+  if (categoryScore < 70) return 3;
+  return 2;
+}
+
+export const maximumWeakCategoryBreadthAdjustment = 10;
 
 // Independent root causes tighten a non-catastrophic constraint modestly.
 // Correlated findings share a penaltyGroup and therefore count only once.

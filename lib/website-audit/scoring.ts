@@ -9,10 +9,12 @@ import type {
   WebsiteAuditResult,
 } from "./model";
 import {
+  getAdditionalWeakCategoryAdjustment,
+  getMaterialCategoryHealthCap,
   healthConstraintCaps,
   independentMaterialGroupStep,
-  materialCategoryGuardrail,
   maximumIndependentGroupAdjustment,
+  maximumWeakCategoryBreadthAdjustment,
 } from "./health-constraints";
 import { normalizeAuditResult, toNormalizedScore } from "./result-schema";
 
@@ -263,6 +265,8 @@ type BuildAuditResultOptions = {
  *   severity alone does not impose a generic ceiling.
  * - Confirmed material caps are grouped by root cause. Independent material
  *   groups can tighten the strongest cap, while duplicate manifestations do not.
+ * - Confirmed materially weak categories add a score-sensitive ceiling, so a
+ *   severely broken system cannot be averaged away by unrelated perfect areas.
  * - A literal 100 requires complete evidence and no remaining findings. Missing
  *   evidence is not scored as failure; it only prevents a claim of perfection.
  */
@@ -324,6 +328,7 @@ export function buildAuditResult({
       return total + category.score * categoryWeight;
     }, 0) / availableOverallWeight;
   const groupedMaterialCaps = new Map<string, number>();
+  const materialGroupsByCategory = new Map<AuditCategoryId, Set<string>>();
 
   for (const check of normalizedChecks) {
     if (
@@ -340,44 +345,71 @@ export function buildAuditResult({
       group,
       Math.min(groupedMaterialCaps.get(group) ?? 100, check.overallScoreCap),
     );
+    const categoryGroups = materialGroupsByCategory.get(check.category) ??
+      new Set<string>();
+    categoryGroups.add(group);
+    materialGroupsByCategory.set(check.category, categoryGroups);
   }
 
-  const constrainedCategoryIds = new Set(
-    normalizedChecks.flatMap((check) =>
-      check.status === "failed" &&
-      check.overallScoreCap !== undefined &&
-      check.finding &&
-      inferFindingImpact(check.finding) === "confirmed"
-        ? [check.category]
-        : [],
-    ),
-  );
-  const hasLowMaterialCategory = categoryScores.some(
-    (category) =>
-      constrainedCategoryIds.has(category.id) &&
-      category.score !== null &&
-      category.score < 80,
-  );
   const strongestExplicitMaterialCap = Math.min(
     100,
     ...groupedMaterialCaps.values(),
   );
-  const baseMaterialConstraint = Math.min(
-    strongestExplicitMaterialCap,
-    hasLowMaterialCategory ? materialCategoryGuardrail : 100,
-  );
   // Fundamental visibility and availability failures already dominate the
   // health classification; breadth adjustments are reserved for lesser caps.
   const independentGroupAdjustment =
-    baseMaterialConstraint >= healthConstraintCaps.fundamentalVisibility + 1
+    strongestExplicitMaterialCap >=
+    healthConstraintCaps.fundamentalVisibility + 1
       ? Math.min(
           maximumIndependentGroupAdjustment,
           Math.max(0, groupedMaterialCaps.size - 1) *
             independentMaterialGroupStep,
         )
       : 0;
-  const materialConstraint =
-    baseMaterialConstraint - independentGroupAdjustment;
+  const explicitMaterialConstraint =
+    strongestExplicitMaterialCap - independentGroupAdjustment;
+  const weakMaterialCategories = categoryScores
+    .flatMap((category) => {
+      const groups = materialGroupsByCategory.get(category.id);
+
+      return category.score !== null && category.score < 90 && groups
+        ? [{ score: category.score, groups }]
+        : [];
+    })
+    .sort((left, right) => left.score - right.score);
+  const countedWeakCategoryGroups = new Set<string>();
+  let weakCategoryConstraint = 100;
+  let weakCategoryBreadthAdjustment = 0;
+
+  for (const weakCategory of weakMaterialCategories) {
+    const introducesIndependentRoot = [...weakCategory.groups].some(
+      (group) => !countedWeakCategoryGroups.has(group),
+    );
+
+    if (!introducesIndependentRoot) continue;
+
+    if (countedWeakCategoryGroups.size === 0) {
+      weakCategoryConstraint = getMaterialCategoryHealthCap(
+        weakCategory.score,
+      );
+    } else {
+      weakCategoryBreadthAdjustment +=
+        getAdditionalWeakCategoryAdjustment(weakCategory.score);
+    }
+
+    for (const group of weakCategory.groups) {
+      countedWeakCategoryGroups.add(group);
+    }
+  }
+
+  weakCategoryConstraint -= Math.min(
+    maximumWeakCategoryBreadthAdjustment,
+    weakCategoryBreadthAdjustment,
+  );
+  const materialConstraint = Math.min(
+    explicitMaterialConstraint,
+    weakCategoryConstraint,
+  );
   const allFindings = normalizedChecks.flatMap((check) =>
     check.finding ? [check.finding] : [],
   );

@@ -6,6 +6,7 @@ import type {
   AuditSeverity,
 } from "../../lib/website-audit/model";
 import type { AuditCategoryId } from "../../lib/website-audit/categories";
+import { getMaterialCategoryHealthCap } from "../../lib/website-audit/health-constraints";
 import { buildAuditResult } from "../../lib/website-audit/scoring";
 
 const baseCheck = (
@@ -55,6 +56,23 @@ const passingCategoryChecks = (prefix: string) =>
   allCategories.map((category) =>
     baseCheck({ id: `${prefix}-${category}`, category }),
   );
+
+test("material category ceilings are monotonic across health bands", () => {
+  const categoryScores = [95, 85, 75, 65, 55, 49];
+  const caps = categoryScores.map(getMaterialCategoryHealthCap);
+
+  assert.deepEqual(caps, [100, 94, 89, 84, 79, 74]);
+  for (let index = 1; index < caps.length; index += 1) {
+    assert.ok(caps[index] <= caps[index - 1]);
+  }
+  for (let score = 1; score <= 100; score += 1) {
+    assert.ok(
+      getMaterialCategoryHealthCap(score) >=
+        getMaterialCategoryHealthCap(score - 1),
+    );
+  }
+  assert.throws(() => getMaterialCategoryHealthCap(Number.NaN));
+});
 
 test("health is normalized from available evidence while coverage stays separate", () => {
   const result = build([
@@ -247,58 +265,56 @@ test("unavailable performance is excluded from health and lowers confidence", ()
 test("a concentrated confirmed material failure cannot be averaged into Excellent", () => {
   const result = build([
     ...passingCategoryChecks("confirmed").filter(
-      (check) => check.category !== "conversion-ux",
+      (check) => check.category !== "mobile-experience",
     ),
-    baseCheck({ id: "conversion-pass", category: "conversion-ux" }),
     baseCheck({
-      id: "primary-action-broken",
-      category: "conversion-ux",
+      id: "material-mobile-failure",
+      category: "mobile-experience",
       status: "failed",
-      score: 50,
-      overallScoreCap: 88,
-      penaltyGroup: "primary-action",
+      score: 49,
+      overallScoreCap: 93,
+      penaltyGroup: "mobile-layout",
       finding: withFinding(
         "high",
-        "primary-action-broken",
+        "material-mobile-failure",
         "confirmed",
-        "conversion-ux",
+        "mobile-experience",
       ),
     }),
   ]);
-  const conversion = result.categoryScores.find(
-    (category) => category.id === "conversion-ux",
+  const mobile = result.categoryScores.find(
+    (category) => category.id === "mobile-experience",
   );
 
-  assert.equal(conversion?.score, 75);
-  assert.equal(result.overallScore, 88);
-  assert.ok(result.overallScore < 90);
+  assert.equal(mobile?.score, 49);
+  assert.equal(result.overallScore, 74);
+  assert.ok(result.overallScore < 80);
 });
 
 test("a concentrated likely weakness remains governed by weighted scoring", () => {
   const result = build([
     ...passingCategoryChecks("likely").filter(
-      (check) => check.category !== "conversion-ux",
+      (check) => check.category !== "mobile-experience",
     ),
-    baseCheck({ id: "likely-conversion-pass", category: "conversion-ux" }),
     baseCheck({
-      id: "likely-conversion-weakness",
-      category: "conversion-ux",
+      id: "likely-mobile-weakness",
+      category: "mobile-experience",
       status: "failed",
-      score: 0,
+      score: 7,
       overallScoreCap: 88,
       finding: withFinding(
         "medium",
-        "likely-conversion-weakness",
+        "likely-mobile-weakness",
         "likely",
-        "conversion-ux",
+        "mobile-experience",
       ),
     }),
   ]);
-  const conversion = result.categoryScores.find(
-    (category) => category.id === "conversion-ux",
+  const mobile = result.categoryScores.find(
+    (category) => category.id === "mobile-experience",
   );
 
-  assert.ok((conversion?.score ?? 100) < 80);
+  assert.equal(mobile?.score, 49);
   assert.ok(result.overallScore >= 90);
 });
 
@@ -323,6 +339,25 @@ test("informational complexity stays very high without rounding to perfect", () 
 
   assert.ok(result.overallScore >= 96);
   assert.ok(result.overallScore < 100);
+});
+
+test("a mixed strong site can remain in the low nineties without material failures", () => {
+  const result = build(
+    allCategories.map((category) =>
+      baseCheck({
+        id: `mixed-${category}`,
+        category,
+        score:
+          category === "performance"
+            ? 75
+            : category === "accessibility"
+              ? 81
+              : 100,
+      }),
+    ),
+  );
+
+  assert.equal(result.overallScore, 92);
 });
 
 test("a true perfect score requires full evidence and no findings", () => {
@@ -386,14 +421,16 @@ test("correlated manifestations cannot multiply one root penalty", () => {
 
 test("duplicate material manifestations share one overall constraint", () => {
   const single = build([
-    ...passingCategoryChecks("single"),
+    ...passingCategoryChecks("single").filter(
+      (check) => check.category !== "mobile-experience",
+    ),
     baseCheck({
       id: "mobile-root",
       category: "mobile-experience",
       status: "failed",
-      score: 50,
+      score: 49,
       penaltyGroup: "mobile-layout",
-      overallScoreCap: 88,
+      overallScoreCap: 93,
       finding: withFinding(
         "high",
         "mobile-root",
@@ -403,51 +440,44 @@ test("duplicate material manifestations share one overall constraint", () => {
     }),
   ]);
   const duplicated = build([
-    ...passingCategoryChecks("duplicate"),
-    baseCheck({
-      id: "mobile-width",
-      category: "mobile-experience",
-      status: "failed",
-      score: 50,
-      penaltyGroup: "mobile-layout",
-      overallScoreCap: 88,
-      finding: withFinding(
-        "high",
-        "mobile-width",
-        "confirmed",
-        "mobile-experience",
-      ),
-    }),
-    baseCheck({
-      id: "mobile-action",
-      category: "conversion-ux",
-      status: "failed",
-      score: 50,
-      penaltyGroup: "mobile-layout",
-      overallScoreCap: 88,
-      finding: withFinding(
-        "high",
-        "mobile-action",
-        "confirmed",
-        "conversion-ux",
-      ),
-    }),
+    ...passingCategoryChecks("duplicate").filter(
+      (check) => check.category !== "mobile-experience",
+    ),
+    ...["mobile-width", "mobile-image", "mobile-content"].map((id) =>
+      baseCheck({
+        id,
+        category: "mobile-experience",
+        status: "failed",
+        score: 49,
+        penaltyGroup: "mobile-layout",
+        overallScoreCap: 93,
+        finding: withFinding(
+          "high",
+          id,
+          "confirmed",
+          "mobile-experience",
+        ),
+      }),
+    ),
   ]);
 
-  assert.equal(single.overallScore, 88);
-  assert.equal(duplicated.overallScore, 88);
+  assert.equal(single.overallScore, 74);
+  assert.equal(duplicated.overallScore, 74);
 });
 
 test("independent confirmed material failures strengthen the constraint", () => {
   const result = build([
-    ...passingCategoryChecks("independent"),
+    ...passingCategoryChecks("independent").filter(
+      (check) =>
+        !["mobile-experience", "seo"].includes(check.category),
+    ),
     baseCheck({
       id: "independent-mobile",
       category: "mobile-experience",
       status: "failed",
-      score: 50,
+      score: 49,
       penaltyGroup: "mobile-layout",
-      overallScoreCap: 88,
+      overallScoreCap: 93,
       finding: withFinding(
         "high",
         "independent-mobile",
@@ -456,22 +486,49 @@ test("independent confirmed material failures strengthen the constraint", () => 
       ),
     }),
     baseCheck({
-      id: "independent-form",
-      category: "accessibility",
+      id: "independent-indexing",
+      category: "seo",
       status: "failed",
-      score: 50,
-      penaltyGroup: "form-accessibility",
+      score: 49,
+      penaltyGroup: "search-visibility",
       overallScoreCap: 93,
       finding: withFinding(
         "high",
-        "independent-form",
+        "independent-indexing",
         "confirmed",
-        "accessibility",
+        "seo",
       ),
     }),
   ]);
 
-  assert.equal(result.overallScore, 85);
+  assert.equal(result.overallScore, 69);
+});
+
+test("weak categories sharing one root do not create category breadth", () => {
+  const result = build([
+    ...passingCategoryChecks("shared-root").filter(
+      (check) =>
+        !["mobile-experience", "conversion-ux"].includes(check.category),
+    ),
+    ...(["mobile-experience", "conversion-ux"] as const).map((category) =>
+      baseCheck({
+        id: `shared-root-${category}`,
+        category,
+        status: "failed",
+        score: 49,
+        penaltyGroup: "mobile-layout",
+        overallScoreCap: 93,
+        finding: withFinding(
+          "high",
+          `shared-root-${category}`,
+          "confirmed",
+          category,
+        ),
+      }),
+    ),
+  ]);
+
+  assert.equal(result.overallScore, 74);
 });
 
 test("a low category with a confirmed material check cannot remain Excellent", () => {
@@ -501,6 +558,29 @@ test("a low category with a confirmed material check cannot remain Excellent", (
     75,
   );
   assert.equal(result.overallScore, 89);
+});
+
+test("a confirmed material category at 60 receives an intermediate ceiling", () => {
+  const result = build([
+    ...passingCategoryChecks("sixty").filter(
+      (check) => check.category !== "mobile-experience",
+    ),
+    baseCheck({
+      id: "sixty-mobile-defect",
+      category: "mobile-experience",
+      status: "failed",
+      score: 60,
+      overallScoreCap: 93,
+      finding: withFinding(
+        "high",
+        "sixty-mobile-defect",
+        "confirmed",
+        "mobile-experience",
+      ),
+    }),
+  ]);
+
+  assert.equal(result.overallScore, 84);
 });
 
 test("catastrophic explicit constraints remain effective", () => {

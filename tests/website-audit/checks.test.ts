@@ -297,7 +297,7 @@ test("overflowing images and clipped navigation produce specific findings", () =
   assert.equal(contentCheck?.overallScoreCap, 88);
   assert.equal(conversionCheck?.overallScoreCap, 88);
   assert.equal(widthCheck?.penaltyGroup, conversionCheck?.penaltyGroup);
-  assert.equal(result.overallScore, 88);
+  assert.equal(result.overallScore, 74);
 });
 
 test("severe measured performance and form barriers declare independent material constraints", () => {
@@ -361,7 +361,7 @@ test("confirmed mobile and form failures cannot be hidden by otherwise strong ca
 
   assert.equal(performance?.score, null);
   assert.ok(result.evidenceCoverage < 100);
-  assert.ok(result.overallScore >= 80 && result.overallScore <= 85);
+  assert.ok(result.overallScore >= 70 && result.overallScore <= 75);
   assert.ok(result.overallScore < 90);
 });
 
