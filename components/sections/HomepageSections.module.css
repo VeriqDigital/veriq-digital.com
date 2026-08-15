@@ -1,0 +1,854 @@
+.kicker {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.trustStrip {
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 12%, transparent);
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.trustStrip ul {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.trustStrip li {
+  display: flex;
+  min-height: 5.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 12%, transparent);
+  padding: 1rem;
+  color: color-mix(in srgb, var(--surface-foreground) 75%, transparent);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.05em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.trustStrip li:first-child {
+  border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 12%, transparent);
+}
+
+.trustStrip li::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.positioning,
+.platform,
+.process,
+.seo,
+.audit,
+.why,
+.growth,
+.finalCta {
+  overflow-x: clip;
+  padding: clamp(5.5rem, 9vw, 9rem) 0;
+}
+
+.positioningIntro,
+.processHeader,
+.seoLayout,
+.whyHeader,
+.growthLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(19rem, 0.8fr);
+  gap: clamp(2.5rem, 8vw, 8rem);
+}
+
+.positioningIntro {
+  align-items: end;
+}
+
+.positioning h2,
+.platform h2,
+.process h2,
+.seo h2,
+.audit h2,
+.why h2,
+.growth h2,
+.finalCta h2 {
+  margin-top: 1.15rem;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 0.94;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.positioning h2,
+.platform h2,
+.seo h2,
+.why h2,
+.growth h2 {
+  max-width: 12ch;
+  font-size: clamp(3.2rem, 6vw, 6rem);
+}
+
+.positioningSummary > p,
+.platformIntro > p,
+.processHeader > p,
+.seoCopy,
+.whyHeader > p,
+.growthLayout > p {
+  max-width: 42rem;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.25vw, 1.12rem);
+  line-height: 1.7;
+}
+
+.inlineLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.inlineLinks a,
+.platformLink,
+.aboutLink {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.55rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary-readable) 55%, transparent);
+  color: var(--foreground);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.inlineLinks a span,
+.platformLink span,
+.aboutLink span {
+  color: var(--primary-readable);
+}
+
+.inlineLinks a:hover,
+.platformLink:hover,
+.aboutLink:hover {
+  border-color: var(--primary-readable);
+  color: var(--primary-readable);
+}
+
+.inlineLinks a:focus-visible,
+.platformLink:focus-visible,
+.aboutLink:focus-visible,
+.resourceRail a:focus-visible,
+.auditCta:focus-visible,
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible {
+  border-radius: 0.25rem;
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 0.3rem;
+}
+
+.websiteJobs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(3.5rem, 6vw, 6rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+}
+
+.websiteJobs > div {
+  min-height: 10.5rem;
+  border-right: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  padding: clamp(1.25rem, 2vw, 1.8rem);
+}
+
+.websiteJobs dt {
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 2.5vw, 2.35rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.websiteJobs dd {
+  max-width: 28ch;
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.platform {
+  background: color-mix(in srgb, var(--foreground) 3%, var(--background));
+}
+
+.platformIntro {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: end;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.platformIntro .kicker {
+  grid-column: 1 / -1;
+  margin-bottom: -1rem;
+}
+
+.platformComparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(3.5rem, 6vw, 6rem);
+  border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+}
+
+.platformComparison article {
+  min-height: 30rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+.platformComparison article + article {
+  border-left: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+}
+
+.platformComparison article:last-child {
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.platformTitle span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.platformComparison article:last-child .platformTitle span {
+  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
+}
+
+.platformTitle h3 {
+  margin-top: 0.75rem;
+  font-family: var(--font-heading);
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.platformComparison article > p {
+  max-width: 50ch;
+  margin-top: 2rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.platformComparison article:last-child > p {
+  color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
+}
+
+.platformComparison ul {
+  margin-top: 2rem;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.platformComparison li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  padding: 0.9rem 0;
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.platformComparison li::before {
+  content: "✓";
+  color: var(--primary-readable);
+  font-weight: 900;
+}
+
+.platformComparison article:last-child li::before {
+  color: var(--primary);
+}
+
+.platformLink {
+  margin-top: 1.5rem;
+}
+
+.processHeader {
+  align-items: end;
+}
+
+.process h2 {
+  max-width: 13ch;
+  font-size: clamp(3rem, 5.2vw, 5.25rem);
+}
+
+.processList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(3.5rem, 6vw, 6rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.processList li {
+  display: grid;
+  min-height: 13.5rem;
+  grid-template-columns: 2.25rem 1fr;
+  gap: 0.8rem;
+  border-right: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding: 1.4rem;
+}
+
+.processList li > span {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+}
+
+.processList h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 2.4vw, 2.35rem);
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.processList p {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.seo {
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.seoLayout {
+  align-items: start;
+}
+
+.seo h2 {
+  max-width: 10ch;
+}
+
+.seoCopy {
+  margin-top: 1.5rem;
+  color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
+}
+
+.seo .inlineLinks a {
+  border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+  color: var(--surface-foreground);
+}
+
+.seo .inlineLinks a:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.seoSignals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+}
+
+.seoSignals li {
+  min-height: 6.5rem;
+  border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  padding: 1.25rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2vw, 1.85rem);
+  font-weight: 750;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.seoSignals li::before {
+  content: "";
+  display: block;
+  width: 2rem;
+  height: 2px;
+  margin-bottom: 1rem;
+  background: var(--primary);
+}
+
+.resourceRail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(3rem, 5vw, 5rem);
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+}
+
+.resourceRail a {
+  display: flex;
+  min-height: 7.5rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  padding: 1.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 76%, transparent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.45;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.resourceRail a:first-child {
+  border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+}
+
+.resourceRail a:hover {
+  background: color-mix(in srgb, var(--primary) 9%, transparent);
+  color: var(--primary);
+}
+
+.resourceRail a span {
+  color: var(--primary);
+}
+
+.audit {
+  background: color-mix(in srgb, var(--primary) 6%, var(--background));
+}
+
+.auditPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(22rem, 0.95fr);
+  overflow: hidden;
+  border-radius: 1rem 1rem 5rem 1rem;
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.auditCopy,
+.auditCategories {
+  padding: clamp(1.75rem, 4vw, 4rem);
+}
+
+.auditCopy {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.audit h2 {
+  max-width: 12ch;
+  font-size: clamp(3rem, 5.4vw, 5.5rem);
+}
+
+.auditCopy > p:not(.kicker) {
+  max-width: 58ch;
+  margin-top: 1.5rem;
+  color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
+  line-height: 1.65;
+}
+
+.auditCta,
+.primaryAction {
+  display: inline-flex;
+  min-height: 3.4rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+  border-radius: 0.5rem;
+  background: var(--primary);
+  color: #071011;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background-color 180ms ease, transform 220ms ease;
+}
+
+.auditCta:hover,
+.primaryAction:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.auditCategories {
+  background: color-mix(in srgb, var(--surface-foreground) 5%, var(--surface));
+}
+
+.auditCategories > p {
+  color: color-mix(in srgb, var(--surface-foreground) 55%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.auditCategories ol {
+  margin-top: 1.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 15%, transparent);
+}
+
+.auditCategories li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 15%, transparent);
+  padding: 1rem 0;
+}
+
+.auditCategories li > span {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+}
+
+.auditCategories strong {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.auditCategories li p {
+  margin-top: 0.35rem;
+  color: color-mix(in srgb, var(--surface-foreground) 60%, transparent);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.whyHeader {
+  align-items: end;
+}
+
+.whyHeader .kicker {
+  grid-column: 1 / -1;
+  margin-bottom: -1rem;
+}
+
+.principles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(3.5rem, 6vw, 6rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+}
+
+.principles article {
+  min-height: 13rem;
+  border-right: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  padding: clamp(1.4rem, 2.5vw, 2.25rem);
+}
+
+.principles h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.principles p {
+  max-width: 50ch;
+  margin-top: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.aboutLink {
+  margin-top: 1.5rem;
+}
+
+.growth {
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  background: color-mix(in srgb, var(--foreground) 3%, var(--background));
+}
+
+.growthLayout {
+  align-items: end;
+}
+
+.growthPath {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-top: clamp(3.5rem, 6vw, 6rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.growthPath li {
+  display: flex;
+  min-height: 7.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  border-right: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding: 1rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.05rem, 1.65vw, 1.55rem);
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.growthPath li:first-child {
+  border-left: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.growthPath i {
+  color: var(--primary-readable);
+  font-family: var(--font-sans);
+  font-style: normal;
+}
+
+.finalCta {
+  background: var(--surface);
+  color: var(--surface-foreground);
+}
+
+.finalCtaInner {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.finalCtaInner > p:first-child {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.finalCta h2 {
+  max-width: 13ch;
+  font-size: clamp(3.2rem, 6.5vw, 6rem);
+}
+
+.finalCtaInner > p:nth-of-type(2) {
+  max-width: 56ch;
+  margin-top: 1.5rem;
+  color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
+  line-height: 1.65;
+}
+
+.finalActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.secondaryAction {
+  display: inline-flex;
+  min-height: 3.4rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+  border: 1px solid color-mix(in srgb, var(--surface-foreground) 24%, transparent);
+  border-radius: 0.5rem;
+  padding: 0.9rem 1.2rem;
+  color: var(--surface-foreground);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.secondaryAction:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+@media (max-width: 960px) {
+  .trustStrip ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .trustStrip li:nth-child(4),
+  .trustStrip li:nth-child(5) {
+    border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 12%, transparent);
+  }
+
+  .trustStrip li:nth-child(4) {
+    grid-column: 1 / span 2;
+  }
+
+  .websiteJobs,
+  .processList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .growthPath {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .growthPath li:nth-child(n + 4) {
+    border-top: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  }
+}
+
+@media (max-width: 760px) {
+  .positioningIntro,
+  .platformIntro,
+  .processHeader,
+  .seoLayout,
+  .whyHeader,
+  .growthLayout,
+  .auditPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .platformIntro .kicker,
+  .whyHeader .kicker {
+    grid-column: auto;
+    margin-bottom: -0.75rem;
+  }
+
+  .platformComparison {
+    grid-template-columns: 1fr;
+  }
+
+  .platformComparison article {
+    min-height: auto;
+  }
+
+  .platformComparison article + article {
+    border-top: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+    border-left: 0;
+  }
+
+  .seoSignals {
+    margin-top: 1rem;
+  }
+
+  .resourceRail {
+    grid-template-columns: 1fr;
+  }
+
+  .resourceRail a {
+    min-height: 5.5rem;
+    border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  }
+
+  .auditPanel {
+    border-radius: 1rem 1rem 3.5rem 1rem;
+  }
+
+  .auditCategories {
+    border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 15%, transparent);
+  }
+}
+
+@media (max-width: 560px) {
+  .trustStrip ul,
+  .websiteJobs,
+  .processList,
+  .principles,
+  .seoSignals,
+  .growthPath {
+    grid-template-columns: 1fr;
+  }
+
+  .trustStrip li,
+  .trustStrip li:first-child,
+  .trustStrip li:nth-child(4),
+  .trustStrip li:nth-child(5) {
+    grid-column: auto;
+    min-height: 3.9rem;
+    justify-content: flex-start;
+    border-top: 0;
+    border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 12%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 12%, transparent);
+    border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 12%, transparent);
+    text-align: left;
+  }
+
+  .positioning h2,
+  .platform h2,
+  .seo h2,
+  .why h2,
+  .growth h2,
+  .audit h2,
+  .finalCta h2 {
+    font-size: clamp(2.75rem, 13vw, 4rem);
+  }
+
+  .websiteJobs > div,
+  .processList li,
+  .principles article {
+    min-height: auto;
+  }
+
+  .growthPath li,
+  .growthPath li:nth-child(n + 4) {
+    min-height: 4.75rem;
+    border-top: 0;
+    border-right: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+    border-left: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  }
+
+  .growthPath {
+    border: 0;
+  }
+
+  .auditCopy,
+  .auditCategories {
+    padding: 1.4rem;
+  }
+
+  .auditCta,
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
+
+  .finalActions {
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inlineLinks a,
+  .platformLink,
+  .aboutLink,
+  .resourceRail a,
+  .auditCta,
+  .primaryAction,
+  .secondaryAction {
+    transition: none;
+  }
+
+  .auditCta:hover,
+  .primaryAction:hover {
+    transform: none;
+  }
+}

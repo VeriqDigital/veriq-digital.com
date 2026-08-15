@@ -56,8 +56,19 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
             </div>
             <div className={styles.projectMeta}>
               <div>
-                <h3>{project.title}</h3>
-                <p>{project.category}</p>
+                <div className={styles.projectHeading}>
+                  <div>
+                    <h3>{project.title}</h3>
+                    <p>{project.category} · {project.year}</p>
+                  </div>
+                  <span aria-hidden="true">↗</span>
+                </div>
+                <p className={styles.projectSummary}>{project.summary}</p>
+                <ul className={styles.projectServices} aria-label={`${project.title} services`}>
+                  {project.services.slice(0, 3).map((service) => (
+                    <li key={service}>{service}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           </Link>

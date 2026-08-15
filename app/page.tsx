@@ -1,4 +1,15 @@
+/*
+THESIS: Veriq's homepage is a working sales path, not a thin portfolio index.
+OWN-WORLD: Preserve the graphite and warm-white surfaces, cyan signal color, oversized condensed headings, precise rules, and restrained technical detail already established across the site.
+STORY: A service-business owner understands the offer, recognizes what the website should accomplish, sees platform and process clarity, reviews real work, discovers the audit, and chooses a useful next step.
+FIRST VIEWPORT: A compact two-column hero pairs the outcome-led offer and clear actions with the existing project inquiry form; credibility context sits directly below the actions.
+FORM: Brief-specified conversion sequence within the established Veriq world; no concept seed was used because the structure and visual constraints were explicit.
+*/
 import HomepageCampaignOffer from "@/components/campaign/HomepageCampaignOffer";
+import HomePlatformProcess from "@/components/sections/HomePlatformProcess";
+import HomeSeoAudit from "@/components/sections/HomeSeoAudit";
+import HomeTrustSection from "@/components/sections/HomeTrustSection";
+import HomeWhyGrowth, { HomeFinalCta } from "@/components/sections/HomeWhyGrowth";
 import FAQ from "@/components/sections/FAQ";
 import Hero from "@/components/sections/Hero";
 import ServicesSection from "@/components/sections/ServicesSection";
@@ -10,6 +21,7 @@ import {
   siteStructuredData,
 } from "@/config/seo";
 import { homepageCampaign, siteConfig } from "@/config/site";
+import { isWebsiteAuditDiscoverable } from "@/lib/website-audit/runtime-config";
 
 export const metadata = createPageMetadata({
   description: siteConfig.description,
@@ -17,6 +29,8 @@ export const metadata = createPageMetadata({
 });
 
 export default function Home() {
+  const auditEnabled = isWebsiteAuditDiscoverable();
+
   return (
     <>
       <script
@@ -33,15 +47,20 @@ export default function Home() {
             ) : null
           }
         />
+        <HomeTrustSection auditEnabled={auditEnabled} />
         <Section id="services">
           <ServicesSection />
         </Section>
+        <HomePlatformProcess />
         <Section id="works">
           <Works />
         </Section>
+        <HomeSeoAudit auditEnabled={auditEnabled} />
+        <HomeWhyGrowth />
         <Section id="faq">
           <FAQ />
         </Section>
+        <HomeFinalCta />
       </main>
     </>
   );

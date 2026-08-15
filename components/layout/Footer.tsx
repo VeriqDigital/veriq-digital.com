@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SocialLinks from "@/components/ui/SocialLinks";
-import { footerLinks, siteConfig } from "@/config/site";
+import WebsiteAuditLink from "@/components/ui/WebsiteAuditLink";
+import { footerGroups, siteConfig } from "@/config/site";
 import styles from "./Footer.module.css";
 
 const Footer = () => {
@@ -19,16 +20,27 @@ const Footer = () => {
 
           <nav className={styles.navigation} aria-label="Footer navigation">
             <div className={styles.navigationHeading}>
-              <span>Explore</span>
+              <span>Explore Veriq</span>
               <i aria-hidden="true" />
             </div>
-            <div className={styles.linkGrid}>
-              {footerLinks.map((link, index) => (
-                <Link href={link.href} key={link.href}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  {link.label}
-                  <i aria-hidden="true">↘</i>
-                </Link>
+            <div className={styles.groupGrid}>
+              {footerGroups.map((group) => (
+                <div className={styles.linkGroup} key={group.label}>
+                  <h2>{group.label}</h2>
+                  <ul>
+                    {group.links.map((link) => (
+                      <li key={`${group.label}-${link.label}`}>
+                        {link.href === "/website-audit" ? (
+                          <WebsiteAuditLink placement="footer_resources">
+                            {link.label}
+                          </WebsiteAuditLink>
+                        ) : (
+                          <Link href={link.href}>{link.label}</Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
             </div>
           </nav>
@@ -41,7 +53,7 @@ const Footer = () => {
         </a>
 
         <div className={styles.bottom}>
-          <p>&copy; 2026 {siteConfig.name}. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
           <span aria-hidden="true" />
         </div>
       </div>

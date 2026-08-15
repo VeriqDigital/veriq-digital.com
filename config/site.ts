@@ -5,9 +5,9 @@ export const siteConfig = {
   shortName: "Veriq",
   defaultTitle: "Websites & Custom Software for Growing Businesses | Veriq Digital",
   tagline:
-    "Web design, custom development, and growth support built around what the business actually needs.",
+    "Web design, SEO, custom functionality, and ongoing support built around what the business actually needs.",
   description:
-    "Veriq Digital designs websites and custom software that help growing businesses attract customers, improve operations, and build for the long term.",
+    "Veriq Digital designs custom and Squarespace websites with SEO foundations, conversion-focused structure, custom functionality, and ongoing support for growing businesses.",
   url: "https://www.veriqdigital.com",
   locale: "en_US",
   location: {
@@ -58,6 +58,9 @@ export type HomepageCampaignConfig = {
   page: "homepage";
 };
 
+const auditNavigationEnabled =
+  process.env.NEXT_PUBLIC_WEBSITE_AUDIT_DISCOVERY_ENABLED === "true";
+
 export const homepageCampaign: HomepageCampaignConfig = {
   enabled: true,
   spotCount: 3,
@@ -73,9 +76,6 @@ export const homepageCampaign: HomepageCampaignConfig = {
   page: "homepage",
 };
 
-const auditNavigationEnabled =
-  process.env.NEXT_PUBLIC_WEBSITE_AUDIT_DISCOVERY_ENABLED === "true";
-
 export const navigation = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
@@ -86,19 +86,49 @@ export const navigation = [
   { label: "About", href: "/about" },
 ] as const satisfies ReadonlyArray<{ label: string; href: string }>;
 
-export const footerLinks = [
-  { label: "Services", href: "/services" },
-  ...(auditNavigationEnabled
-    ? [{ label: "Free Website Audit", href: "/website-audit" } as const]
-    : []),
-  { label: "Small Business Web Design", href: "/small-business-web-design" },
-  { label: "Des Moines Web Design", href: "/des-moines-web-design" },
-  { label: "Blog", href: "/blog" },
-  { label: "Work", href: "/work" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-  { label: "Privacy", href: "/privacy" },
-] as const satisfies ReadonlyArray<{ label: string; href: string }>;
+export const footerGroups = [
+  {
+    label: "Services",
+    links: [
+      { label: "Web Design", href: "/small-business-web-design" },
+      { label: "Website Redesign", href: "/website-redesign" },
+      { label: "Custom Development", href: "/services#custom-development" },
+      { label: "Squarespace", href: "/small-business-web-design" },
+      { label: "SEO", href: "/services#ongoing-support" },
+      { label: "Website Support", href: "/services#ongoing-support" },
+    ],
+  },
+  {
+    label: "Locations",
+    links: [
+      { label: "Des Moines Web Design", href: "/des-moines-web-design" },
+    ],
+  },
+  {
+    label: "Company",
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Work", href: "/work" },
+      { label: "Blog", href: "/blog" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
+  {
+    label: "Resources",
+    links: [
+      ...(auditNavigationEnabled
+        ? [{ label: "Free Website Audit", href: "/website-audit" } as const]
+        : []),
+      { label: "Website Guides", href: "/blog" },
+      { label: "Website Cost Guide", href: "/resources/how-much-does-a-small-business-website-cost" },
+      { label: "Custom vs. Template", href: "/resources/custom-website-vs-template-for-small-business" },
+    ],
+  },
+  {
+    label: "Legal",
+    links: [{ label: "Privacy", href: "/privacy" }],
+  },
+] as const;
 
 export const primaryCta = {
   label: "Contact",
