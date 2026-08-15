@@ -85,9 +85,14 @@ const makeRenderedMobile = (
     wideElementCount: 0,
     fixedWidthElementCount: 0,
     overflowingImageCount: 0,
+    intentionallyClippedImageCount: 0,
+    potentialOverflowElementCount: 0,
     clippedImportantElementCount: 0,
+    potentiallyClippedImportantElementCount: 0,
     clippedNavigation: false,
     offscreenPrimaryActionCount: 0,
+    missingDimensionImageCount: 0,
+    unreservedImageCount: 0,
     seriousTapTargetCount: 0,
     interactiveControlCount: 4,
     tinyTextCount: 0,
@@ -273,7 +278,7 @@ test("overflowing images and clipped navigation produce specific findings", () =
     (category) => category.id === "conversion-ux",
   );
 
-  assert.match(imageCheck?.finding?.title ?? "", /Images overflow/);
+  assert.match(imageCheck?.finding?.title ?? "", /horizontal mobile scrolling/);
   assert.equal(contentCheck?.finding?.severity, "high");
   assert.ok((conversion?.score ?? 100) <= 79);
 });
@@ -291,6 +296,104 @@ test("harmless tiny overflow stays within the rendered tolerance", () => {
   );
 
   assert.equal(widthCheck?.status, "passed");
+});
+
+test("clipped decoration and carousel geometry stay informational without horizontal scrolling", () => {
+  const { checks, result } = buildResultWithRenderedMobile(
+    makeRenderedMobile({
+      documentWidth: 680,
+      horizontalOverflowPixels: 290,
+      horizontalScrollPixels: 0,
+      potentialOverflowElementCount: 5,
+      intentionallyClippedImageCount: 3,
+      potentiallyClippedImportantElementCount: 1,
+    }),
+  );
+  const widthCheck = checks.find(
+    (check) => check.id === "mobile-rendered-width",
+  );
+  const imageCheck = checks.find(
+    (check) => check.id === "mobile-rendered-images",
+  );
+  const mobile = result.categoryScores.find(
+    (category) => category.id === "mobile-experience",
+  );
+
+  assert.equal(widthCheck?.status, "opportunity");
+  assert.equal(widthCheck?.finding?.impact, "informational");
+  assert.equal(imageCheck?.status, "passed");
+  assert.ok((mobile?.score ?? 0) >= 95);
+});
+
+test("a skipped heading level is informational while a missing primary heading remains meaningful", () => {
+  const skipped = buildAuditChecks(
+    makeCrawl(
+      makePage({
+        headings: [
+          { level: 1, text: "Primary" },
+          { level: 3, text: "Supporting" },
+        ],
+      }),
+    ),
+    pageSpeed,
+    makeRenderedMobile(),
+  ).checks;
+  const missing = buildAuditChecks(
+    makeCrawl(makePage({ h1s: [], headings: [] })),
+    pageSpeed,
+    makeRenderedMobile(),
+  ).checks;
+
+  assert.equal(
+    skipped.find((check) => check.id === "seo-heading-order")?.finding?.impact,
+    "informational",
+  );
+  assert.equal(
+    missing.find((check) => check.id === "seo-h1")?.finding?.severity,
+    "high",
+  );
+});
+
+test("large HTML uses a progressive low-impact curve instead of a cliff", () => {
+  const justOver = buildAuditChecks(
+    makeCrawl(makePage({ htmlBytes: 501 * 1024 })),
+    pageSpeed,
+    makeRenderedMobile(),
+  ).checks.find((check) => check.id === "technical-html-size");
+  const complex = buildAuditChecks(
+    makeCrawl(makePage({ htmlBytes: 974 * 1024 })),
+    pageSpeed,
+    makeRenderedMobile(),
+  ).checks.find((check) => check.id === "technical-html-size");
+
+  assert.equal(justOver?.score, 99);
+  assert.equal(complex?.score, 97);
+  assert.equal(complex?.finding?.impact, "informational");
+});
+
+test("missing image attributes with reserved CSS space remain informational", () => {
+  const { checks, result } = buildResultWithRenderedMobile(
+    makeRenderedMobile({
+      missingDimensionImageCount: 1,
+      unreservedImageCount: 0,
+    }),
+  );
+  const page = makePage({ imageCount: 1, missingDimensionImageCount: 1 });
+  const stableChecks = buildAuditChecks(
+    makeCrawl(page),
+    pageSpeed,
+    makeRenderedMobile({
+      missingDimensionImageCount: 1,
+      unreservedImageCount: 0,
+    }),
+  ).checks;
+  const dimensionCheck = stableChecks.find(
+    (check) => check.id === "technical-image-dimensions",
+  );
+
+  assert.ok(checks.length > 0 && result.overallScore > 0);
+  assert.equal(dimensionCheck?.finding?.impact, "informational");
+  assert.equal(dimensionCheck?.score, 100);
 });
 
 test("rendered-check unavailability reduces evidence without scoring failure", () => {

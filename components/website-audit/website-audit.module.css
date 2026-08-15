@@ -382,6 +382,21 @@
   background: var(--primary);
 }
 
+.scoreConfidence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.65rem;
+  margin-top: 1rem;
+  color: color-mix(in srgb, var(--surface-foreground) 60%, transparent);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.scoreConfidence strong {
+  color: var(--primary);
+  font-weight: 750;
+}
+
 .scoreExplanation {
   max-width: 48ch;
   margin-top: 1.25rem;

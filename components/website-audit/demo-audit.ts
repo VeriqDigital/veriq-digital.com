@@ -81,6 +81,7 @@ export const demoAuditResult = normalizeAuditResult({
     {
       id: "demo-indexing-block",
       category: "technical-health",
+      impact: "confirmed",
       severity: "critical",
       title: "A key service page is blocked from search results",
       explanation:
@@ -95,6 +96,7 @@ export const demoAuditResult = normalizeAuditResult({
     {
       id: "demo-mobile-load",
       category: "performance",
+      impact: "confirmed",
       severity: "high",
       title: "Your main content loads slowly on mobile",
       explanation:
@@ -112,6 +114,7 @@ export const demoAuditResult = normalizeAuditResult({
     {
       id: "demo-primary-action",
       category: "conversion-ux",
+      impact: "confirmed",
       severity: "high",
       title: "The primary next step is difficult to find",
       explanation:
@@ -126,6 +129,7 @@ export const demoAuditResult = normalizeAuditResult({
     {
       id: "demo-page-title",
       category: "seo",
+      impact: "likely",
       severity: "medium",
       title: "The homepage title does not describe the main service",
       explanation:
@@ -140,6 +144,7 @@ export const demoAuditResult = normalizeAuditResult({
     {
       id: "demo-tap-targets",
       category: "mobile-experience",
+      impact: "likely",
       severity: "medium",
       title: "Some mobile controls are difficult to tap",
       explanation:
@@ -157,6 +162,7 @@ export const demoAuditResult = normalizeAuditResult({
     {
       id: "demo-form-labels",
       category: "accessibility",
+      impact: "informational",
       severity: "passed",
       title: "Contact fields have useful accessible labels",
       explanation:
@@ -171,5 +177,5 @@ export const demoAuditResult = normalizeAuditResult({
     "Sample data only. No real website was analyzed for this preview.",
     "Automated accessibility checks do not certify WCAG or legal compliance.",
   ],
-  methodologyVersion: "v2",
+  methodologyVersion: "v3",
 });

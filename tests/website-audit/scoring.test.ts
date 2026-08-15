@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { AuditCheckResult, AuditSeverity } from "../../lib/website-audit/model";
+import type {
+  AuditCheckResult,
+  AuditFindingImpact,
+  AuditSeverity,
+} from "../../lib/website-audit/model";
+import type { AuditCategoryId } from "../../lib/website-audit/categories";
 import { buildAuditResult } from "../../lib/website-audit/scoring";
 
 const baseCheck = (
@@ -24,9 +29,12 @@ const build = (checks: readonly AuditCheckResult[]) =>
 const withFinding = (
   severity: AuditSeverity,
   id: string,
+  impact: AuditFindingImpact = "confirmed",
+  category: AuditCategoryId = "seo",
 ): AuditCheckResult["finding"] => ({
   id,
-  category: "seo",
+  category,
+  impact,
   severity,
   title: `${severity} finding`,
   explanation: "A measurable issue was detected.",
@@ -34,7 +42,7 @@ const withFinding = (
   recommendation: "Correct the measurable issue and verify the result.",
 });
 
-test("full evidence can earn 100 only across several strong checks", () => {
+test("health is normalized from available evidence while coverage stays separate", () => {
   const result = build([
     baseCheck({ id: "seo-a", category: "seo" }),
     baseCheck({ id: "seo-b", category: "seo" }),
@@ -46,10 +54,10 @@ test("full evidence can earn 100 only across several strong checks", () => {
   assert.equal(seo?.evidenceLevel, "full");
   assert.equal(seo?.evidenceCoverage, 100);
   assert.equal(result.evidenceCoverage, 22);
-  assert.ok(result.overallScore < 90);
+  assert.equal(result.overallScore, 100);
 });
 
-test("sparse or partial evidence cannot accidentally produce a perfect score", () => {
+test("partial evidence does not fabricate a penalty or a perfect confidence signal", () => {
   const sparse = build([baseCheck({ id: "seo-only", category: "seo" })]);
   const partial = build([
     baseCheck({ id: "seo-good", category: "seo", weight: 10 }),
@@ -64,8 +72,8 @@ test("sparse or partial evidence cannot accidentally produce a perfect score", (
   const sparseSeo = sparse.categoryScores.find((category) => category.id === "seo");
   const partialSeo = partial.categoryScores.find((category) => category.id === "seo");
 
-  assert.equal(sparseSeo?.score, 89);
-  assert.equal(partialSeo?.score, 69);
+  assert.equal(sparseSeo?.score, 100);
+  assert.equal(partialSeo?.score, 100);
   assert.equal(partialSeo?.evidenceLevel, "partial");
   assert.equal(partialSeo?.evidenceCoverage, 10);
 });
@@ -100,6 +108,8 @@ test("critical findings carry a much larger consequence than minor opportunities
       category: "seo",
       status: "failed",
       score: 0,
+      categoryScoreCap: 49,
+      overallScoreCap: 79,
       finding: withFinding("critical", "critical"),
     }),
     baseCheck({ id: "pass-a", category: "seo" }),
@@ -154,7 +164,208 @@ test("overall scoring preserves explicit category weights", () => {
     50,
   );
   assert.equal(result.evidenceCoverage, 42);
-  assert.equal(result.overallScore, 70);
+  assert.equal(result.overallScore, 76);
+});
+
+test("informational observations have only a tiny direct score effect", () => {
+  const result = build([
+    baseCheck({ id: "pass-a", category: "seo", weight: 10 }),
+    baseCheck({ id: "pass-b", category: "seo", weight: 10 }),
+    baseCheck({
+      id: "heading-skip",
+      category: "seo",
+      weight: 10,
+      status: "opportunity",
+      score: 40,
+      evidenceConfidence: 0.5,
+      finding: withFinding(
+        "opportunity",
+        "heading-skip",
+        "informational",
+      ),
+    }),
+  ]);
+
+  assert.ok(
+    (result.categoryScores.find((category) => category.id === "seo")?.score ??
+      0) >= 98,
+  );
+  assert.equal(
+    result.categoryScores.find((category) => category.id === "seo")
+      ?.evidenceCoverage,
+    83,
+  );
+});
+
+test("unavailable performance is excluded from health and lowers confidence", () => {
+  const categories: readonly AuditCategoryId[] = [
+    "seo",
+    "mobile-experience",
+    "accessibility",
+    "conversion-ux",
+    "technical-health",
+  ];
+  const checks = categories.flatMap((category) =>
+    ["a", "b", "c"].map((suffix) =>
+      baseCheck({ id: `${category}-${suffix}`, category }),
+    ),
+  );
+  checks.push(
+    baseCheck({
+      id: "performance-unavailable",
+      category: "performance",
+      status: "unavailable",
+      score: null,
+      weight: 100,
+    }),
+  );
+  const result = build(checks);
+
+  assert.equal(result.overallScore, 100);
+  assert.equal(result.evidenceCoverage, 80);
+  assert.equal(
+    result.categoryScores.find((category) => category.id === "performance")
+      ?.score,
+    null,
+  );
+});
+
+test("correlated manifestations cannot multiply one root penalty", () => {
+  const single = build([
+    baseCheck({
+      id: "overflow-width",
+      category: "mobile-experience",
+      status: "failed",
+      score: 20,
+      weight: 25,
+      penaltyGroup: "mobile-overflow",
+      finding: withFinding(
+        "high",
+        "overflow-width",
+        "confirmed",
+        "mobile-experience",
+      ),
+    }),
+    baseCheck({ id: "mobile-pass", category: "mobile-experience", weight: 25 }),
+  ]);
+  const duplicated = build([
+    ...[
+      ["overflow-width", 25, 20],
+      ["overflow-image", 10, 30],
+      ["overflow-content", 15, 25],
+    ].map(([id, weight, score]) =>
+      baseCheck({
+        id: String(id),
+        category: "mobile-experience",
+        status: "failed",
+        score: Number(score),
+        weight: Number(weight),
+        penaltyGroup: "mobile-overflow",
+        finding: withFinding(
+          "high",
+          String(id),
+          "confirmed",
+          "mobile-experience",
+        ),
+      }),
+    ),
+    baseCheck({ id: "mobile-pass", category: "mobile-experience", weight: 25 }),
+  ]);
+
+  assert.equal(
+    single.categoryScores.find((category) => category.id === "mobile-experience")
+      ?.score,
+    duplicated.categoryScores.find(
+      (category) => category.id === "mobile-experience",
+    )?.score,
+  );
+});
+
+test("representative website health collections occupy defensible score bands", () => {
+  const categories: readonly AuditCategoryId[] = [
+    "seo",
+    "performance",
+    "mobile-experience",
+    "accessibility",
+    "conversion-ux",
+    "technical-health",
+  ];
+  const scenario = (
+    name: string,
+    failedCategories: ReadonlySet<AuditCategoryId>,
+    failedScore: number,
+    impact: AuditFindingImpact,
+  ) =>
+    build(
+      categories.flatMap((category) => [
+        baseCheck({ id: `${name}-${category}-pass`, category, weight: 10 }),
+        baseCheck({
+          id: `${name}-${category}-observation`,
+          category,
+          weight: 10,
+          status: failedCategories.has(category) ? "failed" : "opportunity",
+          score: failedCategories.has(category) ? failedScore : 70,
+          finding: withFinding(
+            failedCategories.has(category) ? "high" : "opportunity",
+            `${name}-${category}-observation`,
+            failedCategories.has(category) ? impact : "informational",
+            category,
+          ),
+        }),
+        baseCheck(
+          failedCategories.has(category)
+            ? {
+                id: `${name}-${category}-second-issue`,
+                category,
+                weight: 10,
+                status: "failed",
+                score: failedScore,
+                finding: withFinding(
+                  "high",
+                  `${name}-${category}-second-issue`,
+                  impact,
+                  category,
+                ),
+              }
+            : { id: `${name}-${category}-pass-2`, category, weight: 10 },
+        ),
+      ]),
+    );
+
+  const excellent = scenario("excellent", new Set(), 100, "confirmed");
+  const good = scenario(
+    "good",
+    new Set<AuditCategoryId>([
+      "technical-health",
+      "seo",
+      "mobile-experience",
+      "accessibility",
+    ]),
+    40,
+    "likely",
+  );
+  const mediocre = scenario(
+    "mediocre",
+    new Set<AuditCategoryId>([
+      "seo",
+      "mobile-experience",
+      "accessibility",
+      "conversion-ux",
+    ]),
+    30,
+    "confirmed",
+  );
+  const poor = scenario(
+    "poor",
+    new Set<AuditCategoryId>(categories),
+    0,
+    "confirmed",
+  );
+
+  assert.ok(excellent.overallScore >= 90);
+  assert.ok(good.overallScore >= 80 && good.overallScore < 95);
+  assert.ok(mediocre.overallScore >= 60 && mediocre.overallScore < 80);
+  assert.ok(poor.overallScore < 60);
 });
 
 test("scoring normalizes finite values and rejects non-finite scores", () => {

@@ -26,6 +26,15 @@ export default function AuditResults({ result, variant }: AuditResultsProps) {
   const categoryTitleId = `${idPrefix}-category-score-title`;
   const findingsTitleId = `${idPrefix}-findings-title`;
   const fullReportTitleId = `${idPrefix}-full-report-title`;
+  const checksCompleted = result.categoryScores.reduce(
+    (total, category) => total + category.checksRun,
+    0,
+  );
+  const applicableChecks = result.categoryScores.reduce(
+    (total, category) =>
+      total + category.checksRun + category.checksUnavailable,
+    0,
+  );
 
   return (
     <div className={styles.resultsShell}>
@@ -51,6 +60,8 @@ export default function AuditResults({ result, variant }: AuditResultsProps) {
         <OverallScore
           score={result.overallScore}
           evidenceCoverage={result.evidenceCoverage}
+          checksCompleted={checksCompleted}
+          applicableChecks={applicableChecks}
           summary={result.overallSummary}
         />
         <dl className={styles.resultSummary} aria-label="Audit summary">
