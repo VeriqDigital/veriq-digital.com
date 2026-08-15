@@ -22,6 +22,7 @@ import {
 } from "@/config/seo";
 import { homepageCampaign, siteConfig } from "@/config/site";
 import { isWebsiteAuditDiscoverable } from "@/lib/website-audit/runtime-config";
+import styles from "./page.module.css";
 
 export const metadata = createPageMetadata({
   description: siteConfig.description,
@@ -49,11 +50,11 @@ export default function Home() {
           }
         />
         <HomeTrustSection auditEnabled={auditEnabled} />
-        <Section id="services">
+        <Section id="services" className={styles.servicesChapter}>
           <ServicesSection />
         </Section>
         <HomePlatformProcess />
-        <Section id="works">
+        <Section id="works" className={styles.worksChapter}>
           <Works />
         </Section>
         <HomeSeoAudit auditEnabled={auditEnabled} />

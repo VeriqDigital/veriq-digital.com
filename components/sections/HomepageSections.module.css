@@ -200,6 +200,7 @@
 }
 
 .platform {
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 9%, transparent);
   background: color-mix(in srgb, var(--foreground) 3%, var(--background));
 }
 
