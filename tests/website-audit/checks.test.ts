@@ -203,6 +203,7 @@ test("robots blocking and cross-page canonicals stay explicit and conservative",
 
   assert.equal(byId.get("seo-robots-access")?.status, "failed");
   assert.equal(byId.get("seo-robots-access")?.finding?.severity, "high");
+  assert.equal(byId.get("seo-robots-access")?.overallScoreCap, 79);
   assert.equal(byId.get("seo-canonical")?.status, "opportunity");
 });
 
@@ -262,6 +263,11 @@ test("a fixed-width container wider than the viewport is a rendered failure", ()
 test("overflowing images and clipped navigation produce specific findings", () => {
   const { checks, result } = buildResultWithRenderedMobile(
     makeRenderedMobile({
+      documentWidth: 700,
+      horizontalOverflowPixels: 310,
+      horizontalScrollPixels: 310,
+      wideElementCount: 1,
+      fixedWidthElementCount: 1,
       overflowingImageCount: 2,
       clippedImportantElementCount: 2,
       clippedNavigation: true,
@@ -271,8 +277,14 @@ test("overflowing images and clipped navigation produce specific findings", () =
   const imageCheck = checks.find(
     (check) => check.id === "mobile-rendered-images",
   );
+  const widthCheck = checks.find(
+    (check) => check.id === "mobile-rendered-width",
+  );
   const contentCheck = checks.find(
     (check) => check.id === "mobile-rendered-important-content",
+  );
+  const conversionCheck = checks.find(
+    (check) => check.id === "conversion-mobile-action-usability",
   );
   const conversion = result.categoryScores.find(
     (category) => category.id === "conversion-ux",
@@ -281,6 +293,76 @@ test("overflowing images and clipped navigation produce specific findings", () =
   assert.match(imageCheck?.finding?.title ?? "", /horizontal mobile scrolling/);
   assert.equal(contentCheck?.finding?.severity, "high");
   assert.ok((conversion?.score ?? 100) <= 79);
+  assert.equal(widthCheck?.overallScoreCap, 88);
+  assert.equal(contentCheck?.overallScoreCap, 88);
+  assert.equal(conversionCheck?.overallScoreCap, 88);
+  assert.equal(widthCheck?.penaltyGroup, conversionCheck?.penaltyGroup);
+  assert.equal(result.overallScore, 88);
+});
+
+test("severe measured performance and form barriers declare independent material constraints", () => {
+  const degradedPageSpeed: PageSpeedData = {
+    ...pageSpeed,
+    performanceScore: 30,
+  };
+  const { checks } = buildAuditChecks(
+    makeCrawl(
+      makePage({
+        formControlCount: 4,
+        unlabeledFormControlCount: 4,
+      }),
+    ),
+    degradedPageSpeed,
+    makeRenderedMobile(),
+  );
+  const performanceCheck = checks.find(
+    (check) => check.id === "performance-pagespeed",
+  );
+  const formCheck = checks.find(
+    (check) => check.id === "accessibility-form-labels",
+  );
+
+  assert.equal(performanceCheck?.overallScoreCap, 93);
+  assert.equal(formCheck?.overallScoreCap, 93);
+  assert.notEqual(performanceCheck?.penaltyGroup, formCheck?.penaltyGroup);
+});
+
+test("confirmed mobile and form failures cannot be hidden by otherwise strong categories", () => {
+  const page = makePage({
+    formControlCount: 4,
+    unlabeledFormControlCount: 4,
+  });
+  const { checks, notices } = buildAuditChecks(
+    makeCrawl(page),
+    { available: false, reason: "provider_error" },
+    makeRenderedMobile({
+      documentWidth: 700,
+      horizontalOverflowPixels: 310,
+      horizontalScrollPixels: 310,
+      wideElementCount: 2,
+      fixedWidthElementCount: 1,
+      overflowingImageCount: 2,
+      clippedImportantElementCount: 2,
+      clippedNavigation: true,
+      offscreenPrimaryActionCount: 1,
+    }),
+  );
+  const result = buildAuditResult({
+    id: "a6799d85-eab3-4fa7-aefd-131b0d9b2cb2",
+    auditedUrl: "https://example.com/",
+    createdAt: "2026-08-12T12:00:00.000Z",
+    completedAt: "2026-08-12T12:00:10.000Z",
+    checks,
+    notices,
+  });
+  const performance = result.categoryScores.find(
+    (category) => category.id === "performance",
+  );
+
+  assert.equal(performance?.score, null);
+  assert.ok(result.evidenceCoverage < 100);
+  assert.ok(result.overallScore >= 80 && result.overallScore <= 85);
+  assert.ok(result.overallScore < 90);
 });
 
 test("harmless tiny overflow stays within the rendered tolerance", () => {

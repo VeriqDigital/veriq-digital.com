@@ -8,6 +8,12 @@ import type {
   AuditSeverity,
   WebsiteAuditResult,
 } from "./model";
+import {
+  healthConstraintCaps,
+  independentMaterialGroupStep,
+  materialCategoryGuardrail,
+  maximumIndependentGroupAdjustment,
+} from "./health-constraints";
 import { normalizeAuditResult, toNormalizedScore } from "./result-schema";
 
 const severityPriority: Record<AuditSeverity, number> = {
@@ -255,6 +261,10 @@ type BuildAuditResultOptions = {
  *   confidence separately and never pulls the health score toward a prior.
  * - Only checks with proven impact can declare explicit score caps; nominal
  *   severity alone does not impose a generic ceiling.
+ * - Confirmed material caps are grouped by root cause. Independent material
+ *   groups can tighten the strongest cap, while duplicate manifestations do not.
+ * - A literal 100 requires complete evidence and no remaining findings. Missing
+ *   evidence is not scored as failure; it only prevents a claim of perfection.
  */
 export function buildAuditResult({
   id,
@@ -313,16 +323,78 @@ export function buildAuditResult({
 
       return total + category.score * categoryWeight;
     }, 0) / availableOverallWeight;
-  const explicitOverallCaps = normalizedChecks.flatMap((check) =>
-    check.overallScoreCap === undefined ? [] : [check.overallScoreCap],
+  const groupedMaterialCaps = new Map<string, number>();
+
+  for (const check of normalizedChecks) {
+    if (
+      check.status !== "failed" ||
+      check.overallScoreCap === undefined ||
+      !check.finding ||
+      inferFindingImpact(check.finding) !== "confirmed"
+    ) {
+      continue;
+    }
+
+    const group = check.penaltyGroup ?? check.id;
+    groupedMaterialCaps.set(
+      group,
+      Math.min(groupedMaterialCaps.get(group) ?? 100, check.overallScoreCap),
+    );
+  }
+
+  const constrainedCategoryIds = new Set(
+    normalizedChecks.flatMap((check) =>
+      check.status === "failed" &&
+      check.overallScoreCap !== undefined &&
+      check.finding &&
+      inferFindingImpact(check.finding) === "confirmed"
+        ? [check.category]
+        : [],
+    ),
   );
-  const overallScore = toNormalizedScore(
-    Math.min(rawOverallScore, 100, ...explicitOverallCaps),
+  const hasLowMaterialCategory = categoryScores.some(
+    (category) =>
+      constrainedCategoryIds.has(category.id) &&
+      category.score !== null &&
+      category.score < 80,
   );
-  const findings = prioritizeFindings(normalizedChecks);
+  const strongestExplicitMaterialCap = Math.min(
+    100,
+    ...groupedMaterialCaps.values(),
+  );
+  const baseMaterialConstraint = Math.min(
+    strongestExplicitMaterialCap,
+    hasLowMaterialCategory ? materialCategoryGuardrail : 100,
+  );
+  // Fundamental visibility and availability failures already dominate the
+  // health classification; breadth adjustments are reserved for lesser caps.
+  const independentGroupAdjustment =
+    baseMaterialConstraint >= healthConstraintCaps.fundamentalVisibility + 1
+      ? Math.min(
+          maximumIndependentGroupAdjustment,
+          Math.max(0, groupedMaterialCaps.size - 1) *
+            independentMaterialGroupStep,
+        )
+      : 0;
+  const materialConstraint =
+    baseMaterialConstraint - independentGroupAdjustment;
   const allFindings = normalizedChecks.flatMap((check) =>
     check.finding ? [check.finding] : [],
   );
+  const perfectScoreEligible =
+    categoryScores.every((category) => category.evidenceLevel === "full") &&
+    allFindings.length === 0;
+  const perfectionConstraint = perfectScoreEligible
+    ? 100
+    : healthConstraintCaps.incompletePerfection;
+  const overallScore = toNormalizedScore(
+    Math.min(
+      rawOverallScore,
+      materialConstraint,
+      perfectionConstraint,
+    ),
+  );
+  const findings = prioritizeFindings(normalizedChecks);
   const limitedCategories = categoryScores.filter(
     (category) => category.evidenceLevel !== "full",
   );

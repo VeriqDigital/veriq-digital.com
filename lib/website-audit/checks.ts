@@ -9,6 +9,7 @@ import type {
   PageSpeedMetric,
   RenderedMobileData,
 } from "./model";
+import { healthConstraintCaps } from "./health-constraints";
 import { hasObviousHeadingSkip } from "./page-analysis";
 
 type FindingInput = Omit<AuditFinding, "id" | "category" | "impact"> &
@@ -436,7 +437,7 @@ function buildSeoChecks(
         status: "failed",
         score: 0,
         categoryScoreCap: 49,
-        overallScoreCap: 79,
+        overallScoreCap: healthConstraintCaps.fundamentalVisibility,
         finding: {
           severity: "critical",
           title: "The page tells search engines not to index it",
@@ -483,6 +484,7 @@ function buildSeoChecks(
         weight: 12,
         status: "failed",
         score: 0,
+        overallScoreCap: healthConstraintCaps.fundamentalVisibility,
         finding: {
           severity: "high",
           title: "Robots.txt blocks crawling of the audited page",
@@ -616,6 +618,10 @@ function buildPerformanceChecks(pageSpeed: PageSpeedData): AuditCheckResult[] {
       status: pageSpeed.performanceScore >= 75 ? "passed" : "failed",
       score: pageSpeed.performanceScore,
       penaltyGroup: "performance-lab-measurement",
+      overallScoreCap:
+        pageSpeed.performanceScore < 50
+          ? healthConstraintCaps.moderateMaterialDefect
+          : undefined,
       finding:
         pageSpeed.performanceScore >= 75
           ? undefined
@@ -819,6 +825,10 @@ function buildMobileChecks(
           score: catastrophicOverflow ? 10 : materialOverflow >= 48 ? 45 : 75,
           penaltyGroup: "mobile-horizontal-layout",
           categoryScoreCap: catastrophicOverflow ? 49 : undefined,
+          overallScoreCap:
+            catastrophicOverflow || materialOverflow >= 48
+              ? healthConstraintCaps.majorCustomerExperience
+              : healthConstraintCaps.moderateMaterialDefect,
           finding: {
             impact: "confirmed",
             severity: catastrophicOverflow
@@ -885,6 +895,10 @@ function buildMobileChecks(
               ? 30
               : 60,
           penaltyGroup: "mobile-horizontal-layout",
+          overallScoreCap:
+            metrics.clippedNavigation || metrics.offscreenPrimaryActionCount > 0
+              ? healthConstraintCaps.majorCustomerExperience
+              : healthConstraintCaps.moderateMaterialDefect,
           finding: {
             impact: "confirmed",
             severity:
@@ -948,6 +962,7 @@ function buildMobileChecks(
           status: "failed",
           score: metrics.overflowingImageCount >= 3 ? 55 : 75,
           penaltyGroup: "mobile-horizontal-layout",
+          overallScoreCap: healthConstraintCaps.moderateMaterialDefect,
           finding: {
             impact: "confirmed",
             severity: metrics.overflowingImageCount >= 3 ? "high" : "medium",
@@ -1095,6 +1110,11 @@ function buildAccessibilityChecks(
         weight: 15,
         status: "failed",
         score: labelScore,
+        penaltyGroup: "form-accessibility",
+        overallScoreCap:
+          labelScore < 60
+            ? healthConstraintCaps.moderateMaterialDefect
+            : undefined,
         finding: {
           severity: labelScore < 60 ? "high" : "medium",
           title: "Some form fields do not have detectable labels",
@@ -1240,7 +1260,9 @@ function buildConversionChecks(
           weight: 15,
           status: "failed",
           score: 25,
+          penaltyGroup: "mobile-horizontal-layout",
           categoryScoreCap: 79,
+          overallScoreCap: healthConstraintCaps.majorCustomerExperience,
           finding: {
             severity: "high",
             title: "A primary customer action is cut off on mobile",
@@ -1323,7 +1345,7 @@ function buildTechnicalChecks(
           status: "failed",
           score: 0,
           categoryScoreCap: 30,
-          overallScoreCap: 59,
+          overallScoreCap: healthConstraintCaps.catastrophic,
           finding: {
             severity: "critical",
             title: "The submitted page did not return a successful response",
