@@ -681,6 +681,17 @@
 }
 
 @media (max-width: 960px) {
+  .positioning,
+  .platform,
+  .process,
+  .seo,
+  .audit,
+  .why,
+  .growth,
+  .finalCta {
+    padding-block: 7rem;
+  }
+
   .trustStrip ul {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -760,6 +771,17 @@
 }
 
 @media (max-width: 560px) {
+  .positioning,
+  .platform,
+  .process,
+  .seo,
+  .audit,
+  .why,
+  .growth,
+  .finalCta {
+    padding-block: 5rem;
+  }
+
   .trustStrip ul,
   .websiteJobs,
   .processList,

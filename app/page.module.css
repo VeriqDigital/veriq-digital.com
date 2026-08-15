@@ -1,3 +1,9 @@
+.servicesChapter,
+.worksChapter,
+.faqChapter {
+  padding-block: 9rem;
+}
+
 .servicesChapter {
   border-top: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
   background: color-mix(in srgb, var(--foreground) 3%, var(--background));
@@ -5,4 +11,20 @@
 
 .worksChapter {
   border-top: 1px solid color-mix(in srgb, var(--foreground) 11%, transparent);
+}
+
+@media (max-width: 960px) {
+  .servicesChapter,
+  .worksChapter,
+  .faqChapter {
+    padding-block: 7rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .servicesChapter,
+  .worksChapter,
+  .faqChapter {
+    padding-block: 5rem;
+  }
 }

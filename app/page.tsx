@@ -59,7 +59,7 @@ export default function Home() {
         </Section>
         <HomeSeoAudit auditEnabled={auditEnabled} />
         <HomeWhyGrowth />
-        <Section id="faq">
+        <Section id="faq" className={styles.faqChapter}>
           <FAQ />
         </Section>
         <HomeFinalCta />
