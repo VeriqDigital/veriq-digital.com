@@ -123,13 +123,15 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   return (
-    <header
-      className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-lg"
-      data-scrolled={isScrolled}
-      data-visible={isVisible || isMenuOpen}
-    >
+    <>
+      <span className="site-navbar-safe-area" aria-hidden="true" />
+      <header
+        className="site-navbar fixed inset-x-0 top-0 z-50 isolate w-full text-lg"
+        data-scrolled={isScrolled}
+        data-visible={isVisible || isMenuOpen}
+      >
       <nav
-        className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-8 px-6 sm:px-10 lg:px-14 xl:px-20"
+        className="relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-3 px-4 min-[360px]:gap-8 min-[360px]:px-6 sm:px-10 lg:px-14 xl:px-20"
         aria-label="Primary"
       >
         <Link
@@ -155,7 +157,7 @@ const Navbar = () => {
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className="cursor-pointer rounded-full bg-(--primary) px-6 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) lg:text-xl"
+            className="cursor-pointer rounded-full bg-(--primary) px-4 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) min-[360px]:px-6 lg:text-xl"
           >
             {primaryCta.label}
           </Link>
@@ -200,7 +202,8 @@ const Navbar = () => {
         </nav>
       )}
 
-    </header>
+      </header>
+    </>
   );
 };
 
