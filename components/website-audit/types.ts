@@ -17,3 +17,9 @@ export const getScoreInterpretation = (score: number) => {
   if (score >= 50) return "Needs work";
   return "Significant issues";
 };
+
+export const getEvidenceConfidence = (coverage: number) => {
+  if (coverage >= 85) return "High confidence";
+  if (coverage >= 60) return "Moderate confidence";
+  return "Limited confidence";
+};

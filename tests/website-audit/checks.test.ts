@@ -85,9 +85,14 @@ const makeRenderedMobile = (
     wideElementCount: 0,
     fixedWidthElementCount: 0,
     overflowingImageCount: 0,
+    intentionallyClippedImageCount: 0,
+    potentialOverflowElementCount: 0,
     clippedImportantElementCount: 0,
+    potentiallyClippedImportantElementCount: 0,
     clippedNavigation: false,
     offscreenPrimaryActionCount: 0,
+    missingDimensionImageCount: 0,
+    unreservedImageCount: 0,
     seriousTapTargetCount: 0,
     interactiveControlCount: 4,
     tinyTextCount: 0,
@@ -198,6 +203,7 @@ test("robots blocking and cross-page canonicals stay explicit and conservative",
 
   assert.equal(byId.get("seo-robots-access")?.status, "failed");
   assert.equal(byId.get("seo-robots-access")?.finding?.severity, "high");
+  assert.equal(byId.get("seo-robots-access")?.overallScoreCap, 79);
   assert.equal(byId.get("seo-canonical")?.status, "opportunity");
 });
 
@@ -257,6 +263,11 @@ test("a fixed-width container wider than the viewport is a rendered failure", ()
 test("overflowing images and clipped navigation produce specific findings", () => {
   const { checks, result } = buildResultWithRenderedMobile(
     makeRenderedMobile({
+      documentWidth: 700,
+      horizontalOverflowPixels: 310,
+      horizontalScrollPixels: 310,
+      wideElementCount: 1,
+      fixedWidthElementCount: 1,
       overflowingImageCount: 2,
       clippedImportantElementCount: 2,
       clippedNavigation: true,
@@ -266,16 +277,92 @@ test("overflowing images and clipped navigation produce specific findings", () =
   const imageCheck = checks.find(
     (check) => check.id === "mobile-rendered-images",
   );
+  const widthCheck = checks.find(
+    (check) => check.id === "mobile-rendered-width",
+  );
   const contentCheck = checks.find(
     (check) => check.id === "mobile-rendered-important-content",
+  );
+  const conversionCheck = checks.find(
+    (check) => check.id === "conversion-mobile-action-usability",
   );
   const conversion = result.categoryScores.find(
     (category) => category.id === "conversion-ux",
   );
 
-  assert.match(imageCheck?.finding?.title ?? "", /Images overflow/);
+  assert.match(imageCheck?.finding?.title ?? "", /horizontal mobile scrolling/);
   assert.equal(contentCheck?.finding?.severity, "high");
   assert.ok((conversion?.score ?? 100) <= 79);
+  assert.equal(widthCheck?.overallScoreCap, 88);
+  assert.equal(contentCheck?.overallScoreCap, 88);
+  assert.equal(conversionCheck?.overallScoreCap, 88);
+  assert.equal(widthCheck?.penaltyGroup, conversionCheck?.penaltyGroup);
+  assert.equal(result.overallScore, 74);
+});
+
+test("severe measured performance and form barriers declare independent material constraints", () => {
+  const degradedPageSpeed: PageSpeedData = {
+    ...pageSpeed,
+    performanceScore: 30,
+  };
+  const { checks } = buildAuditChecks(
+    makeCrawl(
+      makePage({
+        formControlCount: 4,
+        unlabeledFormControlCount: 4,
+      }),
+    ),
+    degradedPageSpeed,
+    makeRenderedMobile(),
+  );
+  const performanceCheck = checks.find(
+    (check) => check.id === "performance-pagespeed",
+  );
+  const formCheck = checks.find(
+    (check) => check.id === "accessibility-form-labels",
+  );
+
+  assert.equal(performanceCheck?.overallScoreCap, 93);
+  assert.equal(formCheck?.overallScoreCap, 93);
+  assert.notEqual(performanceCheck?.penaltyGroup, formCheck?.penaltyGroup);
+});
+
+test("confirmed mobile and form failures cannot be hidden by otherwise strong categories", () => {
+  const page = makePage({
+    formControlCount: 4,
+    unlabeledFormControlCount: 4,
+  });
+  const { checks, notices } = buildAuditChecks(
+    makeCrawl(page),
+    { available: false, reason: "provider_error" },
+    makeRenderedMobile({
+      documentWidth: 700,
+      horizontalOverflowPixels: 310,
+      horizontalScrollPixels: 310,
+      wideElementCount: 2,
+      fixedWidthElementCount: 1,
+      overflowingImageCount: 2,
+      clippedImportantElementCount: 2,
+      clippedNavigation: true,
+      offscreenPrimaryActionCount: 1,
+    }),
+  );
+  const result = buildAuditResult({
+    id: "a6799d85-eab3-4fa7-aefd-131b0d9b2cb2",
+    auditedUrl: "https://example.com/",
+    createdAt: "2026-08-12T12:00:00.000Z",
+    completedAt: "2026-08-12T12:00:10.000Z",
+    checks,
+    notices,
+  });
+  const performance = result.categoryScores.find(
+    (category) => category.id === "performance",
+  );
+
+  assert.equal(performance?.score, null);
+  assert.ok(result.evidenceCoverage < 100);
+  assert.ok(result.overallScore >= 70 && result.overallScore <= 75);
+  assert.ok(result.overallScore < 90);
 });
 
 test("harmless tiny overflow stays within the rendered tolerance", () => {
@@ -291,6 +378,104 @@ test("harmless tiny overflow stays within the rendered tolerance", () => {
   );
 
   assert.equal(widthCheck?.status, "passed");
+});
+
+test("clipped decoration and carousel geometry stay informational without horizontal scrolling", () => {
+  const { checks, result } = buildResultWithRenderedMobile(
+    makeRenderedMobile({
+      documentWidth: 680,
+      horizontalOverflowPixels: 290,
+      horizontalScrollPixels: 0,
+      potentialOverflowElementCount: 5,
+      intentionallyClippedImageCount: 3,
+      potentiallyClippedImportantElementCount: 1,
+    }),
+  );
+  const widthCheck = checks.find(
+    (check) => check.id === "mobile-rendered-width",
+  );
+  const imageCheck = checks.find(
+    (check) => check.id === "mobile-rendered-images",
+  );
+  const mobile = result.categoryScores.find(
+    (category) => category.id === "mobile-experience",
+  );
+
+  assert.equal(widthCheck?.status, "opportunity");
+  assert.equal(widthCheck?.finding?.impact, "informational");
+  assert.equal(imageCheck?.status, "passed");
+  assert.ok((mobile?.score ?? 0) >= 95);
+});
+
+test("a skipped heading level is informational while a missing primary heading remains meaningful", () => {
+  const skipped = buildAuditChecks(
+    makeCrawl(
+      makePage({
+        headings: [
+          { level: 1, text: "Primary" },
+          { level: 3, text: "Supporting" },
+        ],
+      }),
+    ),
+    pageSpeed,
+    makeRenderedMobile(),
+  ).checks;
+  const missing = buildAuditChecks(
+    makeCrawl(makePage({ h1s: [], headings: [] })),
+    pageSpeed,
+    makeRenderedMobile(),
+  ).checks;
+
+  assert.equal(
+    skipped.find((check) => check.id === "seo-heading-order")?.finding?.impact,
+    "informational",
+  );
+  assert.equal(
+    missing.find((check) => check.id === "seo-h1")?.finding?.severity,
+    "high",
+  );
+});
+
+test("large HTML uses a progressive low-impact curve instead of a cliff", () => {
+  const justOver = buildAuditChecks(
+    makeCrawl(makePage({ htmlBytes: 501 * 1024 })),
+    pageSpeed,
+    makeRenderedMobile(),
+  ).checks.find((check) => check.id === "technical-html-size");
+  const complex = buildAuditChecks(
+    makeCrawl(makePage({ htmlBytes: 974 * 1024 })),
+    pageSpeed,
+    makeRenderedMobile(),
+  ).checks.find((check) => check.id === "technical-html-size");
+
+  assert.equal(justOver?.score, 99);
+  assert.equal(complex?.score, 97);
+  assert.equal(complex?.finding?.impact, "informational");
+});
+
+test("missing image attributes with reserved CSS space remain informational", () => {
+  const { checks, result } = buildResultWithRenderedMobile(
+    makeRenderedMobile({
+      missingDimensionImageCount: 1,
+      unreservedImageCount: 0,
+    }),
+  );
+  const page = makePage({ imageCount: 1, missingDimensionImageCount: 1 });
+  const stableChecks = buildAuditChecks(
+    makeCrawl(page),
+    pageSpeed,
+    makeRenderedMobile({
+      missingDimensionImageCount: 1,
+      unreservedImageCount: 0,
+    }),
+  ).checks;
+  const dimensionCheck = stableChecks.find(
+    (check) => check.id === "technical-image-dimensions",
+  );
+
+  assert.ok(checks.length > 0 && result.overallScore > 0);
+  assert.equal(dimensionCheck?.finding?.impact, "informational");
+  assert.equal(dimensionCheck?.score, 100);
 });
 
 test("rendered-check unavailability reduces evidence without scoring failure", () => {

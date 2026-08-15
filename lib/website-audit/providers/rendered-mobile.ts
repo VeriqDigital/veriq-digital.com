@@ -35,6 +35,8 @@ export type RenderedControlMeasurement = Readonly<{
   hasAdequateLabelTarget: boolean;
   primaryAction: boolean;
   materiallyOutside: boolean;
+  potentiallyOutside: boolean;
+  intentionallyOffCanvas: boolean;
   insideNavigation: boolean;
   importantElement: boolean;
 }>;
@@ -47,8 +49,13 @@ export type RenderedMobileMeasurement = Readonly<{
   wideElementCount: number;
   fixedWidthElementCount: number;
   overflowingImageCount: number;
+  intentionallyClippedImageCount: number;
+  potentialOverflowElementCount: number;
   clippedBaseImportantElementCount: number;
+  potentiallyClippedImportantElementCount: number;
   navigationMateriallyOutside: boolean;
+  missingDimensionImageCount: number;
+  unreservedImageCount: number;
   controls: readonly RenderedControlMeasurement[];
   tinyTextCount: number;
   textSampleCount: number;
@@ -313,8 +320,20 @@ export function normalizeRenderedMobileMetrics(
     wideElementCount: boundedInteger(metrics.wideElementCount, 10_000),
     fixedWidthElementCount: boundedInteger(metrics.fixedWidthElementCount, 10_000),
     overflowingImageCount: boundedInteger(metrics.overflowingImageCount, 10_000),
+    intentionallyClippedImageCount: boundedInteger(
+      metrics.intentionallyClippedImageCount,
+      10_000,
+    ),
+    potentialOverflowElementCount: boundedInteger(
+      metrics.potentialOverflowElementCount,
+      10_000,
+    ),
     clippedImportantElementCount: boundedInteger(
       metrics.clippedImportantElementCount,
+      10_000,
+    ),
+    potentiallyClippedImportantElementCount: boundedInteger(
+      metrics.potentiallyClippedImportantElementCount,
       10_000,
     ),
     clippedNavigation: Boolean(metrics.clippedNavigation),
@@ -322,6 +341,11 @@ export function normalizeRenderedMobileMetrics(
       metrics.offscreenPrimaryActionCount,
       10_000,
     ),
+    missingDimensionImageCount: boundedInteger(
+      metrics.missingDimensionImageCount,
+      10_000,
+    ),
+    unreservedImageCount: boundedInteger(metrics.unreservedImageCount, 10_000),
     seriousTapTargetCount: boundedInteger(metrics.seriousTapTargetCount, 10_000),
     interactiveControlCount: boundedInteger(metrics.interactiveControlCount, 10_000),
     tinyTextCount: boundedInteger(metrics.tinyTextCount, 10_000),
@@ -368,15 +392,28 @@ export function interpretRenderedMobileMeasurement(
     wideElementCount: measurement.wideElementCount,
     fixedWidthElementCount: measurement.fixedWidthElementCount,
     overflowingImageCount: measurement.overflowingImageCount,
+    intentionallyClippedImageCount: measurement.intentionallyClippedImageCount,
+    potentialOverflowElementCount: measurement.potentialOverflowElementCount,
     clippedImportantElementCount:
       measurement.clippedBaseImportantElementCount +
       offscreenPrimaryActions.filter((control) => !control.importantElement).length,
+    potentiallyClippedImportantElementCount:
+      measurement.potentiallyClippedImportantElementCount +
+      interactiveControls.filter(
+        (control) =>
+          control.potentiallyOutside &&
+          !control.materiallyOutside &&
+          !control.intentionallyOffCanvas &&
+          !control.importantElement,
+      ).length,
     clippedNavigation:
       measurement.navigationMateriallyOutside ||
       interactiveControls.some(
         (control) => control.insideNavigation && control.materiallyOutside,
       ),
     offscreenPrimaryActionCount: offscreenPrimaryActions.length,
+    missingDimensionImageCount: measurement.missingDimensionImageCount,
+    unreservedImageCount: measurement.unreservedImageCount,
     seriousTapTargetCount: seriousTapTargets.length,
     interactiveControlCount: interactiveControls.length,
     tinyTextCount: measurement.tinyTextCount,
@@ -446,15 +483,44 @@ const measurePage = async (
     await page.waitForTimeout(200);
 
     const measurement = await page.evaluate(() => {
-      const viewportWidth = window.screen.width || 390;
+      const viewportWidth = Math.round(
+        Math.min(
+          ...[
+            window.visualViewport?.width,
+            window.screen.width,
+            window.innerWidth,
+            document.documentElement.clientWidth,
+          ].filter(
+            (value): value is number =>
+              typeof value === "number" && Number.isFinite(value) && value > 0,
+          ),
+        ),
+      );
       const documentWidth = Math.max(
         document.documentElement.scrollWidth,
         document.body?.scrollWidth ?? 0,
       );
       const startingScrollX = window.scrollX;
+      const originalRootScrollBehavior = document.documentElement.style.scrollBehavior;
+      const originalBodyScrollBehavior = document.body.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = "auto";
+      document.body.style.scrollBehavior = "auto";
       window.scrollTo({ left: documentWidth, top: window.scrollY });
-      const horizontalScrollPixels = Math.max(0, Math.round(window.scrollX));
+      const measuredHorizontalScrollPixels = Math.max(0, Math.round(window.scrollX));
       window.scrollTo({ left: startingScrollX, top: window.scrollY });
+      document.documentElement.style.scrollBehavior = originalRootScrollBehavior;
+      document.body.style.scrollBehavior = originalBodyScrollBehavior;
+      const rootOverflowX = getComputedStyle(document.documentElement).overflowX;
+      const bodyOverflowX = getComputedStyle(document.body).overflowX;
+      const documentOverflowIsUnclipped =
+        documentWidth > viewportWidth + 8 &&
+        !["hidden", "clip"].includes(rootOverflowX) &&
+        !["hidden", "clip"].includes(bodyOverflowX);
+      const horizontalScrollPixels = Math.max(
+        measuredHorizontalScrollPixels,
+        documentOverflowIsUnclipped ? documentWidth - viewportWidth : 0,
+      );
+      const hasReachableHorizontalOverflow = horizontalScrollPixels > 8;
       const elements = [...document.body.querySelectorAll<HTMLElement>("*")];
       const actionPattern =
         /\b(call|contact|book|schedule|quote|estimate|get started|request|buy|shop|reserve|apply|sign up)\b/i;
@@ -471,65 +537,222 @@ const measurePage = async (
           element.getAttribute("aria-hidden") !== "true"
         );
       };
-      const isInsideHorizontalScroller = (element: HTMLElement) => {
+      const horizontalAncestorCache = new WeakMap<
+        HTMLElement,
+        readonly HTMLElement[]
+      >();
+      const getHorizontalAncestors = (element: HTMLElement) => {
+        const cached = horizontalAncestorCache.get(element);
+        if (cached) return cached;
+
+        const ancestors: HTMLElement[] = [];
         let ancestor = element.parentElement;
 
         while (ancestor && ancestor !== document.body) {
-          const style = getComputedStyle(ancestor);
-
-          if (
-            ["auto", "scroll"].includes(style.overflowX) &&
-            ancestor.scrollWidth > ancestor.clientWidth + 8
-          ) {
-            return true;
-          }
-
+          ancestors.push(ancestor);
           ancestor = ancestor.parentElement;
         }
 
-        return false;
+        horizontalAncestorCache.set(element, ancestors);
+        return ancestors;
+      };
+      const isInsideHorizontalScroller = (element: HTMLElement) => {
+        return getHorizontalAncestors(element).some((ancestor) => {
+          const style = getComputedStyle(ancestor);
+          return (
+            ["auto", "scroll"].includes(style.overflowX) &&
+            ancestor.scrollWidth > ancestor.clientWidth + 8
+          );
+        });
       };
       const isInsideHorizontalClip = (element: HTMLElement) => {
-        let ancestor = element.parentElement;
-
-        while (ancestor && ancestor !== document.body) {
+        return getHorizontalAncestors(element).some((ancestor) => {
           const style = getComputedStyle(ancestor);
           const rect = ancestor.getBoundingClientRect();
-
-          if (
+          return (
             ["hidden", "clip"].includes(style.overflowX) &&
             rect.left >= -8 &&
             rect.right <= viewportWidth + 8
-          ) {
-            return true;
-          }
-
-          ancestor = ancestor.parentElement;
-        }
-
-        return false;
+          );
+        });
       };
       const visibleElements = elements.filter(isVisible);
-      const materiallyOutside = (element: HTMLElement) => {
+      const parseCssTimeMilliseconds = (value: string) => {
+        const normalized = value.trim().toLowerCase();
+        const numericValue = Number.parseFloat(normalized);
+
+        if (!Number.isFinite(numericValue) || numericValue <= 0) return 0;
+        if (normalized.endsWith("ms")) return numericValue;
+        if (normalized.endsWith("s")) return numericValue * 1_000;
+        return 0;
+      };
+      const hasActiveCssTime = (value: string) =>
+        value
+          .split(",")
+          .some((item) => parseCssTimeMilliseconds(item) > 0);
+      const horizontalTransitionProperties = new Set([
+        "transform",
+        "translate",
+        "scale",
+        "rotate",
+        "left",
+        "right",
+        "inset",
+        "inset-inline",
+        "inset-inline-start",
+        "inset-inline-end",
+        "margin",
+        "margin-left",
+        "margin-right",
+        "margin-inline",
+        "margin-inline-start",
+        "margin-inline-end",
+        "width",
+        "min-width",
+        "max-width",
+      ]);
+      const isDefaultTransformComponent = (
+        value: string | undefined,
+        defaultValues: readonly string[],
+      ) => {
+        const normalized = value?.trim().toLowerCase() ?? "";
+        return !normalized || defaultValues.includes(normalized);
+      };
+      const hasHorizontalPositioningEvidence = (style: CSSStyleDeclaration) => {
+        if (!["absolute", "fixed", "sticky"].includes(style.position)) {
+          return false;
+        }
+
+        return [
+          style.left,
+          style.right,
+          style.getPropertyValue("inset-inline-start"),
+          style.getPropertyValue("inset-inline-end"),
+        ].some((value) => {
+          const normalized = value.trim().toLowerCase();
+          return Boolean(normalized && normalized !== "auto" && normalized !== "0px");
+        });
+      };
+      const hasHorizontalMotionPotential = (
+        style: CSSStyleDeclaration,
+        insideSemanticMotionContainer: boolean,
+      ) => {
+        const hasAppliedTransform =
+          style.transform !== "none" ||
+          !isDefaultTransformComponent(style.translate, ["none", "0px", "0px 0px"]) ||
+          !isDefaultTransformComponent(style.scale, ["none", "1", "1 1"]) ||
+          !isDefaultTransformComponent(style.rotate, ["none", "0deg"]);
+
+        if (hasAppliedTransform) return true;
+
+        const transitionProperties = style.transitionProperty
+          .split(",")
+          .map((property) => property.trim().toLowerCase());
+        const transitionDurations = style.transitionDuration
+          .split(",")
+          .map(parseCssTimeMilliseconds);
+        const hasPositioningEvidence = hasHorizontalPositioningEvidence(style);
+        const hasRelevantTransition = transitionProperties.some(
+          (property, index) => {
+            const duration =
+              transitionDurations[index % Math.max(1, transitionDurations.length)] ?? 0;
+            if (duration <= 0 || property === "none") return false;
+            if (horizontalTransitionProperties.has(property)) return true;
+
+            return (
+              property === "all" &&
+              insideSemanticMotionContainer &&
+              hasPositioningEvidence
+            );
+          },
+        );
+
+        if (hasRelevantTransition) return true;
+
+        return (
+          style.animationName !== "none" &&
+          hasActiveCssTime(style.animationDuration) &&
+          (insideSemanticMotionContainer || hasPositioningEvidence)
+        );
+      };
+      type HorizontalGeometry = Readonly<{
+        rect: DOMRect;
+        visibleRatio: number;
+        outside: boolean;
+        insideScroller: boolean;
+        insideClip: boolean;
+        horizontalMotionPotential: boolean;
+        intentionallyOffCanvas: boolean;
+      }>;
+      const horizontalGeometryCache = new WeakMap<
+        HTMLElement,
+        HorizontalGeometry
+      >();
+      const horizontalGeometry = (element: HTMLElement): HorizontalGeometry => {
+        const cached = horizontalGeometryCache.get(element);
+        if (cached) return cached;
+
         const rect = element.getBoundingClientRect();
         const visibleWidth = Math.max(
           0,
           Math.min(rect.right, viewportWidth) - Math.max(rect.left, 0),
         );
-
-        return (
-          !isInsideHorizontalScroller(element) &&
-          (rect.left < -24 ||
-            rect.right > viewportWidth + 24 ||
-            visibleWidth / Math.max(1, rect.width) < 0.7)
+        const visibleRatio = visibleWidth / Math.max(1, rect.width);
+        const outside =
+          rect.left < -24 ||
+          rect.right > viewportWidth + 24 ||
+          visibleRatio < 0.7;
+        const ancestors = getHorizontalAncestors(element);
+        const semanticOffCanvasContainer = element.closest(
+          '[aria-modal="true"], dialog, nav, [role="navigation"], [data-state="closed"], [class*="drawer" i], [class*="offcanvas" i], [class*="carousel" i], [class*="slider" i]',
         );
+        const motionStyles = [element, ...ancestors].map((candidate) =>
+          getComputedStyle(candidate),
+        );
+        const horizontalMotionPotential = motionStyles.some((style) =>
+          hasHorizontalMotionPotential(
+            style,
+            Boolean(semanticOffCanvasContainer),
+          ),
+        );
+        const intentionallyOffCanvas =
+          outside &&
+          !hasReachableHorizontalOverflow &&
+          Boolean(semanticOffCanvasContainer) &&
+          (horizontalMotionPotential || visibleRatio === 0);
+
+        const geometry = {
+          rect,
+          visibleRatio,
+          outside,
+          insideScroller: isInsideHorizontalScroller(element),
+          insideClip: isInsideHorizontalClip(element),
+          horizontalMotionPotential,
+          intentionallyOffCanvas,
+        };
+        horizontalGeometryCache.set(element, geometry);
+        return geometry;
       };
       const wideElements = visibleElements.filter((element) => {
-        const rect = element.getBoundingClientRect();
+        const geometry = horizontalGeometry(element);
         return (
-          !isInsideHorizontalScroller(element) &&
-          !isInsideHorizontalClip(element) &&
-          rect.width > viewportWidth + 24
+          documentWidth > viewportWidth + 8 &&
+          geometry.outside &&
+          !geometry.insideScroller &&
+          !geometry.insideClip &&
+          (!geometry.horizontalMotionPotential ||
+            hasReachableHorizontalOverflow) &&
+          !geometry.intentionallyOffCanvas &&
+          geometry.rect.width > viewportWidth + 24
+        );
+      });
+      const wideElementSet = new Set(wideElements);
+      const potentialOverflowElements = visibleElements.filter((element) => {
+        const geometry = horizontalGeometry(element);
+        return (
+          geometry.outside &&
+          !geometry.insideScroller &&
+          !wideElementSet.has(element)
         );
       });
       const fixedWidthElements = wideElements.filter((element) => {
@@ -538,17 +761,52 @@ const measurePage = async (
         return /^\d+(?:\.\d+)?px?$/.test(declaredWidth.trim());
       });
       const overflowingImages = visibleElements.filter(
-        (element) =>
-          element instanceof HTMLImageElement &&
-          !isInsideHorizontalClip(element) &&
-          materiallyOutside(element),
+        (element) => {
+          if (!(element instanceof HTMLImageElement)) return false;
+          const geometry = horizontalGeometry(element);
+          return (
+            documentWidth > viewportWidth + 8 &&
+            geometry.outside &&
+            !geometry.insideScroller &&
+            !geometry.insideClip &&
+            (!geometry.horizontalMotionPotential ||
+              hasReachableHorizontalOverflow) &&
+            !geometry.intentionallyOffCanvas
+          );
+        },
       );
+      const overflowingImageSet = new Set(overflowingImages);
+      const intentionallyClippedImages = visibleElements.filter((element) => {
+        if (!(element instanceof HTMLImageElement)) return false;
+        const geometry = horizontalGeometry(element);
+        const objectFit = getComputedStyle(element).objectFit;
+        return (
+          geometry.outside &&
+          !overflowingImageSet.has(element) &&
+          (geometry.insideClip ||
+            geometry.insideScroller ||
+            geometry.horizontalMotionPotential ||
+            geometry.intentionallyOffCanvas ||
+            ["cover", "contain"].includes(objectFit))
+        );
+      });
       const navigationElements = visibleElements.filter((element) =>
         element.matches("nav, [role=navigation]"),
       );
       const baseImportantElements = visibleElements.filter((element) =>
-        element.matches("main, h1, nav, [role=navigation]"),
+        element.matches("h1, nav, [role=navigation]"),
       );
+      const isConfirmedInaccessible = (element: HTMLElement) => {
+        const geometry = horizontalGeometry(element);
+        return (
+          geometry.outside &&
+          !hasReachableHorizontalOverflow &&
+          !geometry.insideScroller &&
+          !geometry.horizontalMotionPotential &&
+          !geometry.intentionallyOffCanvas &&
+          geometry.visibleRatio < 0.7
+        );
+      };
       const controlElements = visibleElements.filter((element) =>
         element.matches(
           "a, button, input, select, textarea, [role=button], [role=link]",
@@ -556,6 +814,7 @@ const measurePage = async (
       );
       const controls = controlElements.map((element) => {
         const rect = element.getBoundingClientRect();
+        const geometry = horizontalGeometry(element);
         const associatedLabels =
           element instanceof HTMLInputElement ? [...(element.labels ?? [])] : [];
         const hasAdequateLabelTarget = associatedLabels.some((label) => {
@@ -598,7 +857,9 @@ const measurePage = async (
           primaryAction: actionPattern.test(
             `${element.textContent ?? ""} ${element.getAttribute("aria-label") ?? ""} ${element.getAttribute("href") ?? ""}`,
           ),
-          materiallyOutside: materiallyOutside(element),
+          materiallyOutside: isConfirmedInaccessible(element),
+          potentiallyOutside: geometry.outside,
+          intentionallyOffCanvas: geometry.intentionallyOffCanvas,
           insideNavigation: Boolean(element.closest("nav, [role=navigation]")),
           importantElement: element.matches(
             "main, h1, nav, [role=navigation]",
@@ -618,6 +879,42 @@ const measurePage = async (
       const tinyText = textElements.filter(
         (element) => Number.parseFloat(getComputedStyle(element).fontSize) < 12,
       );
+      const visibleImages = visibleElements.filter(
+        (element): element is HTMLImageElement =>
+          element instanceof HTMLImageElement,
+      );
+      const imagesMissingDimensions = visibleImages.filter(
+        (image) => !image.hasAttribute("width") || !image.hasAttribute("height"),
+      );
+      const unreservedImages = imagesMissingDimensions.filter((image) => {
+        const style = getComputedStyle(image);
+        const parentStyle = image.parentElement
+          ? getComputedStyle(image.parentElement)
+          : null;
+        const ownInlineDimensions =
+          Boolean(image.style.width && image.style.width !== "auto") &&
+          Boolean(image.style.height && image.style.height !== "auto");
+        const parentReservesRatio =
+          parentStyle?.aspectRatio !== undefined &&
+          parentStyle.aspectRatio !== "auto" &&
+          ["hidden", "clip"].includes(parentStyle.overflow);
+
+        return !(
+          style.aspectRatio !== "auto" ||
+          ownInlineDimensions ||
+          parentReservesRatio
+        );
+      });
+      const confirmedImportantElements = baseImportantElements.filter(
+        isConfirmedInaccessible,
+      );
+      const confirmedImportantElementSet = new Set(confirmedImportantElements);
+      const potentiallyClippedImportantElements = baseImportantElements.filter(
+        (element) => {
+          const geometry = horizontalGeometry(element);
+          return geometry.outside && !confirmedImportantElementSet.has(element);
+        },
+      );
 
       return {
         viewportWidth,
@@ -627,9 +924,16 @@ const measurePage = async (
         wideElementCount: wideElements.length,
         fixedWidthElementCount: fixedWidthElements.length,
         overflowingImageCount: overflowingImages.length,
-        clippedBaseImportantElementCount:
-          baseImportantElements.filter(materiallyOutside).length,
-        navigationMateriallyOutside: navigationElements.some(materiallyOutside),
+        intentionallyClippedImageCount: intentionallyClippedImages.length,
+        potentialOverflowElementCount: potentialOverflowElements.length,
+        clippedBaseImportantElementCount: confirmedImportantElements.length,
+        potentiallyClippedImportantElementCount:
+          potentiallyClippedImportantElements.length,
+        navigationMateriallyOutside: navigationElements.some(
+          isConfirmedInaccessible,
+        ),
+        missingDimensionImageCount: imagesMissingDimensions.length,
+        unreservedImageCount: unreservedImages.length,
         controls,
         tinyTextCount: tinyText.length,
         textSampleCount: textElements.length,

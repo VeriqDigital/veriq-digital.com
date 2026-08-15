@@ -3,20 +3,37 @@ import type { CrawlAuditData, ResourceDiscoveryStatus } from "./crawl-types";
 import type {
   AuditCheckResult,
   AuditFinding,
+  AuditFindingImpact,
   AuditSeverity,
   PageSpeedData,
   PageSpeedMetric,
   RenderedMobileData,
 } from "./model";
+import { healthConstraintCaps } from "./health-constraints";
 import { hasObviousHeadingSkip } from "./page-analysis";
 
-type FindingInput = Omit<AuditFinding, "id" | "category">;
+type FindingInput = Omit<AuditFinding, "id" | "category" | "impact"> &
+  Readonly<{ impact?: AuditFindingImpact }>;
+
+const defaultImpactBySeverity: Record<AuditSeverity, AuditFindingImpact> = {
+  critical: "confirmed",
+  high: "confirmed",
+  medium: "likely",
+  low: "likely",
+  opportunity: "informational",
+  passed: "informational",
+};
 
 const finding = (
   id: string,
   category: AuditCheckResult["category"],
   input: FindingInput,
-): AuditFinding => ({ id, category, ...input });
+): AuditFinding => ({
+  id,
+  category,
+  ...input,
+  impact: input.impact ?? defaultImpactBySeverity[input.severity],
+});
 
 const check = (
   value: Omit<AuditCheckResult, "finding"> & { finding?: FindingInput },
@@ -87,6 +104,8 @@ const metricCheck = ({
     weight,
     status: "failed",
     score: needsImprovementResult ? 60 : 20,
+    penaltyGroup:
+      category === "performance" ? "performance-lab-measurement" : undefined,
     finding: {
       severity,
       title,
@@ -284,12 +303,13 @@ function buildSeoChecks(
         id: "seo-h1",
         category: "seo",
         weight: 14,
-        status: "failed",
-        score: 65,
+        status: "opportunity",
+        score: 97,
         finding: {
-          severity: "medium",
-          title: "The audited page has multiple primary headings",
-          explanation: `${page.h1s.length} H1 headings were found. Multiple H1s can be valid in some document structures, but they can signal an unclear hierarchy on a business page.`,
+          impact: "informational",
+          severity: "opportunity",
+          title: "Review the page's multiple primary headings",
+          explanation: `${page.h1s.length} H1 headings were found. Multiple H1s can be valid in modern document structures, so this observation does not establish a usability or search problem by itself.`,
           whyItMatters:
             "A predictable heading structure makes the page easier to scan and understand.",
           recommendation:
@@ -309,15 +329,16 @@ function buildSeoChecks(
           id: "seo-heading-order",
           category: "seo",
           weight: 6,
-          status: "failed",
-          score: 60,
+          status: "opportunity",
+          score: 98,
           finding: {
-            severity: "medium",
-            title: "The page skips a heading level",
+            impact: "informational",
+            severity: "opportunity",
+            title: "Review the page's heading hierarchy",
             explanation:
               "At least one heading jumps by more than one level, such as from H2 directly to H4.",
             whyItMatters:
-              "A logical heading outline helps people scan the page and helps assistive technology communicate its structure.",
+              "A logical outline can help people scan the page and can make section relationships clearer to assistive technology. A skipped level alone does not prove the page is difficult to understand.",
             recommendation:
               "Review the heading outline and use the next appropriate level for nested sections.",
           },
@@ -415,6 +436,8 @@ function buildSeoChecks(
         weight: 18,
         status: "failed",
         score: 0,
+        categoryScoreCap: 49,
+        overallScoreCap: healthConstraintCaps.fundamentalVisibility,
         finding: {
           severity: "critical",
           title: "The page tells search engines not to index it",
@@ -461,6 +484,7 @@ function buildSeoChecks(
         weight: 12,
         status: "failed",
         score: 0,
+        overallScoreCap: healthConstraintCaps.fundamentalVisibility,
         finding: {
           severity: "high",
           title: "Robots.txt blocks crawling of the audited page",
@@ -593,6 +617,11 @@ function buildPerformanceChecks(pageSpeed: PageSpeedData): AuditCheckResult[] {
       weight: 40,
       status: pageSpeed.performanceScore >= 75 ? "passed" : "failed",
       score: pageSpeed.performanceScore,
+      penaltyGroup: "performance-lab-measurement",
+      overallScoreCap:
+        pageSpeed.performanceScore < 50
+          ? healthConstraintCaps.moderateMaterialDefect
+          : undefined,
       finding:
         pageSpeed.performanceScore >= 75
           ? undefined
@@ -723,21 +752,10 @@ function buildMobileChecks(
 
   if (!pageSpeed.available) {
     checks.push(
-      unavailableCheck("mobile-pagespeed-performance", "mobile-experience", 20),
       unavailableCheck("mobile-tap-targets", "mobile-experience", 5),
       unavailableCheck("mobile-content-width", "mobile-experience", 5),
     );
   } else {
-    checks.push(
-      check({
-        id: "mobile-pagespeed-performance",
-        category: "mobile-experience",
-        weight: 20,
-        status: pageSpeed.performanceScore >= 75 ? "passed" : "failed",
-        score: pageSpeed.performanceScore,
-      }),
-    );
-
     for (const [id, score, title] of [
       ["mobile-tap-targets", pageSpeed.audits.tapTargets, "Some mobile controls may be difficult to tap"],
       ["mobile-content-width", pageSpeed.audits.contentWidth, "Page content may extend beyond the mobile viewport"],
@@ -754,6 +772,10 @@ function buildMobileChecks(
             weight: 5,
             status: "failed",
             score,
+            penaltyGroup:
+              id === "mobile-content-width"
+                ? "mobile-horizontal-layout"
+                : undefined,
             finding: {
               severity: score < 50 ? "high" : "medium",
               title,
@@ -786,45 +808,75 @@ function buildMobileChecks(
     metrics.horizontalOverflowPixels,
     metrics.horizontalScrollPixels,
   );
+  const confirmedHorizontalOverflow =
+    metrics.horizontalScrollPixels > 8 ||
+    (metrics.horizontalOverflowPixels > 8 && metrics.wideElementCount > 0);
   const catastrophicOverflow =
     metrics.horizontalScrollPixels >= 160 ||
-    metrics.horizontalOverflowPixels >= 200 ||
     (metrics.fixedWidthElementCount > 0 && materialOverflow >= 120);
-  const majorOverflow =
-    materialOverflow > 8 || metrics.fixedWidthElementCount > 0;
 
   checks.push(
-    !majorOverflow && materialOverflow <= 8
+    confirmedHorizontalOverflow
       ? check({
           id: "mobile-rendered-width",
           category: "mobile-experience",
           weight: 25,
-          status: "passed",
-          score: 100,
-        })
-      : check({
-          id: "mobile-rendered-width",
-          category: "mobile-experience",
-          weight: 25,
           status: "failed",
-          score: catastrophicOverflow ? 10 : materialOverflow >= 48 ? 40 : 72,
+          score: catastrophicOverflow ? 10 : materialOverflow >= 48 ? 45 : 75,
+          penaltyGroup: "mobile-horizontal-layout",
+          categoryScoreCap: catastrophicOverflow ? 49 : undefined,
+          overallScoreCap:
+            catastrophicOverflow || materialOverflow >= 48
+              ? healthConstraintCaps.majorCustomerExperience
+              : healthConstraintCaps.moderateMaterialDefect,
           finding: {
+            impact: "confirmed",
             severity: catastrophicOverflow
               ? "critical"
               : materialOverflow >= 48
                 ? "high"
                 : "medium",
-            title: "The rendered page is wider than a mobile screen",
+            title: "The mobile document is wider than the usable viewport",
             explanation:
-              "The mobile render found page content extending materially beyond the usable viewport. Tiny subpixel differences are ignored.",
+              "The rendered document has confirmed page-level width beyond the usable mobile viewport. The detector requires reachable sideways scrolling or a non-clipped wide element that contributes to document width; tiny subpixel differences are ignored.",
             whyItMatters:
-              "Visitors may need to scroll sideways or may miss content that starts outside the visible mobile layout.",
+              "Horizontal page scrolling can hide content and makes reading and navigation harder on a phone.",
             recommendation:
               "Use responsive containers, allow flexible content to shrink, and remove fixed widths that exceed the mobile viewport.",
-            observedValue: `${metrics.documentWidth}px document at a ${metrics.viewportWidth}px viewport (${materialOverflow}px overflow; ${metrics.fixedWidthElementCount} fixed-width elements detected).`,
-            recommendedValue: `No more than 8px incidental overflow at a ${metrics.viewportWidth}px viewport.`,
+            observedValue: `${metrics.documentWidth}px document at a ${metrics.viewportWidth}px viewport (${metrics.horizontalScrollPixels}px reachable horizontal scroll; ${metrics.wideElementCount} confirmed wide elements; ${metrics.fixedWidthElementCount} fixed-width elements).`,
+            recommendedValue: `No more than 8px incidental horizontal scroll at a ${metrics.viewportWidth}px viewport.`,
           },
-        }),
+        })
+      : metrics.potentialOverflowElementCount > 0 ||
+          metrics.horizontalOverflowPixels > 8
+        ? check({
+            id: "mobile-rendered-width",
+            category: "mobile-experience",
+            weight: 25,
+            status: "opportunity",
+            score: 96,
+            evidenceConfidence: 0.65,
+            penaltyGroup: "mobile-horizontal-layout",
+            finding: {
+              impact: "informational",
+              severity: "opportunity",
+              title: "Potential mobile overflow detected",
+              explanation:
+                "Some rendered geometry extends beyond the viewport, but the audit could not confirm unintended document-level horizontal scrolling.",
+              whyItMatters:
+                "Transformed, animated, clipped, and off-canvas elements often extend beyond the viewport intentionally, so geometry alone does not prove a usability problem.",
+              recommendation:
+                "Review the flagged area at common phone widths and confirm that meaningful content and controls remain reachable.",
+              observedValue: `${metrics.potentialOverflowElementCount} potential overflow elements; ${metrics.horizontalScrollPixels}px reachable horizontal scroll.`,
+            },
+          })
+        : check({
+            id: "mobile-rendered-width",
+            category: "mobile-experience",
+            weight: 25,
+            status: "passed",
+            score: 100,
+          }),
   );
 
   const importantContentClipped =
@@ -842,14 +894,20 @@ function buildMobileChecks(
             metrics.clippedNavigation || metrics.offscreenPrimaryActionCount > 0
               ? 30
               : 60,
+          penaltyGroup: "mobile-horizontal-layout",
+          overallScoreCap:
+            metrics.clippedNavigation || metrics.offscreenPrimaryActionCount > 0
+              ? healthConstraintCaps.majorCustomerExperience
+              : healthConstraintCaps.moderateMaterialDefect,
           finding: {
+            impact: "confirmed",
             severity:
               metrics.clippedNavigation || metrics.offscreenPrimaryActionCount > 0
                 ? "high"
                 : "medium",
-            title: "Important content is cut off in the mobile layout",
+            title: "Important mobile content is not reachable",
             explanation:
-              "The rendered mobile check found navigation, primary content, or an action extending substantially outside the visible viewport.",
+              "The rendered mobile check found meaningful navigation, a primary heading, or an action outside the usable viewport without a normal horizontal path to reach it.",
             whyItMatters:
               "Customers cannot reliably use content or controls they cannot see or reach on a phone.",
             recommendation:
@@ -857,6 +915,28 @@ function buildMobileChecks(
             observedValue: `${metrics.clippedImportantElementCount} important elements clipped; ${metrics.offscreenPrimaryActionCount} primary actions off-screen.`,
           },
         })
+      : metrics.potentiallyClippedImportantElementCount > 0
+        ? check({
+            id: "mobile-rendered-important-content",
+            category: "mobile-experience",
+            weight: 10,
+            status: "opportunity",
+            score: 97,
+            evidenceConfidence: 0.65,
+            penaltyGroup: "mobile-horizontal-layout",
+            finding: {
+              impact: "informational",
+              severity: "opportunity",
+              title: "Some mobile content may extend beyond its container",
+              explanation:
+                "The render found meaningful elements outside the initial viewport, but clipping, animation, or an off-canvas pattern prevented the audit from proving that users cannot reach them.",
+              whyItMatters:
+                "The condition may be intentional, but it is worth confirming that text, navigation, and actions remain available in the normal interaction state.",
+              recommendation:
+                "Review the affected area with menus closed and open, carousels advanced, and animations settled before treating it as a defect.",
+              observedValue: `${metrics.potentiallyClippedImportantElementCount} potentially clipped important elements.`,
+            },
+          })
       : check({
           id: "mobile-rendered-important-content",
           category: "mobile-experience",
@@ -880,11 +960,14 @@ function buildMobileChecks(
           category: "mobile-experience",
           weight: 5,
           status: "failed",
-          score: metrics.overflowingImageCount >= 3 ? 35 : 65,
+          score: metrics.overflowingImageCount >= 3 ? 55 : 75,
+          penaltyGroup: "mobile-horizontal-layout",
+          overallScoreCap: healthConstraintCaps.moderateMaterialDefect,
           finding: {
+            impact: "confirmed",
             severity: metrics.overflowingImageCount >= 3 ? "high" : "medium",
-            title: "Images overflow the mobile viewport",
-            explanation: `${metrics.overflowingImageCount} rendered images extend materially outside the usable mobile width.`,
+            title: "Images contribute to horizontal mobile scrolling",
+            explanation: `${metrics.overflowingImageCount} rendered images extend beyond the usable mobile width and contribute to reachable document-level horizontal scrolling. Intentionally clipped and carousel imagery is excluded.`,
             whyItMatters:
               "Oversized images can create sideways scrolling and hide meaningful visual content.",
             recommendation:
@@ -1013,23 +1096,6 @@ function buildAccessibilityChecks(
             recommendation: "Add the correct language code to the HTML element, such as lang=\"en\" for English.",
           },
         }),
-    hasObviousHeadingSkip(page.headings)
-      ? check({
-          id: "accessibility-heading-order",
-          category: "accessibility",
-          weight: 5,
-          status: "failed",
-          score: 60,
-          finding: {
-            severity: "medium",
-            title: "The heading structure skips a level",
-            explanation: "The page contains an obvious jump in heading levels.",
-            whyItMatters:
-              "A consistent heading outline helps screen-reader users navigate and understand the page.",
-            recommendation: "Use headings in a logical nested order without choosing levels only for visual size.",
-          },
-        })
-      : check({ id: "accessibility-heading-order", category: "accessibility", weight: 5, status: "passed", score: 100 }),
   ];
 
   if (labelScore === null) {
@@ -1044,6 +1110,11 @@ function buildAccessibilityChecks(
         weight: 15,
         status: "failed",
         score: labelScore,
+        penaltyGroup: "form-accessibility",
+        overallScoreCap:
+          labelScore < 60
+            ? healthConstraintCaps.moderateMaterialDefect
+            : undefined,
         finding: {
           severity: labelScore < 60 ? "high" : "medium",
           title: "Some form fields do not have detectable labels",
@@ -1073,6 +1144,7 @@ function buildAccessibilityChecks(
           weight: 35,
           status: pageSpeed.accessibilityScore >= 90 ? "passed" : "failed",
           score: pageSpeed.accessibilityScore,
+          penaltyGroup: "accessibility-automated-measurement",
           finding:
             pageSpeed.accessibilityScore >= 90
               ? undefined
@@ -1106,6 +1178,7 @@ function buildAccessibilityChecks(
               weight: 15,
               status: "failed",
               score: contrastScore,
+              penaltyGroup: "accessibility-automated-measurement",
               finding: {
                 severity: "high",
                 title: "Some text does not have enough color contrast",
@@ -1136,6 +1209,7 @@ function buildConversionChecks(
           weight: 55,
           status: "opportunity",
           score: 68,
+          evidenceConfidence: 0.7,
           finding: {
             severity: "opportunity",
             title: "No obvious action link was detected on the audited page",
@@ -1155,6 +1229,7 @@ function buildConversionChecks(
           weight: 45,
           status: "opportunity",
           score: 70,
+          evidenceConfidence: 0.7,
           finding: {
             severity: "opportunity",
             title: "No direct contact path was detected on the audited page",
@@ -1185,6 +1260,9 @@ function buildConversionChecks(
           weight: 15,
           status: "failed",
           score: 25,
+          penaltyGroup: "mobile-horizontal-layout",
+          categoryScoreCap: 79,
+          overallScoreCap: healthConstraintCaps.majorCustomerExperience,
           finding: {
             severity: "high",
             title: "A primary customer action is cut off on mobile",
@@ -1212,7 +1290,32 @@ function buildConversionChecks(
   return checks;
 }
 
-function buildTechnicalChecks(crawl: CrawlAuditData): AuditCheckResult[] {
+const scoreHtmlResponseSize = (htmlBytes: number, pageSpeed: PageSpeedData) => {
+  const kibibytes = htmlBytes / 1024;
+
+  if (kibibytes <= 500) return 100;
+
+  const baseScore =
+    kibibytes <= 750
+      ? 99
+      : kibibytes <= 1_000
+        ? 97
+        : kibibytes <= 1_500
+          ? 94
+          : kibibytes <= 2_000
+            ? 91
+            : 88;
+  const measuredPerformanceConcern =
+    pageSpeed.available && pageSpeed.performanceScore < 50;
+
+  return measuredPerformanceConcern ? Math.max(82, baseScore - 6) : baseScore;
+};
+
+function buildTechnicalChecks(
+  crawl: CrawlAuditData,
+  pageSpeed: PageSpeedData,
+  renderedMobile: RenderedMobileData,
+): AuditCheckResult[] {
   const page = crawl.primaryPage;
   const finalUrl = new URL(crawl.finalUrl);
   const linkScore =
@@ -1221,11 +1324,17 @@ function buildTechnicalChecks(crawl: CrawlAuditData): AuditCheckResult[] {
       : ((crawl.brokenLinks.tested - crawl.brokenLinks.broken.length) /
           crawl.brokenLinks.tested) *
         100;
-  const dimensionScore =
-    page.imageCount === 0
-      ? 100
-      : ((page.imageCount - page.missingDimensionImageCount) / page.imageCount) *
-        100;
+  const htmlSizeScore = scoreHtmlResponseSize(page.htmlBytes, pageSpeed);
+  const renderedUnreservedImages = renderedMobile.available
+    ? renderedMobile.metrics.unreservedImageCount
+    : null;
+  const imageDimensionRiskScore =
+    renderedUnreservedImages === null || page.imageCount === 0
+      ? 99
+      : Math.max(
+          88,
+          100 - (renderedUnreservedImages / page.imageCount) * 20,
+        );
   const checks: AuditCheckResult[] = [
     page.statusCode >= 200 && page.statusCode < 400
       ? check({ id: "technical-http-status", category: "technical-health", weight: 22, status: "passed", score: 100 })
@@ -1235,6 +1344,8 @@ function buildTechnicalChecks(crawl: CrawlAuditData): AuditCheckResult[] {
           weight: 22,
           status: "failed",
           score: 0,
+          categoryScoreCap: 30,
+          overallScoreCap: healthConstraintCaps.catastrophic,
           finding: {
             severity: "critical",
             title: "The submitted page did not return a successful response",
@@ -1285,19 +1396,24 @@ function buildTechnicalChecks(crawl: CrawlAuditData): AuditCheckResult[] {
       whyItMatters: "A robots.txt file provides crawl guidance and a conventional place to reference the XML sitemap.",
       recommendation: "Publish a simple robots.txt file with deliberate rules and the preferred sitemap location.",
     }),
-    page.htmlBytes <= 500 * 1024
+    htmlSizeScore === 100
       ? check({ id: "technical-html-size", category: "technical-health", weight: 8, status: "passed", score: 100 })
       : check({
           id: "technical-html-size",
           category: "technical-health",
           weight: 8,
-          status: "failed",
-          score: page.htmlBytes <= 800 * 1024 ? 65 : 30,
+          status: htmlSizeScore >= 94 ? "opportunity" : "failed",
+          score: htmlSizeScore,
+          penaltyGroup: "document-delivery-weight",
           finding: {
-            severity: page.htmlBytes > 800 * 1024 ? "high" : "medium",
-            title: "The HTML response is unusually large",
+            impact: htmlSizeScore >= 94 ? "informational" : "likely",
+            severity: htmlSizeScore >= 94 ? "opportunity" : "low",
+            title: "The HTML response is larger than typical",
             explanation: `The downloaded HTML was approximately ${Math.round(page.htmlBytes / 1024)} KB before images, styles, and scripts.`,
-            whyItMatters: "Large documents take longer to transfer and parse, especially on mobile devices.",
+            whyItMatters:
+              pageSpeed.available && pageSpeed.performanceScore < 50
+                ? "A large document coincides with poor measured mobile performance, increasing the likelihood that transfer or parsing work contributes to the delay."
+                : "Large documents can take longer to transfer and parse, but response size alone does not prove that visitors experience a slow page.",
             recommendation: "Remove repeated or unused markup and avoid embedding large data payloads directly in the document.",
           },
         }),
@@ -1324,12 +1440,26 @@ function buildTechnicalChecks(crawl: CrawlAuditData): AuditCheckResult[] {
           category: "technical-health",
           weight: 6,
           status: "opportunity",
-          score: Math.max(60, dimensionScore),
+          score: imageDimensionRiskScore,
+          evidenceConfidence:
+            renderedUnreservedImages === null ? 0.65 : 0.85,
+          penaltyGroup: "layout-stability",
           finding: {
+            impact:
+              renderedUnreservedImages !== null && renderedUnreservedImages > 0
+                ? "likely"
+                : "informational",
             severity: "opportunity",
-            title: "Some images do not declare width and height",
-            explanation: `${page.missingDimensionImageCount} of ${page.imageCount} images omit one or both intrinsic dimension attributes. CSS may still reserve space, so this is an opportunity rather than a confirmed layout problem.`,
-            whyItMatters: "Known dimensions help browsers reserve space and reduce avoidable layout movement.",
+            title:
+              renderedUnreservedImages !== null && renderedUnreservedImages > 0
+                ? "Some images may not reserve stable layout space"
+                : "Some images omit intrinsic width and height attributes",
+            explanation:
+              renderedUnreservedImages === null
+                ? `${page.missingDimensionImageCount} of ${page.imageCount} images omit one or both intrinsic dimension attributes. Rendered layout evidence was unavailable, so this is not treated as proof of layout instability.`
+                : `${page.missingDimensionImageCount} of ${page.imageCount} images omit intrinsic dimensions; ${renderedUnreservedImages} visible images also lacked a detectable CSS aspect ratio or other reserved dimensions in the rendered sample.`,
+            whyItMatters:
+              "Browsers need intrinsic dimensions, a CSS aspect ratio, or another stable container to reserve space before image content loads.",
             recommendation: "Declare intrinsic dimensions or otherwise reserve a stable aspect ratio for content images.",
           },
         }),
@@ -1405,7 +1535,7 @@ export function buildAuditChecks(
       ...buildMobileChecks(crawl, pageSpeed, renderedMobile),
       ...buildAccessibilityChecks(crawl, pageSpeed),
       ...buildConversionChecks(crawl, renderedMobile),
-      ...buildTechnicalChecks(crawl),
+      ...buildTechnicalChecks(crawl, pageSpeed, renderedMobile),
     ],
     notices,
   };

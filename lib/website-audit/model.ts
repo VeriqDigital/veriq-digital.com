@@ -12,6 +12,11 @@ export type NormalizedScore = number;
 
 export type AuditEvidenceLevel = "full" | "partial" | "unavailable";
 
+export type AuditFindingImpact =
+  | "confirmed"
+  | "likely"
+  | "informational";
+
 export type AuditCategoryScore = Readonly<{
   id: AuditCategoryId;
   available: boolean;
@@ -32,6 +37,7 @@ export type AuditSupportingMetric = Readonly<{
 export type AuditFinding = Readonly<{
   id: string;
   category: AuditCategoryId;
+  impact: AuditFindingImpact;
   severity: AuditSeverity;
   title: string;
   explanation: string;
@@ -77,6 +83,10 @@ export type AuditCheckResult = Readonly<{
   weight: number;
   status: AuditCheckStatus;
   score: number | null;
+  evidenceConfidence?: number;
+  penaltyGroup?: string;
+  categoryScoreCap?: number;
+  overallScoreCap?: number;
   finding?: AuditFinding;
 }>;
 
@@ -116,9 +126,14 @@ export type RenderedMobileMetrics = Readonly<{
   wideElementCount: number;
   fixedWidthElementCount: number;
   overflowingImageCount: number;
+  intentionallyClippedImageCount: number;
+  potentialOverflowElementCount: number;
   clippedImportantElementCount: number;
+  potentiallyClippedImportantElementCount: number;
   clippedNavigation: boolean;
   offscreenPrimaryActionCount: number;
+  missingDimensionImageCount: number;
+  unreservedImageCount: number;
   seriousTapTargetCount: number;
   interactiveControlCount: number;
   tinyTextCount: number;

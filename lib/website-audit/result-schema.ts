@@ -14,6 +14,11 @@ const severitySchema = z.enum([
   "opportunity",
   "passed",
 ]);
+const findingImpactSchema = z.enum([
+  "confirmed",
+  "likely",
+  "informational",
+]);
 
 const categoryScoreSchema = z
   .object({
@@ -52,24 +57,36 @@ const categoryScoreSchema = z
     }
   });
 
-const findingSchema = z.object({
-  id: z.string().regex(/^[a-z0-9][a-z0-9._-]{0,99}$/),
-  category: categorySchema,
-  severity: severitySchema,
-  title: boundedText(180),
-  explanation: boundedText(700),
-  whyItMatters: boundedText(700),
-  recommendation: boundedText(900),
-  observedValue: boundedText(500).optional(),
-  recommendedValue: boundedText(500).optional(),
-  supportingMetric: z
-    .object({
-      label: boundedText(100),
-      value: boundedText(120),
-      context: boundedText(260).optional(),
-    })
-    .optional(),
-});
+const findingSchema = z
+  .object({
+    id: z.string().regex(/^[a-z0-9][a-z0-9._-]{0,99}$/),
+    category: categorySchema,
+    impact: findingImpactSchema.optional(),
+    severity: severitySchema,
+    title: boundedText(180),
+    explanation: boundedText(700),
+    whyItMatters: boundedText(700),
+    recommendation: boundedText(900),
+    observedValue: boundedText(500).optional(),
+    recommendedValue: boundedText(500).optional(),
+    supportingMetric: z
+      .object({
+        label: boundedText(100),
+        value: boundedText(120),
+        context: boundedText(260).optional(),
+      })
+      .optional(),
+  })
+  .transform((value) => ({
+    ...value,
+    impact:
+      value.impact ??
+      (value.severity === "critical" || value.severity === "high"
+        ? "confirmed"
+        : value.severity === "opportunity" || value.severity === "passed"
+          ? "informational"
+          : "likely"),
+  }));
 
 const resultIdSchema = z.union([
   z.uuid(),

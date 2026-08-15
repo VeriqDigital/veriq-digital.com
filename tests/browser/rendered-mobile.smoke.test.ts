@@ -58,8 +58,216 @@ test(
     assert.ok(result.metrics.horizontalOverflowPixels >= 600);
     assert.ok(result.metrics.fixedWidthElementCount >= 1);
     assert.ok(result.metrics.overflowingImageCount >= 1);
-    assert.equal(result.metrics.clippedNavigation, true);
+    assert.equal(result.metrics.clippedNavigation, false);
     assert.equal(result.metrics.interactiveControlCount, 2);
     assert.equal(result.metrics.seriousTapTargetCount, 1);
+  },
+);
+
+test(
+  "distinguishes clipped visuals and off-canvas UI from unreachable content",
+  { timeout: 30_000 },
+  async () => {
+    const executablePath = playwrightChromium.executablePath();
+    await access(executablePath);
+    const audit = async (body: string, styles: string) =>
+      runRenderedMobileAudit(
+        {
+          submittedUrl: "https://example.com/",
+          finalUrl: "https://example.com/",
+          redirectCount: 0,
+          html: `<!doctype html><html><head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>html, body { margin: 0; } ${styles}</style>
+          </head><body>${body}</body></html>`,
+          primaryPage: {},
+        } as PrimaryCrawlData,
+        { browserExecutablePathForTesting: executablePath },
+      );
+
+    const decorative = await audit(
+      `<section class="hero"><h1>Healthy hero</h1><img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='200'/%3E"></section>`,
+      `.hero { position: relative; width: 100%; height: 220px; overflow: hidden; }
+       .hero img { position: absolute; width: 800px; height: 200px; left: 40%; object-fit: cover; }`,
+    );
+    const offCanvas = await audit(
+      `<main><h1>Page</h1></main><nav aria-hidden="true"><a href="/menu">Menu item</a></nav>`,
+      `nav { position: fixed; left: 100vw; width: 280px; transform: translateX(100%); }`,
+    );
+    const carousel = await audit(
+      `<main><h1>Products</h1><div class="carousel"><div class="track"><img alt="One" width="390" height="200"><img alt="Two" width="390" height="200"></div></div></main>`,
+      `.carousel { width: 100%; overflow: hidden; }
+       .track { display: flex; width: 780px; transform: translateX(0); }
+       .track img { flex: 0 0 390px; }`,
+    );
+    const unreachableAction = await audit(
+      `<main><h1>Book a service</h1><a class="cta" href="/contact">Get a quote</a></main>`,
+      `.cta { position: fixed; left: 520px; top: 100px; width: 140px; height: 44px; }`,
+    );
+    const stableImage = await audit(
+      `<main><h1>Stable image</h1><img class="stable" alt="Example" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'/%3E"></main>`,
+      `.stable { display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover; }`,
+    );
+
+    for (const result of [
+      decorative,
+      offCanvas,
+      carousel,
+      unreachableAction,
+      stableImage,
+    ]) {
+      assert.equal(result.available, true);
+    }
+    if (
+      !decorative.available ||
+      !offCanvas.available ||
+      !carousel.available ||
+      !unreachableAction.available ||
+      !stableImage.available
+    ) {
+      return;
+    }
+
+    assert.equal(decorative.metrics.horizontalScrollPixels, 0);
+    assert.equal(decorative.metrics.overflowingImageCount, 0);
+    assert.equal(offCanvas.metrics.clippedNavigation, false);
+    assert.equal(carousel.metrics.overflowingImageCount, 0);
+    assert.equal(unreachableAction.metrics.offscreenPrimaryActionCount, 1);
+    assert.equal(stableImage.metrics.missingDimensionImageCount, 1);
+    assert.equal(stableImage.metrics.unreservedImageCount, 0);
+  },
+);
+
+test(
+  "uses only horizontal motion evidence to exempt rendered overflow",
+  { timeout: 45_000 },
+  async () => {
+    const executablePath = playwrightChromium.executablePath();
+    await access(executablePath);
+    const audit = async (body: string, styles: string) =>
+      runRenderedMobileAudit(
+        {
+          submittedUrl: "https://example.com/",
+          finalUrl: "https://example.com/",
+          redirectCount: 0,
+          html: `<!doctype html><html><head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>html, body { margin: 0; } ${styles}</style>
+          </head><body>${body}</body></html>`,
+          primaryPage: {},
+        } as PrimaryCrawlData,
+        { browserExecutablePathForTesting: executablePath },
+      );
+    const assertAvailable = (
+      result: Awaited<ReturnType<typeof runRenderedMobileAudit>>,
+      caseName: string,
+    ) => {
+      assert.equal(
+        result.available,
+        true,
+        `${caseName} rendered audit was unavailable.`,
+      );
+      if (!result.available) throw new Error(`${caseName} audit unavailable.`);
+      return result.metrics;
+    };
+
+    const transformedDocumentOverflow = assertAvailable(
+      await audit(
+        `<nav style="width: 700px"><a href="/menu">Navigation</a></nav>
+         <main class="broken" style="width: 1000px">
+           <h1>Broken animated layout</h1>
+           <img alt="Example" width="800" height="200"
+             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='200'/%3E">
+           <button>Action</button>
+         </main>`,
+        `.broken { transform: translateX(1px); }`,
+      ),
+      "horizontal-motion document overflow",
+    );
+    const unrelatedTransition = assertAvailable(
+      await audit(
+        `<div class="theme"><div class="broken">Wide content</div></div>`,
+        `html { overflow-x: clip; }
+         .theme { transition: color 200ms; }
+         .broken { width: 1200px; height: 40px; }`,
+      ),
+      "unrelated color transition",
+    );
+    const opacityTransition = assertAvailable(
+      await audit(
+        `<div class="broken">Wide content</div>`,
+        `html { overflow-x: clip; }
+         .broken {
+           width: 1200px;
+           height: 40px;
+           transition-property: opacity, transform;
+           transition-duration: 0.2s, 0ms;
+         }`,
+      ),
+      "opacity transition",
+    );
+    const offCanvasDrawer = assertAvailable(
+      await audit(
+        `<main><h1>Page</h1><div class="drawer-shell"><aside class="drawer">Menu</aside></div></main>`,
+        `.drawer-shell {
+           position: relative;
+           width: 100%;
+           height: 80px;
+           overflow-x: clip;
+         }
+         .drawer {
+           position: absolute;
+           left: 100%;
+           width: 280px;
+           height: 80px;
+           transition: transform 0.3s;
+           transform: translateX(100%);
+         }`,
+      ),
+      "off-canvas drawer",
+    );
+    const carousel = assertAvailable(
+      await audit(
+        `<main><h1>Products</h1><div class="carousel"><div class="track"><div>One</div><div>Two</div></div></div></main>`,
+        `.carousel { width: 100%; overflow-x: hidden; }
+         .track {
+           display: flex;
+           width: 780px;
+           transform: translateX(-390px);
+           transition: transform 300ms;
+         }
+         .track > div { flex: 0 0 390px; height: 80px; }`,
+      ),
+      "carousel",
+    );
+    const transitionAll = assertAvailable(
+      await audit(
+        `<div class="broken">Wide content</div>`,
+        `html { overflow-x: clip; }
+         .broken { width: 1200px; height: 40px; transition: all 0.2s; }`,
+      ),
+      "transition-all overflow",
+    );
+    for (const metrics of [
+      unrelatedTransition,
+      opacityTransition,
+      transitionAll,
+    ]) {
+      assert.ok(metrics.horizontalOverflowPixels >= 800);
+      assert.equal(metrics.horizontalScrollPixels, 0);
+      assert.ok(metrics.wideElementCount >= 1);
+    }
+
+    assert.equal(offCanvasDrawer.horizontalScrollPixels, 0);
+    assert.equal(offCanvasDrawer.wideElementCount, 0);
+    assert.equal(offCanvasDrawer.clippedImportantElementCount, 0);
+    assert.equal(carousel.horizontalScrollPixels, 0);
+    assert.equal(carousel.wideElementCount, 0);
+    assert.equal(carousel.clippedImportantElementCount, 0);
+    assert.ok(
+      transformedDocumentOverflow.horizontalScrollPixels >= 600,
+      JSON.stringify(transformedDocumentOverflow),
+    );
+    assert.ok(transformedDocumentOverflow.fixedWidthElementCount >= 2);
   },
 );

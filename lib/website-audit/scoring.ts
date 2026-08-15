@@ -4,9 +4,18 @@ import type {
   AuditCategoryScore,
   AuditCheckResult,
   AuditFinding,
+  AuditFindingImpact,
   AuditSeverity,
   WebsiteAuditResult,
 } from "./model";
+import {
+  getAdditionalWeakCategoryAdjustment,
+  getMaterialCategoryHealthCap,
+  healthConstraintCaps,
+  independentMaterialGroupStep,
+  maximumIndependentGroupAdjustment,
+  maximumWeakCategoryBreadthAdjustment,
+} from "./health-constraints";
 import { normalizeAuditResult, toNormalizedScore } from "./result-schema";
 
 const severityPriority: Record<AuditSeverity, number> = {
@@ -17,6 +26,26 @@ const severityPriority: Record<AuditSeverity, number> = {
   opportunity: 4,
   passed: 5,
 };
+
+const impactPriority: Record<AuditFindingImpact, number> = {
+  confirmed: 0,
+  likely: 1,
+  informational: 2,
+};
+
+const impactDeductionFactor: Record<AuditFindingImpact, number> = {
+  confirmed: 1,
+  likely: 0.55,
+  informational: 0.1,
+};
+
+const inferFindingImpact = (finding: AuditFinding): AuditFindingImpact =>
+  finding.impact ??
+  (finding.severity === "critical" || finding.severity === "high"
+    ? "confirmed"
+    : finding.severity === "opportunity" || finding.severity === "passed"
+      ? "informational"
+      : "likely");
 
 const summarizeCategory = (score: number | null) => {
   if (score === null) {
@@ -67,6 +96,31 @@ const normalizeCheck = (check: AuditCheckResult): AuditCheckResult => {
     throw new TypeError(`Audit check ${check.id} must have a positive weight.`);
   }
 
+  if (
+    check.evidenceConfidence !== undefined &&
+    (!Number.isFinite(check.evidenceConfidence) ||
+      check.evidenceConfidence < 0 ||
+      check.evidenceConfidence > 1)
+  ) {
+    throw new TypeError(
+      `Audit check ${check.id} must have evidence confidence from 0 to 1.`,
+    );
+  }
+
+  for (const [label, cap] of [
+    ["category", check.categoryScoreCap],
+    ["overall", check.overallScoreCap],
+  ] as const) {
+    if (
+      cap !== undefined &&
+      (!Number.isFinite(cap) || cap < 0 || cap > 100)
+    ) {
+      throw new TypeError(
+        `Audit check ${check.id} has an invalid ${label} score cap.`,
+      );
+    }
+  }
+
   if (check.status === "unavailable") {
     if (check.score !== null) {
       throw new TypeError(`Unavailable audit check ${check.id} cannot have a score.`);
@@ -90,44 +144,64 @@ const scoreCategory = (
   const availableChecks = categoryChecks.filter(
     (check) => check.status !== "unavailable" && check.score !== null,
   );
-  const availableWeight = availableChecks.reduce(
-    (total, check) => total + check.weight,
-    0,
-  );
   const totalWeight = categoryChecks.reduce(
     (total, check) => total + check.weight,
     0,
   );
   const evidenceCoverage =
-    totalWeight > 0 ? toNormalizedScore((availableWeight / totalWeight) * 100) : 0;
-  const rawScore =
-    availableWeight > 0
-      ? availableChecks.reduce(
-          (total, check) => total + (check.score ?? 0) * check.weight,
-          0,
-        ) / availableWeight
-      : null;
-  const categoryFindings = availableChecks.flatMap((check) =>
-    check.finding ? [check.finding] : [],
+    totalWeight > 0
+      ? toNormalizedScore(
+          (availableChecks.reduce(
+            (total, check) =>
+              total + check.weight * (check.evidenceConfidence ?? 1),
+            0,
+          ) /
+            totalWeight) *
+            100,
+        )
+      : 0;
+  const groupedDeductions = new Map<string, number>();
+  const groupedScoringWeights = new Map<string, number>();
+
+  for (const availableCheck of availableChecks) {
+    const rawDeduction =
+      availableCheck.weight * (100 - (availableCheck.score ?? 100));
+    const impact = availableCheck.finding
+      ? inferFindingImpact(availableCheck.finding)
+      : "confirmed";
+    const deduction = rawDeduction * impactDeductionFactor[impact];
+    const group = availableCheck.penaltyGroup ?? availableCheck.id;
+
+    groupedDeductions.set(
+      group,
+      Math.max(groupedDeductions.get(group) ?? 0, deduction),
+    );
+    groupedScoringWeights.set(
+      group,
+      Math.max(groupedScoringWeights.get(group) ?? 0, availableCheck.weight),
+    );
+  }
+
+  const scoringWeight = [...groupedScoringWeights.values()].reduce(
+    (total, weight) => total + weight,
+    0,
   );
+
   let score =
-    rawScore === null
-      ? null
-      : rawScore * (evidenceCoverage / 100) +
-        65 * (1 - evidenceCoverage / 100);
+    scoringWeight > 0
+      ? 100 -
+        [...groupedDeductions.values()].reduce(
+          (total, deduction) => total + deduction,
+          0,
+        ) /
+          scoringWeight
+      : null;
 
   if (score !== null) {
-    const ceilings = [100];
-
-    if (evidenceCoverage < 100 || availableChecks.length < 3) ceilings.push(89);
-    if (categoryId === "conversion-ux") ceilings.push(85);
-    if (categoryFindings.some((finding) => finding.severity === "high")) {
-      ceilings.push(79);
-    }
-    if (categoryFindings.some((finding) => finding.severity === "critical")) {
-      ceilings.push(49);
-    }
-    score = toNormalizedScore(Math.min(score, ...ceilings));
+    const explicitCaps = availableChecks.flatMap((check) =>
+      check.categoryScoreCap === undefined ? [] : [check.categoryScoreCap],
+    );
+    score = toNormalizedScore(Math.min(score, 100, ...explicitCaps));
   }
 
   return {
@@ -151,6 +225,12 @@ const prioritizeFindings = (checks: readonly AuditCheckResult[]) =>
   checks
     .flatMap((check) => (check.finding ? [check.finding] : []))
     .sort((left, right) => {
+      const impactDifference =
+        impactPriority[inferFindingImpact(left)] -
+        impactPriority[inferFindingImpact(right)];
+
+      if (impactDifference !== 0) return impactDifference;
+
       const severityDifference =
         severityPriority[left.severity] - severityPriority[right.severity];
 
@@ -173,14 +253,22 @@ type BuildAuditResultOptions = {
 };
 
 /**
- * Scoring methodology v2:
+ * Scoring methodology v3:
  * - Each check declares a positive weight and a normalized 0–100 result.
- * - Missing evidence reduces coverage and pulls partial results toward a
- *   conservative evidence prior; it is never scored as zero or perfect.
- * - Sparse and partial categories cannot score 90+, while critical/high
- *   findings apply centralized severity ceilings.
- * - The overall score uses explicit category weights and total evidence
- *   coverage so unavailable data cannot make an excellent score easier.
+ * - Impact controls scoring influence, so informational observations have only
+ *   a tiny effect while confirmed harmful issues keep their full effect.
+ * - Correlated checks share a penalty group and count only their strongest
+ *   deduction instead of stacking every manifestation of one root condition.
+ * - Unavailable evidence is excluded from score denominators. Coverage reports
+ *   confidence separately and never pulls the health score toward a prior.
+ * - Only checks with proven impact can declare explicit score caps; nominal
+ *   severity alone does not impose a generic ceiling.
+ * - Confirmed material caps are grouped by root cause. Independent material
+ *   groups can tighten the strongest cap, while duplicate manifestations do not.
+ * - Confirmed materially weak categories add a score-sensitive ceiling, so a
+ *   severely broken system cannot be averaged away by unrelated perfect areas.
+ * - A literal 100 requires complete evidence and no remaining findings. Missing
+ *   evidence is not scored as failure; it only prevents a claim of perfection.
  */
 export function buildAuditResult({
   id,
@@ -239,20 +327,106 @@ export function buildAuditResult({
 
       return total + category.score * categoryWeight;
     }, 0) / availableOverallWeight;
-  const hasCriticalFinding = normalizedChecks.some(
-    (check) => check.finding?.severity === "critical",
+  const groupedMaterialCaps = new Map<string, number>();
+  const materialGroupsByCategory = new Map<AuditCategoryId, Set<string>>();
+
+  for (const check of normalizedChecks) {
+    if (
+      check.status !== "failed" ||
+      check.overallScoreCap === undefined ||
+      !check.finding ||
+      inferFindingImpact(check.finding) !== "confirmed"
+    ) {
+      continue;
+    }
+
+    const group = check.penaltyGroup ?? check.id;
+    groupedMaterialCaps.set(
+      group,
+      Math.min(groupedMaterialCaps.get(group) ?? 100, check.overallScoreCap),
+    );
+    const categoryGroups = materialGroupsByCategory.get(check.category) ??
+      new Set<string>();
+    categoryGroups.add(group);
+    materialGroupsByCategory.set(check.category, categoryGroups);
+  }
+
+  const strongestExplicitMaterialCap = Math.min(
+    100,
+    ...groupedMaterialCaps.values(),
   );
-  const overallScore = toNormalizedScore(
-    Math.min(
-      rawOverallScore * (evidenceCoverage / 100) +
-        65 * (1 - evidenceCoverage / 100),
-      hasCriticalFinding ? 79 : 100,
-    ),
+  // Fundamental visibility and availability failures already dominate the
+  // health classification; breadth adjustments are reserved for lesser caps.
+  const independentGroupAdjustment =
+    strongestExplicitMaterialCap >=
+    healthConstraintCaps.fundamentalVisibility + 1
+      ? Math.min(
+          maximumIndependentGroupAdjustment,
+          Math.max(0, groupedMaterialCaps.size - 1) *
+            independentMaterialGroupStep,
+        )
+      : 0;
+  const explicitMaterialConstraint =
+    strongestExplicitMaterialCap - independentGroupAdjustment;
+  const weakMaterialCategories = categoryScores
+    .flatMap((category) => {
+      const groups = materialGroupsByCategory.get(category.id);
+
+      return category.score !== null && category.score < 90 && groups
+        ? [{ score: category.score, groups }]
+        : [];
+    })
+    .sort((left, right) => left.score - right.score);
+  const countedWeakCategoryGroups = new Set<string>();
+  let weakCategoryConstraint = 100;
+  let weakCategoryBreadthAdjustment = 0;
+
+  for (const weakCategory of weakMaterialCategories) {
+    const introducesIndependentRoot = [...weakCategory.groups].some(
+      (group) => !countedWeakCategoryGroups.has(group),
+    );
+
+    if (!introducesIndependentRoot) continue;
+
+    if (countedWeakCategoryGroups.size === 0) {
+      weakCategoryConstraint = getMaterialCategoryHealthCap(
+        weakCategory.score,
+      );
+    } else {
+      weakCategoryBreadthAdjustment +=
+        getAdditionalWeakCategoryAdjustment(weakCategory.score);
+    }
+
+    for (const group of weakCategory.groups) {
+      countedWeakCategoryGroups.add(group);
+    }
+  }
+
+  weakCategoryConstraint -= Math.min(
+    maximumWeakCategoryBreadthAdjustment,
+    weakCategoryBreadthAdjustment,
   );
-  const findings = prioritizeFindings(normalizedChecks);
+  const materialConstraint = Math.min(
+    explicitMaterialConstraint,
+    weakCategoryConstraint,
+  );
   const allFindings = normalizedChecks.flatMap((check) =>
     check.finding ? [check.finding] : [],
   );
+  const perfectScoreEligible =
+    categoryScores.every((category) => category.evidenceLevel === "full") &&
+    allFindings.length === 0;
+  const perfectionConstraint = perfectScoreEligible
+    ? 100
+    : healthConstraintCaps.incompletePerfection;
+  const overallScore = toNormalizedScore(
+    Math.min(
+      rawOverallScore,
+      materialConstraint,
+      perfectionConstraint,
+    ),
+  );
+  const findings = prioritizeFindings(normalizedChecks);
   const limitedCategories = categoryScores.filter(
     (category) => category.evidenceLevel !== "full",
   );
@@ -263,7 +437,7 @@ export function buildAuditResult({
 
     return category.evidenceLevel === "unavailable"
       ? `${label} was unavailable and reduced overall evidence coverage rather than being scored as zero or perfect.`
-      : `${label} was partially evaluated (${category.evidenceCoverage}% evidence coverage); its score reflects reduced confidence.`;
+      : `${label} was partially evaluated (${category.evidenceCoverage}% evidence coverage). Its score uses completed checks only; confidence is lower.`;
   });
 
   return normalizeAuditResult({
@@ -292,6 +466,6 @@ export function buildAuditResult({
     },
     findings,
     notices: [...new Set([...notices, ...coverageNotices])].slice(0, 8),
-    methodologyVersion: "v2",
+    methodologyVersion: "v3",
   });
 }
