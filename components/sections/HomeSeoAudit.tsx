@@ -15,14 +15,18 @@ const seoSignals = [
   "Search intent",
 ] as const;
 
-export default function HomeSeoAudit({ auditEnabled }: { auditEnabled: boolean }) {
+export default function HomeSeoAudit({
+  auditEnabled,
+}: {
+  auditEnabled: boolean;
+}) {
   return (
     <>
       <section className={styles.seo} aria-labelledby="seo-title">
         <Container>
           <div className={styles.seoLayout}>
             <div>
-              <h2 id="seo-title">SEO is part of the website system.</h2>
+              <h2 id="seo-title">SEO is the name of the game.</h2>
               <p className={styles.seoCopy}>
                 Search visibility is shaped by how the site is planned, written,
                 built, and maintained. Veriq considers the foundations early so
@@ -34,41 +38,54 @@ export default function HomeSeoAudit({ auditEnabled }: { auditEnabled: boolean }
                 </Link>
                 {auditEnabled ? (
                   <WebsiteAuditLink placement="homepage_seo">
-                    Audit your search foundations <span aria-hidden="true">↗</span>
+                    Audit your search foundations{" "}
+                    <span aria-hidden="true">↗</span>
                   </WebsiteAuditLink>
                 ) : null}
               </div>
             </div>
 
-            <ul className={styles.seoSignals} aria-label="SEO foundations Veriq considers">
+            <ul
+              className={styles.seoSignals}
+              aria-label="SEO foundations Veriq considers"
+            >
               {seoSignals.map((signal) => (
                 <li key={signal}>{signal}</li>
               ))}
             </ul>
           </div>
 
-          <div className={styles.resourceRail} aria-label="Related website resources">
+          <div
+            className={styles.resourceRail}
+            aria-label="Related website resources"
+          >
             <Link href="/resources/why-isnt-my-business-website-showing-up-on-google">
-              Why your website may not show up on Google <span aria-hidden="true">↗</span>
+              Why your website may not show up on Google{" "}
+              <span aria-hidden="true">↗</span>
             </Link>
             <Link href="/resources/why-is-my-website-slow">
               What makes a website slow <span aria-hidden="true">↗</span>
             </Link>
             <Link href="/resources/website-looks-bad-on-mobile">
-              Why a website breaks down on mobile <span aria-hidden="true">↗</span>
+              Why a website breaks down on mobile{" "}
+              <span aria-hidden="true">↗</span>
             </Link>
           </div>
         </Container>
       </section>
 
       {auditEnabled ? (
-        <section className={styles.audit} aria-labelledby="homepage-audit-title">
+        <section
+          className={styles.audit}
+          aria-labelledby="homepage-audit-title"
+        >
           <Container>
             <div className={styles.auditPanel}>
               <div className={styles.auditCopy}>
                 <p className={styles.kicker}>Free website audit</p>
                 <h2 id="homepage-audit-title">
-                  See what your website gets right and what may be holding it back.
+                  See what your website gets right and what may be holding it
+                  back.
                 </h2>
                 <p>
                   Get a technical and strategic starting point across measurable

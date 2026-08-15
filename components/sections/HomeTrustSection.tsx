@@ -5,9 +5,9 @@ import styles from "./HomepageSections.module.css";
 
 const trustPoints = [
   "Custom or Squarespace",
-  "Performance-minded",
-  "Conversion-focused",
-  "Mobile-first",
+  "Optimized for performance",
+  "Conversion focused",
+  "Mobile friendly",
   "Built around your business",
 ] as const;
 
@@ -20,7 +20,11 @@ const websiteJobs = [
   ["Adapt", "Support new content, campaigns, and functionality."],
 ] as const;
 
-export default function HomeTrustSection({ auditEnabled }: { auditEnabled: boolean }) {
+export default function HomeTrustSection({
+  auditEnabled,
+}: {
+  auditEnabled: boolean;
+}) {
   return (
     <>
       <section className={styles.trustStrip} aria-label="How Veriq builds">
@@ -33,7 +37,10 @@ export default function HomeTrustSection({ auditEnabled }: { auditEnabled: boole
         </Container>
       </section>
 
-      <section className={styles.positioning} aria-labelledby="positioning-title">
+      <section
+        className={styles.positioning}
+        aria-labelledby="positioning-title"
+      >
         <Container>
           <div className={styles.positioningIntro}>
             <div>

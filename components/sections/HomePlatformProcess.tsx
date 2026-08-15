@@ -17,7 +17,9 @@ export default function HomePlatformProcess() {
       <section className={styles.platform} aria-labelledby="platform-title">
         <Container>
           <div className={styles.platformIntro}>
-            <h2 id="platform-title">One platform should not decide every project.</h2>
+            <h2 id="platform-title">
+              Pick the right platform for your business.
+            </h2>
             <p>
               Veriq works in Squarespace and custom development. The choice
               follows the content, functionality, editing needs, timeline, and
@@ -49,8 +51,9 @@ export default function HomePlatformProcess() {
                 <h3>Custom development</h3>
               </div>
               <p>
-                The better route when the website needs specialized behavior,
-                a unique interface, deeper integrations, or room for more complex growth.
+                The better route when the website needs specialized behavior, a
+                unique interface, deeper integrations, or room for more complex
+                growth.
               </p>
               <ul>
                 <li>Specialized functionality</li>
@@ -61,7 +64,10 @@ export default function HomePlatformProcess() {
             </article>
           </div>
 
-          <Link className={styles.platformLink} href="/resources/custom-website-vs-template-for-small-business">
+          <Link
+            className={styles.platformLink}
+            href="/resources/custom-website-vs-template-for-small-business"
+          >
             Compare custom websites and managed platforms
             <span aria-hidden="true">↗</span>
           </Link>
@@ -73,7 +79,9 @@ export default function HomePlatformProcess() {
           <div className={styles.processHeader}>
             <div>
               <p className={styles.kicker}>How it works</p>
-              <h2 id="process-title">A clear path from first conversation to improvement.</h2>
+              <h2 id="process-title">
+                A clear path with communication every step of the way.
+              </h2>
             </div>
             <p>
               You do not need a finished brief or a platform picked out. We

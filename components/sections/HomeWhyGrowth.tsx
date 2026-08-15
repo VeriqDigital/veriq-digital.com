@@ -25,7 +25,14 @@ const principles = [
   },
 ] as const;
 
-const growthPath = ["Website", "Search", "Content", "Campaigns", "Leads", "Optimization"] as const;
+const growthPath = [
+  "Website",
+  "Search",
+  "Content",
+  "Campaigns",
+  "Leads",
+  "Optimization",
+] as const;
 
 export default function HomeWhyGrowth() {
   return (
@@ -34,7 +41,9 @@ export default function HomeWhyGrowth() {
         <Container>
           <div className={styles.whyHeader}>
             <p className={styles.kicker}>Why Veriq</p>
-            <h2 id="why-title">Good decisions before more deliverables.</h2>
+            <h2 id="why-title">
+              Locally owned, fast replies, regular communication.
+            </h2>
             <p>
               Veriq is a focused, founder-led studio. You work directly with the
               person planning, designing, and building the project, with the
@@ -59,7 +68,9 @@ export default function HomeWhyGrowth() {
         <Container>
           <div className={styles.growthLayout}>
             <div>
-              <h2 id="growth-title">Your website should be ready for the traffic you send to it.</h2>
+              <h2 id="growth-title">
+                Your website should be ready for the traffic you send to it.
+              </h2>
             </div>
             <p>
               Search, content, social media, and future advertising all send
@@ -68,11 +79,16 @@ export default function HomeWhyGrowth() {
               business needs every channel today.
             </p>
           </div>
-          <ol className={styles.growthPath} aria-label="A website-led growth path">
+          <ol
+            className={styles.growthPath}
+            aria-label="A website-led growth path"
+          >
             {growthPath.map((step, index) => (
               <li key={step}>
                 <span>{step}</span>
-                {index < growthPath.length - 1 ? <i aria-hidden="true">→</i> : null}
+                {index < growthPath.length - 1 ? (
+                  <i aria-hidden="true">→</i>
+                ) : null}
               </li>
             ))}
           </ol>
@@ -87,7 +103,9 @@ export function HomeFinalCta() {
     <section className={styles.finalCta} aria-labelledby="final-cta-title">
       <Container>
         <div className={styles.finalCtaInner}>
-          <h2 id="final-cta-title">Build a website that earns its place in your business.</h2>
+          <h2 id="final-cta-title">
+            Build a website that earns its place in your business.
+          </h2>
           <p>
             Tell Veriq what is not working, what needs to change, or what you
             are ready to build. A rough idea is enough to start.

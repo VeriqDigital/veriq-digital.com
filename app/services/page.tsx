@@ -186,7 +186,6 @@ export default function ServicesPage() {
                 </Link>
               ))}
             </nav>
-
           </div>
         </Container>
       </section>
@@ -270,7 +269,7 @@ export default function ServicesPage() {
               <span aria-hidden="true" />
               How we work
             </p>
-            <h2>A clear path from first conversation to what comes next.</h2>
+            <h2>A clear path with communication every step of the way.</h2>
           </div>
 
           <ol className={styles.processList}>
