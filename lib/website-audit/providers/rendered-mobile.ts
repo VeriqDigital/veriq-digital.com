@@ -506,10 +506,20 @@ const measurePage = async (
       document.documentElement.style.scrollBehavior = "auto";
       document.body.style.scrollBehavior = "auto";
       window.scrollTo({ left: documentWidth, top: window.scrollY });
-      const horizontalScrollPixels = Math.max(0, Math.round(window.scrollX));
+      const measuredHorizontalScrollPixels = Math.max(0, Math.round(window.scrollX));
       window.scrollTo({ left: startingScrollX, top: window.scrollY });
       document.documentElement.style.scrollBehavior = originalRootScrollBehavior;
       document.body.style.scrollBehavior = originalBodyScrollBehavior;
+      const rootOverflowX = getComputedStyle(document.documentElement).overflowX;
+      const bodyOverflowX = getComputedStyle(document.body).overflowX;
+      const documentOverflowIsUnclipped =
+        documentWidth > viewportWidth + 8 &&
+        !["hidden", "clip"].includes(rootOverflowX) &&
+        !["hidden", "clip"].includes(bodyOverflowX);
+      const horizontalScrollPixels = Math.max(
+        measuredHorizontalScrollPixels,
+        documentOverflowIsUnclipped ? documentWidth - viewportWidth : 0,
+      );
       const hasReachableHorizontalOverflow = horizontalScrollPixels > 8;
       const elements = [...document.body.querySelectorAll<HTMLElement>("*")];
       const actionPattern =
@@ -567,13 +577,111 @@ const measurePage = async (
         });
       };
       const visibleElements = elements.filter(isVisible);
+      const parseCssTimeMilliseconds = (value: string) => {
+        const normalized = value.trim().toLowerCase();
+        const numericValue = Number.parseFloat(normalized);
+
+        if (!Number.isFinite(numericValue) || numericValue <= 0) return 0;
+        if (normalized.endsWith("ms")) return numericValue;
+        if (normalized.endsWith("s")) return numericValue * 1_000;
+        return 0;
+      };
+      const hasActiveCssTime = (value: string) =>
+        value
+          .split(",")
+          .some((item) => parseCssTimeMilliseconds(item) > 0);
+      const horizontalTransitionProperties = new Set([
+        "transform",
+        "translate",
+        "scale",
+        "rotate",
+        "left",
+        "right",
+        "inset",
+        "inset-inline",
+        "inset-inline-start",
+        "inset-inline-end",
+        "margin",
+        "margin-left",
+        "margin-right",
+        "margin-inline",
+        "margin-inline-start",
+        "margin-inline-end",
+        "width",
+        "min-width",
+        "max-width",
+      ]);
+      const isDefaultTransformComponent = (
+        value: string | undefined,
+        defaultValues: readonly string[],
+      ) => {
+        const normalized = value?.trim().toLowerCase() ?? "";
+        return !normalized || defaultValues.includes(normalized);
+      };
+      const hasHorizontalPositioningEvidence = (style: CSSStyleDeclaration) => {
+        if (!["absolute", "fixed", "sticky"].includes(style.position)) {
+          return false;
+        }
+
+        return [
+          style.left,
+          style.right,
+          style.getPropertyValue("inset-inline-start"),
+          style.getPropertyValue("inset-inline-end"),
+        ].some((value) => {
+          const normalized = value.trim().toLowerCase();
+          return Boolean(normalized && normalized !== "auto" && normalized !== "0px");
+        });
+      };
+      const hasHorizontalMotionPotential = (
+        style: CSSStyleDeclaration,
+        insideSemanticMotionContainer: boolean,
+      ) => {
+        const hasAppliedTransform =
+          style.transform !== "none" ||
+          !isDefaultTransformComponent(style.translate, ["none", "0px", "0px 0px"]) ||
+          !isDefaultTransformComponent(style.scale, ["none", "1", "1 1"]) ||
+          !isDefaultTransformComponent(style.rotate, ["none", "0deg"]);
+
+        if (hasAppliedTransform) return true;
+
+        const transitionProperties = style.transitionProperty
+          .split(",")
+          .map((property) => property.trim().toLowerCase());
+        const transitionDurations = style.transitionDuration
+          .split(",")
+          .map(parseCssTimeMilliseconds);
+        const hasPositioningEvidence = hasHorizontalPositioningEvidence(style);
+        const hasRelevantTransition = transitionProperties.some(
+          (property, index) => {
+            const duration =
+              transitionDurations[index % Math.max(1, transitionDurations.length)] ?? 0;
+            if (duration <= 0 || property === "none") return false;
+            if (horizontalTransitionProperties.has(property)) return true;
+
+            return (
+              property === "all" &&
+              insideSemanticMotionContainer &&
+              hasPositioningEvidence
+            );
+          },
+        );
+
+        if (hasRelevantTransition) return true;
+
+        return (
+          style.animationName !== "none" &&
+          hasActiveCssTime(style.animationDuration) &&
+          (insideSemanticMotionContainer || hasPositioningEvidence)
+        );
+      };
       type HorizontalGeometry = Readonly<{
         rect: DOMRect;
         visibleRatio: number;
         outside: boolean;
         insideScroller: boolean;
         insideClip: boolean;
-        transformedOrAnimated: boolean;
+        horizontalMotionPotential: boolean;
         intentionallyOffCanvas: boolean;
       }>;
       const horizontalGeometryCache = new WeakMap<
@@ -595,25 +703,23 @@ const measurePage = async (
           rect.right > viewportWidth + 24 ||
           visibleRatio < 0.7;
         const ancestors = getHorizontalAncestors(element);
+        const semanticOffCanvasContainer = element.closest(
+          '[aria-modal="true"], dialog, nav, [role="navigation"], [data-state="closed"], [class*="drawer" i], [class*="offcanvas" i], [class*="carousel" i], [class*="slider" i]',
+        );
         const motionStyles = [element, ...ancestors].map((candidate) =>
           getComputedStyle(candidate),
         );
-        const transformedOrAnimated = motionStyles.some(
-          (style) =>
-            style.transform !== "none" ||
-            style.animationName !== "none" ||
-            style.transitionDuration
-              .split(",")
-              .some((duration) => Number.parseFloat(duration) > 0),
-        );
-        const semanticOffCanvasContainer = element.closest(
-          '[aria-modal="true"], dialog, nav, [role="navigation"], [data-state="closed"], [class*="drawer" i], [class*="offcanvas" i], [class*="carousel" i], [class*="slider" i]',
+        const horizontalMotionPotential = motionStyles.some((style) =>
+          hasHorizontalMotionPotential(
+            style,
+            Boolean(semanticOffCanvasContainer),
+          ),
         );
         const intentionallyOffCanvas =
           outside &&
           !hasReachableHorizontalOverflow &&
           Boolean(semanticOffCanvasContainer) &&
-          (transformedOrAnimated || visibleRatio === 0);
+          (horizontalMotionPotential || visibleRatio === 0);
 
         const geometry = {
           rect,
@@ -621,7 +727,7 @@ const measurePage = async (
           outside,
           insideScroller: isInsideHorizontalScroller(element),
           insideClip: isInsideHorizontalClip(element),
-          transformedOrAnimated,
+          horizontalMotionPotential,
           intentionallyOffCanvas,
         };
         horizontalGeometryCache.set(element, geometry);
@@ -634,7 +740,8 @@ const measurePage = async (
           geometry.outside &&
           !geometry.insideScroller &&
           !geometry.insideClip &&
-          !geometry.transformedOrAnimated &&
+          (!geometry.horizontalMotionPotential ||
+            hasReachableHorizontalOverflow) &&
           !geometry.intentionallyOffCanvas &&
           geometry.rect.width > viewportWidth + 24
         );
@@ -662,7 +769,8 @@ const measurePage = async (
             geometry.outside &&
             !geometry.insideScroller &&
             !geometry.insideClip &&
-            !geometry.transformedOrAnimated &&
+            (!geometry.horizontalMotionPotential ||
+              hasReachableHorizontalOverflow) &&
             !geometry.intentionallyOffCanvas
           );
         },
@@ -677,7 +785,7 @@ const measurePage = async (
           !overflowingImageSet.has(element) &&
           (geometry.insideClip ||
             geometry.insideScroller ||
-            geometry.transformedOrAnimated ||
+            geometry.horizontalMotionPotential ||
             geometry.intentionallyOffCanvas ||
             ["cover", "contain"].includes(objectFit))
         );
@@ -694,7 +802,7 @@ const measurePage = async (
           geometry.outside &&
           !hasReachableHorizontalOverflow &&
           !geometry.insideScroller &&
-          !geometry.transformedOrAnimated &&
+          !geometry.horizontalMotionPotential &&
           !geometry.intentionallyOffCanvas &&
           geometry.visibleRatio < 0.7
         );
