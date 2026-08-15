@@ -5,7 +5,7 @@ import styles from "./HomepageSections.module.css";
 
 const trustPoints = [
   "Custom or Squarespace",
-  "SEO-conscious builds",
+  "Performance-minded",
   "Conversion-focused",
   "Mobile-first",
   "Built around your business",
@@ -46,8 +46,8 @@ export default function HomeTrustSection({ auditEnabled }: { auditEnabled: boole
               <p>
                 Your website should help the right people find you, understand
                 what makes the business credible, and take the next step without
-                friction. Veriq connects the message, design, technology, and
-                search foundations so the site supports the business as one system.
+                friction. Veriq aligns the message, design, technology, and
+                customer path so the site does useful work for the business.
               </p>
               <div className={styles.inlineLinks}>
                 {auditEnabled ? (

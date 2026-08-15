@@ -9,9 +9,9 @@ const principles = [
       "The message, platform, and functionality follow a concrete business objective.",
   },
   {
-    title: "No platform dogma",
+    title: "Clear ownership",
     description:
-      "Squarespace when it fits. Custom development when the requirements justify it.",
+      "Accounts, access, responsibilities, and ongoing support are discussed clearly so the business knows what it controls.",
   },
   {
     title: "Technical quality",
@@ -21,7 +21,7 @@ const principles = [
   {
     title: "Built to grow",
     description:
-      "The first version creates a foundation for better content, search, tools, campaigns, and continued improvement.",
+      "The first version can expand into better content, stronger search visibility, useful tools, campaigns, and continued improvement.",
   },
 ] as const;
 

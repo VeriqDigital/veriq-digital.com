@@ -32,7 +32,7 @@ const Hero = ({ campaign }: HeroProps) => {
               </Button>
             </div>
             <ul className={styles.context} aria-label="Veriq at a glance">
-              <li>Founder-led in Des Moines</li>
+              <li>Based in Des Moines</li>
               <li>Custom or Squarespace</li>
               <li>Local and remote projects</li>
             </ul>

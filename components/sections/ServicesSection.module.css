@@ -105,7 +105,7 @@
 .card {
   position: relative;
   display: flex;
-  min-height: 25rem;
+  min-height: 21.5rem;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
@@ -290,7 +290,7 @@
   }
 
   .card {
-    min-height: 23rem;
+    min-height: 22rem;
   }
 }
 

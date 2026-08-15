@@ -50,7 +50,7 @@ const ServicesSection = () => {
             What we do
           </p>
           <h2 className={styles.heading}>
-            The parts of your website <span>should work together.</span>
+            What Veriq can help <span>you improve.</span>
           </h2>
         </div>
         <div className={styles.introLinks}>
