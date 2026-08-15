@@ -84,8 +84,8 @@
   margin-top: 1.15rem;
   font-family: var(--font-heading);
   font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: 0.94;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
   text-transform: uppercase;
   text-wrap: balance;
 }
@@ -97,6 +97,14 @@
 .growth h2 {
   max-width: 12ch;
   font-size: clamp(3.2rem, 6vw, 6rem);
+}
+
+.positioning h2,
+.platform h2,
+.seo h2,
+.growth h2,
+.finalCta h2 {
+  margin-top: 0;
 }
 
 .positioningSummary > p,
@@ -202,11 +210,6 @@
   gap: clamp(2rem, 6vw, 6rem);
 }
 
-.platformIntro .kicker {
-  grid-column: 1 / -1;
-  margin-bottom: -1rem;
-}
-
 .platformComparison {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -246,8 +249,8 @@
   font-family: var(--font-heading);
   font-size: clamp(2.8rem, 5vw, 5rem);
   font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: 0.95;
+  letter-spacing: -0.02em;
+  line-height: 1;
   text-transform: uppercase;
 }
 
@@ -634,21 +637,12 @@
   text-align: center;
 }
 
-.finalCtaInner > p:first-child {
-  color: var(--primary);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .finalCta h2 {
   max-width: 13ch;
   font-size: clamp(3.2rem, 6.5vw, 6rem);
 }
 
-.finalCtaInner > p:nth-of-type(2) {
+.finalCtaInner > p {
   max-width: 56ch;
   margin-top: 1.5rem;
   color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
@@ -724,7 +718,6 @@
     grid-template-columns: 1fr;
   }
 
-  .platformIntro .kicker,
   .whyHeader .kicker {
     grid-column: auto;
     margin-bottom: -0.75rem;

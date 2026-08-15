@@ -15,7 +15,6 @@ const Hero = ({ campaign }: HeroProps) => {
       <Container>
         <div className={styles.layout}>
           <div className={styles.content}>
-            <p className={styles.eyebrow}>Websites for growing service businesses</p>
             <h1 className={styles.title}>
               Get found. Earn trust.
               <span>Turn interest into action.</span>

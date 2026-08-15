@@ -28,16 +28,6 @@
   gap: clamp(3rem, 6vw, 6rem);
 }
 
-.eyebrow {
-  margin-bottom: 1.25rem;
-  color: var(--primary-readable);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .content {
   min-width: 0;
 }
@@ -47,8 +37,8 @@
   font-family: var(--font-heading);
   font-size: clamp(3.6rem, 6.2vw, 6rem);
   font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
   text-transform: uppercase;
   text-wrap: balance;
 }
@@ -59,8 +49,8 @@
   color: var(--muted);
   font-size: 0.7em;
   font-weight: 700;
-  line-height: 0.96;
-  letter-spacing: -0.03em;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
 }
 
 .description {

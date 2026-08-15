@@ -37,7 +37,6 @@ export default function HomeTrustSection({ auditEnabled }: { auditEnabled: boole
         <Container>
           <div className={styles.positioningIntro}>
             <div>
-              <p className={styles.kicker}>A website with a job to do</p>
               <h2 id="positioning-title">
                 Looking professional is only the starting point.
               </h2>

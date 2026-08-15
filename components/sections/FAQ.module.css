@@ -20,8 +20,8 @@
   font-family: var(--font-heading);
   font-size: clamp(3.2rem, 6vw, 6rem);
   font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: 0.94;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
   text-transform: uppercase;
   text-wrap: balance;
 }

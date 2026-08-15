@@ -17,7 +17,6 @@ export default function HomePlatformProcess() {
       <section className={styles.platform} aria-labelledby="platform-title">
         <Container>
           <div className={styles.platformIntro}>
-            <p className={styles.kicker}>The right tool for the problem</p>
             <h2 id="platform-title">One platform should not decide every project.</h2>
             <p>
               Veriq works in Squarespace and custom development. The choice

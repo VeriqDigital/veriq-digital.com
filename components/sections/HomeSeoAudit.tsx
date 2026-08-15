@@ -22,7 +22,6 @@ export default function HomeSeoAudit({ auditEnabled }: { auditEnabled: boolean }
         <Container>
           <div className={styles.seoLayout}>
             <div>
-              <p className={styles.kicker}>Getting found starts in the build</p>
               <h2 id="seo-title">SEO is part of the website system.</h2>
               <p className={styles.seoCopy}>
                 Search visibility is shaped by how the site is planned, written,

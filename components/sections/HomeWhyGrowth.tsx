@@ -59,7 +59,6 @@ export default function HomeWhyGrowth() {
         <Container>
           <div className={styles.growthLayout}>
             <div>
-              <p className={styles.kicker}>A foundation for what comes next</p>
               <h2 id="growth-title">Your website should be ready for the traffic you send to it.</h2>
             </div>
             <p>
@@ -88,7 +87,6 @@ export function HomeFinalCta() {
     <section className={styles.finalCta} aria-labelledby="final-cta-title">
       <Container>
         <div className={styles.finalCtaInner}>
-          <p>Make the next version count</p>
           <h2 id="final-cta-title">Build a website that earns its place in your business.</h2>
           <p>
             Tell Veriq what is not working, what needs to change, or what you
