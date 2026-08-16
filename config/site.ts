@@ -90,11 +90,12 @@ export const footerGroups = [
   {
     label: "Services",
     links: [
-      { label: "Web Design", href: "/small-business-web-design" },
-      { label: "Website Redesign", href: "/website-redesign" },
-      { label: "Custom Development", href: "/services#custom-development" },
-      { label: "Squarespace", href: "/small-business-web-design" },
-      { label: "SEO", href: "/services#ongoing-support" },
+      { label: "Web Design & Development", href: "/services#web-design-development" },
+      { label: "Custom Websites", href: "/services#custom-websites" },
+      { label: "Squarespace Websites", href: "/services#squarespace-websites" },
+      { label: "Website Redesign", href: "/services#website-redesigns" },
+      { label: "SEO & Growth", href: "/services#seo-growth" },
+      { label: "Custom Website Tools", href: "/services#custom-website-tools" },
       { label: "Website Support", href: "/services#ongoing-support" },
     ],
   },

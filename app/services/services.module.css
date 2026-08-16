@@ -1,37 +1,65 @@
 .page {
   overflow: clip;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.page h1,
+.page h2,
+.page h3,
+.page h4,
+.page p,
+.page a,
+.page li {
+  text-shadow: none;
 }
 
 .hero {
   position: relative;
+  isolation: isolate;
   min-height: min(58rem, 100svh);
-  padding: clamp(10rem, 16vh, 13rem) 0 clamp(5rem, 9vw, 8rem);
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding: clamp(9.5rem, 16vh, 12rem) 0 clamp(5.5rem, 9vw, 8rem);
+  background: var(--background);
 }
 
-.hero::before {
-  content: "";
+.heroGrid {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: -1;
+  opacity: 0.23;
   background-image:
-    linear-gradient(color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px);
-  background-size: 4.5rem 4.5rem;
-  mask-image: linear-gradient(to bottom, black, transparent 92%);
+    linear-gradient(color-mix(in srgb, var(--foreground) 9%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--foreground) 9%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to right, transparent 4%, black 54%, black 100%);
 }
 
 .heroInner {
   position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(16rem, 0.5fr);
+  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.55fr);
   align-items: end;
-  gap: clamp(3rem, 8vw, 8rem);
+  column-gap: clamp(3.5rem, 8vw, 8rem);
+  row-gap: clamp(2rem, 4vw, 3rem);
 }
 
-.heroCopy,
-.serviceIndex {
-  position: relative;
-  z-index: 1;
+.heroStatement,
+.heroDetails {
+  grid-column: 1;
+}
+
+.eyebrow,
+.sectionLabel {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
 }
 
 .eyebrow {
@@ -39,113 +67,106 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 650;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
 }
 
-.eyebrow span {
+.eyebrow > span {
   width: 2.75rem;
   height: 2px;
+  flex: none;
   background: var(--primary);
 }
 
 .hero h1 {
-  max-width: 10ch;
+  max-width: 11ch;
   font-family: var(--font-heading);
-  font-size: clamp(4.25rem, 8.7vw, 9rem);
+  font-size: clamp(4.2rem, 7.2vw, 6rem);
   font-weight: 900;
-  line-height: 0.86;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
   text-transform: uppercase;
+  text-wrap: balance;
 }
 
 .hero h1 span {
-  color: var(--muted);
+  display: block;
 }
 
-.heroSummary {
-  display: grid;
-  grid-template-columns: minmax(17rem, 30rem) auto;
-  align-items: end;
-  gap: clamp(2rem, 5vw, 5rem);
-  margin-top: clamp(2.25rem, 4vw, 4rem);
+.hero h1 span:last-child {
+  color: color-mix(in srgb, var(--foreground) 62%, transparent);
 }
 
-.heroSummary > p {
+.heroDescription {
+  max-width: 44rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
   color: var(--muted);
-  font-size: clamp(1rem, 1.3vw, 1.18rem);
-  line-height: 1.7;
+  font-size: clamp(1.05rem, 1.35vw, 1.18rem);
+  line-height: 1.72;
 }
 
 .heroActions {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+.primaryLink,
+.secondaryLink,
+.closingLink,
+.closingAuditLink {
+  display: inline-flex;
+  min-height: 3.4rem;
   align-items: center;
-  gap: 1.5rem;
+  justify-content: center;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
 }
 
 .primaryLink,
 .closingLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.1rem;
-  border-radius: 0.5rem;
-  padding: 0.95rem 1.25rem;
+  border: 1px solid var(--primary);
   background: var(--primary);
   color: #071011;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition:
-    background-color 200ms ease,
-    transform 250ms ease;
 }
 
 .primaryLink:hover,
 .closingLink:hover {
+  border-color: var(--primary-hover);
   background: var(--primary-hover);
-  transform: translateY(-2px);
 }
 
-.primaryLink span,
-.closingLink span,
-.textLink span {
-  font-size: 1rem;
-  line-height: 1;
-}
-
-.textLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 30%, transparent);
-  padding-bottom: 0.25rem;
+.secondaryLink {
+  border: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
   color: var(--foreground);
-  font-size: 0.75rem;
-  font-weight: 750;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  transition: border-color 200ms ease, color 200ms ease;
 }
 
-.textLink:hover {
+.closingAuditLink {
+  border: 1px solid color-mix(in srgb, var(--surface-foreground) 26%, transparent);
+  color: var(--surface-foreground);
+}
+
+.secondaryLink:hover {
   border-color: var(--primary-readable);
-  color: color-mix(
-    in srgb,
-    var(--foreground) 68%,
-    var(--primary-readable)
-  );
+  color: var(--primary-readable);
+}
+
+.closingAuditLink:hover {
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .serviceIndex {
+  grid-row: 1 / span 2;
+  grid-column: 2;
   align-self: end;
-  border-top: 1px solid color-mix(in srgb, var(--foreground) 17%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
 }
 
 .serviceIndex > p {
@@ -160,47 +181,168 @@
 
 .serviceIndex a {
   display: grid;
-  grid-template-columns: 2rem 1fr auto;
-  align-items: center;
-  gap: 0.65rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 17%, transparent);
-  padding: 1.15rem 0;
-  font-family: var(--font-heading);
-  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
-  font-weight: 750;
-  text-transform: uppercase;
-  transition: color 200ms ease, padding 250ms ease;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  gap: 0.55rem 0.8rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  padding: 1.25rem 0;
+  transition: border-color 180ms ease, color 180ms ease;
 }
 
 .serviceIndex a:hover {
-  padding-left: 0.4rem;
-  color: color-mix(
-    in srgb,
-    var(--foreground) 68%,
-    var(--primary-readable)
-  );
+  border-color: var(--primary-readable);
 }
 
-.serviceIndex a span {
-  color: var(--muted);
+.serviceIndex a > span {
+  grid-row: 1 / span 2;
+  color: var(--primary-readable);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 500;
+  font-size: 0.66rem;
+  font-weight: 650;
+  line-height: 1.4;
 }
 
-.serviceIndex a i {
+.serviceIndex strong {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 1.7vw, 1.55rem);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  text-transform: uppercase;
+}
+
+.serviceIndex small {
+  grid-column: 2;
+  max-width: 28ch;
+  color: color-mix(in srgb, var(--foreground) 58%, transparent);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.serviceIndex i {
+  grid-row: 1 / span 2;
+  grid-column: 3;
+  align-self: center;
   color: var(--primary-readable);
   font-family: var(--font-sans);
   font-style: normal;
 }
 
+.overview {
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding: clamp(5rem, 8vw, 7rem) 0;
+  background: color-mix(in srgb, var(--foreground) 3%, var(--background));
+}
+
+.overviewHeader {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(2rem, 7vw, 7rem);
+}
+
+.overviewHeader h2 {
+  max-width: 15ch;
+  font-family: var(--font-heading);
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.overviewList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2.5rem, 6vw, 6rem);
+  margin-top: clamp(3rem, 6vw, 5rem);
+  list-style: none;
+}
+
+.overviewList > li {
+  min-width: 0;
+}
+
+.overviewList > li > a {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  align-content: start;
+  gap: 0.85rem 1rem;
+  transition: color 180ms ease;
+}
+
+.overviewList > li > a:hover h3 {
+  color: var(--primary-readable);
+}
+
+.overviewList > li > a > span {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.overviewList > li > a > div {
+  min-width: 0;
+}
+
+.overviewList h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 2.8vw, 2.65rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: color 180ms ease;
+}
+
+.overviewList div > p {
+  max-width: 34ch;
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.overviewList ul {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+  list-style: none;
+}
+
+.overviewList ul li {
+  display: grid;
+  grid-template-columns: 0.45rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.65rem;
+  color: color-mix(in srgb, var(--foreground) 72%, transparent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.overviewList ul li::before {
+  content: "";
+  width: 0.25rem;
+  height: 0.25rem;
+  background: var(--primary);
+}
+
+.overviewList > li > a > i {
+  color: var(--primary-readable);
+  font-style: normal;
+}
+
 .chapters {
-  border-top: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  background: var(--background);
 }
 
 .chapter {
-  scroll-margin-top: 7rem;
-  padding: clamp(6rem, 11vw, 11rem) 0;
+  scroll-margin-top: 6.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding: clamp(6rem, 10vw, 10rem) 0;
 }
 
 .chapter:nth-child(even) {
@@ -209,9 +351,9 @@
 
 .chapterInner {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.8fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(21rem, 0.85fr);
   align-items: center;
-  gap: clamp(3.5rem, 10vw, 10rem);
+  gap: clamp(3.5rem, 9vw, 9rem);
 }
 
 .chapterReverse .chapterCopy {
@@ -221,7 +363,6 @@
 .chapterReverse .capabilityPanel {
   grid-row: 1;
   grid-column: 1;
-  transform: rotate(-1.25deg);
 }
 
 .chapterLabel {
@@ -233,71 +374,126 @@
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 650;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.chapterLabel span {
+.chapterLabel > span {
   display: grid;
-  width: 2.25rem;
+  width: 2.35rem;
   aspect-ratio: 1;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
   border-radius: 50%;
-  color: var(--foreground);
+  color: var(--primary-readable);
   letter-spacing: 0;
 }
 
 .chapter h2 {
   max-width: 11ch;
   font-family: var(--font-heading);
-  font-size: clamp(3.2rem, 6.1vw, 6.3rem);
+  font-size: clamp(3.2rem, 5.8vw, 6rem);
   font-weight: 900;
-  line-height: 0.92;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
+  line-height: 0.94;
   text-transform: uppercase;
+  text-wrap: balance;
 }
 
 .chapterDescription {
-  max-width: 40rem;
+  max-width: 42rem;
   margin-top: 2rem;
   color: var(--muted);
-  font-size: clamp(1rem, 1.25vw, 1.14rem);
+  font-size: clamp(1rem, 1.25vw, 1.13rem);
   line-height: 1.72;
 }
 
-.chapterLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
+.inlineLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.35rem;
   margin-top: 1.5rem;
-  border-bottom: 1px solid
-    color-mix(in srgb, var(--primary-readable) 55%, transparent);
-  padding-bottom: 0.3rem;
-  color: var(--primary-readable);
-  font-size: 0.78rem;
-  font-weight: 750;
-  text-transform: uppercase;
-  transition: border-color 200ms ease, color 200ms ease;
 }
 
-.chapterLink:hover {
-  border-color: currentColor;
-  color: color-mix(in srgb, var(--foreground) 68%, var(--primary-readable));
+.inlineLinks a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.55rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  color: var(--foreground);
+  font-size: 0.74rem;
+  font-weight: 750;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.inlineLinks a span {
+  color: var(--primary-readable);
+}
+
+.inlineLinks a:hover {
+  border-color: var(--primary-readable);
+  color: var(--primary-readable);
+}
+
+.auditLink {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  max-width: 35rem;
+  margin-top: 2rem;
+  border-top: 1px solid var(--primary-readable);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  padding: 1rem 0;
+  color: var(--foreground);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  font-weight: 750;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.auditLink > span {
+  grid-column: 1;
+  margin-top: 0.4rem;
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+}
+
+.auditLink > i {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  color: var(--primary-readable);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-style: normal;
+}
+
+.auditLink:hover {
+  border-bottom-color: var(--primary-readable);
+  color: var(--primary-readable);
 }
 
 .fitNote {
   display: grid;
   grid-template-columns: 5rem 1fr;
   gap: 1.25rem;
-  max-width: 39rem;
+  max-width: 40rem;
   margin-top: 2.25rem;
-  border-top: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
   padding-top: 1.25rem;
 }
 
-.fitNote span {
-  color: var(--primary-hover);
+.fitNote > span,
+.bestFor > span {
+  color: var(--primary-readable);
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 700;
@@ -305,22 +501,16 @@
   text-transform: uppercase;
 }
 
-.fitNote p {
-  color: var(--muted);
+.fitNote > p {
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
   font-size: 0.88rem;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .capabilityPanel {
   position: relative;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--surface-foreground) 12%, transparent);
-  border-radius: 1.25rem 1.25rem 5rem 1.25rem;
-  padding: clamp(1.5rem, 3vw, 2.25rem);
-  background: var(--surface);
-  color: var(--surface-foreground);
-  box-shadow: 0 2.5rem 6rem rgba(0, 0, 0, 0.12);
-  transform: rotate(1.25deg);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  color: var(--foreground);
 }
 
 .panelHeading {
@@ -328,8 +518,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding-bottom: 1.25rem;
-  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
+  padding: 1rem 0 1.25rem;
+  color: color-mix(in srgb, var(--foreground) 58%, transparent);
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 650;
@@ -337,52 +527,240 @@
   text-transform: uppercase;
 }
 
-.panelHeading i {
-  color: var(--primary);
+.panelHeading > i {
+  color: var(--primary-readable);
   font-size: 0.75rem;
   font-style: normal;
 }
 
 .capabilityPanel ol {
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
   list-style: none;
 }
 
 .capabilityPanel li {
   display: grid;
-  grid-template-columns: 2rem 1fr;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
   gap: 0.75rem;
-  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 13%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
   padding: 1rem 0;
   font-family: var(--font-heading);
   font-size: clamp(1.2rem, 1.8vw, 1.55rem);
   font-weight: 650;
-  line-height: 1.15;
+  letter-spacing: -0.01em;
+  line-height: 1.14;
   text-transform: uppercase;
 }
 
-.capabilityPanel li span {
-  padding-top: 0.2rem;
-  color: color-mix(in srgb, var(--surface-foreground) 38%, transparent);
+.capabilityPanel li > span {
+  padding-top: 0.18rem;
+  color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 500;
 }
 
 .panelOutcome {
-  position: relative;
-  z-index: 1;
-  max-width: 27rem;
+  max-width: 30rem;
+  margin-top: 1.25rem;
+  color: color-mix(in srgb, var(--foreground) 62%, transparent);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+.pathSection {
+  margin-top: clamp(5rem, 9vw, 9rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+}
+
+.pathHeading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.8fr);
+  align-items: end;
+  gap: clamp(2rem, 7vw, 7rem);
+}
+
+.pathHeading .sectionLabel {
+  grid-column: 1 / -1;
+  margin-bottom: -1rem;
+}
+
+.pathHeading h3 {
+  max-width: 14ch;
+  font-family: var(--font-heading);
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-weight: 850;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.pathHeading > p:last-child {
+  max-width: 42rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.pathGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(3rem, 5vw, 4.5rem);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+}
+
+.pathGrid article {
+  display: flex;
+  min-height: 31rem;
+  flex-direction: column;
+  scroll-margin-top: 7rem;
+  border-right: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  padding: clamp(1.4rem, 2.5vw, 2.25rem);
+  background: color-mix(in srgb, var(--foreground) 4%, var(--background));
+}
+
+.pathCode {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.pathGrid h4 {
+  max-width: 10ch;
+  margin-top: 1.25rem;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  text-transform: uppercase;
+}
+
+.pathGrid article > p {
+  max-width: 38ch;
   margin-top: 1.5rem;
-  color: color-mix(in srgb, var(--surface-foreground) 62%, transparent);
-  font-size: 0.84rem;
-  line-height: 1.6;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.bestFor {
+  margin-top: 1.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding-top: 1.15rem;
+}
+
+.bestFor > p {
+  margin-top: 0.55rem;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  font-size: 0.82rem;
+  line-height: 1.58;
+}
+
+.pathGrid article > a {
+  display: flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  padding-top: 1rem;
+  color: var(--foreground);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.pathGrid article > a span {
+  color: var(--primary-readable);
+  font-size: 0.95rem;
+}
+
+.pathGrid article > a:hover {
+  border-color: var(--primary-readable);
+  color: var(--primary-readable);
+}
+
+.support {
+  scroll-margin-top: 6.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding: clamp(4.5rem, 7vw, 6rem) 0;
+  background: color-mix(in srgb, var(--foreground) 3%, var(--background));
+}
+
+.supportLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(24rem, 1.18fr);
+  align-items: start;
+  gap: clamp(3rem, 8vw, 8rem);
+}
+
+.supportCopy h2 {
+  max-width: 11ch;
+  margin-top: 1.25rem;
+  font-family: var(--font-heading);
+  font-size: clamp(2.75rem, 4.5vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
+  text-transform: uppercase;
+}
+
+.supportCopy > p:last-child {
+  max-width: 43rem;
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.supportList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  list-style: none;
+}
+
+.supportList li {
+  display: grid;
+  min-height: 4.75rem;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.8rem;
+  border-right: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  padding: 1rem 1.25rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.supportList li > span {
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 650;
 }
 
 .process {
   position: relative;
   overflow: hidden;
-  border-top: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
-  padding: clamp(6rem, 10vw, 10rem) 0 clamp(7.5rem, 12vw, 12rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  padding: clamp(6rem, 10vw, 10rem) 0 clamp(7rem, 11vw, 11rem);
+  background: var(--background);
 }
 
 .processHeader {
@@ -399,40 +777,39 @@
 .processHeader h2 {
   max-width: 12ch;
   font-family: var(--font-heading);
-  font-size: clamp(3.2rem, 6.2vw, 6.5rem);
+  font-size: clamp(3.2rem, 5.8vw, 6rem);
   font-weight: 900;
-  line-height: 0.92;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
+  line-height: 0.94;
   text-transform: uppercase;
+  text-wrap: balance;
 }
 
 .processList {
-  position: relative;
-  z-index: 1;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: clamp(1.5rem, 3vw, 3rem);
-  margin-top: clamp(4rem, 8vw, 8rem);
+  gap: clamp(1.25rem, 3vw, 3rem);
+  margin-top: clamp(4rem, 8vw, 7rem);
   list-style: none;
 }
 
 .processStep {
   position: relative;
   display: flex;
-  min-height: 10rem;
+  min-height: 11rem;
   flex-direction: column;
   justify-content: space-between;
   gap: 2.5rem;
-  border-top: 1px solid color-mix(in srgb, var(--foreground) 24%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
   padding-top: 1rem;
 }
 
 .processStep:nth-child(even) {
-  transform: translateY(3rem);
+  margin-top: 3rem;
 }
 
 .stepNumber {
-  color: var(--primary-hover);
+  color: var(--primary-readable);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
@@ -441,114 +818,126 @@
 
 .processStep h3 {
   font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 2.7vw, 2.65rem);
+  font-size: clamp(1.8rem, 2.6vw, 2.6rem);
   font-weight: 800;
   line-height: 1;
   text-transform: uppercase;
 }
 
 .processStep p {
-  max-width: 15rem;
+  max-width: 16rem;
   margin-top: 0.65rem;
   color: var(--muted);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: 0.86rem;
+  line-height: 1.55;
 }
 
 .processArrow {
   position: absolute;
   top: 45%;
-  right: clamp(-2.1rem, -2.1vw, -1.05rem);
-  color: color-mix(in srgb, var(--foreground) 38%, transparent);
-  font-size: 1.15rem;
+  right: clamp(-2.1rem, -2.1vw, -1rem);
+  color: color-mix(in srgb, var(--foreground) 36%, transparent);
+  font-size: 1.1rem;
   line-height: 1;
-  transform: rotate(-45deg);
+  rotate: -45deg;
 }
 
 .closing {
-  padding: clamp(6rem, 10vw, 10rem) 0;
+  padding: clamp(6rem, 9vw, 9rem) 0;
   background: var(--surface);
   color: var(--surface-foreground);
 }
 
 .closingInner {
   display: grid;
-  grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(10rem, 0.3fr) minmax(0, 1fr) auto;
   align-items: end;
   gap: clamp(2rem, 6vw, 6rem);
 }
 
 .closingInner > p {
   align-self: start;
-  color: color-mix(in srgb, var(--surface-foreground) 55%, transparent);
+  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 650;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.11em;
+  line-height: 1.5;
   text-transform: uppercase;
 }
 
 .closing h2 {
-  max-width: 12ch;
+  max-width: 13ch;
   font-family: var(--font-heading);
-  font-size: clamp(3rem, 5.8vw, 6rem);
+  font-size: clamp(3rem, 5.5vw, 5.5rem);
   font-weight: 850;
-  line-height: 0.92;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
   text-transform: uppercase;
+  text-wrap: balance;
 }
 
-.closingLink {
-  margin-bottom: 0.25rem;
-  white-space: nowrap;
+.closingCopy {
+  max-width: 42rem;
+  margin-top: 1.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 66%, transparent);
+  font-size: 0.95rem;
+  line-height: 1.65;
 }
 
 .closingActions {
   display: grid;
-  justify-items: start;
-  gap: 1rem;
+  justify-items: stretch;
+  gap: 0.8rem;
 }
 
-.bookingLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
-  padding-bottom: 0.25rem;
-  color: var(--surface-foreground);
-  font-size: 0.72rem;
-  font-weight: 750;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  transition: border-color 200ms ease, color 200ms ease;
+.primaryLink:focus-visible,
+.secondaryLink:focus-visible,
+.serviceIndex a:focus-visible,
+.overviewList a:focus-visible,
+.inlineLinks a:focus-visible,
+.auditLink:focus-visible,
+.pathGrid article > a:focus-visible {
+  border-radius: 0.25rem;
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 0.3rem;
 }
 
-.bookingLink:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.bookingLink:focus-visible {
+.closingLink:focus-visible,
+.closingAuditLink:focus-visible {
+  border-radius: 0.25rem;
   outline: 3px solid var(--primary);
-  outline-offset: 4px;
+  outline-offset: 0.3rem;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1050px) {
+  .heroGrid {
+    opacity: 0.15;
+  }
+
   .heroInner {
     grid-template-columns: 1fr;
   }
 
-  .heroCopy {
-    max-width: 58rem;
+  .heroStatement,
+  .heroDetails,
+  .serviceIndex {
+    grid-row: auto;
+    grid-column: 1;
+  }
+
+  .heroStatement,
+  .heroDetails {
+    max-width: 62rem;
   }
 
   .serviceIndex {
-    width: min(100%, 34rem);
+    width: min(100%, 42rem);
     margin-left: auto;
   }
 
   .chapterInner {
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.75fr);
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.78fr);
     gap: clamp(2.5rem, 6vw, 5rem);
   }
 
@@ -561,7 +950,7 @@
   }
 
   .closingInner {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .closingInner > p {
@@ -569,26 +958,25 @@
   }
 }
 
-@media (max-width: 720px) {
-  .hero {
-    min-height: auto;
-    padding-top: 9rem;
-  }
-
-  .heroSummary,
+@media (max-width: 800px) {
+  .overviewHeader,
   .chapterInner,
+  .pathHeading,
+  .supportLayout,
   .processHeader,
   .closingInner {
     grid-template-columns: 1fr;
   }
 
-  .heroActions {
-    gap: 1.25rem;
+  .overviewList {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 
-  .serviceIndex {
-    width: 100%;
-    margin-left: 0;
+  .overviewList > li + li {
+    margin-top: 2rem;
+    border-top: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+    padding-top: 2rem;
   }
 
   .chapterReverse .chapterCopy,
@@ -598,15 +986,33 @@
   }
 
   .chapterCopy {
-    max-width: 40rem;
+    max-width: 44rem;
   }
 
-  .capabilityPanel,
-  .chapterReverse .capabilityPanel {
-    width: 94%;
-    margin-left: auto;
-    border-radius: 1.1rem 1.1rem 4rem 1.1rem;
-    transform: rotate(0.75deg);
+  .capabilityPanel {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .pathHeading .sectionLabel {
+    grid-column: auto;
+    margin-bottom: -0.75rem;
+  }
+
+  .pathGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pathGrid article {
+    min-height: auto;
+  }
+
+  .pathGrid article > a {
+    margin-top: 2rem;
+  }
+
+  .supportList {
+    margin-top: 0.5rem;
   }
 
   .processList {
@@ -619,10 +1025,10 @@
   .processStep:nth-child(even) {
     display: grid;
     min-height: auto;
-    grid-template-columns: 3rem 1fr;
+    grid-template-columns: 3rem minmax(0, 1fr);
     gap: 1rem;
+    margin-top: 0;
     padding: 1.5rem 0 3.75rem;
-    transform: none;
   }
 
   .processStep:last-child {
@@ -634,21 +1040,83 @@
     right: auto;
     bottom: 1.1rem;
     left: 0.25rem;
-    transform: none;
+    rotate: 0deg;
   }
 
-  .closingLink {
+  .closingActions {
     justify-self: start;
   }
 }
 
-@media (max-width: 480px) {
-  .hero h1 {
-    font-size: clamp(3.6rem, 18vw, 5.2rem);
+@media (max-width: 560px) {
+  .hero {
+    min-height: auto;
+    padding: 8.5rem 0 4.75rem;
   }
 
-  .primaryLink {
+  .hero h1 {
+    max-width: 100%;
+    font-size: clamp(3.25rem, 15vw, 4.45rem);
+    letter-spacing: -0.025em;
+  }
+
+  .heroDescription {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .heroActions {
+    display: grid;
+  }
+
+  .primaryLink,
+  .secondaryLink,
+  .closingLink,
+  .closingAuditLink {
     width: 100%;
+  }
+
+  .serviceIndex {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .serviceIndex a {
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    padding: 1.1rem 0;
+  }
+
+  .serviceIndex a > span,
+  .serviceIndex a > i {
+    grid-row: 1;
+  }
+
+  .serviceIndex small {
+    display: none;
+  }
+
+  .overview,
+  .chapter,
+  .support,
+  .process,
+  .closing {
+    padding-block: 4.75rem;
+  }
+
+  .overviewHeader h2,
+  .pathHeading h3,
+  .supportCopy h2,
+  .processHeader h2,
+  .closing h2 {
+    font-size: clamp(2.65rem, 12vw, 3.7rem);
+  }
+
+  .chapter h2 {
+    font-size: clamp(2.9rem, 13.5vw, 4.2rem);
+  }
+
+  .overviewList > li > a {
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
   }
 
   .fitNote {
@@ -656,19 +1124,52 @@
     gap: 0.5rem;
   }
 
-  .capabilityPanel,
-  .chapterReverse .capabilityPanel {
+  .capabilityPanel {
     width: 100%;
     margin-left: 0;
-    transform: none;
+  }
+
+  .capabilityPanel li {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    font-size: clamp(1.15rem, 5.7vw, 1.45rem);
+  }
+
+  .pathSection {
+    margin-top: 4.75rem;
+  }
+
+  .pathGrid article {
+    padding: 1.25rem;
+  }
+
+  .pathGrid h4 {
+    font-size: clamp(2.2rem, 11vw, 3rem);
+  }
+
+  .supportList {
+    grid-template-columns: 1fr;
+  }
+
+  .supportList li {
+    min-height: 4.75rem;
+  }
+
+  .closingActions {
+    width: 100%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .primaryLink,
+  .secondaryLink,
   .closingLink,
-  .chapterLink,
-  .serviceIndex a {
+  .closingAuditLink,
+  .serviceIndex a,
+  .overviewList > li > a,
+  .overviewList h3,
+  .inlineLinks a,
+  .auditLink,
+  .pathGrid article > a {
     transition: none;
   }
 }
