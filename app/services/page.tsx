@@ -8,7 +8,6 @@ FORM: Existing editorial chapter sequence, refined with Option B's information c
 
 import Link from "next/link";
 import Container from "@/components/ui/Container";
-import HeroEnvironment from "@/components/ui/HeroEnvironment";
 import WebsiteAuditLink from "@/components/ui/WebsiteAuditLink";
 import { createPageMetadata, serializeJsonLd } from "@/config/seo";
 import { siteConfig } from "@/config/site";
@@ -20,7 +19,8 @@ const serviceChapters = [
     id: "web-design-development",
     title: "Web Design & Development",
     summary: "Build a new website or substantially improve the one you have.",
-    statement: "Websites built around the business, not a template.",
+    statement:
+      "Websites built to your exact specifications and business needs.",
     description:
       "From streamlined Squarespace builds to fully custom Next.js websites, Veriq chooses the approach around the business, its customers, and what the site actually needs to accomplish. That can mean starting fresh or redesigning an existing site that no longer performs or represents the company well.",
     note: "Best for businesses that need a new website, a substantial redesign, or a clearer and more useful digital presence.",
@@ -39,8 +39,10 @@ const serviceChapters = [
     number: "02",
     id: "seo-growth",
     title: "SEO & Growth",
-    summary: "Improve the foundation that helps the right people find and use your site.",
-    statement: "Being online doesn't matter if the right people can't find you.",
+    summary:
+      "Improve the foundation that helps the right people find and use your site.",
+    statement:
+      "A website that can't be found is a website that can't help the business.",
     description:
       "SEO starts with the structure and technical quality of the website itself, then expands into local search, useful service and location content, measurement, and continued improvement. Veriq builds that foundation without promising shortcuts or guaranteed rankings.",
     note: "Especially useful for small and local businesses that need stronger visibility in Des Moines, across Iowa, or in the markets they actually serve.",
@@ -60,7 +62,8 @@ const serviceChapters = [
     number: "03",
     id: "custom-website-tools",
     title: "Custom Website Tools",
-    summary: "Add practical functionality when standard forms and plugins stop being enough.",
+    summary:
+      "Add practical functionality when standard forms and plugins stop being enough.",
     statement: "Your website can do more than display information.",
     description:
       "When an off-the-shelf form or plugin cannot support the way the business actually works, Veriq can build focused functionality into or alongside the website. The goal is not software for its own sake; it is a clearer customer experience and less friction in day-to-day operations.",
@@ -201,18 +204,17 @@ export default function ServicesPage() {
       />
 
       <section className={styles.hero}>
-        <HeroEnvironment />
+        <div className={styles.heroGrid} aria-hidden="true" />
         <Container>
           <div className={styles.heroInner}>
             <div className={styles.heroStatement}>
               <p className={styles.eyebrow}>
                 <span aria-hidden="true" />
-                Services / What we build
+                Services
               </p>
               <h1>
-                One digital partner.
-                <span>Three ways to move</span>
-                <span>your business forward.</span>
+                Pick the right path
+                <span>for your business</span>
               </h1>
             </div>
 
@@ -260,9 +262,7 @@ export default function ServicesPage() {
         <Container>
           <div className={styles.overviewHeader}>
             <p className={styles.sectionLabel}>The whole offer</p>
-            <h2 id="service-overview">
-              Three connected services. One practical plan.
-            </h2>
+            <h2 id="service-overview">Three services. One plan.</h2>
           </div>
           <ol className={styles.overviewList}>
             {serviceChapters.map((service) => (
@@ -308,7 +308,8 @@ export default function ServicesPage() {
                   {service.id === "web-design-development" ? (
                     <div className={styles.inlineLinks}>
                       <Link href="/small-business-web-design">
-                        Small business web design <span aria-hidden="true">↗</span>
+                        Small business web design{" "}
+                        <span aria-hidden="true">↗</span>
                       </Link>
                       <Link href="/des-moines-web-design">
                         Des Moines web design <span aria-hidden="true">↗</span>
@@ -326,11 +327,6 @@ export default function ServicesPage() {
                       <i aria-hidden="true">↗</i>
                     </WebsiteAuditLink>
                   ) : null}
-
-                  <div className={styles.fitNote}>
-                    <span>Good fit</span>
-                    <p>{service.note}</p>
-                  </div>
                 </div>
 
                 <aside className={styles.capabilityPanel}>
@@ -358,17 +354,14 @@ export default function ServicesPage() {
                     <p className={styles.sectionLabel}>Choose the right path</p>
                     <h3>Custom, Squarespace, or a complete redesign.</h3>
                     <p>
-                      These are different implementation paths—not pricing tiers.
-                      Veriq recommends the approach that fits the business and the
-                      job the website needs to do.
+                      These are different implementation paths—not pricing
+                      tiers. Veriq recommends the approach that fits the
+                      business and the job the website needs to do.
                     </p>
                   </div>
                   <div className={styles.pathGrid}>
                     {websitePaths.map((path) => (
-                      <article
-                        id={path.id}
-                        key={path.id}
-                      >
+                      <article id={path.id} key={path.id}>
                         <span className={styles.pathCode}>{path.code}</span>
                         <h4>{path.title}</h4>
                         <p>{path.description}</p>
@@ -394,13 +387,14 @@ export default function ServicesPage() {
         <Container>
           <div className={styles.supportLayout}>
             <div className={styles.supportCopy}>
-              <p className={styles.sectionLabel}>Ongoing support / Optional</p>
+              <p className={styles.sectionLabel}>Ongoing support</p>
               <h2>Keep making the site better.</h2>
               <p>
                 The launch is not the finish line. When it is useful, Veriq can
                 continue helping with maintenance, content, search, performance,
-                conversion work, and new functionality. Ongoing support can match
-                what the business needs; it is not required for every project.
+                conversion work, and new functionality. Ongoing support can
+                match what the business needs; it is not required for every
+                project.
               </p>
             </div>
             <ul className={styles.supportList}>
@@ -422,7 +416,7 @@ export default function ServicesPage() {
               <span aria-hidden="true" />
               How we work
             </p>
-            <h2>A clear path from business problem to working solution.</h2>
+            <h2>The path from problem to solution.</h2>
           </div>
 
           <ol className={styles.processList}>
@@ -451,7 +445,9 @@ export default function ServicesPage() {
           <div className={styles.closingInner}>
             <p>Not sure what the business actually needs?</p>
             <div>
-              <h2>Start with the problem. We&apos;ll find the right approach.</h2>
+              <h2>
+                Start with the problem. We&apos;ll find the right approach.
+              </h2>
               <p className={styles.closingCopy}>
                 You do not need to know whether the answer is Next.js,
                 Squarespace, SEO, a redesign, or custom functionality before

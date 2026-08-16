@@ -4,9 +4,20 @@
 
 .hero {
   position: relative;
-  isolation: isolate;
   min-height: min(58rem, 100svh);
   padding: clamp(10rem, 16vh, 13rem) 0 clamp(6rem, 10vw, 9rem);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px);
+  background-size: 4.5rem 4.5rem;
+  mask-image: linear-gradient(to bottom, black, transparent 92%);
 }
 
 .heroInner {
@@ -299,6 +310,7 @@
   grid-column: 4 / span 4;
   margin-top: 3.5rem;
   border-top-left-radius: 4.5rem;
+  background: color-mix(in srgb, var(--primary) 9%, var(--background));
 }
 
 .beliefCard:nth-child(3) {
@@ -372,6 +384,7 @@
   font-weight: 650;
   letter-spacing: 0.13em;
   line-height: 1.35;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 45%);
   text-transform: uppercase;
 }
 
