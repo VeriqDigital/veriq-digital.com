@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-15T00:00:00-05:00",
+  "title": "Design System: Veriq Digital",
+  "extensions": {
+    "colorMeta": {
+      "cyan": { "role": "primary", "displayName": "Signal Cyan", "canonical": "#4ef2f2" },
+      "cyan-readable-light": { "role": "primary", "displayName": "Readable Cyan", "canonical": "#00777a" },
+      "warm-white": { "role": "neutral", "displayName": "Warm White", "canonical": "#f7f7f5" },
+      "graphite": { "role": "neutral", "displayName": "Specification Graphite", "canonical": "#121212" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Condensed Display", "purpose": "Hero and section theses." },
+      "body": { "displayName": "Editorial Body", "purpose": "Readable explanatory copy." },
+      "label": { "displayName": "Technical Label", "purpose": "Indices, metadata, and compact wayfinding." }
+    },
+    "shadows": [
+      { "name": "floating-control", "value": "0 12px 35px rgba(0,0,0,0.22)", "purpose": "Global floating controls only." }
+    ],
+    "motion": [
+      { "name": "interface-standard", "value": "180ms ease", "purpose": "Color and rule state changes." },
+      { "name": "interface-lift", "value": "220ms cubic-bezier(0.22,1,0.36,1)", "purpose": "Small CTA movement." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "560px" },
+      { "name": "tablet", "value": "760px" },
+      { "name": "desktop", "value": "960px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Signal-cyan action with compact industrial labeling.",
+      "html": "<button class=\"ds-button-primary\">START A PROJECT</button>",
+      "css": ".ds-button-primary{min-height:44px;border:0;border-radius:6px;padding:12px 24px;background:var(--primary,#4ef2f2);color:#111;font:800 .75rem/1.2 Arial,sans-serif;letter-spacing:.05em;text-transform:uppercase;transition:background-color 180ms ease,transform 220ms cubic-bezier(.22,1,.36,1)}.ds-button-primary:hover{background:#40c5c5;transform:translateY(-2px)}.ds-button-primary:focus-visible{outline:3px solid #00777a;outline-offset:3px}"
+    },
+    {
+      "name": "Numbered Index Row",
+      "kind": "custom",
+      "description": "Rule-bound service navigation pairing technical indices with condensed titles.",
+      "html": "<a class=\"ds-index\" href=\"#\"><span>01</span><strong>WEB DESIGN &amp; DEVELOPMENT</strong><i>↘</i></a>",
+      "css": ".ds-index{display:grid;grid-template-columns:2rem 1fr auto;align-items:center;gap:12px;min-height:56px;border-top:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16);color:#f7f7f5;text-decoration:none}.ds-index span{color:rgba(247,247,245,.55);font:600 .65rem/1.2 monospace}.ds-index strong{font:800 1.1rem/1 Arial Narrow,sans-serif}.ds-index i{color:#4ef2f2;font-style:normal}.ds-index:hover strong{color:#4ef2f2}.ds-index:focus-visible{outline:3px solid #4ef2f2;outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Working Specification",
+    "overview": "An industrial field manual meets an editorial feature: oversized condensed statements, precise rules and indices, alternating graphite and warm-white fields, and cyan reserved for meaningful signals.",
+    "keyCharacteristics": [
+      "Clean condensed display type",
+      "Asymmetrical editorial composition",
+      "Fine-rule capability systems",
+      "Decisive neutral fields",
+      "Readable, practical copy"
+    ],
+    "rules": [
+      { "name": "The Signal Rule", "body": "Cyan identifies action, navigation, or a meaningful point in the story.", "section": "colors" },
+      { "name": "The Clean Edge Rule", "body": "Readable text never uses RGB splits, text shadows, filters, or transformed containers.", "section": "typography" }
+    ],
+    "dos": [
+      "Use one dominant typographic statement per section.",
+      "Recompose layouts deliberately for mobile.",
+      "Keep supporting copy high-contrast and narrowly measured."
+    ],
+    "donts": [
+      "Do not use chromatic aberration or blur on readable type.",
+      "Do not introduce generic SaaS cards or fake proof.",
+      "Do not use cyan for long small-text passages on light backgrounds."
+    ]
+  }
+}

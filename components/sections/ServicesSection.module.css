@@ -131,9 +131,6 @@
 }
 
 .card:nth-child(2) {
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--primary) 14%, transparent), transparent 58%),
-    var(--surface);
   border-top-left-radius: 4.5rem;
 }
 

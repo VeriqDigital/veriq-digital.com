@@ -4,26 +4,26 @@ export const services = [
     title: "Website Design & Development",
     description:
       "Strategy, content structure, responsive design, and implementation in Squarespace or custom code, chosen around what the business needs.",
-    href: "/small-business-web-design",
+    href: "/services#web-design-development",
     linkLabel: "Explore website design",
     capabilities: ["Custom or Squarespace", "Responsive design", "Conversion paths"],
   },
   {
     icon: "search",
-    title: "Search Engine Optimization",
+    title: "SEO & Growth",
     description:
       "Technical foundations, local search considerations, content hierarchy, and site architecture that help the right pages get found.",
-    href: "/services#ongoing-support",
-    linkLabel: "Explore SEO support",
+    href: "/services#seo-growth",
+    linkLabel: "Explore SEO & growth",
     capabilities: ["Technical SEO", "Local search", "Content architecture"],
   },
   {
     icon: "command",
-    title: "Custom Website Functionality",
+    title: "Custom Website Tools",
     description:
       "Calculators, quote tools, portals, forms, integrations, and internal systems built around a clear operational need.",
-    href: "/services#custom-development",
-    linkLabel: "Explore custom development",
+    href: "/services#custom-website-tools",
+    linkLabel: "Explore custom website tools",
     capabilities: ["Quote and intake tools", "Portals and dashboards", "Integrations"],
   },
   {

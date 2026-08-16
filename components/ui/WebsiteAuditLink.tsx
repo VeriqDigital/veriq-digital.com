@@ -9,6 +9,9 @@ export type WebsiteAuditPlacement =
   | "homepage_quality"
   | "homepage_seo"
   | "homepage_audit"
+  | "services_hero"
+  | "services_seo"
+  | "services_closing"
   | "footer_resources";
 
 type WebsiteAuditLinkProps = {

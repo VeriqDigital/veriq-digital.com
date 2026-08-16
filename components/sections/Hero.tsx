@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import HeroInquiryForm from "@/components/forms/HeroInquiryForm";
 import Button, { getButtonClassName } from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
+import HeroEnvironment from "@/components/ui/HeroEnvironment";
 import WebsiteAuditLink from "@/components/ui/WebsiteAuditLink";
 import styles from "./Hero.module.css";
 
@@ -13,7 +14,7 @@ type HeroProps = {
 const Hero = ({ auditEnabled, campaign }: HeroProps) => {
   return (
     <section className={styles.hero}>
-      <div className={styles.grid} aria-hidden="true" />
+      <HeroEnvironment />
       <Container>
         <div className={styles.layout}>
           <div className={styles.content}>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/components/ui/Container";
+import HeroEnvironment from "@/components/ui/HeroEnvironment";
 import { createPageMetadata } from "@/config/seo";
 import { siteConfig } from "@/config/site";
 import styles from "./about.module.css";
@@ -66,6 +67,7 @@ export default function AboutPage() {
   return (
     <main id="main-content" className={styles.page}>
       <section className={styles.hero}>
+        <HeroEnvironment />
         <Container>
           <div className={styles.heroInner}>
             <div className={styles.heroCopy}>
