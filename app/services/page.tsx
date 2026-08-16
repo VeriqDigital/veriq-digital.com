@@ -19,8 +19,7 @@ const serviceChapters = [
     id: "web-design-development",
     title: "Web Design & Development",
     summary: "Build a new website or substantially improve the one you have.",
-    statement:
-      "Websites built to your exact specifications and business needs.",
+    statement: "WEBSITES BUILT AROUND YOUR BUSINESS, NOT A TEMPLATE.",
     description:
       "From streamlined Squarespace builds to fully custom Next.js websites, Veriq chooses the approach around the business, its customers, and what the site actually needs to accomplish. That can mean starting fresh or redesigning an existing site that no longer performs or represents the company well.",
     note: "Best for businesses that need a new website, a substantial redesign, or a clearer and more useful digital presence.",
