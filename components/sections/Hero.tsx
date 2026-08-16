@@ -22,9 +22,9 @@ const Hero = ({ auditEnabled, campaign }: HeroProps) => {
               <span>Turn leads into customers.</span>
             </h1>
             <p className={styles.description}>
-              Veriq designs and builds custom and Squarespace websites with
-              search foundations, clear conversion paths, and support after
-              launch.
+              Veriq designs and builds custom and Squarespace websites that are
+              fast, easy to find, and built to turn visitors into customers. We
+              also stick around after launch for updates and support.
             </p>
             <div className={styles.actions}>
               <Button href="/contact">Start a project</Button>
