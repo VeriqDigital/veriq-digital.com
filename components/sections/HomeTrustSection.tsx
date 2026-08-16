@@ -45,7 +45,7 @@ export default function HomeTrustSection({
           <div className={styles.positioningIntro}>
             <div>
               <h2 id="positioning-title">
-                Looking professional is only the starting point.
+                The pillars of a successful website
               </h2>
             </div>
             <div className={styles.positioningSummary}>
