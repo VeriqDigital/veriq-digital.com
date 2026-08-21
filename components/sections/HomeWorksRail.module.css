@@ -76,18 +76,11 @@
     1.5rem,
     calc((100vw - var(--container-width)) / 2 + 1.5rem)
   );
-  cursor: grab;
-  touch-action: pan-y;
-}
-
-.viewport[data-dragging="true"] {
-  cursor: grabbing;
 }
 
 .track {
   display: flex;
   width: max-content;
-  user-select: none;
   will-change: transform;
 }
 

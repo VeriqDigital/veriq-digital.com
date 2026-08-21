@@ -2,13 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  type FocusEvent,
-  type MouseEvent,
-  type PointerEvent,
-  useEffect,
-  useRef,
-} from "react";
+import { useEffect, useRef } from "react";
 import styles from "./HomeWorksRail.module.css";
 
 export type HomeWorksRailProject = {
@@ -23,18 +17,14 @@ type HomeWorksRailTrackProps = {
   projects: HomeWorksRailProject[];
 };
 
-type PauseState = {
-  desktop: boolean;
-  reducedMotion: boolean;
+type PlaybackState = {
   inView: boolean;
   documentVisible: boolean;
   hovered: boolean;
   focused: boolean;
-  dragging: boolean;
 };
 
 const CYCLE_DURATION_MS = 38_000;
-const DRAG_THRESHOLD = 8;
 
 const HomeWorksRailTrack = ({ projects }: HomeWorksRailTrackProps) => {
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -44,24 +34,6 @@ const HomeWorksRailTrack = ({ projects }: HomeWorksRailTrackProps) => {
   const previousTimeRef = useRef<number | null>(null);
   const groupWidthRef = useRef(0);
   const offsetRef = useRef(0);
-  const startAnimationRef = useRef<() => void>(() => undefined);
-  const stopAnimationRef = useRef<() => void>(() => undefined);
-  const suppressClickRef = useRef(false);
-  const dragRef = useRef({
-    pointerId: -1,
-    startX: 0,
-    startOffset: 0,
-    moved: false,
-  });
-  const pauseStateRef = useRef<PauseState>({
-    desktop: false,
-    reducedMotion: false,
-    inView: false,
-    documentVisible: true,
-    hovered: false,
-    focused: false,
-    dragging: false,
-  });
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -78,18 +50,21 @@ const HomeWorksRailTrack = ({ projects }: HomeWorksRailTrackProps) => {
     const reducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
+    const playback: PlaybackState = {
+      inView: false,
+      documentVisible: document.visibilityState === "visible",
+      hovered: false,
+      focused: false,
+    };
 
     const canAnimate = () => {
-      const state = pauseStateRef.current;
-
       return (
-        state.desktop &&
-        !state.reducedMotion &&
-        state.inView &&
-        state.documentVisible &&
-        !state.hovered &&
-        !state.focused &&
-        !state.dragging &&
+        desktopQuery.matches &&
+        !reducedMotionQuery.matches &&
+        playback.inView &&
+        playback.documentVisible &&
+        !playback.hovered &&
+        !playback.focused &&
         groupWidthRef.current > 0
       );
     };
@@ -143,9 +118,6 @@ const HomeWorksRailTrack = ({ projects }: HomeWorksRailTrackProps) => {
       }
     };
 
-    startAnimationRef.current = startAnimation;
-    stopAnimationRef.current = stopAnimation;
-
     const measure = () => {
       const previousWidth = groupWidthRef.current;
       const nextWidth = primaryGroup.getBoundingClientRect().width;
@@ -161,7 +133,7 @@ const HomeWorksRailTrack = ({ projects }: HomeWorksRailTrackProps) => {
       groupWidthRef.current = nextWidth;
       offsetRef.current = wrapOffset(offsetRef.current);
 
-      if (pauseStateRef.current.desktop) {
+      if (desktopQuery.matches && !reducedMotionQuery.matches) {
         applyOffset();
       }
 
@@ -169,34 +141,52 @@ const HomeWorksRailTrack = ({ projects }: HomeWorksRailTrackProps) => {
     };
 
     const syncMotionPreference = () => {
-      const state = pauseStateRef.current;
-      state.desktop = desktopQuery.matches;
-      state.reducedMotion = reducedMotionQuery.matches;
-
-      if (!state.desktop || state.reducedMotion) {
+      if (!desktopQuery.matches || reducedMotionQuery.matches) {
         stopAnimation();
         offsetRef.current = 0;
         track.style.transform = "";
       } else {
         measure();
+      }
+    };
+
+    const setInteractionPause = (
+      reason: "hovered" | "focused",
+      paused: boolean,
+    ) => {
+      playback[reason] = paused;
+
+      if (paused) {
+        stopAnimation();
+      } else {
         startAnimation();
       }
     };
 
     const handleVisibilityChange = () => {
-      pauseStateRef.current.documentVisible =
-        document.visibilityState === "visible";
+      playback.documentVisible = document.visibilityState === "visible";
 
-      if (pauseStateRef.current.documentVisible) {
+      if (playback.documentVisible) {
         startAnimation();
       } else {
         stopAnimation();
       }
     };
 
+    const handlePointerEnter = () => setInteractionPause("hovered", true);
+    const handlePointerLeave = () => setInteractionPause("hovered", false);
+    const handleFocusIn = () => setInteractionPause("focused", true);
+    const handleFocusOut = (event: globalThis.FocusEvent) => {
+      const nextTarget = event.relatedTarget;
+
+      if (!(nextTarget instanceof Node) || !viewport.contains(nextTarget)) {
+        setInteractionPause("focused", false);
+      }
+    };
+
     const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
-        pauseStateRef.current.inView = entry.isIntersecting;
+        playback.inView = entry.isIntersecting;
 
         if (entry.isIntersecting) {
           startAnimation();
@@ -210,125 +200,29 @@ const HomeWorksRailTrack = ({ projects }: HomeWorksRailTrackProps) => {
 
     intersectionObserver.observe(viewport);
     resizeObserver.observe(primaryGroup);
+    viewport.addEventListener("pointerenter", handlePointerEnter);
+    viewport.addEventListener("pointerleave", handlePointerLeave);
+    viewport.addEventListener("focusin", handleFocusIn);
+    viewport.addEventListener("focusout", handleFocusOut);
     desktopQuery.addEventListener("change", syncMotionPreference);
     reducedMotionQuery.addEventListener("change", syncMotionPreference);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    measure();
     syncMotionPreference();
 
     return () => {
       stopAnimation();
       intersectionObserver.disconnect();
       resizeObserver.disconnect();
+      viewport.removeEventListener("pointerenter", handlePointerEnter);
+      viewport.removeEventListener("pointerleave", handlePointerLeave);
+      viewport.removeEventListener("focusin", handleFocusIn);
+      viewport.removeEventListener("focusout", handleFocusOut);
       desktopQuery.removeEventListener("change", syncMotionPreference);
       reducedMotionQuery.removeEventListener("change", syncMotionPreference);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      startAnimationRef.current = () => undefined;
-      stopAnimationRef.current = () => undefined;
     };
   }, []);
-
-  const setPaused = (
-    reason: "hovered" | "focused" | "dragging",
-    paused: boolean,
-  ) => {
-    pauseStateRef.current[reason] = paused;
-
-    if (paused) {
-      stopAnimationRef.current();
-    } else {
-      startAnimationRef.current();
-    }
-  };
-
-  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (!pauseStateRef.current.desktop || event.button !== 0) {
-      return;
-    }
-
-    dragRef.current = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startOffset: offsetRef.current,
-      moved: false,
-    };
-    event.currentTarget.dataset.dragging = "true";
-    setPaused("dragging", true);
-  };
-
-  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-
-    if (drag.pointerId !== event.pointerId || !pauseStateRef.current.dragging) {
-      return;
-    }
-
-    const distance = drag.startX - event.clientX;
-
-    if (Math.abs(distance) >= DRAG_THRESHOLD) {
-      drag.moved = true;
-
-      if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
-        event.currentTarget.setPointerCapture(event.pointerId);
-      }
-
-      event.preventDefault();
-    }
-
-    const width = groupWidthRef.current;
-
-    if (width > 0) {
-      offsetRef.current =
-        ((drag.startOffset + distance) % width + width) % width;
-
-      if (trackRef.current) {
-        trackRef.current.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`;
-      }
-    }
-  };
-
-  const finishDrag = (event: PointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-
-    if (drag.pointerId !== event.pointerId) {
-      return;
-    }
-
-    const width = groupWidthRef.current;
-    const offsetDifference = Math.abs(offsetRef.current - drag.startOffset);
-    const wrappedDistance =
-      width > 0
-        ? Math.min(offsetDifference, Math.max(0, width - offsetDifference))
-        : offsetDifference;
-
-    suppressClickRef.current =
-      drag.moved && wrappedDistance >= DRAG_THRESHOLD;
-    dragRef.current.pointerId = -1;
-    event.currentTarget.dataset.dragging = "false";
-
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-
-    setPaused("dragging", false);
-  };
-
-  const handleClickCapture = (event: MouseEvent<HTMLDivElement>) => {
-    if (!suppressClickRef.current) {
-      return;
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
-    suppressClickRef.current = false;
-  };
-
-  const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
-    if (!event.currentTarget.contains(event.relatedTarget)) {
-      setPaused("focused", false);
-    }
-  };
 
   return (
     <div
@@ -338,15 +232,6 @@ const HomeWorksRailTrack = ({ projects }: HomeWorksRailTrackProps) => {
       role="region"
       aria-roledescription="carousel"
       aria-label="Selected work"
-      onPointerEnter={() => setPaused("hovered", true)}
-      onPointerLeave={() => setPaused("hovered", false)}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={finishDrag}
-      onPointerCancel={finishDrag}
-      onClickCapture={handleClickCapture}
-      onFocusCapture={() => setPaused("focused", true)}
-      onBlurCapture={handleBlur}
     >
       <div ref={trackRef} className={styles.track} data-home-work-track>
         <ProjectSequence
