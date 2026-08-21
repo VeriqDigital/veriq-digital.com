@@ -449,7 +449,7 @@
   grid-template-columns: minmax(0, 1.05fr) minmax(22rem, 0.95fr);
   overflow: hidden;
   border-radius: 1rem;
-  background: var(--surface);
+  background: var(--surface-interactive);
   color: var(--surface-foreground);
 }
 
@@ -503,7 +503,11 @@
 }
 
 .auditCategories {
-  background: color-mix(in srgb, var(--surface-foreground) 5%, var(--surface));
+  background: color-mix(
+    in srgb,
+    var(--surface-foreground) 5%,
+    var(--surface-interactive)
+  );
 }
 
 .auditCategories > p {
