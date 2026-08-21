@@ -33,7 +33,7 @@
 
 .title {
   max-width: 10.5ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3.6rem, 6.2vw, 6rem);
   font-weight: 900;
   line-height: 0.95;

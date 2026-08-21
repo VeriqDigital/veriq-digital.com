@@ -159,7 +159,7 @@ const LeadModal = ({
             </p>
             <h2
               id={`${activeModal}-form-title`}
-              className="font-heading text-3xl font-black uppercase"
+              className="font-sans text-3xl font-black uppercase"
             >
               {activeContent.title}
             </h2>

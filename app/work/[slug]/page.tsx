@@ -60,7 +60,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
             <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--primary-readable)">
               {project.category} · {project.year}
             </p>
-            <h1 className="max-w-5xl font-heading text-6xl font-black uppercase leading-[0.9] tracking-[-0.04em] md:text-8xl lg:text-9xl">
+            <h1 className="max-w-5xl font-sans text-6xl font-black uppercase leading-[0.9] tracking-[-0.04em] md:text-8xl lg:text-9xl">
               {project.title}
             </h1>
           </div>
@@ -95,7 +95,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
             <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--primary-readable)">
               About the project
             </p>
-            <h2 className="font-heading text-4xl font-black uppercase md:text-5xl">
+            <h2 className="font-sans text-4xl font-black uppercase md:text-5xl">
               The brief
             </h2>
             <p className="mt-5 max-w-2xl text-base leading-7 text-(--muted) md:text-lg">
@@ -107,7 +107,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
               <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-(--muted)">
                 Timeframe
               </dt>
-              <dd className="mt-2 font-heading text-3xl font-black uppercase">
+              <dd className="mt-2 font-sans text-3xl font-black uppercase">
                 {project.timeframe}
               </dd>
             </div>
@@ -115,7 +115,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
               <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-(--muted)">
                 Team
               </dt>
-              <dd className="mt-2 font-heading text-3xl font-black uppercase">
+              <dd className="mt-2 font-sans text-3xl font-black uppercase">
                 {project.team}
               </dd>
             </div>
@@ -142,7 +142,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
             <span className="font-mono text-xs font-semibold text-(--primary-readable)">
               01
             </span>
-            <h2 className="mt-4 font-heading text-4xl font-black uppercase md:text-6xl">
+            <h2 className="mt-4 font-sans text-4xl font-black uppercase md:text-6xl">
               The challenge
             </h2>
             <p className="mt-5 max-w-xl text-lg leading-8 text-(--muted)">
@@ -153,7 +153,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
             <span className="font-mono text-xs font-semibold text-(--primary-readable)">
               02
             </span>
-            <h2 className="mt-4 font-heading text-4xl font-black uppercase md:text-6xl">
+            <h2 className="mt-4 font-sans text-4xl font-black uppercase md:text-6xl">
               The outcome
             </h2>
             <p className="mt-5 max-w-xl text-lg leading-8 text-(--muted)">
@@ -169,7 +169,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
           <span className="font-mono text-xs uppercase tracking-[0.14em] text-(--muted)">
             Next project
           </span>
-          <span className="mt-3 flex items-center justify-between gap-6 font-heading text-4xl font-black uppercase transition group-hover:text-(--primary-readable) md:text-7xl">
+          <span className="mt-3 flex items-center justify-between gap-6 font-sans text-4xl font-black uppercase transition group-hover:text-(--primary-readable) md:text-7xl">
             {nextProject.title}
             <i className="font-sans text-3xl font-normal not-italic md:text-5xl">
               ↗

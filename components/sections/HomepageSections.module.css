@@ -345,7 +345,7 @@
 
 .seo h2,
 .finalCta h2 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-weight: 900;
   letter-spacing: -0.025em;
   line-height: 0.98;

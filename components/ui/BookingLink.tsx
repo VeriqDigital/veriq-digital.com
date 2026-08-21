@@ -11,6 +11,7 @@ export type BookingPlacement =
   | "floating_mobile"
   | "navbar"
   | "small_business_web_design_closing"
+  | "services_hero"
   | "services_closing"
   | "website_audit_closing"
   | "website_redesign_closing";

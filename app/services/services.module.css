@@ -78,7 +78,7 @@
 
 .hero h1 {
   max-width: 11ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(4.2rem, 7.2vw, 6rem);
   font-weight: 900;
   letter-spacing: -0.03em;
@@ -202,7 +202,7 @@
 }
 
 .serviceIndex strong {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.2rem, 1.7vw, 1.55rem);
   font-weight: 800;
   letter-spacing: -0.015em;
@@ -242,7 +242,7 @@
 
 .overviewHeader h2 {
   max-width: 15ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(2.8rem, 5vw, 5rem);
   font-weight: 900;
   letter-spacing: -0.025em;
@@ -287,7 +287,7 @@
 }
 
 .overviewList h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.8rem, 2.8vw, 2.65rem);
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -391,7 +391,7 @@
 
 .chapter h2 {
   max-width: 11ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3.2rem, 5.8vw, 6rem);
   font-weight: 900;
   letter-spacing: -0.03em;
@@ -447,7 +447,7 @@
   border-bottom: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
   padding: 1rem 0;
   color: var(--foreground);
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.25rem, 2vw, 1.7rem);
   font-weight: 750;
   line-height: 1;
@@ -544,7 +544,7 @@
   gap: 0.75rem;
   border-top: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
   padding: 1rem 0;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.2rem, 1.8vw, 1.55rem);
   font-weight: 650;
   letter-spacing: -0.01em;
@@ -588,7 +588,7 @@
 
 .pathHeading h3 {
   max-width: 14ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(2.8rem, 5vw, 5rem);
   font-weight: 850;
   letter-spacing: -0.025em;
@@ -634,7 +634,7 @@
 .pathGrid h4 {
   max-width: 10ch;
   margin-top: 1.25rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(2rem, 3.4vw, 3.25rem);
   font-weight: 850;
   letter-spacing: -0.02em;
@@ -708,7 +708,7 @@
 .supportCopy h2 {
   max-width: 11ch;
   margin-top: 1.25rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(2.75rem, 4.5vw, 4.5rem);
   font-weight: 900;
   letter-spacing: -0.025em;
@@ -741,7 +741,7 @@
   border-right: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
   padding: 1rem 1.25rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1rem, 1.4vw, 1.2rem);
   font-weight: 700;
   line-height: 1.15;
@@ -776,7 +776,7 @@
 
 .processHeader h2 {
   max-width: 12ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3.2rem, 5.8vw, 6rem);
   font-weight: 900;
   letter-spacing: -0.03em;
@@ -817,7 +817,7 @@
 }
 
 .processStep h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.8rem, 2.6vw, 2.6rem);
   font-weight: 800;
   line-height: 1;
@@ -868,7 +868,7 @@
 
 .closing h2 {
   max-width: 13ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3rem, 5.5vw, 5.5rem);
   font-weight: 850;
   letter-spacing: -0.025em;
@@ -1112,7 +1112,7 @@
   }
 
   .chapter h2 {
-    font-size: clamp(2.9rem, 13.5vw, 4.2rem);
+    font-size: clamp(2.9rem, 12vw, 4.2rem);
   }
 
   .overviewList > li > a {

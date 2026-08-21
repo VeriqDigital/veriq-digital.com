@@ -1,6 +1,6 @@
 /*
 THESIS: Make Veriq's three offers understandable in seconds without replacing the established Services-page identity.
-OWN-WORLD: Dark charcoal fields, warm-white type, signal cyan, condensed Oswald headlines, mono indices, fine rules, and asymmetrical editorial layouts.
+OWN-WORLD: Dark charcoal fields, warm-white type, signal cyan, heavy Geist Sans headlines, mono indices, fine rules, and asymmetrical editorial layouts.
 STORY: Choose a website path, understand how search supports it, see what custom website tools can add, then learn how Veriq can keep helping after launch.
 FIRST VIEWPORT: Oversized positioning statement on the left, two direct actions below, and a ruled three-service index on the right.
 FORM: Existing editorial chapter sequence, refined with Option B's information clarity; brief-pinned, no concept seed.
@@ -8,6 +8,7 @@ FORM: Existing editorial chapter sequence, refined with Option B's information c
 
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import BookingLink from "@/components/ui/BookingLink";
 import WebsiteAuditLink from "@/components/ui/WebsiteAuditLink";
 import { createPageMetadata, serializeJsonLd } from "@/config/seo";
 import { siteConfig } from "@/config/site";
@@ -240,17 +241,17 @@ export default function ServicesPage() {
                 enough.
               </p>
               <div className={styles.heroActions}>
-                <Link href="/contact" className={styles.primaryLink}>
-                  Start a project
+                <BookingLink
+                  placement="services_hero"
+                  className={styles.primaryLink}
+                >
+                  Book a Call
+                  <span aria-hidden="true">↗</span>
+                </BookingLink>
+                <Link href="/contact" className={styles.secondaryLink}>
+                  Get in Touch
                   <span aria-hidden="true">↗</span>
                 </Link>
-                <WebsiteAuditLink
-                  placement="services_hero"
-                  className={styles.secondaryLink}
-                >
-                  Get a free website audit
-                  <span aria-hidden="true">↗</span>
-                </WebsiteAuditLink>
               </div>
             </div>
           </div>

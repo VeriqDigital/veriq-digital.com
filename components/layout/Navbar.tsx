@@ -145,7 +145,7 @@ const Navbar = () => {
       >
         <Link
           href="/"
-          className="font-heading text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
+          className="font-sans text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
         >
           {siteConfig.shortName}
         </Link>

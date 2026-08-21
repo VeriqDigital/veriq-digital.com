@@ -33,7 +33,7 @@
   gap: 0.75rem;
   margin-bottom: 1.4rem;
   color: var(--muted);
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-mono);
   font-size: 0.69rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -49,7 +49,7 @@
 .errorCode {
   margin-bottom: 1rem;
   color: var(--primary-readable);
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(4.5rem, 10vw, 8rem);
   font-weight: 800;
   line-height: 0.8;
@@ -58,7 +58,7 @@
 
 .content h1 {
   margin: 0;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(4rem, 7.5vw, 6rem);
   font-weight: 700;
   line-height: 0.88;

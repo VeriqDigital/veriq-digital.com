@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Oswald } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import DevelopmentWebVitals from "@/components/analytics/DevelopmentWebVitals";
 import MetaPixel from "@/components/analytics/MetaPixel";
 import PrivacyAwareAnalytics from "@/components/analytics/PrivacyAwareAnalytics";
@@ -19,11 +19,6 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const oswald = Oswald({
-  subsets: ["latin"],
-  variable: "--font-heading",
 });
 
 const isPreviewDeployment = process.env.VERCEL_ENV === "preview";
@@ -85,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${oswald.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         {isDevelopment ? <DevelopmentWebVitals /> : null}

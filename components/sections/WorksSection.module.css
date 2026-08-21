@@ -38,7 +38,7 @@
 
 .header :is(h1, h2) {
   max-width: 12ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3.4rem, 6.6vw, 6rem);
   font-weight: 900;
   line-height: 0.96;
@@ -240,6 +240,10 @@
 }
 
 @media (max-width: 540px) {
+  .header :is(h1, h2) {
+    font-size: clamp(2.9rem, 12vw, 3.4rem);
+  }
+
   .project:nth-child(2) {
     width: 100%;
   }
