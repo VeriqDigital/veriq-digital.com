@@ -257,26 +257,27 @@
 
 .beliefGrid {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  align-items: start;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
   gap: 1.25rem;
   margin-top: clamp(4rem, 8vw, 8rem);
 }
 
 .beliefCard {
   position: relative;
-  display: flex;
-  min-height: 17rem;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  min-height: 22rem;
+  grid-template-rows: auto minmax(3em, auto) 1fr;
+  align-content: start;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--foreground) 13%, transparent);
   border-radius: 1.25rem;
-  padding: clamp(1.4rem, 2.5vw, 2rem);
+  padding: 2rem;
   background: var(--background);
 }
 
 .beliefCard > span {
+  margin-bottom: 2.5rem;
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.65rem;
@@ -285,9 +286,8 @@
 }
 
 .beliefCard h3 {
-  max-width: 12ch;
   font-family: var(--font-sans);
-  font-size: clamp(1.8rem, 2.7vw, 2.7rem);
+  font-size: clamp(1.8rem, 2.35vw, 2.35rem);
   font-weight: 800;
   line-height: 1;
   text-transform: uppercase;
@@ -299,29 +299,6 @@
   color: var(--muted);
   font-size: 0.86rem;
   line-height: 1.6;
-}
-
-.beliefCard:nth-child(1) {
-  grid-column: 1 / span 3;
-  border-bottom-right-radius: 4.5rem;
-}
-
-.beliefCard:nth-child(2) {
-  grid-column: 4 / span 4;
-  margin-top: 3.5rem;
-  border-top-left-radius: 4.5rem;
-}
-
-.beliefCard:nth-child(3) {
-  grid-column: 8 / span 2;
-  min-height: 20rem;
-  margin-top: 1.25rem;
-}
-
-.beliefCard:nth-child(4) {
-  grid-column: 10 / span 3;
-  margin-top: 5rem;
-  border-top-right-radius: 4.5rem;
 }
 
 .founder {
@@ -568,18 +545,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .beliefCard:nth-child(1),
-  .beliefCard:nth-child(2),
-  .beliefCard:nth-child(3),
-  .beliefCard:nth-child(4) {
-    grid-column: auto;
-  }
-
-  .beliefCard:nth-child(3) {
-    min-height: 17rem;
-    margin-top: 0;
-  }
-
   .founderInner,
   .whyInner {
     gap: clamp(3rem, 6vw, 5rem);
@@ -619,19 +584,10 @@
     margin-left: 0;
   }
 
-  .beliefCard,
-  .beliefCard:nth-child(1),
-  .beliefCard:nth-child(2),
-  .beliefCard:nth-child(3),
-  .beliefCard:nth-child(4) {
+  .beliefCard {
     min-height: 14rem;
-    margin-top: 0;
     border-radius: 1.1rem;
-  }
-
-  .beliefCard:nth-child(even) {
-    width: 92%;
-    margin-left: auto;
+    padding: 1.5rem;
   }
 
   .founderVisual {
@@ -666,7 +622,6 @@
     width: 100%;
   }
 
-  .beliefCard:nth-child(even),
   .founderVisual {
     width: 100%;
   }

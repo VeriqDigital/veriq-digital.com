@@ -147,10 +147,8 @@ export default function AboutPage() {
             {beliefs.map((belief) => (
               <article className={styles.beliefCard} key={belief.number}>
                 <span>{belief.number}</span>
-                <div>
-                  <h3>{belief.title}</h3>
-                  <p>{belief.description}</p>
-                </div>
+                <h3>{belief.title}</h3>
+                <p>{belief.description}</p>
               </article>
             ))}
           </div>
