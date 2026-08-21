@@ -1,4 +1,3 @@
-import Container from "@/components/ui/Container";
 import BookingLink from "@/components/ui/BookingLink";
 import SocialLinks from "@/components/ui/SocialLinks";
 import { createPageMetadata } from "@/config/seo";
@@ -18,7 +17,7 @@ export default function ContactPage() {
 
   return (
     <main id="main-content" className={styles.page}>
-      <Container>
+      <div className={styles.container}>
         <div className={styles.layout}>
           <section className={styles.intro} aria-labelledby="contact-title">
             <p className={styles.eyebrow}>
@@ -74,7 +73,7 @@ export default function ContactPage() {
 
           <ContactForm />
         </div>
-      </Container>
+      </div>
     </main>
   );
 }
