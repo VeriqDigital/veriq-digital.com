@@ -12,9 +12,9 @@ import HomeTrustSection from "@/components/sections/HomeTrustSection";
 import HomeWhyGrowth, { HomeFinalCta } from "@/components/sections/HomeWhyGrowth";
 import FAQ from "@/components/sections/FAQ";
 import Hero from "@/components/sections/Hero";
+import HomeWorksRail from "@/components/sections/HomeWorksRail";
 import ServicesSection from "@/components/sections/ServicesSection";
 import Section from "@/components/ui/Section";
-import Works from "@/components/sections/WorksSection";
 import {
   createPageMetadata,
   serializeJsonLd,
@@ -55,7 +55,7 @@ export default function Home() {
         </Section>
         <HomePlatformProcess />
         <Section id="works" className={styles.worksChapter}>
-          <Works />
+          <HomeWorksRail />
         </Section>
         <HomeSeoAudit auditEnabled={auditEnabled} />
         <HomeWhyGrowth />

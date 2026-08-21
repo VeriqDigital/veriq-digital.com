@@ -1,0 +1,241 @@
+.works {
+  position: relative;
+  isolation: isolate;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(17rem, 0.65fr);
+  align-items: end;
+  gap: clamp(2rem, 7vw, 7rem);
+  margin-bottom: clamp(2.75rem, 5vw, 4.5rem);
+}
+
+.header h2 {
+  max-width: 12ch;
+  font-family: var(--font-sans);
+  font-size: clamp(3.4rem, 6.6vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
+  text-transform: uppercase;
+}
+
+.header h2 span {
+  color: var(--muted);
+}
+
+.headerAside {
+  display: grid;
+  justify-items: start;
+  gap: 1.5rem;
+}
+
+.headerAside p {
+  max-width: 28rem;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  line-height: 1.6;
+}
+
+.viewAllLink {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary-readable) 48%, transparent);
+  color: var(--foreground);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.viewAllLink span {
+  color: var(--primary-readable);
+  font-size: 1rem;
+}
+
+.viewAllLink:hover {
+  border-color: var(--primary-readable);
+  color: var(--primary-readable);
+}
+
+.viewAllLink:focus-visible {
+  border-radius: 0.25rem;
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 0.3rem;
+}
+
+.viewport {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+  padding-left: max(
+    1.5rem,
+    calc((100vw - var(--container-width)) / 2 + 1.5rem)
+  );
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.viewport[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  user-select: none;
+  will-change: transform;
+}
+
+.group {
+  --rail-gap: clamp(1.1rem, 2.2vw, 2rem);
+  display: flex;
+  flex: none;
+  gap: var(--rail-gap);
+  padding-right: var(--rail-gap);
+}
+
+.card {
+  flex: none;
+  width: clamp(34rem, 44vw, 52rem);
+}
+
+.cardLink {
+  display: block;
+  color: var(--foreground);
+}
+
+.imageWrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--surface) 8%, var(--background));
+}
+
+.image {
+  object-fit: cover;
+}
+
+.projectMeta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.1rem;
+}
+
+.projectMeta h3 {
+  font-family: var(--font-sans);
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  font-weight: 760;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+
+.projectMeta p {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.projectMeta > span {
+  color: var(--primary-readable);
+  font-size: 1.15rem;
+}
+
+.cardLink:focus-visible {
+  border-radius: 1rem;
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 0.35rem;
+}
+
+@media (max-width: 900px), (hover: none), (pointer: coarse) {
+  .header {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .headerAside {
+    gap: 1.15rem;
+  }
+
+  .viewport {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding-right: 1.5rem;
+    cursor: auto;
+    scroll-padding-inline: 1.5rem;
+    scroll-snap-type: inline proximity;
+    scrollbar-width: none;
+    touch-action: auto;
+  }
+
+  .viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .duplicateGroup {
+    display: none;
+  }
+
+  .card {
+    width: min(78vw, 36rem);
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 540px) {
+  .header h2 {
+    font-size: clamp(2.9rem, 12vw, 3.4rem);
+  }
+
+  .headerAside p {
+    font-size: 1rem;
+  }
+
+  .projectMeta h3 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    overflow-x: auto;
+    padding-right: 1.5rem;
+    cursor: auto;
+    scroll-snap-type: inline proximity;
+    scrollbar-width: none;
+    touch-action: auto;
+  }
+
+  .viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .duplicateGroup {
+    display: none;
+  }
+
+  .card {
+    scroll-snap-align: start;
+  }
+}
