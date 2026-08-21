@@ -289,7 +289,7 @@ export default function ServicesPage() {
       <div className={styles.chapters}>
         {serviceChapters.map((service, index) => (
           <section id={service.id} className={styles.chapter} key={service.id}>
-            <Container>
+            <Container wide={service.id === "web-design-development"}>
               <div
                 className={`${styles.chapterInner} ${
                   index === 1 ? styles.chapterReverse : ""
