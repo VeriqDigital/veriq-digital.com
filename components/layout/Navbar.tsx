@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { navigation, primaryCta, siteConfig } from "@/config/site";
+import BookingLink from "@/components/ui/BookingLink";
+import { navigation, siteConfig } from "@/config/site";
+
+const TOP_THRESHOLD = 8;
+const HIDE_START = 72;
+const HIDE_DISTANCE = 120;
+const REVEAL_DISTANCE = 16;
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,9 +44,9 @@ const Navbar = () => {
       const currentScrollY = window.scrollY;
       const difference = currentScrollY - lastScrollY.current;
 
-      updateScrolledState(currentScrollY > 8);
+      updateScrolledState(currentScrollY > TOP_THRESHOLD);
 
-      if (currentScrollY <= 8) {
+      if (currentScrollY <= TOP_THRESHOLD) {
         updateVisibleState(true);
         downwardDistance = 0;
         upwardDistance = 0;
@@ -48,7 +54,10 @@ const Navbar = () => {
         downwardDistance += difference;
         upwardDistance = 0;
 
-        if (currentScrollY > 72 && downwardDistance >= 300) {
+        if (
+          currentScrollY > HIDE_START &&
+          downwardDistance >= HIDE_DISTANCE
+        ) {
           updateVisibleState(false);
           downwardDistance = 0;
         }
@@ -56,7 +65,7 @@ const Navbar = () => {
         upwardDistance += Math.abs(difference);
         downwardDistance = 0;
 
-        if (upwardDistance >= 40) {
+        if (upwardDistance >= REVEAL_DISTANCE) {
           updateVisibleState(true);
           upwardDistance = 0;
         }
@@ -136,7 +145,7 @@ const Navbar = () => {
       >
         <Link
           href="/"
-          className="font-heading text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
+          className="font-sans text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
         >
           {siteConfig.shortName}
         </Link>
@@ -154,13 +163,13 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/contact"
+          <BookingLink
+            placement="navbar"
             onClick={() => setIsMenuOpen(false)}
             className="cursor-pointer rounded-full bg-(--primary) px-4 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) min-[360px]:px-6 lg:text-xl"
           >
-            {primaryCta.label}
-          </Link>
+            Book a Call
+          </BookingLink>
 
           <button
             type="button"
@@ -185,7 +194,7 @@ const Navbar = () => {
         <nav
           id="mobile-navigation"
           aria-label="Mobile navigation"
-          className="absolute inset-x-4 top-full rounded-lg border border-white/10 bg-black/88 p-2 text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:hidden"
+          className="absolute inset-x-4 top-full rounded-lg border border-black/10 bg-[#f6f3ed]/95 p-2 text-(--foreground) shadow-[0_18px_50px_rgba(20,22,23,0.14)] backdrop-blur-xl lg:hidden"
         >
           <div className="grid gap-1">
             {navigation.map((item) => (
@@ -193,7 +202,7 @@ const Navbar = () => {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="rounded-md px-4 py-3 text-lg font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
+                className="rounded-md px-4 py-3 text-lg font-semibold text-(--nav-muted) transition hover:bg-black/5 hover:text-(--primary-readable)"
               >
                 {item.label}
               </Link>

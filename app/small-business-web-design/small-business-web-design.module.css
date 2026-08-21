@@ -62,7 +62,7 @@
 
 .hero h1 {
   max-width: 12ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3.7rem, 8.3vw, 6rem);
   font-weight: 900;
   line-height: 0.9;
@@ -168,7 +168,7 @@
 
 .briefPanel dt {
   color: var(--primary);
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: 1.05rem;
   font-weight: 750;
   text-transform: uppercase;
@@ -237,7 +237,7 @@
 .localBridge h2,
 .closing h2 {
   max-width: 13ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3rem, 6vw, 6rem);
   font-weight: 880;
   line-height: 0.92;
@@ -289,7 +289,7 @@
 .requirementList h3,
 .processList h3,
 .workMeta h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.45rem, 2vw, 2rem);
   font-weight: 800;
   line-height: 1.05;
@@ -357,7 +357,7 @@
 
 .platformTitle strong {
   color: var(--primary);
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(2.4rem, 4vw, 4rem);
   line-height: 1;
   text-transform: uppercase;
@@ -520,7 +520,7 @@
 }
 
 .resourceLinks strong {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.35rem, 2.4vw, 2.3rem);
   line-height: 1.05;
   text-transform: uppercase;
@@ -568,7 +568,7 @@
   gap: 1rem;
   padding: 1.5rem 0;
   cursor: pointer;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.3rem, 2vw, 1.8rem);
   font-weight: 750;
   list-style: none;

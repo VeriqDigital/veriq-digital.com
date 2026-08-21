@@ -3,7 +3,6 @@
   isolation: isolate;
   min-height: min(58rem, 100svh);
   overflow: hidden;
-  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
   padding: clamp(8rem, 11vh, 9rem) 0 clamp(4.5rem, 7vh, 6rem);
   background: var(--background);
 }
@@ -12,12 +11,12 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  opacity: 0.23;
+  opacity: 0.12;
   background-image:
     linear-gradient(color-mix(in srgb, var(--foreground) 9%, transparent) 1px, transparent 1px),
     linear-gradient(90deg, color-mix(in srgb, var(--foreground) 9%, transparent) 1px, transparent 1px);
   background-size: 72px 72px;
-  mask-image: linear-gradient(to right, transparent 4%, black 54%, black 100%);
+  mask-image: linear-gradient(to right, transparent 10%, black 64%, transparent 100%);
 }
 
 .layout {
@@ -34,7 +33,7 @@
 
 .title {
   max-width: 10.5ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3.6rem, 6.2vw, 6rem);
   font-weight: 900;
   line-height: 0.95;

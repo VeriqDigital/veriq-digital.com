@@ -67,7 +67,7 @@
 
 .hero h1 {
   max-width: 10ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(4rem, 8.2vw, 6rem);
   font-weight: 900;
   line-height: 0.88;
@@ -189,7 +189,7 @@
 }
 
 .outcomePath strong {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.3rem, 2.2vw, 1.9rem);
   line-height: 1;
   text-transform: uppercase;
@@ -230,7 +230,7 @@
 .faqIntro h2,
 .closing h2 {
   max-width: 14ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3rem, 5.8vw, 5.5rem);
   font-weight: 875;
   line-height: 0.93;
@@ -259,7 +259,7 @@
 }
 
 .businessCases dt {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.6rem, 2.5vw, 2.35rem);
   font-weight: 800;
   line-height: 1.05;
@@ -313,7 +313,7 @@
 
 .capabilityList h3 {
   max-width: 16ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.65rem, 2.7vw, 2.55rem);
   font-weight: 800;
   line-height: 1.02;
@@ -386,7 +386,7 @@
 }
 
 .processList h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.8rem, 3vw, 2.8rem);
   font-weight: 800;
   line-height: 1;
@@ -459,7 +459,7 @@
 }
 
 .workMeta h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.8rem, 3vw, 2.7rem);
   font-weight: 800;
   line-height: 1;
@@ -510,7 +510,7 @@
 
 .guideLinks strong {
   max-width: 28ch;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.55rem, 2.8vw, 2.5rem);
   line-height: 1.05;
   text-transform: uppercase;
@@ -542,7 +542,7 @@
   gap: 1.5rem;
   padding: 1.5rem 0;
   list-style: none;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.35rem, 2.4vw, 2rem);
   font-weight: 750;
   line-height: 1.15;

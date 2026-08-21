@@ -56,7 +56,7 @@
 .campaignHeading {
   max-width: 19ch;
   margin-top: 1rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.65rem, 3vw, 2.25rem);
   font-weight: 800;
   letter-spacing: -0.025em;
@@ -213,7 +213,7 @@
 
 .modalIntro h2,
 .successState h2 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(2rem, 7vw, 2.75rem);
   font-weight: 850;
   letter-spacing: -0.025em;

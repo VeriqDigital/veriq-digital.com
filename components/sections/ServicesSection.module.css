@@ -32,17 +32,17 @@
 }
 
 .heading {
-  max-width: 10ch;
-  font-family: var(--font-heading);
-  font-size: clamp(3.5rem, 6.7vw, 6rem);
-  font-weight: 900;
-  line-height: 0.96;
-  letter-spacing: -0.025em;
-  text-transform: uppercase;
+  max-width: 16ch;
+  font-family: var(--font-sans);
+  font-size: clamp(2.65rem, 5vw, 4.8rem);
+  font-weight: 780;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
 }
 
 .heading span {
-  color: var(--muted);
+  color: inherit;
 }
 
 .introLinks {
@@ -98,7 +98,7 @@
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 1.25rem;
   margin-top: clamp(2.75rem, 5vw, 4.75rem);
 }
 
@@ -109,11 +109,11 @@
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--foreground) 13%, transparent);
-  border-radius: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 9%, transparent);
+  border-radius: 0.9rem;
   padding: clamp(1.35rem, 2vw, 1.8rem);
-  background: var(--surface);
-  color: var(--surface-foreground);
+  background: color-mix(in srgb, white 46%, var(--background));
+  color: var(--foreground);
   transition:
     transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 250ms ease,
@@ -121,32 +121,16 @@
 }
 
 .card:hover {
-  transform: translateY(-0.35rem);
-  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
-  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.16);
-}
-
-.card:nth-child(1) {
-  border-bottom-right-radius: 4.5rem;
-}
-
-.card:nth-child(2) {
-  border-top-left-radius: 4.5rem;
-}
-
-.card:nth-child(3) {
-  border-bottom-left-radius: 4.5rem;
-}
-
-.card:nth-child(4) {
-  border-top-right-radius: 4.5rem;
+  transform: translateY(-0.2rem);
+  border-color: color-mix(in srgb, var(--primary-readable) 35%, transparent);
+  box-shadow: 0 18px 44px rgba(20, 24, 26, 0.08);
 }
 
 .cardMeta {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  color: color-mix(in srgb, var(--surface-foreground) 52%, transparent);
+  color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-style: normal;
@@ -158,23 +142,22 @@
 .cardMeta i {
   width: 1.75rem;
   height: 1px;
-  background: var(--primary);
+  background: var(--primary-readable);
 }
 
 .card h3 {
   max-width: 17ch;
-  font-family: var(--font-heading);
-  font-size: clamp(1.65rem, 2.2vw, 2.25rem);
-  font-weight: 800;
-  line-height: 1;
+  font-family: var(--font-sans);
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  font-weight: 760;
+  line-height: 1.08;
   letter-spacing: -0.025em;
-  text-transform: uppercase;
 }
 
 .card p {
   max-width: 44rem;
   margin-top: 0.8rem;
-  color: color-mix(in srgb, var(--surface-foreground) 65%, transparent);
+  color: var(--muted);
   font-size: 0.875rem;
   line-height: 1.55;
 }
@@ -187,10 +170,10 @@
 }
 
 .capabilities li {
-  border: 1px solid color-mix(in srgb, var(--surface-foreground) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
   border-radius: 999px;
   padding: 0.4rem 0.6rem;
-  color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
+  color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
@@ -204,12 +187,12 @@
   align-items: center;
   gap: 0.55rem;
   margin-top: 0.9rem;
-  color: var(--primary);
+  color: var(--primary-readable);
   font-size: 0.76rem;
   font-weight: 750;
   line-height: 1.25;
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--primary) 45%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--primary-readable) 45%, transparent);
   text-underline-offset: 0.25rem;
 }
 
@@ -219,7 +202,7 @@
 
 .cardLink:focus-visible {
   border-radius: 0.25rem;
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--primary-readable);
   outline-offset: 0.2rem;
 }
 
@@ -231,8 +214,8 @@
   width: 2.65rem;
   aspect-ratio: 1;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--surface-foreground) 18%, transparent);
-  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  color: var(--muted);
   transition:
     border-color 250ms ease,
     color 250ms ease,
@@ -266,8 +249,8 @@
 }
 
 .card:hover .cardIcon {
-  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
-  color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary-readable) 48%, transparent);
+  color: var(--primary-readable);
   transform: rotate(4deg) scale(1.05);
 }
 
@@ -307,7 +290,7 @@
     width: 100%;
     min-height: 21rem;
     margin-left: 0;
-    border-radius: 1.1rem;
+    border-radius: 0.9rem;
   }
 }
 

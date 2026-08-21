@@ -7,18 +7,6 @@
   padding: clamp(9rem, 14vw, 12rem) 0 clamp(5rem, 9vw, 8rem);
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  top: 7rem;
-  right: -13rem;
-  width: 31rem;
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--primary-readable) 20%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
 .heroGrid {
   position: relative;
   display: grid;
@@ -61,7 +49,7 @@
 .heroCopy h1 {
   max-width: 11ch;
   margin-top: 1.25rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3.65rem, 7.5vw, 6rem);
   font-weight: 850;
   letter-spacing: -0.03em;
@@ -200,10 +188,6 @@
   font-weight: 700;
 }
 
-:global(:root[data-theme="dark"]) .inputError {
-  color: #ffaaa2;
-}
-
 .inputNotice strong {
   color: var(--foreground);
   overflow-wrap: anywhere;
@@ -234,18 +218,6 @@
   background: var(--surface);
   color: var(--surface-foreground);
   box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28);
-}
-
-.auditPreview::before {
-  content: "";
-  position: absolute;
-  top: -5rem;
-  right: -5rem;
-  width: 12rem;
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--primary) 28%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
 }
 
 .auditPreview > header,
@@ -331,7 +303,7 @@
 }
 
 .scoreValue strong {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(4.25rem, 8vw, 7.25rem);
   font-weight: 850;
   letter-spacing: -0.035em;
@@ -470,7 +442,7 @@
 .resultSectionHeading h2,
 .fullReport h2,
 .serviceCtaInner h2 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-weight: 820;
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -507,7 +479,7 @@
 }
 
 .checkList dt {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.55rem, 2.5vw, 2.15rem);
   font-weight: 780;
   line-height: 1.05;
@@ -561,7 +533,7 @@
 }
 
 .processList h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   font-weight: 780;
   line-height: 1;
@@ -577,13 +549,16 @@
 }
 
 .resultsSection {
-  background: var(--surface);
-  color: var(--surface-foreground);
+  background: var(--background);
   padding: clamp(5rem, 9vw, 8rem) 0;
 }
 
 .resultsShell {
   min-width: 0;
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--surface-foreground);
+  padding: clamp(1.5rem, 4.5vw, 4rem);
 }
 
 .resultsHeader {
@@ -650,7 +625,7 @@
 
 .resultSummary dd {
   color: var(--primary);
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 820;
   line-height: 0.8;
@@ -704,7 +679,7 @@
 }
 
 .categoryScoreHeading h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.45rem, 2.7vw, 2.2rem);
   font-weight: 760;
   line-height: 1;
@@ -745,7 +720,7 @@
 
 .categoryScoreHeading > p strong {
   color: var(--primary);
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(1.7rem, 3vw, 2.5rem);
   font-weight: 800;
   line-height: 0.9;
@@ -864,7 +839,7 @@
 }
 
 .findingLead h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(2rem, 4vw, 3.35rem);
   font-weight: 780;
   letter-spacing: -0.02em;
@@ -953,8 +928,8 @@
   gap: clamp(2.5rem, 8vw, 8rem);
   margin-top: clamp(5rem, 10vw, 9rem);
   border-radius: 16px;
-  background: var(--primary);
-  color: #071010;
+  background: var(--background);
+  color: var(--foreground);
   padding: clamp(1.5rem, 4vw, 3.5rem);
 }
 
@@ -986,7 +961,7 @@
 }
 
 .fullReport > div:first-child > p {
-  color: #005d60;
+  color: var(--primary-readable);
 }
 
 .fullReport h2 {
@@ -998,7 +973,7 @@
 .fullReport > div:first-child > p:last-child {
   max-width: 52ch;
   margin-top: 1.25rem;
-  color: #174547;
+  color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.65;
 }
@@ -1031,13 +1006,13 @@
 }
 
 .reportFields input {
-  border-color: rgba(7, 16, 16, 0.3);
-  background: #f7ffff;
-  color: #071010;
+  border-color: color-mix(in srgb, var(--foreground) 24%, transparent);
+  background: color-mix(in srgb, white 46%, var(--background));
+  color: var(--foreground);
 }
 
 .reportFields input::placeholder {
-  color: rgba(7, 16, 16, 0.58);
+  color: color-mix(in srgb, var(--foreground) 58%, transparent);
 }
 
 .reportFormFooter {
@@ -1049,7 +1024,7 @@
 }
 
 .reportFormFooter > p {
-  color: #174547;
+  color: var(--muted);
   font-size: 0.7rem;
   line-height: 1.5;
 }
@@ -1062,30 +1037,30 @@
 }
 
 .reportFormFooter > p a:focus-visible {
-  outline: 3px solid #071010;
+  outline: 3px solid var(--primary-readable);
   outline-offset: 3px;
 }
 
 .reportFormFooter button {
-  border: 1px solid #071010;
-  background: #071010;
-  color: #f4ffff;
+  border: 0;
+  background: var(--primary);
+  color: #071010;
 }
 
 .reportFormFooter button:hover {
-  background: #203637;
+  background: var(--primary-hover);
 }
 
 .reportFormFooter button:focus-visible,
 .reportFields input:focus-visible {
-  outline-color: #071010;
+  outline-color: var(--primary-readable);
 }
 
 .reportNotice {
   margin-top: 1rem;
-  border-top: 1px solid rgba(7, 16, 16, 0.24);
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
   padding-top: 0.85rem;
-  color: #153f41;
+  color: var(--muted);
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.5;
@@ -1128,7 +1103,7 @@
 .reportStatus h1 {
   max-width: 13ch;
   margin-top: 1rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: clamp(3.2rem, 7vw, 5.75rem);
   font-weight: 850;
   letter-spacing: -0.03em;
@@ -1284,10 +1259,6 @@
 @media (max-width: 640px) {
   .hero {
     padding-top: 8.5rem;
-  }
-
-  .hero::before {
-    display: none;
   }
 
   .heroGrid {

@@ -73,7 +73,6 @@ export default function ContactPage() {
           </section>
 
           <ContactForm />
-
         </div>
       </Container>
     </main>

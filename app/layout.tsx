@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Oswald } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import DevelopmentWebVitals from "@/components/analytics/DevelopmentWebVitals";
 import MetaPixel from "@/components/analytics/MetaPixel";
 import PrivacyAwareAnalytics from "@/components/analytics/PrivacyAwareAnalytics";
@@ -8,7 +8,6 @@ import Footer from "@/components/layout/Footer";
 import CursorGlow from "@/components/ui/CursorGlow";
 import FloatingBookingCta from "@/components/layout/FloatingBookingCta";
 import Navbar from "@/components/layout/Navbar";
-import ThemeToggle from "@/components/ui/ThemeToggle";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -22,15 +21,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const oswald = Oswald({
-  subsets: ["latin"],
-  variable: "--font-heading",
-});
-
 const isPreviewDeployment = process.env.VERCEL_ENV === "preview";
 const isDevelopment = process.env.NODE_ENV === "development";
-
-const themeInitScript = `try{var root=document.documentElement;var savedTheme=localStorage.getItem("theme");var theme=savedTheme==="light"||savedTheme==="dark"?savedTheme:window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";var themeColor=theme==="dark"?"#1a1c1e":"#f7f7f5";root.dataset.theme=theme;root.style.backgroundColor=themeColor;root.style.colorScheme=theme;var themeColorMeta=document.querySelectorAll('meta[name="theme-color"]');for(var i=0;i<themeColorMeta.length;i++){themeColorMeta[i].setAttribute("content",themeColor)}window.addEventListener("load",function(){root.style.removeProperty("background-color");root.style.removeProperty("color-scheme")},{once:true})}catch{document.documentElement.dataset.theme=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}`;
 
 export const metadata: Metadata = {
   title: {
@@ -76,11 +68,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   minimumScale: 1,
   viewportFit: "cover",
-  colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f7f5" },
-    { media: "(prefers-color-scheme: dark)", color: "#1a1c1e" },
-  ],
+  colorScheme: "light",
+  themeColor: "#f6f3ed",
 };
 
 export default function RootLayout({
@@ -91,15 +80,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${oswald.variable} h-full antialiased`}
-      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          id="theme-init"
-          dangerouslySetInnerHTML={{ __html: themeInitScript }}
-        />
-      </head>
       <body className="flex min-h-full flex-col">
         {isDevelopment ? <DevelopmentWebVitals /> : null}
         <a className="skip-link" href="#main-content">
@@ -111,7 +93,6 @@ export default function RootLayout({
         {children}
         <Footer />
         <FloatingBookingCta />
-        <ThemeToggle />
         <PrivacyAwareAnalytics />
         <PrivacyAwareSpeedInsights />
       </body>
