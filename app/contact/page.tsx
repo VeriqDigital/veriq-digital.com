@@ -21,10 +21,6 @@ export default function ContactPage() {
       <Container>
         <div className={styles.layout}>
           <section className={styles.intro} aria-labelledby="contact-title">
-            <p className={styles.eyebrow}>
-              <span aria-hidden="true" />
-              Contact us
-            </p>
             <h1 id="contact-title">
               Let&apos;s make <span>something useful.</span>
             </h1>
@@ -73,7 +69,6 @@ export default function ContactPage() {
           </section>
 
           <ContactForm />
-
         </div>
       </Container>
     </main>
