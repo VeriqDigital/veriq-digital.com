@@ -185,7 +185,7 @@ const Navbar = () => {
         <nav
           id="mobile-navigation"
           aria-label="Mobile navigation"
-          className="absolute inset-x-4 top-full rounded-lg border border-white/10 bg-black/88 p-2 text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:hidden"
+          className="absolute inset-x-4 top-full rounded-lg border border-black/10 bg-[#f6f3ed]/95 p-2 text-(--foreground) shadow-[0_18px_50px_rgba(20,22,23,0.14)] backdrop-blur-xl lg:hidden"
         >
           <div className="grid gap-1">
             {navigation.map((item) => (
@@ -193,7 +193,7 @@ const Navbar = () => {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="rounded-md px-4 py-3 text-lg font-semibold text-white/78 transition hover:bg-white/10 hover:text-(--primary)"
+                className="rounded-md px-4 py-3 text-lg font-semibold text-(--nav-muted) transition hover:bg-black/5 hover:text-(--primary-readable)"
               >
                 {item.label}
               </Link>

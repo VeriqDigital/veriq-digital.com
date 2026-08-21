@@ -200,10 +200,6 @@
   font-weight: 700;
 }
 
-:global(:root[data-theme="dark"]) .inputError {
-  color: #ffaaa2;
-}
-
 .inputNotice strong {
   color: var(--foreground);
   overflow-wrap: anywhere;

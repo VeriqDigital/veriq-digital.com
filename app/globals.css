@@ -2,23 +2,25 @@
 
 :root {
   color-scheme: light;
-  --background: #f7f7f5;
-  --surface: #121212;
-  --surface-hover: #494949;
-  --surface-foreground: #f7f7f5;
-  --foreground: #111111;
-  --muted: #5f6368;
-  --nav-text: #111111;
-  --nav-muted: rgba(17, 17, 17, 0.76);
+  --background: #f6f3ed;
+  --background-soft: #ecece8;
+  --background-cyan: #dff8f5;
+  --surface: #111315;
+  --surface-hover: #24282b;
+  --surface-foreground: #f7f5ef;
+  --foreground: #141617;
+  --muted: #606462;
+  --nav-text: #141617;
+  --nav-muted: rgba(20, 22, 23, 0.72);
   --primary: #4ef2f2;
   --primary-hover: #40c5c5;
   --primary-readable: #00777a;
-  --border: #2a2a2a;
+  --border: #2d3132;
   --container-width: 1280px;
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 18px;
-  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 24px 64px rgba(20, 24, 26, 0.14);
   --lead-panel-background: #121416;
   --lead-panel-border: rgba(255, 255, 255, 0.14);
   --lead-control-background: #1a1d20;
@@ -29,40 +31,6 @@
   --lead-placeholder: rgba(244, 245, 245, 0.58);
   --lead-supporting: rgba(244, 245, 245, 0.66);
   --lead-focus-ring: rgba(78, 242, 242, 0.16);
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --background: #1a1c1e;
-  --surface: #24272a;
-  --surface-hover: #2d3135;
-  --surface-foreground: #f4f5f5;
-  --foreground: #f4f5f5;
-  --muted: #aeb3b7;
-  --nav-text: #f4f5f5;
-  --nav-muted: rgba(244, 245, 245, 0.78);
-  --border: #3a3e42;
-  --primary: #4ef2f2;
-  --primary-hover: #40c5c5;
-  --primary-readable: #4ef2f2;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    color-scheme: dark;
-    --background: #1a1c1e;
-    --surface: #24272a;
-    --surface-hover: #2d3135;
-    --surface-foreground: #f4f5f5;
-    --foreground: #f4f5f5;
-    --muted: #aeb3b7;
-    --nav-text: #f4f5f5;
-    --nav-muted: rgba(244, 245, 245, 0.78);
-    --border: #3a3e42;
-    --primary: #4ef2f2;
-    --primary-hover: #40c5c5;
-    --primary-readable: #4ef2f2;
-  }
 }
 
 @theme inline {
@@ -85,7 +53,6 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  transition: background-color 300ms ease, color 300ms ease;
 }
 
 .skip-link {
@@ -134,26 +101,9 @@ body {
   opacity: 1;
 }
 
-.theme-toggle {
-  border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-  background: var(--foreground);
-  color: var(--background);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
-  transition: transform 200ms ease, background-color 300ms ease, color 300ms ease;
-}
-
-.theme-toggle:hover {
-  transform: translateY(-2px) scale(1.04);
-}
-
-.theme-toggle:focus-visible {
-  outline: 3px solid var(--primary-readable);
-  outline-offset: 3px;
-}
-
 .floating-booking-cta {
   position: fixed;
-  right: 6.75rem;
+  right: 1.75rem;
   bottom: 1.75rem;
   z-index: 40;
   display: none;
@@ -188,7 +138,7 @@ body {
 }
 
 .floating-booking-cta strong {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: 0.035em;
@@ -219,7 +169,7 @@ body {
 
 .floating-booking-cta-mobile {
   position: fixed;
-  right: 5.5rem;
+  right: 1.25rem;
   bottom: max(1.25rem, calc(env(safe-area-inset-bottom) + 0.75rem));
   z-index: 40;
   display: flex;
@@ -249,7 +199,7 @@ body {
 }
 
 .floating-booking-cta-mobile strong {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.035em;
@@ -274,7 +224,7 @@ body {
 
 @media (min-width: 640px) {
   .floating-booking-cta-mobile {
-    right: 7.25rem;
+    right: 1.75rem;
     bottom: max(1.75rem, calc(env(safe-area-inset-bottom) + 0.75rem));
   }
 }
@@ -294,18 +244,6 @@ body {
   .floating-booking-cta {
     transition: none;
   }
-}
-
-.theme-icon-sun {
-  display: none;
-}
-
-:root[data-theme="dark"] .theme-icon-sun {
-  display: block;
-}
-
-:root[data-theme="dark"] .theme-icon-moon {
-  display: none;
 }
 
 .site-navbar {
@@ -350,13 +288,13 @@ body {
 }
 
 .site-navbar[data-scrolled="true"] {
-  border-bottom-color: rgba(0, 0, 0, 0.05);
+  border-bottom-color: rgba(20, 22, 23, 0.08);
 }
 
 .site-navbar[data-scrolled="true"]::before {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(32px) saturate(115%);
-  -webkit-backdrop-filter: blur(32px) saturate(115%);
+  background: rgba(246, 243, 237, 0.88);
+  backdrop-filter: blur(20px) saturate(105%);
+  -webkit-backdrop-filter: blur(20px) saturate(105%);
 }
 
 @media (prefers-reduced-motion: reduce) {
