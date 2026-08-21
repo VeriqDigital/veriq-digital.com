@@ -95,6 +95,10 @@
   font-size: clamp(2.65rem, 5vw, 4.8rem);
 }
 
+.positioning h2 {
+  font-size: clamp(2.75rem, 5.6vw, 5.35rem);
+}
+
 .positioning h2,
 .platform h2,
 .growth h2,
@@ -809,6 +813,10 @@
   .growth h2,
   .audit h2 {
     font-size: clamp(2.35rem, 11vw, 3.5rem);
+  }
+
+  .positioning h2 {
+    font-size: clamp(2.45rem, 11.5vw, 3.65rem);
   }
 
   .seo h2,

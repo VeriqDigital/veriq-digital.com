@@ -1,6 +1,7 @@
 import WorksSection from "@/components/sections/WorksSection";
 import Section from "@/components/ui/Section";
 import { createPageMetadata } from "@/config/seo";
+import styles from "./work.module.css";
 
 export const metadata = createPageMetadata({
   title: "Website Design Work & Concepts",
@@ -12,7 +13,7 @@ export const metadata = createPageMetadata({
 export default function WorkPage() {
   return (
     <main id="main-content" className="pt-20">
-      <Section>
+      <Section className={styles.portfolioSection}>
         <WorksSection headingLevel="h1" />
       </Section>
     </main>
