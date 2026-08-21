@@ -9,6 +9,7 @@ type WorksSectionProps = {
 
 const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
   const Heading = headingLevel;
+  const ProjectHeading = headingLevel === "h1" ? "h2" : "h3";
 
   return (
     <div className={styles.works}>
@@ -32,49 +33,35 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
       </header>
 
       <div className={styles.grid}>
-        {projects.map((project, index) => (
-          <Link
-            href={`/work/${project.slug}`}
-            key={project.slug}
-            className={`${styles.project} ${index === 0 ? styles.projectPrimary : index === 1 ? styles.projectSecondary : styles.projectTertiary}`}
-          >
-            <div className={styles.imageWrap}>
-              <Image
-                src={project.image}
-                alt={project.imageAlt}
-                fill
-                sizes={
-                  index === 0
-                    ? "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 79vw, 980px"
-                    : index === 1
-                      ? "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 66vw, 780px"
-                      : "(max-width: 800px) calc(100vw - 3rem), (max-width: 1280px) 70vw, 900px"
-                }
-                className={styles.image}
-              />
-              <span className={styles.viewProject}>
-                View project <i aria-hidden="true">↗</i>
-              </span>
-            </div>
-            <div className={styles.projectMeta}>
-              <div>
+        {projects.map((project, index) => {
+          const isStaggered = index % 2 === 1;
+
+          return (
+            <Link
+              href={`/work/${project.slug}`}
+              key={project.slug}
+              className={`${styles.project}${isStaggered ? ` ${styles.projectStaggered}` : ""}`}
+            >
+              <div className={styles.imageWrap}>
+                <Image
+                  src={project.image}
+                  alt={project.imageAlt}
+                  fill
+                  sizes="(max-width: 759px) calc(100vw - 3rem), (max-width: 1340px) calc(50vw - 2.75rem), 600px"
+                  className={styles.image}
+                />
+              </div>
+              <div className={styles.projectMeta}>
                 <div className={styles.projectHeading}>
-                  <div>
-                    <h3>{project.title}</h3>
-                    <p>{project.category} · {project.year}</p>
-                  </div>
+                  <ProjectHeading>{project.title}</ProjectHeading>
                   <span aria-hidden="true">↗</span>
                 </div>
+                <p className={styles.projectCategory}>{project.category}</p>
                 <p className={styles.projectSummary}>{project.summary}</p>
-                <ul className={styles.projectServices} aria-label={`${project.title} services`}>
-                  {project.services.slice(0, 3).map((service) => (
-                    <li key={service}>{service}</li>
-                  ))}
-                </ul>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
