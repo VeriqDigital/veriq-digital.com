@@ -62,7 +62,7 @@ const auditNavigationEnabled =
   process.env.NEXT_PUBLIC_WEBSITE_AUDIT_DISCOVERY_ENABLED === "true";
 
 export const homepageCampaign: HomepageCampaignConfig = {
-  enabled: true,
+  enabled: false,
   spotCount: 3,
   eyebrow: "FOR IOWA SERVICE BUSINESSES",
   heading: "Free Custom Landing Page",
