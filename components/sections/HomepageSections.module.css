@@ -441,7 +441,7 @@
 }
 
 .audit {
-  background: var(--background-cyan);
+  background: var(--background-soft);
 }
 
 .auditPanel {
