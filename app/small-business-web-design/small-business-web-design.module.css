@@ -8,29 +8,35 @@
   padding: clamp(8.5rem, 14vw, 12rem) 0 clamp(5rem, 9vw, 8rem);
 }
 
-.breadcrumbs ol {
-  display: flex;
-  gap: 0.55rem;
-  margin: 0 0 clamp(3rem, 6vw, 5.5rem);
-  padding: 0;
-  color: var(--muted);
-  font-size: 0.72rem;
-  list-style: none;
-}
-
-.breadcrumbs a {
-  color: var(--foreground);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
+.breadcrumbs,
 .heroGrid {
   position: relative;
   z-index: 1;
+}
+
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.breadcrumbs a:hover {
+  color: var(--primary-readable);
+}
+
+.heroGrid {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(19rem, 0.75fr);
-  align-items: center;
-  gap: clamp(3rem, 9vw, 8rem);
+  align-items: end;
+  gap: clamp(3rem, 9vw, 9rem);
+  margin-top: clamp(3rem, 6vw, 5.5rem);
 }
 
 .kicker,
@@ -128,22 +134,24 @@
 
 .briefPanel {
   position: relative;
-  border-radius: 1rem 1rem 4.5rem 1rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--surface-foreground) 12%, transparent);
+  border-radius: 1rem;
   padding: clamp(1.5rem, 3vw, 2.25rem);
   background: var(--surface);
   color: var(--surface-foreground);
-  box-shadow: 0 2.5rem 6rem rgba(0, 0, 0, 0.16);
-  transform: rotate(1deg);
+  box-shadow: 0 2.5rem 6rem rgba(0, 0, 0, 0.13);
 }
 
 .briefHeading {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 1.1rem;
-  color: color-mix(in srgb, var(--surface-foreground) 60%, transparent);
+  gap: 1.5rem;
+  padding-bottom: 1.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
   font-family: var(--font-mono);
-  font-size: 0.63rem;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -155,34 +163,35 @@
 }
 
 .briefPanel dl {
-  margin: 0;
+  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
 }
 
 .briefPanel dl > div {
   display: grid;
-  grid-template-columns: minmax(6.5rem, 0.7fr) 1.3fr;
+  grid-template-columns: minmax(7rem, 0.35fr) minmax(0, 1fr);
   gap: 1rem;
-  border-top: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
-  padding: 1.1rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 14%, transparent);
+  padding: 1rem 0;
 }
 
 .briefPanel dt {
-  color: var(--primary);
-  font-family: var(--font-sans);
-  font-size: 1.05rem;
-  font-weight: 750;
+  color: color-mix(in srgb, var(--surface-foreground) 48%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.briefPanel dd,
-.briefPanel > p {
-  color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
-  font-size: 0.82rem;
+.briefPanel dd {
+  font-size: 0.88rem;
   line-height: 1.5;
 }
 
 .briefPanel > p {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 62%, transparent);
+  font-size: 0.8rem;
+  line-height: 1.55;
 }
 
 .fitSection {
@@ -711,8 +720,7 @@
   }
 
   .briefPanel {
-    border-bottom-right-radius: 3rem;
-    transform: none;
+    border-radius: 1rem;
   }
 
   .briefPanel dl > div {
