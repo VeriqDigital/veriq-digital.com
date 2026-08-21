@@ -1,5 +1,3 @@
-import type { ModalType } from "@/components/layout/LeadModal";
-
 export const siteConfig = {
   name: "Veriq Digital",
   shortName: "Veriq",
@@ -84,6 +82,7 @@ export const navigation = [
     : []),
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ] as const satisfies ReadonlyArray<{ label: string; href: string }>;
 
 export const footerGroups = [
@@ -130,8 +129,3 @@ export const footerGroups = [
     links: [{ label: "Privacy", href: "/privacy" }],
   },
 ] as const;
-
-export const primaryCta = {
-  label: "Contact",
-  modal: "contact",
-} as const satisfies { label: string; modal: ModalType };

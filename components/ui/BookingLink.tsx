@@ -9,6 +9,7 @@ export type BookingPlacement =
   | "des_moines_closing"
   | "floating_desktop"
   | "floating_mobile"
+  | "navbar"
   | "small_business_web_design_closing"
   | "services_closing"
   | "website_audit_closing"
@@ -22,6 +23,7 @@ type BookingLinkProps = {
   ariaHidden?: boolean;
   dataVisible?: boolean;
   tabIndex?: number;
+  onClick?: () => void;
 };
 
 const BookingLink = ({
@@ -32,6 +34,7 @@ const BookingLink = ({
   ariaHidden,
   dataVisible,
   tabIndex,
+  onClick,
 }: BookingLinkProps) => (
   <a
     href={siteConfig.booking.url}
@@ -42,12 +45,13 @@ const BookingLink = ({
     aria-hidden={ariaHidden}
     data-visible={dataVisible}
     tabIndex={tabIndex}
-    onClick={() =>
+    onClick={() => {
       track("book_call", {
         durationMinutes: siteConfig.booking.durationMinutes,
         placement,
-      })
-    }
+      });
+      onClick?.();
+    }}
   >
     {children}
   </a>

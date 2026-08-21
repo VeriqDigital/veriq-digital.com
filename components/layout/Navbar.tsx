@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { navigation, primaryCta, siteConfig } from "@/config/site";
+import BookingLink from "@/components/ui/BookingLink";
+import { navigation, siteConfig } from "@/config/site";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -154,13 +155,13 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/contact"
+          <BookingLink
+            placement="navbar"
             onClick={() => setIsMenuOpen(false)}
             className="cursor-pointer rounded-full bg-(--primary) px-4 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) min-[360px]:px-6 lg:text-xl"
           >
-            {primaryCta.label}
-          </Link>
+            Book a Call
+          </BookingLink>
 
           <button
             type="button"
