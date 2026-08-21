@@ -5,6 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import BookingLink from "@/components/ui/BookingLink";
 import { navigation, siteConfig } from "@/config/site";
 
+const TOP_THRESHOLD = 8;
+const HIDE_START = 72;
+const HIDE_DISTANCE = 120;
+const REVEAL_DISTANCE = 16;
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -39,9 +44,9 @@ const Navbar = () => {
       const currentScrollY = window.scrollY;
       const difference = currentScrollY - lastScrollY.current;
 
-      updateScrolledState(currentScrollY > 8);
+      updateScrolledState(currentScrollY > TOP_THRESHOLD);
 
-      if (currentScrollY <= 8) {
+      if (currentScrollY <= TOP_THRESHOLD) {
         updateVisibleState(true);
         downwardDistance = 0;
         upwardDistance = 0;
@@ -49,7 +54,10 @@ const Navbar = () => {
         downwardDistance += difference;
         upwardDistance = 0;
 
-        if (currentScrollY > 72 && downwardDistance >= 300) {
+        if (
+          currentScrollY > HIDE_START &&
+          downwardDistance >= HIDE_DISTANCE
+        ) {
           updateVisibleState(false);
           downwardDistance = 0;
         }
@@ -57,7 +65,7 @@ const Navbar = () => {
         upwardDistance += Math.abs(difference);
         downwardDistance = 0;
 
-        if (upwardDistance >= 40) {
+        if (upwardDistance >= REVEAL_DISTANCE) {
           updateVisibleState(true);
           upwardDistance = 0;
         }
