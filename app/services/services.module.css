@@ -621,9 +621,10 @@
 }
 
 .pathGrid article {
-  display: flex;
+  display: grid;
   min-height: 31rem;
-  flex-direction: column;
+  grid-row: span 5;
+  grid-template-rows: subgrid;
   scroll-margin-top: 7rem;
   border-right: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
