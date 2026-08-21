@@ -46,6 +46,19 @@
   color: var(--primary-readable);
 }
 
+.indexHero .kicker {
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+}
+
+.indexHero .kicker::before {
+  width: 2.75rem;
+  background: var(--primary);
+}
+
 .kicker::before,
 .articleCategory::before {
   content: "";
