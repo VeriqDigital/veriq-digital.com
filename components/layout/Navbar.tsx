@@ -145,7 +145,7 @@ const Navbar = () => {
       >
         <Link
           href="/"
-          className="font-sans text-3xl font-black uppercase tracking-wide text-(--nav-text) min-[641px]:inline-flex min-[641px]:min-h-11 min-[641px]:shrink-0 min-[641px]:items-center md:text-4xl"
+          className="font-sans text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
         >
           {siteConfig.shortName}
         </Link>
@@ -155,7 +155,7 @@ const Navbar = () => {
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex min-h-11 items-center whitespace-nowrap text-base font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) xl:text-lg"
+              className="text-base font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) xl:text-lg"
             >
               {item.label}
             </Link>
@@ -166,7 +166,7 @@ const Navbar = () => {
           <BookingLink
             placement="navbar"
             onClick={() => setIsMenuOpen(false)}
-            className="cursor-pointer rounded-full bg-(--primary) px-4 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) min-[360px]:px-6 min-[641px]:inline-flex min-[641px]:min-h-11 min-[641px]:shrink-0 min-[641px]:items-center min-[1120px]:text-xl"
+            className="cursor-pointer rounded-full bg-(--primary) px-4 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) min-[360px]:px-6 min-[1120px]:text-xl"
           >
             Book a Call
           </BookingLink>
@@ -202,7 +202,7 @@ const Navbar = () => {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="rounded-md px-4 py-3 text-lg font-semibold text-(--nav-muted) transition hover:bg-black/5 hover:text-(--primary-readable) min-[641px]:flex min-[641px]:min-h-12 min-[641px]:items-center"
+                className="rounded-md px-4 py-3 text-lg font-semibold text-(--nav-muted) transition hover:bg-black/5 hover:text-(--primary-readable)"
               >
                 {item.label}
               </Link>

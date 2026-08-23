@@ -238,17 +238,6 @@ body {
   }
 }
 
-@media (pointer: coarse) {
-  a,
-  button,
-  input,
-  select,
-  textarea,
-  summary {
-    touch-action: manipulation;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .floating-booking-cta-mobile,
   .floating-booking-cta {

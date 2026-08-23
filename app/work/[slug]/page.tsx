@@ -50,7 +50,7 @@ export default async function ProjectPage({ params }: WorkPageProps) {
       <Container>
         <Link
           href="/work"
-          className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--muted) transition hover:text-(--primary-readable) min-[641px]:inline-flex min-[641px]:min-h-11 min-[641px]:items-center"
+          className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--muted) transition hover:text-(--primary-readable)"
         >
           ← All work
         </Link>

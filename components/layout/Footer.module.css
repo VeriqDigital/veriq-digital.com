@@ -252,14 +252,6 @@
   }
 }
 
-@media (min-width: 641px) and (max-width: 1119px) {
-  .logo {
-    display: inline-flex;
-    min-height: 2.75rem;
-    align-items: center;
-  }
-}
-
 @media (max-width: 480px) {
   .footer {
     padding-inline: 1rem;
