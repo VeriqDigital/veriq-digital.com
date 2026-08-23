@@ -56,7 +56,7 @@ const serviceChapters = [
       "Ongoing optimization",
     ],
     outcome:
-      "A stronger technical, local, and content foundation that helps the business appear in relevant search results.",
+      "A stronger technical, local, and content foundation that gives the business a better chance to compete in relevant search results.",
   },
   {
     number: "03",

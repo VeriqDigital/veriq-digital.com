@@ -1,11 +1,11 @@
 export const siteConfig = {
   name: "Veriq",
   shortName: "Veriq",
-  defaultTitle: "Web Design, SEO & Conversion | Veriq",
+  defaultTitle: "Des Moines Web Design, SEO & Conversion | Veriq",
   tagline:
     "Web design, local SEO, conversion-focused functionality, and ongoing website support.",
   description:
-    "Veriq builds and improves custom and Squarespace websites with local SEO, conversion-focused functionality, and ongoing support for growing businesses.",
+    "Veriq is a Des Moines web design studio that builds and improves custom and Squarespace websites with local SEO, conversion-focused functionality, and ongoing support.",
   url: "https://www.veriqdigital.com",
   locale: "en_US",
   location: {
