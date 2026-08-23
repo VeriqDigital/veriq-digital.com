@@ -21,17 +21,17 @@ const principles = [
   {
     title: "Built to grow",
     description:
-      "The first version can expand into better content, stronger search visibility, useful tools, campaigns, and continued improvement.",
+      "The first version can expand into better content, stronger local search visibility, useful conversion tools, and continued improvement.",
   },
 ] as const;
 
 const growthPath = [
-  "Website",
-  "Search",
-  "Content",
-  "Campaigns",
-  "Leads",
-  "Optimization",
+  "Build",
+  "Get found",
+  "Earn trust",
+  "Convert",
+  "Support",
+  "Improve",
 ] as const;
 
 export default function HomeWhyGrowth() {
@@ -81,7 +81,7 @@ export default function HomeWhyGrowth() {
           </div>
           <ol
             className={styles.growthPath}
-            aria-label="A website-led growth path"
+            aria-label="Build, get found, convert, and improve"
           >
             {growthPath.map((step, index) => (
               <li key={step}>

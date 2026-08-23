@@ -1,7 +1,7 @@
 /*
 THESIS: Make Veriq's three offers understandable in seconds without replacing the established Services-page identity.
 OWN-WORLD: Dark charcoal fields, warm-white type, signal cyan, heavy Geist Sans headlines, mono indices, fine rules, and asymmetrical editorial layouts.
-STORY: Choose a website path, understand how search supports it, see what custom website tools can add, then learn how Veriq can keep helping after launch.
+STORY: Choose a website path, understand how local visibility supports it, see what conversion tools can add, then learn how Veriq can keep improving the site after launch.
 FIRST VIEWPORT: Oversized positioning statement on the left, two direct actions below, and a ruled three-service index on the right.
 FORM: Existing editorial chapter sequence, refined with Option B's information clarity; brief-pinned, no concept seed.
 */
@@ -38,46 +38,46 @@ const serviceChapters = [
   {
     number: "02",
     id: "seo-growth",
-    title: "SEO & Growth",
+    title: "SEO & Local Visibility",
     summary:
-      "Improve the foundation that helps the right people find and use your site.",
+      "Improve the foundation that helps the right customers find your business in search.",
     statement:
       "A website that can't be found is a website that can't help the business.",
     description:
-      "SEO starts with the structure and technical quality of the website itself, then expands into local search, useful service and location content, measurement, and continued improvement. Veriq builds that foundation without promising shortcuts or guaranteed rankings.",
+      "SEO starts with the structure and technical quality of the website itself, then expands into local search, Google Business Profile optimization, useful service and location content, and continued improvement. Veriq builds that foundation without promising shortcuts or guaranteed rankings.",
     note: "Especially useful for small and local businesses that need stronger visibility in Des Moines, across Iowa, or in the markets they actually serve.",
     capabilities: [
       "Local SEO",
       "Technical SEO",
-      "On-page optimization",
       "Google Business Profile optimization",
+      "On-page optimization",
       "Analytics and conversion tracking",
       "Service and location content",
       "Ongoing optimization",
     ],
     outcome:
-      "A stronger technical and content foundation that gives the business a better chance to compete in relevant search results.",
+      "A stronger technical, local, and content foundation that helps the business appear in relevant search results.",
   },
   {
     number: "03",
     id: "custom-website-tools",
-    title: "Custom Website Tools",
+    title: "Conversion & Website Tools",
     summary:
-      "Add practical functionality when standard forms and plugins stop being enough.",
+      "Give customers better ways to quote, book, order, calculate, and take action.",
     statement: "Your website can do more than display information.",
     description:
-      "When an off-the-shelf form or plugin cannot support the way the business actually works, Veriq can build focused functionality into or alongside the website. The goal is not software for its own sake; it is a clearer customer experience and less friction in day-to-day operations.",
-    note: "Best for businesses that have outgrown generic forms, manual handoffs, disconnected tools, or one-size-fits-all workflows.",
+      "When a standard form or plugin isn't enough, Veriq can build focused functionality directly into your website. From quote calculators and booking systems to customer ordering and lead capture, every tool is built around one goal: making it easier for visitors to take the next step.",
+    note: "Best for businesses that need a better way for website visitors to quote, book, order, calculate, or inquire.",
     capabilities: [
-      "Quote and intake systems",
-      "Customer and staff portals",
-      "Booking and workflow tools",
-      "Dashboards and reporting",
-      "Forms and automation",
+      "Quote & estimate tools",
+      "Booking & scheduling",
+      "Customer ordering",
+      "Calculators & interactive tools",
+      "Forms & lead capture",
       "Custom website functionality",
     ],
     outcome:
-      "Focused website functionality that makes it easier for customers and staff to get the right thing done.",
+      "Focused website functionality that makes it easier for customers to take action.",
   },
 ] as const;
 
@@ -89,7 +89,7 @@ const websitePaths = [
     description:
       "Built with custom code when the business needs maximum flexibility, stronger performance control, unique functionality, or a highly differentiated experience.",
     bestFor:
-      "Complex requirements, custom functionality, integrations, and businesses that do not want the platform to set the ceiling.",
+      "Conversion-focused functionality, customer-facing integrations, and businesses that do not want the platform to set the ceiling.",
     href: "/small-business-web-design",
     linkLabel: "Explore custom websites",
   },
@@ -121,7 +121,7 @@ const supportItems = [
   "Content updates",
   "Technical maintenance",
   "Performance monitoring",
-  "SEO improvements",
+  "Local and technical SEO improvements",
   "New service and landing pages",
   "Feature additions",
   "Analytics and conversion improvements",
@@ -150,16 +150,16 @@ const processSteps = [
       "Test the complete experience, connect the required systems, and move the work into production carefully.",
   },
   {
-    title: "Grow",
+    title: "Improve",
     description:
       "Keep improving content, search visibility, conversions, performance, and functionality when the business needs it.",
   },
 ] as const;
 
 export const metadata = createPageMetadata({
-  title: "Web Design, SEO & Custom Website Tools",
+  title: "Web Design, Local SEO & Conversion Tools",
   description:
-    "Explore custom and Squarespace web design, website redesigns, local and technical SEO, and custom website functionality from Veriq Digital in Des Moines, Iowa.",
+    "Explore custom and Squarespace web design, website redesigns, local and technical SEO, and conversion-focused website functionality from Veriq Digital in Des Moines, Iowa.",
   path: "/services",
 });
 
@@ -235,10 +235,9 @@ export default function ServicesPage() {
 
             <div className={styles.heroDetails}>
               <p className={styles.heroDescription}>
-                Veriq designs and redesigns business websites, strengthens the
-                foundations that help the right customers find them, and builds
-                practical website tools when a standard marketing site is not
-                enough.
+                Veriq follows a simple plan: build a stronger website, help the
+                right customers find it, create clearer paths to conversion,
+                and keep improving after launch.
               </p>
               <div className={styles.heroActions}>
                 <BookingLink
@@ -391,10 +390,10 @@ export default function ServicesPage() {
               <h2>Keep making the site better.</h2>
               <p>
                 The launch is not the finish line. When it is useful, Veriq can
-                continue helping with maintenance, content, search, performance,
-                conversion work, and new functionality. Ongoing support can
-                match what the business needs; it is not required for every
-                project.
+                continue helping with maintenance, content, local search
+                visibility, performance, conversion work, and new
+                functionality. Ongoing support can match what the business
+                needs; it is not required for every project.
               </p>
             </div>
             <ul className={styles.supportList}>

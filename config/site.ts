@@ -1,11 +1,11 @@
 export const siteConfig = {
   name: "Veriq Digital",
   shortName: "Veriq",
-  defaultTitle: "Websites & Custom Software for Growing Businesses | Veriq Digital",
+  defaultTitle: "Web Design, SEO & Conversion | Veriq Digital",
   tagline:
-    "Web design, SEO, custom functionality, and ongoing support built around what the business actually needs.",
+    "Web design, local SEO, conversion-focused functionality, and ongoing website support.",
   description:
-    "Veriq Digital designs custom and Squarespace websites with SEO foundations, conversion-focused structure, custom functionality, and ongoing support for growing businesses.",
+    "Veriq Digital builds and improves custom and Squarespace websites with local SEO, conversion-focused functionality, and ongoing support for growing businesses.",
   url: "https://www.veriqdigital.com",
   locale: "en_US",
   location: {
@@ -93,8 +93,8 @@ export const footerGroups = [
       { label: "Custom Websites", href: "/services#custom-websites" },
       { label: "Squarespace Websites", href: "/services#squarespace-websites" },
       { label: "Website Redesign", href: "/services#website-redesigns" },
-      { label: "SEO & Growth", href: "/services#seo-growth" },
-      { label: "Custom Website Tools", href: "/services#custom-website-tools" },
+      { label: "SEO & Local Visibility", href: "/services#seo-growth" },
+      { label: "Conversion & Website Tools", href: "/services#custom-website-tools" },
       { label: "Website Support", href: "/services#ongoing-support" },
     ],
   },

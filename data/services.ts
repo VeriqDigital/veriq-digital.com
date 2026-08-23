@@ -10,21 +10,21 @@ export const services = [
   },
   {
     icon: "search",
-    title: "SEO & Growth",
+    title: "SEO & Local Visibility",
     description:
-      "Technical foundations, local search considerations, content hierarchy, and site architecture that help the right pages get found.",
+      "Technical SEO, local search, content structure, and Google Business Profile optimization that help the right customers find your business.",
     href: "/services#seo-growth",
-    linkLabel: "Explore SEO & growth",
-    capabilities: ["Technical SEO", "Local search", "Content architecture"],
+    linkLabel: "Explore SEO & local visibility",
+    capabilities: ["Technical SEO", "Local SEO", "Google Business Profile"],
   },
   {
     icon: "command",
-    title: "Custom Website Tools",
+    title: "Conversion & Website Tools",
     description:
-      "Calculators, quote tools, portals, forms, integrations, and internal systems built around a clear operational need.",
+      "Custom functionality that helps visitors take action, from quotes and calculators to booking, ordering, and lead capture.",
     href: "/services#custom-website-tools",
-    linkLabel: "Explore custom website tools",
-    capabilities: ["Quote and intake tools", "Portals and dashboards", "Integrations"],
+    linkLabel: "Explore conversion tools",
+    capabilities: ["Quotes and calculators", "Booking and ordering", "Lead capture"],
   },
   {
     icon: "support",

@@ -106,7 +106,7 @@ export default function WebDesignerVsWebsiteBuilderArticle() {
           deadline, available owner time, content readiness, and maintenance
           expectations. If a proven builder can support the requirements, the
           remaining question is who should plan and implement it. If the
-          platform limits a necessary workflow or experience, custom
+          platform limits a necessary customer action or experience, custom
           development may be the better route.
         </p>
         <p>
@@ -120,8 +120,8 @@ export default function WebDesignerVsWebsiteBuilderArticle() {
         <ArticleCallout title="Veriq supports both platform and custom builds">
           <p>
             Veriq can design and build a marketing-focused site in Squarespace
-            or use custom development when flexibility, integrations, or
-            functionality require it. Explore the{" "}
+            or use custom development when conversion functionality or
+            customer-facing integrations require it. Explore the{" "}
             <Link href="/small-business-web-design">
               small-business website design approach
             </Link>{" "}

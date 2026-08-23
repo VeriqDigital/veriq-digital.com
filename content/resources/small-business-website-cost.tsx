@@ -13,7 +13,7 @@ export default function SmallBusinessWebsiteCostArticle() {
           For planning purposes, an owner-built website can cost a few hundred
           dollars a year in core software, while professional work can range
           from the low thousands to tens of thousands. A website with custom
-          commerce, integrations, or business workflows can go higher. Those
+          commerce, customer portals, or conversion tools can go higher. Those
           categories are wide because they describe different products, not
           different prices for the same product.
         </p>
@@ -64,7 +64,7 @@ export default function SmallBusinessWebsiteCostArticle() {
             ],
             [
               "Custom functionality",
-              "Specialized commerce, portals, quoting, integrations, or workflows can move the work into tens of thousands or more.",
+              "Specialized commerce, customer portals, quoting, booking, or calculators can move the work into tens of thousands or more.",
               "Product decisions, engineering, data, security, edge cases, integrations, and long-term support.",
             ],
           ]}
@@ -113,9 +113,10 @@ export default function SmallBusinessWebsiteCostArticle() {
             setup, testing, and ongoing dependencies.
           </li>
           <li>
-            <strong>Custom functionality.</strong> Quote tools, calculators,
-            portals, dashboards, or business-specific workflows need product
-            decisions and engineering beyond a standard marketing site.
+            <strong>Custom functionality.</strong> Quote and estimate tools,
+            calculators, booking, ordering, lead capture, or customer portals
+            need product decisions and engineering beyond a standard marketing
+            site.
           </li>
           <li>
             <strong>Migration and launch risk.</strong> Existing URLs, content,

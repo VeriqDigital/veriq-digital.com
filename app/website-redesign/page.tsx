@@ -33,7 +33,7 @@ const redesignSignals = [
   {
     title: "Growth exposed constraints",
     description:
-      "New services, content, integrations, locations, or customer workflows no longer fit the current platform or structure.",
+      "New services, content, integrations, locations, or customer journeys no longer fit the current platform or structure.",
   },
 ] as const;
 
@@ -85,7 +85,7 @@ const redesignWork = [
   {
     title: "Forms and functionality",
     description:
-      "Repair or replace contact flows, booking, quoting, CRM connections, ecommerce, and business-specific integrations where needed.",
+      "Repair or replace contact flows, booking, quoting, CRM connections, ecommerce, and customer-facing integrations where needed.",
   },
   {
     title: "Search foundations",
@@ -105,7 +105,7 @@ const preservationItems = [
   ["Content and media", "Retain accurate, credible material instead of rewriting everything by default."],
   ["Analytics history", "Document current measurement and verify meaningful events after launch."],
   ["Backlinks", "Identify external links pointing to URLs that may move or disappear."],
-  ["Working functions", "Test and preserve forms, integrations, and workflows that still support the business."],
+  ["Working functions", "Test and preserve forms and customer-facing integrations that still support the website."],
 ] as const;
 
 const processSteps = [
@@ -155,7 +155,7 @@ const faqs = [
   {
     question: "When does custom development make sense?",
     answer:
-      "Custom development can be appropriate when the site needs specialized content structures, integrations, performance control, application-like behavior, or functionality that a managed platform cannot support well.",
+      "Custom development can be appropriate when the site needs specialized content structures, performance control, customer-facing integrations, or conversion functionality that a managed platform cannot support well.",
   },
   {
     question: "Will a redesign preserve current Google rankings?",
@@ -275,7 +275,7 @@ export default function WebsiteRedesignPage() {
               </div>
               <dl>
                 <div><dt>Starting point</dt><dd>An existing website with evidence worth reviewing</dd></div>
-                <div><dt>Business gap</dt><dd>The site no longer supports current customers or operations</dd></div>
+                <div><dt>Business gap</dt><dd>The site no longer supports current customers or goals</dd></div>
                 <div><dt>Possible path</dt><dd>Improve, redesign, migrate, or rebuild selectively</dd></div>
                 <div><dt>Migration rule</dt><dd>Preserve useful content, URLs, data, and working behavior</dd></div>
               </dl>
@@ -294,7 +294,7 @@ export default function WebsiteRedesignPage() {
               <p>
                 Age alone is not the test. A redesign becomes relevant when the
                 gap between the current website and the current business creates
-                repeated customer, operational, or technical problems.
+                repeated customer-facing, content, or technical problems.
               </p>
             </div>
           </div>
@@ -433,9 +433,9 @@ export default function WebsiteRedesignPage() {
             <article>
               <h3>Use custom development</h3>
               <p>
-                Appropriate when specialized interactions, integrations,
-                content structures, performance control, or business-specific
-                functionality needs greater flexibility.
+                Appropriate when specialized customer interactions,
+                conversion tools, content structures, performance control, or
+                customer-facing integrations need greater flexibility.
               </p>
             </article>
           </div>

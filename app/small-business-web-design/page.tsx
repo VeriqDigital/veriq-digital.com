@@ -24,7 +24,7 @@ const websiteRequirements = [
 ] as const;
 
 const processSteps = [
-  { title: "Understand the business", description: "Clarify the customers, services, current-site problems, business goals, content, and operational constraints." },
+  { title: "Understand the business", description: "Clarify the customers, services, current-site problems, business goals, content, and technical constraints." },
   { title: "Define the right scope", description: "Plan the pages, messages, customer path, functionality, platform, responsibilities, and launch criteria." },
   { title: "Design with real content", description: "Shape the visual system and responsive layouts around what the business actually needs to communicate." },
   { title: "Build and verify", description: "Implement the site, connect forms and integrations, and test accessibility, performance, metadata, and devices." },
@@ -42,7 +42,7 @@ const faqs = [
   },
   {
     question: "How long does a small-business website take?",
-    answer: "A focused business website can often be completed within several weeks, while the actual schedule depends on scope, content readiness, feedback, functionality, integrations, and launch requirements. Custom software timelines depend on the work involved.",
+    answer: "A focused business website can often be completed within several weeks, while the actual schedule depends on scope, content readiness, feedback, functionality, integrations, and launch requirements. Custom website functionality may require additional time based on the work involved.",
   },
   {
     question: "Can Veriq redesign an existing business website?",
@@ -62,7 +62,7 @@ const featuredProjects = projects.slice(0, 2);
 
 export const metadata = createPageMetadata({
   title: "Small Business Web Design for Growing Businesses",
-  description: "Professional small-business web design through Squarespace or custom development, shaped around credibility, leads, usability, SEO foundations, and growth.",
+  description: "Professional small-business web design through Squarespace or custom development, shaped around credibility, leads, usability, local visibility, and conversion.",
   path: "/small-business-web-design",
 });
 
@@ -180,8 +180,8 @@ export default function SmallBusinessWebDesignPage() {
             </article>
             <article>
               <div className={styles.platformTitle}><span>Flexible implementation</span><strong>Custom development</strong></div>
-              <p>Useful when the website needs specialized interactions, integrations, content structures, performance control, or functionality built around how the business operates.</p>
-              <ul><li>Quote, intake, portal, or dashboard features</li><li>Business-specific integrations and workflows</li><li>Distinct content and interaction requirements</li><li>Greater implementation flexibility</li></ul>
+              <p>Useful when the website needs specialized customer interactions, conversion tools, customer-facing integrations, or greater performance control.</p>
+              <ul><li>Quote, estimate, and calculator tools</li><li>Booking, ordering, and lead capture</li><li>Customer-facing integrations</li><li>Greater implementation flexibility</li></ul>
             </article>
           </div>
           <div className={styles.platformDecision}>

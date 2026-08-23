@@ -32,11 +32,11 @@ export const resourceTopics = [
       "Planning, evaluating, and improving websites that support real business goals.",
   },
   {
-    name: "SEO & Digital Marketing",
-    shortName: "SEO & Marketing",
+    name: "SEO & Local Visibility",
+    shortName: "SEO & Local",
     id: "seo-digital-marketing",
     description:
-      "Search visibility, discoverability, content, and sustainable digital growth.",
+      "Local search visibility, discoverability, technical SEO, and useful content.",
   },
   {
     name: "UI/UX & Conversion",
@@ -510,7 +510,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Why your website is not on Google",
     description:
       "A plain-language guide to indexing, crawlability, local relevance, Google Business Profile, authority, competition, and technical SEO.",
-    topic: "SEO & Digital Marketing",
+    topic: "SEO & Local Visibility",
     category: "Website fundamentals",
     funnel: "Educational",
     primaryTarget: "why isn't my business website showing up on Google",

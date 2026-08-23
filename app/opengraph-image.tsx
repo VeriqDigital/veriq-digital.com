@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "Veriq, a Des Moines web design, development, and growth partner";
+  "Veriq, a Des Moines web design, SEO, and conversion partner";
 export const size = {
   width: 1200,
   height: 630,
@@ -86,7 +86,7 @@ export default function OpenGraphImage() {
               letterSpacing: "0.01em",
             }}
           >
-            Web Design • Development • Growth
+            Web Design • SEO • Conversion
           </div>
         </div>
 

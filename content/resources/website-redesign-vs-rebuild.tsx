@@ -78,9 +78,9 @@ export default function WebsiteRedesignVsRebuildArticle() {
           The existing platform may still be appropriate. A redesigned
           Squarespace site can be the right answer for a marketing-focused
           business that values straightforward editing. Custom development can
-          make sense when specialized content, integrations, performance
-          control, or business-specific functionality requires more
-          flexibility.
+          make sense when specialized content, performance control,
+          customer-facing integrations, or conversion functionality requires
+          more flexibility.
         </p>
       </ArticleSection>
 

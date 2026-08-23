@@ -55,7 +55,7 @@ const ServicesSection = () => {
         </div>
         <div className={styles.introLinks}>
           <Link href="/services" className={styles.servicesLink}>
-            Explore web design, development &amp; growth
+            Explore websites, SEO &amp; conversion
             <span aria-hidden="true">↗</span>
           </Link>
           <Link href="/blog" className={styles.resourcesLink}>

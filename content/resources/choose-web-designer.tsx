@@ -13,7 +13,7 @@ export default function ChooseWebDesignerArticle() {
           opening a dozen portfolio tabs, write down why the website needs to
           change. Common reasons include weak credibility, poor mobile use,
           unclear services, too few qualified inquiries, difficult updates, or
-          a workflow the current site cannot support.
+          a customer action the current site cannot support.
         </p>
         <p>
           Add the constraints that matter: who will approve the work, what

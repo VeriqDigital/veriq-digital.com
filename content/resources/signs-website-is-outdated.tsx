@@ -59,7 +59,7 @@ export default function SignsWebsiteIsOutdatedArticle() {
           The website may have no reliable analytics, track only page views, or
           send leads into a form inbox no one reviews consistently. It may also
           lack pages for important services, flexible content types, or the
-          integrations needed for the next stage of operations.
+          customer-facing integrations needed for the next stage of growth.
         </p>
         <p>
           Growth that has outpaced the site is a stronger redesign signal than

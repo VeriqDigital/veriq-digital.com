@@ -51,15 +51,15 @@ export default function HomePlatformProcess() {
                 <h3>Custom development</h3>
               </div>
               <p>
-                The better route when the website needs specialized behavior, a
-                unique interface, deeper integrations, or room for more complex
-                growth.
+                The better route when the website needs specialized customer
+                interactions, a unique interface, conversion tools, or
+                customer-facing integrations.
               </p>
               <ul>
-                <li>Specialized functionality</li>
+                <li>Quote and estimate tools</li>
                 <li>Maximum interface flexibility</li>
-                <li>Custom integrations</li>
-                <li>Application-like experiences</li>
+                <li>Booking and ordering experiences</li>
+                <li>Calculators and lead capture</li>
               </ul>
             </article>
           </div>
