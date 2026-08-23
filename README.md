@@ -1,4 +1,4 @@
-# Veriq Digital
+# Veriq
 
 The Veriq marketing site, built with Next.js, React, TypeScript, Tailwind CSS,
 Resend, and Zod.

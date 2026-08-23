@@ -88,9 +88,11 @@ const HeroInquiryForm = () => {
               </option>
               <option value="Business website">Business website</option>
               <option value="Website redesign">Website redesign</option>
-              <option value="Custom software">Custom software</option>
-              <option value="SEO or growth support">
-                SEO or growth support
+              <option value="Conversion or website tools">
+                Conversion or website tools
+              </option>
+              <option value="SEO or local visibility">
+                SEO or local visibility
               </option>
               <option value="Something else">Something else</option>
             </select>

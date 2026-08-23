@@ -83,11 +83,12 @@ export default function SmallBusinessWebsiteValueArticle() {
           clearer understanding of the business.
         </p>
         <p>
-          Additional functionality may also carry real operational value.
+          Additional functionality may also carry real customer value.
           Scheduling, quoting, intake, account areas, payments, document
-          exchange, or integrations can reduce manual work while giving
-          customers a better experience. Those features should be added because
-          they improve a process, not because the site needs to feel “advanced.”
+          exchange, or integrations can reduce friction while giving customers
+          a better experience. Those features should be added because they make
+          an important action easier, not because the site needs to feel
+          “advanced.”
         </p>
       </ArticleSection>
 

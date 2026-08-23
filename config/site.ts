@@ -1,11 +1,11 @@
 export const siteConfig = {
-  name: "Veriq Digital",
+  name: "Veriq",
   shortName: "Veriq",
-  defaultTitle: "Websites & Custom Software for Growing Businesses | Veriq Digital",
+  defaultTitle: "Des Moines Web Design, SEO & Conversion | Veriq",
   tagline:
-    "Web design, SEO, custom functionality, and ongoing support built around what the business actually needs.",
+    "Web design, local SEO, conversion-focused functionality, and ongoing website support.",
   description:
-    "Veriq Digital designs custom and Squarespace websites with SEO foundations, conversion-focused structure, custom functionality, and ongoing support for growing businesses.",
+    "Veriq is a Des Moines web design studio that builds and improves custom and Squarespace websites with local SEO, conversion-focused functionality, and ongoing support.",
   url: "https://www.veriqdigital.com",
   locale: "en_US",
   location: {
@@ -28,17 +28,17 @@ export const siteConfig = {
     {
       name: "Facebook",
       href: "https://www.facebook.com/profile.php?id=61592568039360",
-      ariaLabel: "Visit Veriq Digital on Facebook",
+      ariaLabel: "Visit Veriq on Facebook",
     },
     {
       name: "Instagram",
       href: "https://www.instagram.com/veriqdigital/",
-      ariaLabel: "Visit Veriq Digital on Instagram",
+      ariaLabel: "Visit Veriq on Instagram",
     },
     {
       name: "LinkedIn",
       href: "https://www.linkedin.com/company/veriqdigital",
-      ariaLabel: "Veriq Digital on LinkedIn",
+      ariaLabel: "Veriq on LinkedIn",
     },
   ],
 } as const;
@@ -93,8 +93,8 @@ export const footerGroups = [
       { label: "Custom Websites", href: "/services#custom-websites" },
       { label: "Squarespace Websites", href: "/services#squarespace-websites" },
       { label: "Website Redesign", href: "/services#website-redesigns" },
-      { label: "SEO & Growth", href: "/services#seo-growth" },
-      { label: "Custom Website Tools", href: "/services#custom-website-tools" },
+      { label: "SEO & Local Visibility", href: "/services#seo-growth" },
+      { label: "Conversion & Website Tools", href: "/services#custom-website-tools" },
       { label: "Website Support", href: "/services#ongoing-support" },
     ],
   },

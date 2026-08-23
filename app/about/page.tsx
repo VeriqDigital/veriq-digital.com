@@ -46,7 +46,7 @@ const reasons = [
   {
     title: "Built around the business",
     description:
-      "No recycled strategies or predetermined platforms. Every recommendation starts with how your business actually operates.",
+      "No recycled strategies or predetermined platforms. Every recommendation starts with your customers, goals, and path to action.",
   },
   {
     title: "Support beyond launch",
@@ -58,7 +58,7 @@ const reasons = [
 export const metadata = createPageMetadata({
   title: "About Our Des Moines Digital Studio",
   description:
-    "Meet Veriq Digital founder Mick Enev and learn how this Des Moines studio approaches web design, custom development, and long-term growth support.",
+    "Meet Veriq founder Mick Enev and learn how this Des Moines studio approaches web design, local visibility, conversion, and ongoing website improvement.",
   path: "/about",
 });
 
@@ -79,8 +79,8 @@ export default function AboutPage() {
               <div className={styles.heroSummary}>
                 <p>
                   Veriq is an independent digital studio creating websites and
-                  digital experiences that help businesses look sharper, work
-                  smarter, and move forward with confidence.
+                  customer-facing experiences that help businesses get found,
+                  earn trust, and turn interest into action.
                 </p>
                 <div className={styles.heroActions}>
                   <Link href="#philosophy" className={styles.primaryLink}>
@@ -119,8 +119,8 @@ export default function AboutPage() {
               </h2>
               <div className={styles.philosophyCopy}>
                 <p>
-                  Technology is only valuable when it gives people more clarity,
-                  more momentum, or more time for the work that matters.
+                  Technology is only valuable when it gives customers more
+                  clarity, more confidence, or an easier next step.
                 </p>
                 <p>
                   That means understanding the business before choosing the
@@ -182,16 +182,17 @@ export default function AboutPage() {
               <p>
                 I started Veriq because I believe businesses deserve websites
                 that not only look professional, but help them perform better.
-                Every project is designed around the way a business actually
-                operates, with the goal of building something thoughtful,
-                distinctive, and built to support long-term growth.
+                Every project is designed around how customers find, understand,
+                and choose a business, with the goal of building something
+                thoughtful, distinctive, and ready to improve over time.
               </p>
               <p>
                 My software engineering background lets Veriq handle both
-                straightforward business websites and technically complex
-                projects. The technology can change; the goal is always to make
-                a business easier to discover, easier to trust, and easier to
-                do business with.
+                straightforward business websites and focused functionality
+                for quoting, booking, ordering, calculating, and lead capture.
+                The technology can change; the goal is always to make a business
+                easier to discover, easier to trust, and easier to do business
+                with.
               </p>
               <div className={styles.founderRole}>
                 <span>Mick Enev</span>

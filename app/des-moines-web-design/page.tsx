@@ -51,7 +51,7 @@ const processSteps = [
   {
     title: "Understand",
     description:
-      "Start with the business, customers, current-site problems, goals, content, and operational constraints.",
+      "Start with the business, customers, current-site problems, goals, content, and technical constraints.",
   },
   {
     title: "Plan",
@@ -89,7 +89,7 @@ const faqs = [
   {
     question: "Can Veriq redesign an existing website?",
     answer:
-      "Yes. A project can begin with an existing site. We can improve the structure, messaging, design, performance, accessibility, technical SEO, integrations, or content workflow based on what the business actually needs.",
+      "Yes. A project can begin with an existing site. We can improve the structure, messaging, design, performance, accessibility, technical SEO, customer-facing integrations, or content editing process based on what the business actually needs.",
   },
   {
     question: "Do you only work with businesses in Des Moines?",
@@ -261,8 +261,8 @@ export default function DesMoinesWebDesignPage() {
             <div>
               <dt>Custom customer experience</dt>
               <dd>
-                Add quoting, booking, intake, portals, or integrations when the
-                website needs to support more than marketing.
+                Add quoting, booking, ordering, calculators, lead capture, or
+                customer-facing portals when visitors need a better way to act.
               </dd>
             </div>
           </dl>

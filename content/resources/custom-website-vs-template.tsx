@@ -34,7 +34,7 @@ export default function CustomWebsiteVsTemplateArticle() {
         <ul>
           <li>The business needs a credible first website on a controlled scope.</li>
           <li>Content fits standard home, about, service, work, and contact pages.</li>
-          <li>Existing booking, email, or ecommerce tools cover the required workflow.</li>
+          <li>Existing booking, email, or ecommerce tools cover the required customer action.</li>
           <li>The brand can be expressed well within the platform’s design controls.</li>
           <li>Simple maintenance is more valuable than complete implementation freedom.</li>
         </ul>
@@ -54,10 +54,10 @@ export default function CustomWebsiteVsTemplateArticle() {
         </p>
         <ul>
           <li>Complex services need a tailored information structure.</li>
-          <li>The experience must connect to quoting, intake, account, or internal systems.</li>
+          <li>The experience must connect to quoting, booking, ordering, accounts, or other customer-facing systems.</li>
           <li>Performance or accessibility requirements exceed the available template setup.</li>
           <li>Content will expand across many services, markets, resources, or data types.</li>
-          <li>The website itself is part of the product or customer workflow.</li>
+          <li>The website itself is part of the product or customer experience.</li>
           <li>Platform restrictions would force repeated manual work or a poor customer experience.</li>
         </ul>
         <ArticleCallout title="Custom should remove a constraint">
@@ -88,7 +88,7 @@ export default function CustomWebsiteVsTemplateArticle() {
             [
               "Functionality",
               "Best when standard features and supported integrations meet the need.",
-              "Best when the workflow or integration is genuinely business-specific.",
+              "Best when the customer action or integration is genuinely business-specific.",
             ],
             [
               "Maintenance",
@@ -126,7 +126,7 @@ export default function CustomWebsiteVsTemplateArticle() {
           <p>
             Veriq works in Squarespace where it is appropriate and provides
             custom development when the project needs greater flexibility,
-            integrations, or functionality. See the full{" "}
+            customer-facing integrations, or conversion functionality. See the full{" "}
             <Link href="/small-business-web-design">
               small-business web design service
             </Link>{" "}
