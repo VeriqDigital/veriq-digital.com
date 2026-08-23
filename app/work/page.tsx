@@ -6,7 +6,7 @@ import styles from "./work.module.css";
 export const metadata = createPageMetadata({
   title: "Website Design Work & Concepts",
   description:
-    "Explore website design and digital work by Veriq Digital, including focused concepts for service businesses and local brands.",
+    "Explore website design and digital work by Veriq, including focused concepts for service businesses and local brands.",
   path: "/work",
 });
 

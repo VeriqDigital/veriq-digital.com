@@ -15,7 +15,7 @@ import styles from "../resources/resources.module.css";
 export const metadata = createPageMetadata({
   title: "Website, SEO & Digital Presence Blog",
   description:
-    "Practical guidance from Veriq Digital for planning better websites, improving search visibility and user experience, and building a credible digital presence.",
+    "Practical guidance from Veriq for planning better websites, improving search visibility and user experience, and building a credible digital presence.",
   path: "/blog",
 });
 
@@ -36,9 +36,9 @@ const structuredData = {
     {
       "@type": "CollectionPage",
       "@id": `${siteConfig.url}/blog#collection`,
-      name: "Veriq Digital blog",
+      name: "Veriq blog",
       description:
-        "Practical guidance on website planning, search visibility, user experience, technical foundations, and digital presence from Veriq Digital.",
+        "Practical guidance on website planning, search visibility, user experience, technical foundations, and digital presence from Veriq.",
       url: `${siteConfig.url}/blog`,
       inLanguage: "en-US",
       isPartOf: { "@id": `${siteConfig.url}/#website` },

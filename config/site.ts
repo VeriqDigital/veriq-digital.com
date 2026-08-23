@@ -1,11 +1,11 @@
 export const siteConfig = {
-  name: "Veriq Digital",
+  name: "Veriq",
   shortName: "Veriq",
-  defaultTitle: "Web Design, SEO & Conversion | Veriq Digital",
+  defaultTitle: "Web Design, SEO & Conversion | Veriq",
   tagline:
     "Web design, local SEO, conversion-focused functionality, and ongoing website support.",
   description:
-    "Veriq Digital builds and improves custom and Squarespace websites with local SEO, conversion-focused functionality, and ongoing support for growing businesses.",
+    "Veriq builds and improves custom and Squarespace websites with local SEO, conversion-focused functionality, and ongoing support for growing businesses.",
   url: "https://www.veriqdigital.com",
   locale: "en_US",
   location: {
@@ -28,17 +28,17 @@ export const siteConfig = {
     {
       name: "Facebook",
       href: "https://www.facebook.com/profile.php?id=61592568039360",
-      ariaLabel: "Visit Veriq Digital on Facebook",
+      ariaLabel: "Visit Veriq on Facebook",
     },
     {
       name: "Instagram",
       href: "https://www.instagram.com/veriqdigital/",
-      ariaLabel: "Visit Veriq Digital on Instagram",
+      ariaLabel: "Visit Veriq on Instagram",
     },
     {
       name: "LinkedIn",
       href: "https://www.linkedin.com/company/veriqdigital",
-      ariaLabel: "Veriq Digital on LinkedIn",
+      ariaLabel: "Veriq on LinkedIn",
     },
   ],
 } as const;

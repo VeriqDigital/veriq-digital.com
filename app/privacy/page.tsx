@@ -7,7 +7,7 @@ import styles from "./privacy.module.css";
 export const metadata = createPageMetadata({
   title: "Privacy Policy",
   description:
-    "How Veriq Digital collects, uses, shares, and retains information submitted through this website.",
+    "How Veriq collects, uses, shares, and retains information submitted through this website.",
   path: "/privacy",
 });
 
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
     <main id="main-content" className={styles.page}>
       <Container>
         <header className={styles.header}>
-          <p>Privacy at Veriq Digital</p>
+          <p>Privacy at Veriq</p>
           <h1>Privacy policy.</h1>
           <p>Effective August 13, 2026</p>
         </header>

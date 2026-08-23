@@ -159,14 +159,14 @@ const processSteps = [
 export const metadata = createPageMetadata({
   title: "Web Design, Local SEO & Conversion Tools",
   description:
-    "Explore custom and Squarespace web design, website redesigns, local and technical SEO, and conversion-focused website functionality from Veriq Digital in Des Moines, Iowa.",
+    "Explore custom and Squarespace web design, website redesigns, local and technical SEO, and conversion-focused website functionality from Veriq in Des Moines, Iowa.",
   path: "/services",
 });
 
 const servicesStructuredData = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  name: "Veriq Digital services",
+  name: "Veriq services",
   itemListElement: serviceChapters.map((service, index) => ({
     "@type": "ListItem",
     position: index + 1,

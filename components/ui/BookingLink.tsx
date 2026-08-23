@@ -31,7 +31,7 @@ const BookingLink = ({
   children,
   placement,
   className,
-  ariaLabel = `Book a ${siteConfig.booking.durationMinutes}-minute intro call with Veriq Digital (opens in a new tab)`,
+  ariaLabel = `Book a ${siteConfig.booking.durationMinutes}-minute intro call with Veriq (opens in a new tab)`,
   ariaHidden,
   dataVisible,
   tabIndex,
