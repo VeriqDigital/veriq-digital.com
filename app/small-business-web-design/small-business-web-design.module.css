@@ -132,6 +132,33 @@
   text-transform: uppercase;
 }
 
+@media (min-width: 641px) and (max-width: 1119px) {
+  .breadcrumbs ol {
+    align-items: center;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+  }
+
+  .breadcrumbs a,
+  .secondaryAction,
+  .platformDecision a,
+  .redesignGrid a,
+  .localBridge a,
+  .closingActions a:last-child {
+    min-height: 2.75rem;
+  }
+
+  .breadcrumbs a {
+    display: inline-flex;
+    align-self: stretch;
+    align-items: center;
+  }
+}
+
 .briefPanel {
   position: relative;
   overflow: hidden;

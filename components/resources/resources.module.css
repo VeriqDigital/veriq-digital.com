@@ -41,6 +41,14 @@
   text-transform: uppercase;
 }
 
+@media (min-width: 641px) and (max-width: 1119px) {
+  .authorIdentity a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+  }
+}
+
 .authorIdentity a:hover {
   color: var(--primary-readable);
 }

@@ -228,13 +228,24 @@ body {
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1120px) {
   .floating-booking-cta-mobile {
     display: none;
   }
 
   .floating-booking-cta {
     display: flex;
+  }
+}
+
+@media (pointer: coarse) {
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  summary {
+    touch-action: manipulation;
   }
 }
 

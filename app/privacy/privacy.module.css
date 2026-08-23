@@ -76,6 +76,14 @@
   text-underline-offset: 0.18em;
 }
 
+@media (min-width: 641px) and (max-width: 1119px) {
+  .content a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+  }
+}
+
 .content a:focus-visible {
   outline: 3px solid var(--primary-readable);
   outline-offset: 3px;

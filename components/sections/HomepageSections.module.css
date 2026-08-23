@@ -726,6 +726,37 @@
   }
 }
 
+@media (min-width: 641px) and (max-width: 960px) {
+  .positioning,
+  .platform,
+  .process,
+  .seo,
+  .audit,
+  .why,
+  .growth,
+  .finalCta {
+    padding-block: 6.25rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 820px) {
+  .trustStrip ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trustStrip li:nth-child(3) {
+    border-top: 1px solid color-mix(in srgb, var(--foreground) 9%, transparent);
+  }
+
+  .trustStrip li:nth-child(4) {
+    grid-column: auto;
+  }
+
+  .trustStrip li:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 760px) {
   .positioningIntro,
   .platformIntro,

@@ -175,6 +175,18 @@
   transition: color 200ms ease;
 }
 
+@media (min-width: 641px) and (max-width: 1119px) {
+  .bookingOption > a,
+  .contactDetails > div > a {
+    min-height: 2.75rem;
+  }
+
+  .contactDetails > div > a {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
 .contactDetails > div > a:hover {
   color: var(--primary-hover);
 }

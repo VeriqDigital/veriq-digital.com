@@ -134,6 +134,12 @@
   transition: border-color 200ms ease, color 200ms ease;
 }
 
+@media (min-width: 641px) and (max-width: 1119px) {
+  .textLink {
+    min-height: 2.75rem;
+  }
+}
+
 .textLink:hover {
   border-color: var(--primary-readable);
   color: color-mix(

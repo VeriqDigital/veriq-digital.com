@@ -378,6 +378,29 @@
   background: color-mix(in srgb, var(--foreground) 3%, var(--background));
 }
 
+@media (min-width: 641px) and (max-width: 1119px) {
+  .breadcrumbs ol {
+    align-items: center;
+  }
+
+  .breadcrumbs li,
+  .articleToc a {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    display: inline-flex;
+    align-self: stretch;
+    align-items: center;
+  }
+
+  .topicNav a {
+    padding-inline: 0.25rem;
+  }
+}
+
 .sectionHeading > p {
   margin-bottom: 1rem;
   color: var(--primary-readable);
@@ -478,6 +501,18 @@
   .indexCta > div > div > p,
   .articleCtaInner > p {
     grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 760px) {
+  .indexCta > div > div,
+  .articleCtaInner {
+    grid-template-columns: 1fr;
+  }
+
+  .indexCta a,
+  .articleCta a {
+    justify-self: start;
   }
 }
 

@@ -145,17 +145,17 @@ const Navbar = () => {
       >
         <Link
           href="/"
-          className="font-sans text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
+          className="font-sans text-3xl font-black uppercase tracking-wide text-(--nav-text) min-[641px]:inline-flex min-[641px]:min-h-11 min-[641px]:shrink-0 min-[641px]:items-center md:text-4xl"
         >
           {siteConfig.shortName}
         </Link>
 
-        <div className="ml-auto hidden items-center gap-7 lg:flex xl:gap-8">
+        <div className="ml-auto hidden items-center gap-7 min-[1120px]:flex xl:gap-8">
           {navigation.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-base font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) xl:text-lg"
+              className="inline-flex min-h-11 items-center whitespace-nowrap text-base font-semibold text-(--nav-muted) transition hover:text-(--primary-readable) xl:text-lg"
             >
               {item.label}
             </Link>
@@ -166,14 +166,14 @@ const Navbar = () => {
           <BookingLink
             placement="navbar"
             onClick={() => setIsMenuOpen(false)}
-            className="cursor-pointer rounded-full bg-(--primary) px-4 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) min-[360px]:px-6 lg:text-xl"
+            className="cursor-pointer rounded-full bg-(--primary) px-4 py-3 text-lg font-semibold text-black transition hover:bg-(--primary-hover) min-[360px]:px-6 min-[641px]:inline-flex min-[641px]:min-h-11 min-[641px]:shrink-0 min-[641px]:items-center min-[1120px]:text-xl"
           >
             Book a Call
           </BookingLink>
 
           <button
             type="button"
-            className="cursor-pointer flex size-11 items-center justify-center rounded-full border border-current/15 text-(--nav-muted) transition hover:border-(--primary-readable) hover:text-(--primary-readable) lg:hidden"
+            className="cursor-pointer flex size-11 items-center justify-center rounded-full border border-current/15 text-(--nav-muted) transition hover:border-(--primary-readable) hover:text-(--primary-readable) min-[1120px]:hidden"
             aria-label={
               isMenuOpen ? "Close navigation menu" : "Open navigation menu"
             }
@@ -194,7 +194,7 @@ const Navbar = () => {
         <nav
           id="mobile-navigation"
           aria-label="Mobile navigation"
-          className="absolute inset-x-4 top-full rounded-lg border border-black/10 bg-[#f6f3ed]/95 p-2 text-(--foreground) shadow-[0_18px_50px_rgba(20,22,23,0.14)] backdrop-blur-xl lg:hidden"
+          className="absolute inset-x-4 top-full rounded-lg border border-black/10 bg-[#f6f3ed]/95 p-2 text-(--foreground) shadow-[0_18px_50px_rgba(20,22,23,0.14)] backdrop-blur-xl min-[641px]:inset-x-auto min-[641px]:right-10 min-[641px]:w-[min(28rem,calc(100%-5rem))] min-[1120px]:hidden"
         >
           <div className="grid gap-1">
             {navigation.map((item) => (
@@ -202,7 +202,7 @@ const Navbar = () => {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="rounded-md px-4 py-3 text-lg font-semibold text-(--nav-muted) transition hover:bg-black/5 hover:text-(--primary-readable)"
+                className="rounded-md px-4 py-3 text-lg font-semibold text-(--nav-muted) transition hover:bg-black/5 hover:text-(--primary-readable) min-[641px]:flex min-[641px]:min-h-12 min-[641px]:items-center"
               >
                 {item.label}
               </Link>

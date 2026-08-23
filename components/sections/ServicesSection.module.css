@@ -67,6 +67,13 @@
   transition: color 200ms ease, border-color 200ms ease;
 }
 
+@media (min-width: 641px) and (max-width: 1119px) {
+  .servicesLink,
+  .resourcesLink {
+    min-height: 2.75rem;
+  }
+}
+
 .servicesLink span,
 .resourcesLink span {
   color: var(--primary-readable);

@@ -426,6 +426,14 @@
   color: var(--primary);
 }
 
+@media (min-width: 641px) and (max-width: 1119px) {
+  .auditPreview > footer a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+  }
+}
+
 .checksSection,
 .processSection,
 .serviceCta {
