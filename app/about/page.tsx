@@ -236,7 +236,7 @@ export default function AboutPage() {
       <section className={styles.closing}>
         <Container>
           <div className={styles.closingInner}>
-            <p>Have a project in mind?</p>
+            <p>{siteConfig.brandSlogan}</p>
             <h2>Let&apos;s build something your business can grow into.</h2>
             <Link href="/contact" className={styles.closingLink}>
               Start a conversation

@@ -640,6 +640,7 @@
 }
 
 .finalCtaInner {
+  position: relative;
   display: grid;
   justify-items: center;
   text-align: center;
@@ -655,6 +656,21 @@
   margin-top: 1.5rem;
   color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
   line-height: 1.65;
+}
+
+.finalSignature {
+  position: absolute;
+  bottom: -2.75rem;
+  left: 50%;
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .finalActions {

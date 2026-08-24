@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import { siteConfig } from "@/config/site";
 import styles from "./HomepageSections.module.css";
 
 const principles = [
@@ -118,6 +119,9 @@ export function HomeFinalCta() {
               View selected work <span aria-hidden="true">↗</span>
             </Link>
           </div>
+          <span className={styles.finalSignature}>
+            {siteConfig.brandSlogan}
+          </span>
         </div>
       </Container>
     </section>

@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
+import { siteConfig } from "@/config/site";
 
 export const alt =
-  "Veriq, a Des Moines web design, SEO, and conversion partner";
+  `Veriq — ${siteConfig.brandSlogan} Custom website design, SEO, and conversion.`;
 export const size = {
   width: 1200,
   height: 630,
@@ -66,15 +67,15 @@ export default function OpenGraphImage() {
               display: "flex",
               marginTop: 22,
               flexDirection: "column",
-              fontSize: 82,
+              fontSize: 104,
               fontWeight: 900,
               letterSpacing: "-0.035em",
-              lineHeight: 0.92,
+              lineHeight: 0.86,
               textTransform: "uppercase",
             }}
           >
-            <span>A digital presence</span>
-            <span style={{ color: "#c3c8ca" }}>Unlike any other.</span>
+            <span>COMMAND</span>
+            <span style={{ color: "#c3c8ca" }}>ATTENTION.</span>
           </div>
           <div
             style={{
