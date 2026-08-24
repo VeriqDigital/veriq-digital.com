@@ -116,7 +116,7 @@
 }
 
 .secondaryAction,
-.platformDecision a,
+.customDecision a,
 .redesignGrid a,
 .localBridge a,
 .closingActions a:last-child {
@@ -219,7 +219,7 @@
 }
 
 .requirements,
-.platformSection,
+.customSection,
 .redesignSection,
 .processSection,
 .workSection,
@@ -237,7 +237,7 @@
 }
 
 .requirementsIntro h2,
-.platformHeader h2,
+.customHeader h2,
 .redesignGrid h2,
 .processHeader h2,
 .workHeader h2,
@@ -312,7 +312,7 @@
   line-height: 1.58;
 }
 
-.platformSection,
+.customSection,
 .workSection,
 .localBridge,
 .closing {
@@ -320,7 +320,7 @@
   color: var(--surface-foreground);
 }
 
-.platformHeader,
+.customHeader,
 .processHeader,
 .resourcesHeader {
   display: grid;
@@ -328,12 +328,12 @@
   gap: clamp(2.5rem, 9vw, 9rem);
 }
 
-.platformSection .sectionLabel,
+.customSection .sectionLabel,
 .workSection .sectionLabel {
   color: var(--primary);
 }
 
-.platformGrid {
+.customGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
@@ -341,19 +341,19 @@
   background: color-mix(in srgb, var(--surface-foreground) 15%, transparent);
 }
 
-.platformGrid article {
+.customGrid article {
   padding: clamp(1.75rem, 4vw, 3.5rem);
   background: var(--surface);
 }
 
-.platformTitle {
+.customTitle {
   display: grid;
   gap: 0.4rem;
   border-bottom: 1px solid color-mix(in srgb, var(--surface-foreground) 15%, transparent);
   padding-bottom: 1.3rem;
 }
 
-.platformTitle span,
+.customTitle span,
 .workMeta span,
 .resourceLinks > a > span {
   color: color-mix(in srgb, var(--surface-foreground) 58%, transparent);
@@ -364,7 +364,7 @@
   text-transform: uppercase;
 }
 
-.platformTitle strong {
+.customTitle strong {
   color: var(--primary);
   font-family: var(--font-sans);
   font-size: clamp(2.4rem, 4vw, 4rem);
@@ -372,14 +372,14 @@
   text-transform: uppercase;
 }
 
-.platformGrid article > p,
-.platformDecision p {
+.customGrid article > p,
+.customDecision p {
   margin-top: 1.5rem;
   color: color-mix(in srgb, var(--surface-foreground) 70%, transparent);
   line-height: 1.65;
 }
 
-.platformGrid ul {
+.customGrid ul {
   display: grid;
   gap: 0.75rem;
   margin-top: 1.5rem;
@@ -387,11 +387,11 @@
   color: color-mix(in srgb, var(--surface-foreground) 78%, transparent);
 }
 
-.platformGrid li::marker {
+.customGrid li::marker {
   color: var(--primary);
 }
 
-.platformDecision {
+.customDecision {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -399,12 +399,12 @@
   margin-top: 2rem;
 }
 
-.platformDecision p {
+.customDecision p {
   max-width: 38rem;
   margin-top: 0;
 }
 
-.platformDecision a,
+.customDecision a,
 .workSection a,
 .localBridge a,
 .closingActions a:last-child {
@@ -632,7 +632,7 @@
 @media (max-width: 900px) {
   .heroGrid,
   .requirementsIntro,
-  .platformHeader,
+  .customHeader,
   .redesignGrid,
   .processHeader,
   .resourcesHeader,
@@ -666,7 +666,7 @@
     grid-template-columns: 2.5rem minmax(10rem, 0.55fr) minmax(12rem, 1fr);
   }
 
-  .platformDecision {
+  .customDecision {
     align-items: start;
     flex-direction: column;
   }
@@ -678,7 +678,7 @@
 
 @media (max-width: 720px) {
   .requirementList,
-  .platformGrid,
+  .customGrid,
   .workGrid,
   .workHeader {
     grid-template-columns: 1fr;

@@ -1,7 +1,7 @@
 /*
-THESIS: Turn the small-business website decision into a practical brief, not a generic agency pitch or a keyword-heavy service page.
+THESIS: Turn custom small-business website design into a practical brief, not a generic agency pitch or a keyword-heavy service page.
 OWN-WORLD: Veriq's restrained light/dark surfaces, cyan technical linework, condensed display type, and crisp editorial spacing.
-STORY: An owner identifies what the website must do, sees which requirements shape the platform, understands Veriq's process, and starts a scoped conversation.
+STORY: An owner identifies what the website must do, sees how those requirements shape a custom build, understands Veriq's process, and starts a scoped conversation.
 FIRST VIEWPORT: A direct small-business offer and CTA sit beside a compact website brief that connects business needs to website requirements.
 FORM: The seventh grounded Persuade structure, a requirements blueprint selected with seed 9a94af6f and adapted to Veriq's established visual system.
 */
@@ -25,7 +25,7 @@ const websiteRequirements = [
 
 const processSteps = [
   { title: "Understand the business", description: "Clarify the customers, services, current-site problems, business goals, content, and technical constraints." },
-  { title: "Define the right scope", description: "Plan the pages, messages, customer path, functionality, platform, responsibilities, and launch criteria." },
+  { title: "Define the right scope", description: "Plan the pages, messages, customer path, functionality, content responsibilities, and launch criteria." },
   { title: "Design with real content", description: "Shape the visual system and responsive layouts around what the business actually needs to communicate." },
   { title: "Build and verify", description: "Implement the site, connect forms and integrations, and test accessibility, performance, metadata, and devices." },
   { title: "Launch and support", description: "Deploy carefully, confirm measurement and indexation, then continue maintenance and improvement when useful." },
@@ -33,8 +33,8 @@ const processSteps = [
 
 const faqs = [
   {
-    question: "Does Veriq build custom websites or use Squarespace?",
-    answer: "Both. Squarespace can be a strong fit for a marketing-focused website that should be straightforward to manage. Custom development makes sense when the experience needs greater flexibility, integrations, specialized content, or functionality. Veriq recommends the approach that fits the business rather than treating one platform as universally better.",
+    question: "How does Veriq build small-business websites?",
+    answer: "Veriq custom designs and develops each website around the business, its customers, content, conversion path, and required functionality. Modern technology such as Next.js provides a fast, flexible foundation, with content management or ecommerce integrated when the project calls for it.",
   },
   {
     question: "How much does a small-business website cost?",
@@ -62,7 +62,7 @@ const featuredProjects = projects.slice(0, 2);
 
 export const metadata = createPageMetadata({
   title: "Small Business Web Design for Growing Businesses",
-  description: "Professional small-business web design through Squarespace or custom development, shaped around credibility, leads, usability, local visibility, and conversion.",
+  description: "Custom small-business website design and development shaped around credibility, leads, mobile usability, local visibility, and conversion.",
   path: "/small-business-web-design",
 });
 
@@ -74,7 +74,7 @@ const structuredData = {
       "@type": "Service",
       "@id": canonicalUrl + "#service",
       name: "Small business web design and development",
-      serviceType: ["Small business website design", "Business website development", "Custom website development", "Squarespace website design"],
+      serviceType: ["Small business website design", "Business website development", "Custom website design", "Custom website development"],
       description: "Website strategy, design, development, launch, and ongoing support for small and growing businesses.",
       url: canonicalUrl,
       provider: { "@id": siteConfig.url + "/#organization" },
@@ -113,7 +113,7 @@ export default function SmallBusinessWebDesignPage() {
               <p className={styles.kicker}>Professional websites for small businesses</p>
               <h1>A website built for the business you are growing.</h1>
               <p className={styles.heroLead}>
-                Veriq plans, designs, and develops small-business websites that clarify your services, strengthen credibility, and give customers a useful next step. The platform follows the need: Squarespace where it fits, custom development where it matters.
+                Veriq plans, custom designs, and develops small-business websites that clarify your services, strengthen credibility, and give customers a useful next step. Every build starts with what the business and its customers actually need.
               </p>
               <div className={styles.heroActions}>
                 <Link href="/contact" className={styles.primaryAction}>Start a website project <span aria-hidden="true">↗</span></Link>
@@ -125,7 +125,7 @@ export default function SmallBusinessWebDesignPage() {
               <dl>
                 <div><dt>Business need</dt><dd>Credibility, inquiries, or a better customer process</dd></div>
                 <div><dt>Customer decision</dt><dd>Understand, trust, then take the right next step</dd></div>
-                <div><dt>Build approach</dt><dd>Managed platform or custom development, based on fit</dd></div>
+                <div><dt>Build approach</dt><dd>Custom design and modern Next.js development</dd></div>
                 <div><dt>Long-term test</dt><dd>Useful now, maintainable later, ready to grow</dd></div>
               </dl>
               <p>Start with these requirements before choosing pages or technology.</p>
@@ -166,27 +166,27 @@ export default function SmallBusinessWebDesignPage() {
         </Container>
       </section>
 
-      <section className={styles.platformSection}>
+      <section className={styles.customSection}>
         <Container>
-          <div className={styles.platformHeader}>
-            <p className={styles.sectionLabel}>Choose the platform after the requirements</p>
-            <h2>Squarespace and custom development solve different versions of the problem.</h2>
+          <div className={styles.customHeader}>
+            <p className={styles.sectionLabel}>Designed around the requirements</p>
+            <h2>Your website should fit your business—not the other way around.</h2>
           </div>
-          <div className={styles.platformGrid}>
+          <div className={styles.customGrid}>
             <article>
-              <div className={styles.platformTitle}><span>Managed platform</span><strong>Squarespace</strong></div>
-              <p>Often a strong fit for a marketing-focused website that needs a polished experience, standard forms or integrations, and a straightforward editing and maintenance model.</p>
-              <ul><li>Familiar business website content</li><li>Supported platform features</li><li>Practical in-house editing</li><li>Lower infrastructure responsibility</li></ul>
+              <div className={styles.customTitle}><span>Business first</span><strong>Start with what matters</strong></div>
+              <p>Veriq begins with the business, its customers, what visitors need to understand, and the action the website should make easier.</p>
+              <ul><li>Services and positioning</li><li>Customer questions and objections</li><li>Content and proof</li><li>Lead and purchase paths</li></ul>
             </article>
             <article>
-              <div className={styles.platformTitle}><span>Flexible implementation</span><strong>Custom development</strong></div>
-              <p>Useful when the website needs specialized customer interactions, conversion tools, customer-facing integrations, or greater performance control.</p>
-              <ul><li>Quote, estimate, and calculator tools</li><li>Booking, ordering, and lead capture</li><li>Customer-facing integrations</li><li>Greater implementation flexibility</li></ul>
+              <div className={styles.customTitle}><span>Purpose-built</span><strong>Build around the need</strong></div>
+              <p>The design and development follow those requirements, from responsive layouts and performance to search visibility and customer-facing tools.</p>
+              <ul><li>Custom responsive design</li><li>Fast Next.js development</li><li>SEO-ready structure</li><li>Forms, ecommerce, and integrations</li></ul>
             </article>
           </div>
-          <div className={styles.platformDecision}>
-            <p>Complexity, budget, functionality, maintainability, and growth plans all shape the recommendation.</p>
-            <Link href="/resources/custom-website-vs-template-for-small-business">Compare custom websites and templates <span aria-hidden="true">↗</span></Link>
+          <div className={styles.customDecision}>
+            <p>Content management, ecommerce, and other editing tools can be integrated when they support how the business will operate the site.</p>
+            <Link href="/services#web-design-development">Explore custom website services <span aria-hidden="true">↗</span></Link>
           </div>
         </Container>
       </section>
@@ -239,7 +239,7 @@ export default function SmallBusinessWebDesignPage() {
           <div className={styles.resourceLinks}>
             <Link href="/resources/how-much-does-a-small-business-website-cost"><span>Cost</span><strong>How much does a small-business website cost?</strong><i aria-hidden="true">↗</i></Link>
             <Link href="/resources/web-designer-vs-website-builder-for-small-business"><span>Approach</span><strong>Web designer or website builder?</strong><i aria-hidden="true">↗</i></Link>
-            <Link href="/resources/custom-website-vs-template-for-small-business"><span>Platform</span><strong>Custom website or template?</strong><i aria-hidden="true">↗</i></Link>
+            <Link href="/resources/custom-website-vs-template-for-small-business"><span>Approach</span><strong>Custom website or template?</strong><i aria-hidden="true">↗</i></Link>
             <Link href="/resources/how-to-choose-a-web-designer-in-des-moines"><span>Provider</span><strong>How should you evaluate a web designer?</strong><i aria-hidden="true">↗</i></Link>
             <Link href="/resources/what-should-a-local-business-website-include"><span>Essentials</span><strong>What should a useful business website include?</strong><i aria-hidden="true">↗</i></Link>
             <Link href="/resources/what-makes-a-small-business-website-look-professional"><span>Presentation</span><strong>What makes a business website look professional?</strong><i aria-hidden="true">↗</i></Link>
@@ -267,7 +267,7 @@ export default function SmallBusinessWebDesignPage() {
       <section className={styles.closing}>
         <Container>
           <div className={styles.closingInner}>
-            <p>Bring the business problem, not a predetermined platform.</p>
+            <p>Bring the business problem, not a finished technical brief.</p>
             <h2>Build the website your next stage actually needs.</h2>
             <div className={styles.closingActions}>
               <Link href="/contact">Start a project <span aria-hidden="true">↗</span></Link>

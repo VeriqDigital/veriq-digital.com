@@ -221,7 +221,7 @@
 .decision,
 .audit,
 .workScope,
-.platform,
+.rebuild,
 .process,
 .example,
 .resources,
@@ -238,7 +238,7 @@
 
 .sectionIntro,
 .decisionHeader,
-.platformHeader,
+.rebuildHeader,
 .processHeader,
 .resourcesHeader {
   display: grid;
@@ -249,7 +249,7 @@
 .sectionIntro h2,
 .decisionHeader h2,
 .auditCopy h2,
-.platformHeader h2,
+.rebuildHeader h2,
 .processHeader h2,
 .preservation h2,
 .example h2,
@@ -302,7 +302,7 @@
 
 .signalList h3,
 .scopeGrid h3,
-.platformRows h3,
+.rebuildRows h3,
 .processList h3 {
   font-family: var(--font-sans);
   font-size: clamp(1.7rem, 2.8vw, 2.7rem);
@@ -313,7 +313,7 @@
 
 .signalList p,
 .scopeGrid p,
-.platformRows p,
+.rebuildRows p,
 .processList p {
   max-width: 35rem;
   color: var(--muted);
@@ -369,7 +369,7 @@
 }
 
 .decision > div > .inlineLink,
-.platform > div > .inlineLink {
+.rebuild > div > .inlineLink {
   margin-top: 2rem;
 }
 
@@ -503,12 +503,12 @@
   line-height: 1.6;
 }
 
-.platformRows {
+.rebuildRows {
   margin-top: clamp(4rem, 8vw, 7rem);
   border-top: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
 }
 
-.platformRows article {
+.rebuildRows article {
   display: grid;
   grid-template-columns: minmax(15rem, 0.42fr) minmax(0, 0.58fr);
   gap: clamp(2rem, 6vw, 6rem);
@@ -774,7 +774,7 @@
 @media (max-width: 720px) {
   .sectionIntro,
   .decisionHeader,
-  .platformHeader,
+  .rebuildHeader,
   .processHeader,
   .resourcesHeader,
   .auditGrid,
@@ -795,7 +795,7 @@
   }
 
   .pathLedger article,
-  .platformRows article {
+  .rebuildRows article {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }

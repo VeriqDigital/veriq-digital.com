@@ -12,9 +12,8 @@ export default function WebDesignerVsWebsiteBuilderArticle() {
         <p>
           A website builder is software. A web designer is a person or team
           responsible for decisions. The categories overlap because a
-          professional may use Squarespace or another managed builder when it
-          fits the project, while a business owner may use the same platform
-          alone.
+          professional may work within a managed builder when it fits the
+          project, while a business owner may use the same software alone.
         </p>
         <p>
           The useful comparison is therefore not “builder bad, custom code
@@ -117,15 +116,15 @@ export default function WebDesignerVsWebsiteBuilderArticle() {
           . The framework applies beyond geography even though the article is
           written for Des Moines buyers.
         </p>
-        <ArticleCallout title="Veriq supports both platform and custom builds">
+        <ArticleCallout title="Veriq provides custom website design and development">
           <p>
-            Veriq can design and build a marketing-focused site in Squarespace
-            or use custom development when conversion functionality or
-            customer-facing integrations require it. Explore the{" "}
+            Veriq plans, designs, and develops custom websites around the
+            business, its customers, and the actions the site needs to support.
+            Explore the{" "}
             <Link href="/small-business-web-design">
               small-business website design approach
             </Link>{" "}
-            to see how that decision fits the broader process.
+            to see how those requirements shape the broader process.
           </p>
         </ArticleCallout>
       </ArticleSection>

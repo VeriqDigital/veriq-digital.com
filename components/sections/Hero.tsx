@@ -22,9 +22,9 @@ const Hero = ({ auditEnabled, campaign }: HeroProps) => {
               <span>Turn leads into customers.</span>
             </h1>
             <p className={styles.description}>
-              Veriq designs and builds custom and Squarespace websites that are
-              fast, easy to find, and built to turn visitors into customers. We
-              also stick around after launch for updates and support.
+              Veriq designs and develops custom websites that help businesses
+              get found, earn trust, and turn visitors into customers. We also
+              stick around after launch for SEO, improvements, and support.
             </p>
             <div className={styles.actions}>
               <Button href="/contact">Start a project</Button>
@@ -43,7 +43,7 @@ const Hero = ({ auditEnabled, campaign }: HeroProps) => {
             </div>
             <ul className={styles.context} aria-label="Veriq at a glance">
               <li>Based in Des Moines</li>
-              <li>Custom or Squarespace</li>
+              <li>Custom design &amp; development</li>
               <li>Local and remote projects</li>
             </ul>
             {campaign}

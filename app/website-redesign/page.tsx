@@ -1,5 +1,5 @@
 /*
-THESIS: Treat redesign as an evidence-based decision about what to keep, improve, migrate, or rebuild—not a cosmetic reset.
+THESIS: Treat a custom website redesign as an evidence-based decision about what to keep, improve, migrate, or rebuild—not a cosmetic reset.
 OWN-WORLD: Veriq's existing light/dark surfaces, cyan signals, condensed headings, mono labels, rules, and restrained rounded panels.
 STORY: A business owner recognizes structural problems, sees how the current site is audited, understands the possible paths, protects useful equity, and starts a scoped conversation.
 FIRST VIEWPORT: A direct redesign offer and CTA sit beside a current-site dossier that classifies business gap, working assets, likely path, and migration rule.
@@ -49,9 +49,9 @@ const decisionPaths = [
     work: "A shared visual, content, responsive, and interaction system while preserving useful foundations.",
   },
   {
-    path: "Migrate or rebuild",
-    condition: "Platform or technical constraints control the outcome.",
-    work: "Move to a better-fit managed platform or custom implementation with an explicit migration plan.",
+    path: "Rebuild",
+    condition: "Structural or technical constraints control the outcome.",
+    work: "Preserve useful equity while replacing the site with a custom design, modern development, and an explicit migration plan.",
   },
 ] as const;
 
@@ -127,7 +127,7 @@ const processSteps = [
   {
     title: "Design and build",
     description:
-      "Create the responsive system around real content, then implement it in Squarespace or custom development based on fit.",
+      "Create the responsive system around real content, then develop the custom website and integrate the functionality it needs.",
   },
   {
     title: "Test, launch, and monitor",
@@ -143,19 +143,19 @@ const faqs = [
       "No. A focused improvement may be enough when the platform, content structure, and core customer paths remain sound. Veriq evaluates whether problems are isolated, repeated, or architectural before recommending the scope.",
   },
   {
-    question: "Can Veriq redesign a website on its current platform?",
+    question: "What happens to the current website during a redesign?",
     answer:
-      "Potentially. If the current platform can support the required content, editing, responsive behavior, integrations, accessibility, and performance without fragile workarounds, staying can reduce migration risk.",
+      "Veriq audits the current content, indexed URLs, analytics, forms, integrations, and working customer paths before planning the custom rebuild. Useful material can be preserved or migrated while outdated structure and technical constraints are replaced deliberately.",
   },
   {
-    question: "Does Veriq redesign Squarespace websites?",
+    question: "Will the redesigned website be custom-built?",
     answer:
-      "Yes. Squarespace can be a strong fit for a marketing-focused website that should remain straightforward to edit and operate. The recommendation depends on the business requirements and current constraints.",
+      "Yes. Veriq custom designs and develops the new website around the business, its customers, content, conversion path, and required functionality. Modern technology such as Next.js provides the technical foundation.",
   },
   {
-    question: "When does custom development make sense?",
+    question: "Can the redesigned site include content editing?",
     answer:
-      "Custom development can be appropriate when the site needs specialized content structures, performance control, customer-facing integrations, or conversion functionality that a managed platform cannot support well.",
+      "Yes. A content management system can be integrated when the business needs to manage specific content after launch. Editing responsibilities, account ownership, and ongoing support are defined with the project.",
   },
   {
     question: "Will a redesign preserve current Google rankings?",
@@ -165,7 +165,7 @@ const faqs = [
   {
     question: "How much does a website redesign cost?",
     answer:
-      "Cost depends on the current site's condition, scope, content, design, migration, platform change, integrations, custom functionality, redirects, testing, and support. Veriq defines the work before providing a proposal.",
+      "Cost depends on the current site's condition, scope, content, design, migration, integrations, custom functionality, redirects, testing, and support. Veriq defines the work before providing a proposal.",
   },
 ] as const;
 
@@ -174,7 +174,7 @@ const redesignExample = projects.find((project) => project.slug === "mick-enev")
 export const metadata = createPageMetadata({
   title: "Website Redesign Services for Growing Businesses",
   description:
-    "Professional website redesign services for businesses that need clearer messaging, stronger mobile UX, better performance, easier editing, and a responsible migration path.",
+    "Custom website redesign services for businesses that need clearer messaging, stronger mobile UX, better performance, useful functionality, and a responsible migration path.",
   path: "/website-redesign",
 });
 
@@ -193,7 +193,7 @@ const structuredData = {
         "Website migration",
       ],
       description:
-        "Website audit, strategy, content restructuring, responsive redesign, development, migration, launch, and ongoing support for businesses with an existing website.",
+        "Website audit, strategy, content restructuring, custom responsive redesign, development, migration, launch, and ongoing support for businesses with an existing website.",
       url: canonicalUrl,
       provider: { "@id": siteConfig.url + "/#organization" },
       areaServed: [
@@ -279,7 +279,7 @@ export default function WebsiteRedesignPage() {
                 <div><dt>Possible path</dt><dd>Improve, redesign, migrate, or rebuild selectively</dd></div>
                 <div><dt>Migration rule</dt><dd>Preserve useful content, URLs, data, and working behavior</dd></div>
               </dl>
-              <p>The recommendation follows the constraints—not a preferred platform.</p>
+              <p>The scope follows the evidence—not a surface-level preference.</p>
             </aside>
           </div>
         </Container>
@@ -407,40 +407,40 @@ export default function WebsiteRedesignPage() {
         </Container>
       </section>
 
-      <section className={styles.platform}>
+      <section className={styles.rebuild}>
         <Container>
-          <div className={styles.platformHeader}>
-            <p className={styles.sectionLabel}>Platform follows the requirements</p>
-            <h2>Improve what exists, move to Squarespace, or rebuild with custom development.</h2>
+          <div className={styles.rebuildHeader}>
+            <p className={styles.sectionLabel}>A deliberate custom rebuild</p>
+            <h2>Preserve the value. Replace the constraints.</h2>
           </div>
-          <div className={styles.platformRows}>
+          <div className={styles.rebuildRows}>
             <article>
-              <h3>Keep or improve the current platform</h3>
+              <h3>Protect useful equity</h3>
               <p>
-                The safest path when the system supports the needed content,
-                editing, performance, accessibility, and integrations without
-                fragile workarounds.
+                Carry forward accurate content, useful URLs, analytics context,
+                working integrations, and recognizable brand elements when they
+                still serve the business.
               </p>
             </article>
             <article>
-              <h3>Move to Squarespace</h3>
+              <h3>Rebuild around the business</h3>
               <p>
-                A strong option for a marketing-focused website that benefits
-                from managed infrastructure and a straightforward content
-                editing model.
+                Create a custom responsive design and develop it around the
+                current message, customer journey, content, performance needs,
+                and required editing model.
               </p>
             </article>
             <article>
-              <h3>Use custom development</h3>
+              <h3>Make room for growth</h3>
               <p>
-                Appropriate when specialized customer interactions,
-                conversion tools, content structures, performance control, or
-                customer-facing integrations need greater flexibility.
+                Strengthen search foundations and add quoting, booking,
+                ecommerce, lead capture, or other customer-facing functionality
+                where it improves the journey.
               </p>
             </article>
           </div>
-          <Link href="/resources/custom-website-vs-template-for-small-business" className={styles.inlineLink}>
-            Compare managed platforms and custom development <span aria-hidden="true">↗</span>
+          <Link href="/small-business-web-design" className={styles.inlineLink}>
+            Explore custom website design and development <span aria-hidden="true">↗</span>
           </Link>
         </Container>
       </section>

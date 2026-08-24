@@ -7,12 +7,12 @@ export const faqs = [
   {
     question: "How long does a website take?",
     answer:
-      "Most business websites take 2–6 weeks. Content readiness, feedback timing, platform, integrations, and functionality can change the schedule. The proposal sets a realistic timeline before work begins.",
+      "Most business websites take 2–6 weeks. Content readiness, feedback timing, integrations, and functionality can change the schedule. The proposal sets a realistic timeline before work begins.",
   },
   {
-    question: "Do you build custom websites or use Squarespace?",
+    question: "Does Veriq build custom websites?",
     answer:
-      "Both. Squarespace can be a strong fit for a marketing-focused website that should be straightforward to manage. Custom development makes sense when the experience needs more flexibility, integrations, specialized content, or functionality. The recommendation follows the business need.",
+      "Yes. Veriq designs and develops custom websites around the business, its customers, content, conversion path, and required functionality. Sites are built with modern technology such as Next.js, with content management integrated when it supports the project.",
   },
   {
     question: "Can you redesign an existing website?",

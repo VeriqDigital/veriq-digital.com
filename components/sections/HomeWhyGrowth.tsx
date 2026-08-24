@@ -1,12 +1,13 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import { siteConfig } from "@/config/site";
 import styles from "./HomepageSections.module.css";
 
 const principles = [
   {
     title: "Business-first",
     description:
-      "The message, platform, and functionality follow a concrete business objective.",
+      "The message, design, and functionality follow a concrete business objective.",
   },
   {
     title: "Clear ownership",
@@ -118,6 +119,9 @@ export function HomeFinalCta() {
               View selected work <span aria-hidden="true">↗</span>
             </Link>
           </div>
+          <span className={styles.finalSignature}>
+            {siteConfig.brandSlogan}
+          </span>
         </div>
       </Container>
     </section>

@@ -17,10 +17,10 @@ export default function CustomWebsiteVsTemplateArticle() {
         </p>
         <p>
           Many professional projects sit between the extremes. A designer might
-          use Squarespace as the content and hosting platform while creating a
-          distinct structure, visual system, and responsive experience. Another
-          project may use custom code but rely on proven interface patterns.
-          What matters is where the business benefits from original work.
+          customize an established content system while creating a distinct
+          structure, visual system, and responsive experience. Another project
+          may use custom code but rely on proven interface patterns. What
+          matters is where the business benefits from original work.
         </p>
       </ArticleSection>
 
@@ -122,15 +122,15 @@ export default function CustomWebsiteVsTemplateArticle() {
           helps separate the platform decision from the question of who should
           do the work.
         </p>
-        <ArticleCallout title="Start with the business, then choose the platform">
+        <ArticleCallout title="Veriq builds around the business">
           <p>
-            Veriq works in Squarespace where it is appropriate and provides
-            custom development when the project needs greater flexibility,
-            customer-facing integrations, or conversion functionality. See the full{" "}
+            Veriq provides custom website design and development when a business
+            needs a site shaped around its message, customer journey,
+            performance, search visibility, and functionality. See the full{" "}
             <Link href="/small-business-web-design">
               small-business web design service
             </Link>{" "}
-            for the requirements considered before that recommendation.
+            for the requirements that guide the work.
           </p>
         </ArticleCallout>
       </ArticleSection>

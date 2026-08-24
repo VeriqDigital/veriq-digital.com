@@ -70,19 +70,11 @@ export default function SmallBusinessWebsiteCostArticle() {
           ]}
         />
         <p>
-          These are budgeting bands, not package prices. The same platform can
-          appear in more than one band: a Squarespace site built by its owner
-          has a different cost structure from a professionally planned and
-          custom-designed Squarespace site. Check the platform’s{" "}
-          <a
-            href="https://support.squarespace.com/hc/en-us/articles/206536797-Choosing-the-right-Squarespace-plan"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            current plan guidance
-          </a>{" "}
-          when estimating recurring software because plan features and pricing
-          can change.
+          These are budgeting bands, not package prices. A website assembled by
+          its owner from a standard builder has a different cost structure from
+          a professionally planned, custom-designed, and custom-developed site.
+          When estimating recurring software, review current vendor pricing and
+          included features because plans and fees can change.
         </p>
       </ArticleSection>
 
