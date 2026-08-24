@@ -8,8 +8,8 @@ const seoSignals = [
   "Site structure",
   "Performance",
   "Metadata",
-  "Content hierarchy",
   "Local search",
+  "Google Business Profile",
   "Internal linking",
   "Indexability",
   "Search intent",
@@ -30,7 +30,10 @@ export default function HomeSeoAudit({
               <p className={styles.seoCopy}>
                 Search visibility is shaped by how the site is planned, written,
                 built, and maintained. Veriq considers the foundations early so
-                SEO is not reduced to a plugin or a last-minute checklist.
+                SEO is not reduced to a plugin or a last-minute checklist. For
+                local businesses, that can include Google Business Profile
+                assistance so the website, business details, and profile support
+                the same search strategy.
               </p>
               <div className={styles.inlineLinks}>
                 <Link href="/blog#seo-digital-marketing">

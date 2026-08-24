@@ -22,18 +22,19 @@ const serviceChapters = [
     summary: "Build a new website or substantially improve the one you have.",
     statement: "WEBSITES BUILT AROUND YOUR BUSINESS, NOT A TEMPLATE.",
     description:
-      "From streamlined Squarespace builds to fully custom Next.js websites, Veriq chooses the approach around the business, its customers, and what the site actually needs to accomplish. That can mean starting fresh or redesigning an existing site that no longer performs or represents the company well.",
+      "Veriq plans, designs, and develops custom websites around the business, its customers, its content, and the actions that create value. Modern Next.js development provides a fast, flexible foundation without turning the technology into the sales pitch.",
     note: "Best for businesses that need a new website, a substantial redesign, or a clearer and more useful digital presence.",
     capabilities: [
       "Custom Next.js websites",
-      "Squarespace websites",
+      "Custom website design",
       "Website redesigns",
       "Responsive, mobile-first design",
-      "CMS and content setup",
+      "CMS integration where appropriate",
       "Conversion-focused page structure",
+      "Ecommerce where appropriate",
     ],
     outcome:
-      "A credible, responsive website built with the right level of flexibility and complexity for the business.",
+      "A credible, responsive custom website designed around the business and ready to support its next stage.",
   },
   {
     number: "02",
@@ -44,12 +45,12 @@ const serviceChapters = [
     statement:
       "A website that can't be found is a website that can't help the business.",
     description:
-      "SEO starts with the structure and technical quality of the website itself, then expands into local search, Google Business Profile optimization, useful service and location content, and continued improvement. Veriq builds that foundation without promising shortcuts or guaranteed rankings.",
+      "SEO starts with the structure and technical quality of the website itself, then expands into on-page content, local search, and Google Business Profile assistance. Veriq can help align business information, categories, website links, social profiles, and identify outdated photos or content without promising shortcuts or guaranteed rankings.",
     note: "Especially useful for small and local businesses that need stronger visibility in Des Moines, across Iowa, or in the markets they actually serve.",
     capabilities: [
       "Local SEO",
       "Technical SEO",
-      "Google Business Profile optimization",
+      "Google Business Profile assistance",
       "On-page optimization",
       "Analytics and conversion tracking",
       "Service and location content",
@@ -71,7 +72,7 @@ const serviceChapters = [
     capabilities: [
       "Quote & estimate tools",
       "Booking & scheduling",
-      "Customer ordering",
+      "Ecommerce & customer ordering",
       "Calculators & interactive tools",
       "Forms & lead capture",
       "Custom website functionality",
@@ -81,39 +82,39 @@ const serviceChapters = [
   },
 ] as const;
 
-const websitePaths = [
+const projectPaths = [
   {
     code: "01A",
     id: "custom-websites",
     title: "Custom Website",
     description:
-      "Built with custom code when the business needs maximum flexibility, stronger performance control, unique functionality, or a highly differentiated experience.",
+      "A new website planned, designed, and developed specifically around the business, its customers, and the path from first visit to action.",
     bestFor:
-      "Conversion-focused functionality, customer-facing integrations, and businesses that do not want the platform to set the ceiling.",
+      "Businesses starting fresh or replacing a site that cannot support their message, brand, performance, or customer journey.",
     href: "/small-business-web-design",
     linkLabel: "Explore custom websites",
   },
   {
     code: "01B",
-    id: "squarespace-websites",
-    title: "Squarespace Website",
-    description:
-      "A professional, well-structured website on a platform that makes routine content management straightforward for the business.",
-    bestFor:
-      "Marketing-focused sites that need a practical editing experience without unnecessary technical complexity.",
-    href: "/small-business-web-design",
-    linkLabel: "Explore Squarespace websites",
-  },
-  {
-    code: "01C",
     id: "website-redesigns",
     title: "Website Redesign",
     description:
-      "A substantial rethink for an existing site that feels outdated, performs poorly, communicates badly, or no longer reflects the business.",
+      "A custom rebuild for an existing website that feels outdated, confusing, slow, difficult to use, or out of step with the business.",
     bestFor:
-      "Businesses that already have a website but need better structure, clearer messaging, stronger design, or a more capable platform.",
+      "Businesses with useful content or search equity to preserve while the experience, structure, and technology are rebuilt.",
     href: "/website-redesign",
     linkLabel: "Explore website redesigns",
+  },
+  {
+    code: "01C",
+    id: "website-growth",
+    title: "Website Growth",
+    description:
+      "Focused work that helps an existing web presence get found, convert more clearly, and give customers better ways to interact with the business.",
+    bestFor:
+      "SEO, local visibility, Google Business Profile assistance, conversion improvements, or new customer-facing functionality.",
+    href: "/services#seo-growth",
+    linkLabel: "Explore website growth",
   },
 ] as const;
 
@@ -159,7 +160,7 @@ const processSteps = [
 export const metadata = createPageMetadata({
   title: "Web Design, Local SEO & Conversion Tools",
   description:
-    "Explore custom and Squarespace web design, website redesigns, local and technical SEO, and conversion-focused website functionality from Veriq in Des Moines, Iowa.",
+    "Custom website design and development, redesigns, local SEO, Google Business Profile assistance, and conversion tools from Veriq in Des Moines, Iowa.",
   path: "/services",
 });
 
@@ -351,15 +352,15 @@ export default function ServicesPage() {
                 <div className={styles.pathSection}>
                   <div className={styles.pathHeading}>
                     <p className={styles.sectionLabel}>Choose the right path</p>
-                    <h3>Custom, Squarespace, or a complete redesign.</h3>
+                    <h3>Custom website, redesign, or something more.</h3>
                     <p>
-                      These are different implementation paths—not pricing
-                      tiers. Veriq recommends the approach that fits the
-                      business and the job the website needs to do.
+                      Start with the problem the business needs to solve. Veriq
+                      can build from scratch, replace what is no longer working,
+                      or strengthen the website as the business grows.
                     </p>
                   </div>
                   <div className={styles.pathGrid}>
-                    {websitePaths.map((path) => (
+                    {projectPaths.map((path) => (
                       <article id={path.id} key={path.id}>
                         <span className={styles.pathCode}>{path.code}</span>
                         <h4>{path.title}</h4>
@@ -448,9 +449,9 @@ export default function ServicesPage() {
                 Start with the problem. We&apos;ll find the right approach.
               </h2>
               <p className={styles.closingCopy}>
-                You do not need to know whether the answer is Next.js,
-                Squarespace, SEO, a redesign, or custom functionality before
-                reaching out.
+                You do not need to know whether the answer is a custom website,
+                a redesign, stronger local visibility, or new customer-facing
+                functionality before reaching out.
               </p>
             </div>
             <div className={styles.closingActions}>

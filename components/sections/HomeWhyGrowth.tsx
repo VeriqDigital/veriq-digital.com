@@ -6,7 +6,7 @@ const principles = [
   {
     title: "Business-first",
     description:
-      "The message, platform, and functionality follow a concrete business objective.",
+      "The message, design, and functionality follow a concrete business objective.",
   },
   {
     title: "Clear ownership",

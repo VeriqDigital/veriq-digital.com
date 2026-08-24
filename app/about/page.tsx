@@ -46,7 +46,7 @@ const reasons = [
   {
     title: "Built around the business",
     description:
-      "No recycled strategies or predetermined platforms. Every recommendation starts with your customers, goals, and path to action.",
+      "No recycled strategies or premade layouts. Every recommendation starts with your customers, goals, and path to action.",
   },
   {
     title: "Support beyond launch",

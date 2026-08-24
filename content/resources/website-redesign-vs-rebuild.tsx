@@ -75,12 +75,10 @@ export default function WebsiteRedesignVsRebuildArticle() {
           separately can create another layer of inconsistency.
         </p>
         <p>
-          The existing platform may still be appropriate. A redesigned
-          Squarespace site can be the right answer for a marketing-focused
-          business that values straightforward editing. Custom development can
-          make sense when specialized content, performance control,
-          customer-facing integrations, or conversion functionality requires
-          more flexibility.
+          Focused changes may still be appropriate when the existing system is
+          sound. A custom rebuild becomes more valuable when specialized
+          content, performance control, customer-facing integrations, or
+          conversion functionality requires a more flexible foundation.
         </p>
       </ArticleSection>
 

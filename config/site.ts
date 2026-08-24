@@ -3,9 +3,9 @@ export const siteConfig = {
   shortName: "Veriq",
   defaultTitle: "Des Moines Web Design, SEO & Conversion | Veriq",
   tagline:
-    "Web design, local SEO, conversion-focused functionality, and ongoing website support.",
+    "Custom websites, local SEO, conversion-focused functionality, and ongoing support.",
   description:
-    "Veriq is a Des Moines web design studio that builds and improves custom and Squarespace websites with local SEO, conversion-focused functionality, and ongoing support.",
+    "Veriq is a Des Moines studio for custom website design and development, local SEO, Google Business Profile assistance, conversion tools, and ongoing support.",
   url: "https://www.veriqdigital.com",
   locale: "en_US",
   location: {
@@ -91,8 +91,8 @@ export const footerGroups = [
     links: [
       { label: "Web Design & Development", href: "/services#web-design-development" },
       { label: "Custom Websites", href: "/services#custom-websites" },
-      { label: "Squarespace Websites", href: "/services#squarespace-websites" },
       { label: "Website Redesign", href: "/services#website-redesigns" },
+      { label: "Website Growth", href: "/services#website-growth" },
       { label: "SEO & Local Visibility", href: "/services#seo-growth" },
       { label: "Conversion & Website Tools", href: "/services#custom-website-tools" },
       { label: "Website Support", href: "/services#ongoing-support" },

@@ -4,71 +4,70 @@ import styles from "./HomepageSections.module.css";
 
 const processSteps = [
   ["Discover", "Understand the business, customer, goals, and constraints."],
-  ["Strategy", "Define the message, structure, platform, and path to action."],
+  ["Strategy", "Define the message, structure, functionality, and path to action."],
   ["Design", "Shape the responsive experience around real content."],
   ["Build", "Implement, integrate, and test the approved direction."],
   ["Launch", "Deploy carefully and confirm the technical foundations."],
   ["Improve", "Use support, SEO, and iteration where they add value."],
 ] as const;
 
-export default function HomePlatformProcess() {
+export default function HomeWebsiteApproach() {
   return (
     <>
-      <section className={styles.platform} aria-labelledby="platform-title">
+      <section className={styles.approach} aria-labelledby="approach-title">
         <Container>
-          <div className={styles.platformIntro}>
-            <h2 id="platform-title">
-              Pick the right platform for your business.
+          <div className={styles.approachIntro}>
+            <h2 id="approach-title">
+              Start with the website problem.
             </h2>
             <p>
-              Veriq works in Squarespace and custom development. The choice
-              follows the content, functionality, editing needs, timeline, and
-              long-term plan.
+              Some businesses need a completely new custom website. Others need
+              to replace what is holding an existing site back. Veriq starts
+              with the business, customer journey, and next useful outcome.
             </p>
           </div>
 
-          <div className={styles.platformComparison}>
+          <div className={styles.approachComparison}>
             <article>
-              <div className={styles.platformTitle}>
-                <span>Managed platform</span>
-                <h3>Squarespace</h3>
+              <div className={styles.approachTitle}>
+                <span>New website</span>
+                <h3>Build something new</h3>
               </div>
               <p>
-                A strong fit for many marketing-focused business websites that
-                need a polished launch and a straightforward editing model.
+                Plan, design, and develop a custom website around what customers
+                need to understand, trust, and do next.
               </p>
               <ul>
-                <li>Easy content editing</li>
-                <li>Faster implementation</li>
-                <li>Standard forms and integrations</li>
-                <li>Lower technical complexity</li>
+                <li>Custom responsive design</li>
+                <li>Modern Next.js development</li>
+                <li>Search-ready page structure</li>
+                <li>Clear conversion paths</li>
               </ul>
             </article>
 
             <article>
-              <div className={styles.platformTitle}>
-                <span>Purpose-built</span>
-                <h3>Custom development</h3>
+              <div className={styles.approachTitle}>
+                <span>Existing presence</span>
+                <h3>Improve what you have</h3>
               </div>
               <p>
-                The better route when the website needs specialized customer
-                interactions, a unique interface, conversion tools, or
-                customer-facing integrations.
+                Rebuild an ineffective website or strengthen its visibility,
+                conversion path, and customer-facing functionality.
               </p>
               <ul>
-                <li>Quote and estimate tools</li>
-                <li>Maximum interface flexibility</li>
-                <li>Booking and ordering experiences</li>
-                <li>Calculators and lead capture</li>
+                <li>Website redesigns</li>
+                <li>SEO and local visibility</li>
+                <li>Google Business Profile assistance</li>
+                <li>Quote, booking, and lead tools</li>
               </ul>
             </article>
           </div>
 
           <Link
-            className={styles.platformLink}
-            href="/resources/custom-website-vs-template-for-small-business"
+            className={styles.approachLink}
+            href="/services"
           >
-            Compare custom websites and managed platforms
+            Explore website services
             <span aria-hidden="true">↗</span>
           </Link>
         </Container>
@@ -84,7 +83,7 @@ export default function HomePlatformProcess() {
               </h2>
             </div>
             <p>
-              You do not need a finished brief or a platform picked out. We
+              You do not need a finished brief or a technical approach picked out. We
               define the right scope together, make decisions visible, and keep
               the next step clear.
             </p>

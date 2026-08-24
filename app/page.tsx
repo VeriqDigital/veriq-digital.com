@@ -1,12 +1,12 @@
 /*
 THESIS: Veriq's homepage is a working sales path, not a thin portfolio index.
 OWN-WORLD: Preserve the graphite and warm-white surfaces, cyan signal color, oversized condensed headings, precise rules, and restrained technical detail already established across the site.
-STORY: A service-business owner understands the offer, recognizes what the website should accomplish, sees platform and process clarity, reviews real work, discovers the audit, and chooses a useful next step.
+STORY: A service-business owner understands the offer, recognizes what the website should accomplish, sees the available project approaches and process, reviews real work, discovers the audit, and chooses a useful next step.
 FIRST VIEWPORT: A compact two-column hero pairs the outcome-led offer and clear actions with the existing project inquiry form; credibility context sits directly below the actions.
 FORM: Brief-specified conversion sequence within the established Veriq world; no concept seed was used because the structure and visual constraints were explicit.
 */
 import HomepageCampaignOffer from "@/components/campaign/HomepageCampaignOffer";
-import HomePlatformProcess from "@/components/sections/HomePlatformProcess";
+import HomeWebsiteApproach from "@/components/sections/HomeWebsiteApproach";
 import HomeSeoAudit from "@/components/sections/HomeSeoAudit";
 import HomeTrustSection from "@/components/sections/HomeTrustSection";
 import HomeWhyGrowth, { HomeFinalCta } from "@/components/sections/HomeWhyGrowth";
@@ -53,7 +53,7 @@ export default function Home() {
         <Section id="services" className={styles.servicesChapter}>
           <ServicesSection />
         </Section>
-        <HomePlatformProcess />
+        <HomeWebsiteApproach />
         <Section id="works" className={styles.worksChapter}>
           <HomeWorksRail />
         </Section>

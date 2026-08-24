@@ -4,7 +4,7 @@ import WebsiteAuditLink from "@/components/ui/WebsiteAuditLink";
 import styles from "./HomepageSections.module.css";
 
 const trustPoints = [
-  "Custom or Squarespace",
+  "Custom-built websites",
   "Optimized for performance",
   "Conversion focused",
   "Mobile friendly",
