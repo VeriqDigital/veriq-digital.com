@@ -189,6 +189,26 @@
   text-align: right;
 }
 
+.auditDisclaimer {
+  max-width: 68ch;
+  margin-top: 0.65rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.auditDisclaimer a {
+  color: var(--primary-readable);
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.auditDisclaimer a:focus-visible {
+  outline: 3px solid var(--primary-readable);
+  outline-offset: 3px;
+}
+
 .inputError {
   color: #9f261c;
   font-weight: 700;

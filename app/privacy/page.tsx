@@ -20,7 +20,7 @@ export default function PrivacyPage() {
         <header className={styles.header}>
           <p>Privacy at Veriq</p>
           <h1>Privacy policy.</h1>
-          <p>Effective August 13, 2026</p>
+          <p>Effective August 24, 2026</p>
         </header>
 
         <div className={styles.content}>
@@ -28,10 +28,12 @@ export default function PrivacyPage() {
             <h2>Information we collect</h2>
             <p>
               We collect information you choose to submit through contact and
-              inquiry forms, such as your name, contact details, business
-              information, project needs, and message. Our hosting and analytics
-              providers may also process limited technical information needed to
-              operate, secure, and understand use of the site.
+              inquiry forms, such as your name, email, phone number when provided,
+              business or company information, website, project information or
+              message, campaign or source information, and other information you
+              intentionally provide. Our hosting and analytics providers may also
+              process limited technical information needed to operate, secure,
+              and understand use of the site.
             </p>
           </section>
 
@@ -55,12 +57,48 @@ export default function PrivacyPage() {
           </section>
 
           <section>
+            <h2>Analytics and advertising measurement</h2>
+            <p>
+              We use analytics and performance services to understand website
+              activity and may use Meta Pixel to measure advertising
+              effectiveness. Depending on the service and interaction, these
+              providers may receive technical usage information such as browser
+              or device details, pages viewed, interactions or events, and
+              referring information where available.
+            </p>
+            <p>
+              Individual website-audit report URLs and opaque report IDs are
+              intentionally excluded from Meta Pixel. Other analytics and
+              performance measurements replace individual report paths with a
+              generic report route and remove query strings and fragments before
+              an event is sent.
+            </p>
+          </section>
+
+          <section>
+            <h2>Inquiry and lead management</h2>
+            <p>
+              Contact submissions start a conversation with Veriq. We use Resend
+              for transactional email and, when configured, may also use a private
+              lead or customer relationship management system to store and manage
+              inquiries. The information processed may include the form details
+              described above, including campaign or source information when it
+              accompanies a submission.
+            </p>
+            <p>
+              Contact-form submitters are not added to a marketing list solely
+              because they sent an inquiry, and website-audit report recipients
+              are not added to a mailing list.
+            </p>
+          </section>
+
+          <section>
             <h2>How information is used</h2>
             <p>
               We use submitted information to respond to requests, deliver the
               services you ask for, protect the site from abuse, troubleshoot
-              failures, and improve site performance. We do not add website-audit
-              recipients to a mailing list or sell personal information.
+              failures, and improve site performance. We do not sell personal
+              information.
             </p>
           </section>
 
@@ -69,9 +107,12 @@ export default function PrivacyPage() {
             <p>
               We use service providers such as Vercel for hosting and private audit
               storage, Google for PageSpeed Insights, and Resend for transactional
-              email. They process information on our behalf under their own terms.
-              Contact and project correspondence may be retained as reasonably
-              necessary for the relationship, legal obligations, and security.
+              email. Analytics, advertising measurement, and optional private lead
+              management providers may also process information for the purposes
+              described above. These providers process information under their own
+              terms. Contact and project correspondence may be retained as
+              reasonably necessary for the relationship, legal obligations, and
+              security.
             </p>
           </section>
 

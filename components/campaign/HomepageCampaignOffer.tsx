@@ -17,9 +17,6 @@ const HomepageCampaignOffer = ({ campaign }: HomepageCampaignOfferProps) => {
           <span aria-hidden="true" />
           {campaign.eyebrow}
         </p>
-        <p className={styles.spotBadge}>
-          <strong>{campaign.spotCount}</strong> spots available
-        </p>
       </div>
 
       <h2 id="homepage-campaign-heading" className={styles.campaignHeading}>
@@ -34,7 +31,6 @@ const HomepageCampaignOffer = ({ campaign }: HomepageCampaignOfferProps) => {
           offer={campaign.offer}
           page={campaign.page}
           source={campaign.source}
-          spotCount={campaign.spotCount}
         />
       </div>
     </aside>
