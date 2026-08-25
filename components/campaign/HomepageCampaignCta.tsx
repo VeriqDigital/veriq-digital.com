@@ -17,7 +17,6 @@ export type CampaignTracking = Pick<
 
 type HomepageCampaignCtaProps = CampaignTracking & {
   ctaLabel: string;
-  spotCount: number;
 };
 
 const HomepageCampaignCta = ({
@@ -25,7 +24,6 @@ const HomepageCampaignCta = ({
   offer,
   page,
   source,
-  spotCount,
 }: HomepageCampaignCtaProps) => {
   const [hasOpened, setHasOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -38,8 +36,8 @@ const HomepageCampaignCta = ({
     }
 
     hasTrackedView.current = true;
-    track("free_offer_viewed", { offer, page, source, spotCount });
-  }, [offer, page, source, spotCount]);
+    track("free_offer_viewed", { offer, page, source });
+  }, [offer, page, source]);
 
   const openModal = () => {
     track("free_offer_opened", tracking);
@@ -67,7 +65,6 @@ const HomepageCampaignCta = ({
           onClose={() => setIsOpen(false)}
           page={page}
           source={source}
-          spotCount={spotCount}
         />
       )}
     </>

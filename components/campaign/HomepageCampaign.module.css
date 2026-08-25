@@ -38,21 +38,6 @@
   background: var(--primary);
 }
 
-.spotBadge {
-  flex: none;
-  border-radius: 999px;
-  background: var(--primary);
-  color: #071010;
-  padding: 0.42rem 0.72rem;
-  font-size: 0.72rem;
-  font-weight: 750;
-  line-height: 1;
-}
-
-.spotBadge strong {
-  font-family: var(--font-mono);
-}
-
 .campaignHeading {
   max-width: 19ch;
   margin-top: 1rem;
@@ -348,10 +333,6 @@
 
   .campaignHeader {
     gap: 0.8rem;
-  }
-
-  .spotBadge {
-    align-self: flex-start;
   }
 
   .campaignHeading {

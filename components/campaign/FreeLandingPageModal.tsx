@@ -13,7 +13,6 @@ import styles from "./HomepageCampaign.module.css";
 type FreeLandingPageModalProps = CampaignTracking & {
   isOpen: boolean;
   onClose: () => void;
-  spotCount: number;
 };
 
 const focusableSelector = [
@@ -31,7 +30,6 @@ const FreeLandingPageModal = ({
   onClose,
   page,
   source,
-  spotCount,
 }: FreeLandingPageModalProps) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -189,7 +187,7 @@ const FreeLandingPageModal = ({
         }
       >
         <div className={styles.modalHeader}>
-          <p className={styles.modalEyebrow}>Limited Iowa business offer</p>
+          <p className={styles.modalEyebrow}>Free landing-page concept</p>
           <button
             type="button"
             className={styles.modalClose}
@@ -210,10 +208,10 @@ const FreeLandingPageModal = ({
             <span className={styles.successMark} aria-hidden="true">
               ✓
             </span>
-            <h2 id="free-offer-success-title">You’re on the list</h2>
+            <h2 id="free-offer-success-title">Request received</h2>
             <p id="free-offer-success-description">
-              Thanks — I’ll review your business and reach out personally by
-              email.
+              Thanks — I’ll review your business and follow up personally by
+              email about whether the initial concept is a fit.
             </p>
             <button type="button" onClick={onClose}>
               Close
@@ -222,10 +220,11 @@ const FreeLandingPageModal = ({
         ) : (
           <>
             <div className={styles.modalIntro}>
-              <h2 id="free-offer-title">Reserve your free landing page</h2>
+              <h2 id="free-offer-title">Request a free landing-page concept</h2>
               <p id="free-offer-description">
-                Share two details so I can review your business for one of the
-                {` ${spotCount} available ${spotCount === 1 ? "spot" : "spots"}.`}
+                Share a few details so I can review your business. If Veriq
+                offers an initial custom concept, that concept is provided at no
+                charge and without an obligation to purchase additional work.
               </p>
             </div>
 
@@ -278,12 +277,13 @@ const FreeLandingPageModal = ({
                 className={styles.submitButton}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Reserving…" : "Reserve my spot"}
+                {isSubmitting ? "Sending…" : "Send concept request"}
               </button>
 
               <p className={styles.reassurance}>
-                No spam. I’ll personally review your business and follow up by
-                email.
+                Additional pages, functionality, deployment, support, or a
+                larger engagement may be scoped and priced separately. This
+                request does not create a paid client agreement.
               </p>
 
               {submitError && (

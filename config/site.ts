@@ -46,7 +46,6 @@ export const siteConfig = {
 
 export type HomepageCampaignConfig = {
   enabled: boolean;
-  spotCount: number;
   eyebrow: string;
   heading: string;
   description: string;
@@ -62,14 +61,13 @@ const auditNavigationEnabled =
 
 export const homepageCampaign: HomepageCampaignConfig = {
   enabled: false,
-  spotCount: 3,
-  eyebrow: "FOR IOWA SERVICE BUSINESSES",
-  heading: "Free Custom Landing Page",
+  eyebrow: "FREE LANDING-PAGE CONCEPT",
+  heading: "Custom Landing Page Concept",
   description:
-    "Custom designed specifically for your business.",
+    "Veriq may design an initial custom landing-page concept for your business at no charge.",
   supportingText:
-    "No contracts. No obligation.",
-  ctaLabel: "Claim My Spot",
+    "No obligation to purchase more. Additional pages, functionality, deployment, support, or a larger engagement are scoped and priced separately.",
+  ctaLabel: "Request a Free Concept",
   source: "homepage-free-landing-page",
   offer: "free-landing-page",
   page: "homepage",
@@ -127,6 +125,9 @@ export const footerGroups = [
   },
   {
     label: "Legal",
-    links: [{ label: "Privacy", href: "/privacy" }],
+    links: [
+      { label: "Privacy", href: "/privacy" },
+      { label: "Terms", href: "/terms" },
+    ],
   },
 ] as const;

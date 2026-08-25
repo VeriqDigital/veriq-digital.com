@@ -202,7 +202,7 @@ const getLeadHomePayload = (lead: Lead) => {
 
 const getAutoReplyText = (lead: Lead) =>
   lead.type === "free-landing-page"
-    ? "You’re on the list. I’ll review your business and follow up personally by email."
+    ? "Thanks for your interest in a free initial landing-page concept. I’ll review your business and follow up personally by email. Additional work, if any, would be discussed and priced separately."
     : `Thanks for contacting ${siteConfig.name}. We received your message and will get back to you within one business day.`;
 
 export async function POST(request: Request) {
@@ -409,7 +409,7 @@ export async function POST(request: Request) {
       to: lead.email,
       subject:
         lead.type === "free-landing-page"
-          ? "You’re on the free landing page list"
+          ? "We received your landing-page concept request"
           : "We received your request",
       text: getAutoReplyText(lead),
     })

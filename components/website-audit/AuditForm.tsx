@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
@@ -225,6 +226,11 @@ export default function AuditForm() {
           ) : null}
         </p>
       </div>
+      <p className={styles.auditDisclaimer}>
+        Automated informational assessment. Results are not a certification of
+        accessibility, security, legal compliance, or search performance. See
+        the <Link href="/terms">Terms</Link>.
+      </p>
     </form>
   );
 }
