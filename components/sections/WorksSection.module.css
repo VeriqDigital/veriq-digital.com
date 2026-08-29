@@ -125,6 +125,10 @@
   text-transform: uppercase;
 }
 
+.projectType {
+  margin-top: 0.45rem;
+}
+
 .projectSummary {
   max-width: 58ch;
   margin-top: 0.85rem;

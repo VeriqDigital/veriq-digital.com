@@ -11,7 +11,7 @@ const Footer = () => {
         <div className={styles.top}>
           <div className={styles.brand}>
             <Link href="/" className={styles.logo}>
-              {siteConfig.shortName}
+              {siteConfig.name}
             </Link>
             <p>{siteConfig.tagline}</p>
             <span>Des Moines, Iowa &middot; Local + remote</span>

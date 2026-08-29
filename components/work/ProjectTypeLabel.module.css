@@ -1,0 +1,12 @@
+.label {
+  display: inline-block;
+  max-width: 100%;
+  color: var(--primary-readable);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 650;
+  letter-spacing: 0.11em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}

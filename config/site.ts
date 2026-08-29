@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Veriq",
-  shortName: "Veriq",
+  shortName: "Veriq Digital",
   brandSlogan: "COMMAND ATTENTION.",
   defaultTitle: "Des Moines Web Design, SEO & Conversion | Veriq",
   tagline:
@@ -61,13 +61,13 @@ const auditNavigationEnabled =
 
 export const homepageCampaign: HomepageCampaignConfig = {
   enabled: false,
-  eyebrow: "FREE LANDING-PAGE CONCEPT",
-  heading: "Custom Landing Page Concept",
+  eyebrow: "FREE HOMEPAGE CONCEPT",
+  heading: "Your new website starts free.",
   description:
-    "Veriq may design an initial custom landing-page concept for your business at no charge.",
+    "I’ll design and build your new homepage at no charge so you can see what Veriq can do before deciding whether you want to go any further.",
   supportingText:
-    "No obligation to purchase more. Additional pages, functionality, deployment, support, or a larger engagement are scoped and priced separately.",
-  ctaLabel: "Request a Free Concept",
+    "No contract. No obligation. Additional pages, functionality, deployment, ongoing support, and larger engagements are scoped separately.",
+  ctaLabel: "Request Your Free Homepage",
   source: "homepage-free-landing-page",
   offer: "free-landing-page",
   page: "homepage",

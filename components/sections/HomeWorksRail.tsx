@@ -6,12 +6,13 @@ import HomeWorksRailTrack, {
 import styles from "./HomeWorksRail.module.css";
 
 const railProjects: HomeWorksRailProject[] = projects.map(
-  ({ slug, title, category, image, imageAlt }) => ({
+  ({ slug, title, category, image, imageAlt, projectType }) => ({
     slug,
     title,
     category,
     image,
     imageAlt,
+    projectType,
   }),
 );
 

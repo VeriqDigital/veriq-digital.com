@@ -187,12 +187,12 @@ const FreeLandingPageModal = ({
         }
       >
         <div className={styles.modalHeader}>
-          <p className={styles.modalEyebrow}>Free landing-page concept</p>
+          <p className={styles.modalEyebrow}>Free homepage concept</p>
           <button
             type="button"
             className={styles.modalClose}
             onClick={onClose}
-            aria-label="Close free landing page form"
+            aria-label="Close free homepage form"
           >
             <span aria-hidden="true">&times;</span>
           </button>
@@ -211,7 +211,7 @@ const FreeLandingPageModal = ({
             <h2 id="free-offer-success-title">Request received</h2>
             <p id="free-offer-success-description">
               Thanks — I’ll review your business and follow up personally by
-              email about whether the initial concept is a fit.
+              email about the next step for your homepage.
             </p>
             <button type="button" onClick={onClose}>
               Close
@@ -220,11 +220,11 @@ const FreeLandingPageModal = ({
         ) : (
           <>
             <div className={styles.modalIntro}>
-              <h2 id="free-offer-title">Request a free landing-page concept</h2>
+              <h2 id="free-offer-title">Request your free homepage</h2>
               <p id="free-offer-description">
-                Share a few details so I can review your business. If Veriq
-                offers an initial custom concept, that concept is provided at no
-                charge and without an obligation to purchase additional work.
+                Share a few details so I can review your business. I’ll design
+                and build the initial homepage at no charge, with no obligation
+                to continue into a larger engagement.
               </p>
             </div>
 
@@ -277,13 +277,12 @@ const FreeLandingPageModal = ({
                 className={styles.submitButton}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Sending…" : "Send concept request"}
+                {isSubmitting ? "Sending…" : "Send homepage request"}
               </button>
 
               <p className={styles.reassurance}>
-                Additional pages, functionality, deployment, support, or a
-                larger engagement may be scoped and priced separately. This
-                request does not create a paid client agreement.
+                No contract. Additional pages, functionality, deployment,
+                ongoing support, and larger engagements are scoped separately.
               </p>
 
               {submitError && (

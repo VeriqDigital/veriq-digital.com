@@ -147,7 +147,7 @@ const Navbar = () => {
           href="/"
           className="font-sans text-3xl font-black uppercase tracking-wide text-(--nav-text) md:text-4xl"
         >
-          {siteConfig.shortName}
+          {siteConfig.name}
         </Link>
 
         <div className="ml-auto hidden items-center gap-7 lg:flex xl:gap-8">

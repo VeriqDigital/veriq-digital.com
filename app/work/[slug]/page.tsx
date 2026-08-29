@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Container from "@/components/ui/Container";
+import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
 import { createPageMetadata } from "@/config/seo";
 import { getProject, projects } from "@/data/projects";
 
@@ -60,6 +61,10 @@ export default async function ProjectPage({ params }: WorkPageProps) {
             <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-(--primary-readable)">
               {project.category} · {project.year}
             </p>
+            <ProjectTypeLabel
+              className="mb-4 block"
+              projectType={project.projectType}
+            />
             <h1 className="max-w-5xl font-sans text-6xl font-black uppercase leading-[0.9] tracking-[-0.04em] md:text-8xl lg:text-9xl">
               {project.title}
             </h1>
