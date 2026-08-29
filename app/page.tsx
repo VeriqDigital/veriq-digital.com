@@ -9,7 +9,9 @@ import HomepageCampaignOffer from "@/components/campaign/HomepageCampaignOffer";
 import HomeWebsiteApproach from "@/components/sections/HomeWebsiteApproach";
 import HomeSeoAudit from "@/components/sections/HomeSeoAudit";
 import HomeTrustSection from "@/components/sections/HomeTrustSection";
-import HomeWhyGrowth, { HomeFinalCta } from "@/components/sections/HomeWhyGrowth";
+import HomeWhyGrowth, {
+  HomeFinalCta,
+} from "@/components/sections/HomeWhyGrowth";
 import FAQ from "@/components/sections/FAQ";
 import Hero from "@/components/sections/Hero";
 import HomeWorksRail from "@/components/sections/HomeWorksRail";
@@ -50,13 +52,13 @@ export default function Home() {
           }
         />
         <HomeTrustSection auditEnabled={auditEnabled} />
+        <Section id="works" className={styles.worksChapter}>
+          <HomeWorksRail />
+        </Section>
         <Section id="services" className={styles.servicesChapter}>
           <ServicesSection />
         </Section>
         <HomeWebsiteApproach />
-        <Section id="works" className={styles.worksChapter}>
-          <HomeWorksRail />
-        </Section>
         <HomeSeoAudit auditEnabled={auditEnabled} />
         <HomeWhyGrowth />
         <Section id="faq" className={styles.faqChapter}>
