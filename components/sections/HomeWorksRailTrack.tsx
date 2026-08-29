@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
+import type { ProjectType } from "@/data/projects";
 import styles from "./HomeWorksRail.module.css";
 
 export type HomeWorksRailProject = {
@@ -11,6 +13,7 @@ export type HomeWorksRailProject = {
   category: string;
   image: string;
   imageAlt: string;
+  projectType: ProjectType;
 };
 
 type HomeWorksRailTrackProps = {
@@ -285,6 +288,10 @@ const ProjectSequence = ({
             <div>
               <h3>{project.title}</h3>
               <p>{project.category}</p>
+              <ProjectTypeLabel
+                className={styles.projectType}
+                projectType={project.projectType}
+              />
             </div>
             <span aria-hidden="true">↗</span>
           </div>

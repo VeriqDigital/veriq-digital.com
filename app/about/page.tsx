@@ -78,9 +78,10 @@ export default function AboutPage() {
               </h1>
               <div className={styles.heroSummary}>
                 <p>
-                  Veriq is an independent digital studio creating websites and
-                  customer-facing experiences that help businesses get found,
-                  earn trust, and turn interest into action.
+                  Veriq, also known as Veriq Digital, is an independent Des
+                  Moines studio creating websites and customer-facing
+                  experiences that help businesses get found, earn trust, and
+                  turn interest into action.
                 </p>
                 <div className={styles.heroActions}>
                   <Link href="#philosophy" className={styles.primaryLink}>

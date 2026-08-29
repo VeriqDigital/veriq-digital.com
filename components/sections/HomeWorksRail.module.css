@@ -140,6 +140,10 @@
   text-transform: uppercase;
 }
 
+.projectType {
+  margin-top: 0.35rem;
+}
+
 .projectMeta > span {
   color: var(--primary-readable);
   font-size: 1.15rem;

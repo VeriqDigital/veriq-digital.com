@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
 import { projects } from "@/data/projects";
 import styles from "./WorksSection.module.css";
 
@@ -57,6 +58,10 @@ const WorksSection = ({ headingLevel = "h2" }: WorksSectionProps) => {
                   <span aria-hidden="true">↗</span>
                 </div>
                 <p className={styles.projectCategory}>{project.category}</p>
+                <ProjectTypeLabel
+                  className={styles.projectType}
+                  projectType={project.projectType}
+                />
                 <p className={styles.projectSummary}>{project.summary}</p>
               </div>
             </Link>

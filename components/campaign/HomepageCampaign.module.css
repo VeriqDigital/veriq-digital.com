@@ -91,6 +91,9 @@
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 72%, transparent);
+  background: transparent;
+  color: var(--primary);
   padding: 0.75rem 1rem;
   font-size: 0.76rem;
   letter-spacing: 0.04em;
@@ -102,6 +105,10 @@
 .successState button:hover {
   background: var(--primary-hover);
   transform: translateY(-1px);
+}
+
+.campaignCta:hover {
+  color: #071010;
 }
 
 .campaignCta:focus-visible,

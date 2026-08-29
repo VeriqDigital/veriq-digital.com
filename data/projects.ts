@@ -1,3 +1,5 @@
+export type ProjectType = "client" | "concept" | "independent";
+
 export type Project = {
   slug: string;
   title: string;
@@ -13,8 +15,18 @@ export type Project = {
   outcome: string;
   timeframe: string;
   team: string;
+  projectType: ProjectType;
   services: readonly string[];
 };
+
+const projectTypeLabels = {
+  client: null,
+  concept: "Concept project",
+  independent: "Independent project",
+} as const satisfies Record<ProjectType, string | null>;
+
+export const getProjectTypeLabel = (projectType: ProjectType) =>
+  projectTypeLabels[projectType];
 
 export const projects: readonly Project[] = [
   {
@@ -22,7 +34,7 @@ export const projects: readonly Project[] = [
     title: "Iron Palace",
     seoTitle: "Iron Palace Gym Website Concept",
     category: "Gym concept website",
-    year: "Demo",
+    year: "2026",
     image: "/work/iron-palace.png",
     imageAlt:
       "Iron Palace gym website with a dark architectural hero and bold headline",
@@ -37,14 +49,15 @@ export const projects: readonly Project[] = [
       "The finished demo pairs a dramatic, editorial visual system with focused calls to action and a clear multi-page structure. It demonstrates how a local fitness brand can feel premium without sacrificing usability.",
     timeframe: "Concept build",
     team: "Solo project",
+    projectType: "concept",
     services: ["Creative direction", "Web design", "Frontend development", "Responsive design"],
   },
   {
     slug: "abc-auto-repair",
     title: "ABC Auto Repair",
     seoTitle: "ABC Auto Repair Website Demo",
-    category: "Auto repair demo website",
-    year: "Demo",
+    category: "Auto repair website",
+    year: "2026",
     image: "/work/abc-auto.png",
     imageAlt:
       "ABC Auto Repair website with a repair-shop hero and orange call-to-action",
@@ -59,6 +72,7 @@ export const projects: readonly Project[] = [
       "The demo uses a strong service hierarchy, trust indicators, quote-focused calls to action, and dedicated customer and admin entry points. It shows how a traditional local business can feel dependable and current online.",
     timeframe: "Concept build",
     team: "Solo project",
+    projectType: "concept",
     services: ["UX/UI design", "Web development", "Quote flow", "Responsive design"],
   },
   {
@@ -81,6 +95,7 @@ export const projects: readonly Project[] = [
       "The new portfolio website features a modern design, improved performance, and a better user experience. It effectively showcases my work and skills as a software engineer, and has received positive feedback from visitors.",
     timeframe: "1 week",
     team: "Solo project",
+    projectType: "independent",
     services: ["Creative direction", "Web design", "Frontend development", "Responsive design"],
   },
 ] as const;
