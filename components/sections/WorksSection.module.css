@@ -22,7 +22,7 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
-  color: var(--muted);
+  color: var(--accent-text);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 650;

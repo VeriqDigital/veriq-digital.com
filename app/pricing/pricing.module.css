@@ -37,7 +37,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: var(--primary);
+  color: var(--accent-text);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 650;
@@ -132,7 +132,7 @@
 
 .secondaryLink:hover {
   border-color: var(--primary);
-  color: var(--primary);
+  color: var(--accent-text);
 }
 
 .startingPoint {
@@ -192,7 +192,7 @@
 .startingPoint a:hover,
 .contextLinks a:hover {
   border-color: var(--primary);
-  color: var(--primary);
+  color: var(--accent-text);
 }
 
 .pricing,
@@ -381,12 +381,14 @@
 }
 
 .factors {
+  --accent-text: var(--primary);
+
   background: var(--surface);
   color: var(--surface-foreground);
 }
 
 .factors .sectionLabel {
-  color: var(--primary);
+  color: var(--accent-text);
 }
 
 .factors .factorIntro > p {

@@ -15,6 +15,7 @@
   --primary: #4ef2f2;
   --primary-hover: #40c5c5;
   --primary-readable: var(--primary);
+  --accent-text: #087272;
   --border: #2d3132;
   --container-width: 1280px;
   --radius-sm: 6px;

@@ -1,5 +1,5 @@
 .kicker {
-  color: var(--primary-readable);
+  color: var(--accent-text);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
@@ -467,6 +467,10 @@
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
+}
+
+.audit .kicker {
+  color: var(--primary);
 }
 
 .audit h2 {
