@@ -26,7 +26,7 @@ export default function HomeSeoAudit({
         <Container>
           <div className={styles.seoLayout}>
             <div>
-              <h2 id="seo-title">SEO is the name of the game.</h2>
+              <h2 id="seo-title">Built to be found.</h2>
               <p className={styles.seoCopy}>
                 Search visibility is shaped by how the site is planned, written,
                 built, and maintained. Veriq considers the foundations early so

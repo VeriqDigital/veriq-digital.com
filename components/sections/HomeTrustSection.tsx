@@ -8,7 +8,7 @@ const trustPoints = [
   "Optimized for performance",
   "Conversion focused",
   "Mobile friendly",
-  "Built around your business",
+  "Ongoing support",
 ] as const;
 
 const websiteJobs = [

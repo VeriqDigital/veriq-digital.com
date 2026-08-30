@@ -60,7 +60,6 @@ export default function Home() {
         </Section>
         <HomeWebsiteApproach />
         <HomeSeoAudit auditEnabled={auditEnabled} />
-        <HomeWhyGrowth />
         <Section id="faq" className={styles.faqChapter}>
           <FAQ />
         </Section>
