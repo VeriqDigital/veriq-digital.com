@@ -9,6 +9,7 @@ export type WebsiteAuditPlacement =
   | "homepage_quality"
   | "homepage_seo"
   | "homepage_audit"
+  | "pricing_included"
   | "services_hero"
   | "services_seo"
   | "services_closing"

@@ -52,6 +52,11 @@
   text-transform: uppercase;
 }
 
+.kicker,
+.sectionLabel {
+  color: var(--accent-text);
+}
+
 .kicker {
   display: flex;
   align-items: center;
@@ -63,7 +68,7 @@
   content: "";
   width: 2.5rem;
   height: 2px;
-  background: currentColor;
+  background: var(--primary);
 }
 
 .hero h1 {

@@ -53,7 +53,7 @@
 
 .eyebrow,
 .sectionLabel {
-  color: var(--primary-readable);
+  color: var(--accent-text);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
@@ -77,7 +77,7 @@
 }
 
 .hero .eyebrow {
-  color: var(--muted);
+  color: var(--accent-text);
   font-size: 0.72rem;
   font-weight: 650;
   letter-spacing: 0.16em;

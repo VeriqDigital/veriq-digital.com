@@ -76,7 +76,7 @@ const FloatingBookingCta = () => {
     return () => observer.disconnect();
   }, []);
 
-  if (pathname === "/contact") {
+  if (pathname === "/contact" || pathname === "/pricing") {
     return null;
   }
 

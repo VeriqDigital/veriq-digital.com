@@ -10,6 +10,8 @@ export type BookingPlacement =
   | "floating_desktop"
   | "floating_mobile"
   | "navbar"
+  | "pricing_closing"
+  | "pricing_hero"
   | "small_business_web_design_closing"
   | "services_hero"
   | "services_closing"

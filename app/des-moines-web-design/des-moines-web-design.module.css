@@ -42,7 +42,7 @@
 
 .kicker,
 .sectionLabel {
-  color: var(--muted);
+  color: var(--accent-text);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
@@ -55,14 +55,14 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
-  color: var(--primary-readable);
+  color: var(--accent-text);
 }
 
 .kicker::before {
   content: "";
   width: 2.75rem;
   height: 2px;
-  background: currentColor;
+  background: var(--primary);
 }
 
 .hero h1 {

@@ -43,12 +43,12 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.4rem;
-  color: var(--primary-readable);
+  color: var(--accent-text);
 }
 
 .indexHero .kicker {
   margin-bottom: 1.5rem;
-  color: var(--muted);
+  color: var(--accent-text);
   font-size: 0.72rem;
   font-weight: 650;
   letter-spacing: 0.16em;
@@ -64,7 +64,7 @@
   content: "";
   width: 2.75rem;
   height: 2px;
-  background: currentColor;
+  background: var(--primary);
 }
 
 .indexHero h1,
