@@ -197,7 +197,7 @@
 }
 
 .approach {
-  background: var(--background);
+  background: var(--background-soft);
 }
 
 .approachIntro {
@@ -298,7 +298,7 @@
 }
 
 .process {
-  background: var(--background-soft);
+  background: var(--background);
 }
 
 .process h2 {
