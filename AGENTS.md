@@ -106,7 +106,32 @@ Do not flood every section with cyan.
 
 Do not introduce unrelated purple, blue-gradient, neon, glassmorphism, or trendy SaaS visual systems.
 
-All Veriq cyan/blue brand accents should use the same canonical accent color as the primary CTA buttons unless a specific semantic state requires otherwise.
+### Cyan / Accent Color Usage
+
+Veriq has one canonical cyan brand hue, but accessibility and context take priority over forcing the exact same hex value into every use.
+
+- Use the canonical bright Veriq cyan used by primary CTA buttons for:
+  - Primary CTA backgrounds
+  - Larger graphical accents
+  - Decorative rules and lines
+  - Checkmarks and non-text indicators
+  - Other elements where the bright cyan has sufficient contrast
+
+- For small cyan text on light backgrounds, including eyebrows, section labels, metadata, and small text links, use a darker accessible variant of the same cyan hue when necessary for readability and WCAG contrast.
+
+- All elements serving the same role should use the same token. For example, all light-background eyebrow text should use the same accessible cyan rather than arbitrary variations.
+
+- Do not introduce unrelated blue, teal, or cyan shades for aesthetic variety.
+
+- Do not sacrifice readability or accessibility merely to make two elements use an identical hex value.
+
+- Decorative cyan elements and cyan text do not need to use the exact same value when their contrast requirements differ.
+
+- When creating or modifying color tokens, prefer semantic roles such as `--accent`, `--accent-text`, or the repository's existing equivalent rather than scattering hard-coded color values throughout components.
+
+- Before using the bright accent for text, verify that the foreground/background combination has sufficient contrast. If it does not, use the established accessible accent-text variant instead.
+
+The goal is a visually unified cyan identity with consistent semantic usage, not one hex value applied indiscriminately.
 
 ## 3. Command Attention is a philosophy, not decoration
 
