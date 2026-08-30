@@ -5,15 +5,15 @@
 }
 
 .servicesChapter {
-  background: var(--background-soft);
-}
-
-.worksChapter {
   background: var(--background);
 }
 
-.faqChapter {
+.worksChapter {
   background: var(--background-soft);
+}
+
+.faqChapter {
+  background: var(--background);
 }
 
 @media (max-width: 960px) {

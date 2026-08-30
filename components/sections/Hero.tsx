@@ -18,28 +18,19 @@ const Hero = ({ auditEnabled, campaign }: HeroProps) => {
         <div className={styles.layout}>
           <div className={styles.content}>
             <h1 className={styles.title}>
-              Get found. Earn trust.
-              <span>Turn leads into customers.</span>
+              Custom websites.
+              <span>That turn leads into customers.</span>
             </h1>
             <p className={styles.description}>
-              Veriq designs and develops custom websites that help businesses
-              get found, earn trust, and turn visitors into customers. We also
-              stick around after launch for SEO, improvements, and support.
+              Built around your business, your customers, and the actions you
+              want them to take. Veriq combines strategy, design, development,
+              and SEO to create a site that works as hard as your business does.
             </p>
             <div className={styles.actions}>
-              <Button href="/contact">Start a project</Button>
-              {auditEnabled ? (
-                <WebsiteAuditLink
-                  placement="homepage_hero"
-                  className={getButtonClassName("secondary")}
-                >
-                  Audit your website
-                </WebsiteAuditLink>
-              ) : (
-                <Button href="/work" variant="secondary">
-                  View our work
-                </Button>
-              )}
+              <Button href="/contact">Book a call</Button>
+              <Button href="/contact" variant="secondary">
+                Start a project
+              </Button>
             </div>
             <ul className={styles.context} aria-label="Veriq at a glance">
               <li>Based in Des Moines</li>
