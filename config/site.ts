@@ -75,6 +75,7 @@ export const homepageCampaign: HomepageCampaignConfig = {
 
 export const navigation = [
   { label: "Services", href: "/services" },
+  { label: "Pricing", href: "/pricing" },
   { label: "Work", href: "/work" },
   ...(auditNavigationEnabled
     ? [{ label: "Website Audit", href: "/website-audit" } as const]
@@ -107,6 +108,7 @@ export const footerGroups = [
     label: "Company",
     links: [
       { label: "About", href: "/about" },
+      { label: "Pricing", href: "/pricing" },
       { label: "Work", href: "/work" },
       { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/contact" },

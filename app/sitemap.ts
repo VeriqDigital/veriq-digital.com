@@ -16,6 +16,11 @@ const staticRoutes: MetadataRoute.Sitemap = [
     priority: 0.9,
   },
   {
+    url: `${siteConfig.url}/pricing`,
+    changeFrequency: "monthly",
+    priority: 0.85,
+  },
+  {
     url: `${siteConfig.url}/des-moines-web-design`,
     changeFrequency: "monthly",
     priority: 0.95,
