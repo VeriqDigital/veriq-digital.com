@@ -19,16 +19,15 @@ export default function InformationArchitectureWebDesignArticle() {
           information.
         </p>
         <p>
-          This work happens before choosing colors, typefaces, or decorative
-          details. A business may already have a list of services, a service
-          area, team information, project photos, policies, and contact options.
-          Information architecture turns that material into a system a customer
-          can understand.
+          This comes before colors, typefaces, or decorative details. The raw
+          material may already exist: services, a service area, team
+          information, project photos, policies, and contact options. IA decides
+          how it fits together.
         </p>
         <p>
-          When I plan a website, I start with what people need to find and what
-          the business needs them to understand. The visual design has a much
-          better chance of working once those relationships are settled.
+          Start with what people need to find and what the business needs them
+          to understand. Visual design works better once those relationships are
+          settled.
         </p>
       </ArticleSection>
 
@@ -66,10 +65,10 @@ export default function InformationArchitectureWebDesignArticle() {
         </p>
         <ArticleCallout title="The menu is an output, not the starting point">
           <p>
-            Starting with a list of menu labels encourages a business to copy
-            another website&apos;s structure. Start with customer questions,
-            services, and required actions. The navigation can then expose the
-            parts people need most often.
+            If the first planning document is a menu, it is easy to copy another
+            website&apos;s structure without asking whether it fits. Start with
+            customer questions, services, and required actions. Then decide
+            what the navigation needs to expose.
           </p>
         </ArticleCallout>
       </ArticleSection>
@@ -87,10 +86,10 @@ export default function InformationArchitectureWebDesignArticle() {
         </p>
         <p>
           A service usually deserves its own page when it has a distinct
-          audience, scope, decision process, body of useful detail, or next
-          action. Closely related services can often share a page when separating
-          them would create several thin explanations with little meaningful
-          difference.
+          audience, scope, decision process, enough specific detail, or a
+          different next action. Closely related services can often share a page
+          when separating them would create several thin explanations that say
+          nearly the same thing.
         </p>
         <p>
           I would not create five pages merely because the business can name
@@ -144,11 +143,11 @@ export default function InformationArchitectureWebDesignArticle() {
           <li>Request a quote</li>
         </ul>
         <p>
-          This version uses terms a buyer can recognize and gives distinct
-          services room for the right process, constraints, and proof. It does
-          not mean every item belongs in the top navigation. The three service
-          pages might sit under one Services label, while the quote action stays
-          visible on every important page.
+          These labels tell a buyer what each page covers. Office cleaning,
+          medical facility cleaning, and floor care can each explain a different
+          process, constraint, and set of proof. They still do not all need a
+          spot in the top navigation. The three pages might sit under one
+          Services label, with the quote action visible on each page.
         </p>
         <p>
           A smaller cleaning company may not need all of these pages. If the
@@ -172,10 +171,10 @@ export default function InformationArchitectureWebDesignArticle() {
           looks attractive.
         </p>
         <p>
-          Better structure supports conversion by placing relevant proof and
-          actions near the information that creates the decision. It also gives
-          analytics more meaning: a business can see which service pages attract
-          attention and where people continue, rather than treating every visit
+          With better structure, relevant proof and actions can sit near the
+          information that leads to a decision. Analytics becomes easier to
+          interpret too. The business can see which service pages attract
+          attention and where people continue instead of treating every visit
           as one undifferentiated homepage session.
         </p>
         <p>
@@ -215,10 +214,9 @@ export default function InformationArchitectureWebDesignArticle() {
           <li>Test the labels and routes with someone who does not know the business from the inside.</li>
         </ol>
         <p>
-          The plan can change when real copy reveals a missing page or an
-          unnecessary split. That is healthy. It is cheaper to revise a sitemap
-          than to force finished content into an interface built around the
-          wrong assumptions.
+          Real copy may reveal a missing page or an unnecessary split. Change
+          the plan when that happens. Revising a sitemap is cheaper than forcing
+          finished content into an interface built around the wrong assumptions.
         </p>
         <p>
           On an existing site, first determine whether the structure can be

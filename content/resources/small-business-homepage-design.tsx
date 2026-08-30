@@ -14,16 +14,14 @@ export default function SmallBusinessHomepageDesignArticle() {
       >
         <p>
           A small-business homepage has to establish what the business does,
-          who it serves, and what someone can do next. It should also provide
-          enough proof and context for a visitor to decide where to continue.
-          That is a demanding job, but it is not the same as putting the entire
-          website on one page.
+          who it serves, and what someone can do next. It also needs enough
+          proof and context for a visitor to decide where to continue. It does
+          not need to put the entire website on one page.
         </p>
         <p>
-          When I plan a homepage, I treat it as an overview and a routing page.
-          It introduces the offer, shows the most important options, and sends
-          people toward a service, project, location, or contact action where
-          they can get the detail they need.
+          Treat the homepage as an overview and a routing page. It introduces
+          the offer, shows the most important options, and sends people toward a
+          service, project, location, or contact action with more detail.
         </p>
         <ArticleCallout title="Give people enough information to choose, then let them continue">
           <p>
@@ -71,10 +69,10 @@ export default function SmallBusinessHomepageDesignArticle() {
           ]}
         />
         <p>
-          The stronger version names the service, audience, and market. It also
-          uses an action that matches the likely buying process. The visitor no
-          longer has to infer what “quality” means or click a vague button to
-          discover what the company sells.
+          The stronger version names the service, audience, and market. “Request
+          a Quote” also fits how someone would actually hire a cleaning company.
+          The visitor no longer has to guess what “quality” means or click a
+          vague button to learn what the company sells.
         </p>
         <p>
           A photo, review, certification, phone number, or secondary link may
@@ -89,11 +87,10 @@ export default function SmallBusinessHomepageDesignArticle() {
         title="Use hierarchy and navigation to show what matters first"
       >
         <p>
-          Visual hierarchy should make the headline, supporting explanation,
-          and primary action easy to identify without giving every element the
-          same weight. Size, contrast, spacing, position, and grouping should
-          explain the order. Decoration should reinforce that order rather than
-          compete with it.
+          The headline, supporting explanation, and primary action should be
+          easy to identify without giving every element the same weight. Size,
+          contrast, spacing, position, and grouping establish the order.
+          Decoration should not compete with it.
         </p>
         <p>
           Headings need a logical content hierarchy as well. The{" "}
@@ -104,10 +101,9 @@ export default function SmallBusinessHomepageDesignArticle() {
           >
             W3C guidance on page headings
           </a>{" "}
-          explains how descriptive heading levels communicate organization and
-          help people navigate the content. A heading should name the section,
-          not serve as a vague slogan that requires the paragraph below it to
-          make sense.
+          describes how headings communicate organization and help people move
+          through the content. A heading should name the section, not act as a
+          vague slogan that only makes sense after reading the paragraph below.
         </p>
         <p>
           Keep the main navigation understandable. Use labels such as Services,
@@ -121,8 +117,8 @@ export default function SmallBusinessHomepageDesignArticle() {
           <Link href="/resources/what-makes-a-small-business-website-look-professional">
             what makes a small-business website look professional
           </Link>{" "}
-          covers the broader visual system. Homepage hierarchy is where that
-          system has to make the first set of decisions especially obvious.
+          covers the broader visual system. On the homepage, that system needs
+          to make the first set of decisions especially obvious.
         </p>
       </ArticleSection>
 
@@ -131,9 +127,9 @@ export default function SmallBusinessHomepageDesignArticle() {
         title="Choose homepage sections for the questions this business must answer"
       >
         <p>
-          There is no required stack of homepage sections. A visitor should see
-          the information that changes the decision, in an order that makes
-          sense for the business. Common options include:
+          There is no required stack of homepage sections. Each section should
+          answer a question, provide relevant proof, or help the visitor choose
+          a route. Common options include:
         </p>
         <ul>
           <li>
@@ -152,8 +148,9 @@ export default function SmallBusinessHomepageDesignArticle() {
             to fill the section.
           </li>
           <li>
-            <strong>Company context:</strong> explain who is behind the work and
-            why the approach is relevant without copying the full About page.
+            <strong>About the company:</strong> explain who is behind the work
+            and why the approach is relevant without copying the full About
+            page.
           </li>
           <li>
             <strong>Reviews or testimonials:</strong> include a selective set
@@ -237,10 +234,9 @@ export default function SmallBusinessHomepageDesignArticle() {
           <li>Make sure footer contact details remain readable and actionable.</li>
         </ul>
         <p>
-          I review the phone layout as a reading order, not a compressed
-          screenshot. If an image, proof block, or secondary action interrupts
-          the argument after stacking, it may need to move or disappear at that
-          size.
+          Read the phone layout as a sequence, not a compressed screenshot. If
+          an image, proof block, or secondary action interrupts the argument
+          after stacking, it may need to move or disappear at that size.
         </p>
         <p>
           If the existing homepage repeatedly fails these tests, the broader
