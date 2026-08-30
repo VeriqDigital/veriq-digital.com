@@ -107,10 +107,10 @@ export default function WebsiteMistakesArticle() {
           <li>Did I receive a useful confirmation after taking action?</li>
         </ol>
         <p>
-          Fix failures in the customer path before adding new pages or visual
-          effects. If the underlying structure is sound, targeted improvements
-          may be enough. If the problems repeat across the site, a redesign may
-          be more efficient than patching each symptom.
+          Fix failures in the contact or buying flow before adding new pages or
+          visual effects. If the underlying structure is sound, targeted
+          improvements may be enough. If the problems repeat across the site, a
+          redesign may be more efficient than patching each symptom.
         </p>
         <p>
           Veriq&apos;s{" "}

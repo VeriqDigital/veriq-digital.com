@@ -39,6 +39,7 @@ export async function generateMetadata({
     path: `/resources/${article.slug}`,
     type: "article",
     publishedTime: article.publishedAt,
+    modifiedTime: article.dateModified,
   });
 }
 

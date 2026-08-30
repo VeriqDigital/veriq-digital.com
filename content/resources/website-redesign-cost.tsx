@@ -9,28 +9,45 @@ export default function WebsiteRedesignCostArticle() {
     <>
       <ArticleSection
         id="why-prices-vary"
-        title="Redesign cost depends on what the current site leaves behind"
+        title="Start with the level of redesign"
       >
         <p>
-          A website redesign is not one standardized product. One business may
-          need clearer copy and a better responsive layout on its current
-          platform. Another may need new information architecture, a content
-          migration, rebuilt integrations, and careful URL redirects. Those
-          projects should not carry the same scope or price.
+          Website redesign pricing spans a wide range because “redesign” can
+          describe four very different levels of work:
         </p>
+        <ul>
+          <li>
+            <strong>Focused improvements:</strong> repair a few high-value pages,
+            components, or conversion problems on the current system.
+          </li>
+          <li>
+            <strong>Broad visual and content redesign:</strong> rework the shared
+            design system, messaging, and responsive page layouts.
+          </li>
+          <li>
+            <strong>Restructuring and migration:</strong> reorganize content,
+            change templates or platforms, and map URLs, analytics, and
+            integrations.
+          </li>
+          <li>
+            <strong>Custom functionality:</strong> redesign the site while also
+            building quoting, booking, ordering, portals, or business-specific
+            connections.
+          </li>
+        </ul>
         <p>
-          The existing site also creates work that a new website may not have.
-          Someone has to inventory useful content, understand current traffic,
-          identify working forms and integrations, decide which URLs should
-          remain, and separate real platform limitations from fixable problems.
-          A useful estimate starts with that evidence rather than a page count.
+          The price rises when the work moves from isolated interface changes
+          into shared templates, content decisions, migration risk, and
+          software behavior. The existing site adds its own workload: someone
+          has to inventory what still works, understand traffic, test forms and
+          integrations, and decide which URLs and content should survive.
         </p>
-        <ArticleCallout title="A useful redesign estimate starts with understanding the current site">
+        <ArticleCallout title="Redesign and rebuild are not synonyms">
           <p>
-            Veriq does not publish a fixed redesign package or invent a project
-            total before understanding the current site. A proposal should
-            explain what will be preserved, changed, migrated, rebuilt, and
-            tested.
+            A redesign changes the content, visual system, or way people use the
+            site. A rebuild replaces some or all of the technical implementation.
+            You can redesign on a sound existing platform, or rebuild a brittle
+            system while preserving much of the current appearance and content.
           </p>
         </ArticleCallout>
       </ArticleSection>
@@ -98,17 +115,19 @@ export default function WebsiteRedesignCostArticle() {
           A lower proposal may be appropriate for a focused improvement. It may
           also exclude redirects, mobile design, accessibility review, content
           migration, or production testing. A higher proposal is not
-          automatically better either. The useful question is whether the work
-          matches the problems the business needs to solve.
+          automatically better either. Compare each line of work with a problem
+          the business has actually decided to solve.
         </p>
       </ArticleSection>
 
       <ArticleSection id="budget" title="Build a redesign budget around decisions and risk">
         <p>
-          Start by documenting the business change behind the project, the
-          customer actions the site must support, the content and functions
-          that already work, and the failures that are expensive to keep. Then
-          separate launch requirements from improvements that can follow later.
+          When I review an existing site, I separate problems that can be fixed
+          individually from failures that repeat across the whole system. That
+          distinction usually matters more to the budget than whether someone
+          calls the project a refresh, redesign, or rebuild. Document the
+          business change behind the project, what must keep working, and the
+          failures that are expensive to carry forward.
         </p>
         <p>
           For broader market context, review the guide to{" "}
