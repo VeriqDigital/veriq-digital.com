@@ -10,26 +10,31 @@ export default function WebsiteCostArticle() {
     <>
       <ArticleSection id="why-prices-vary" title="Why website prices vary so much">
         <p>
-          Asking what a website costs is a little like asking what a building
-          costs. A one-room office, a restaurant, and a warehouse all have
-          walls and doors, but they solve different problems. Websites are the
-          same. A five-page informational site and a custom quoting platform
-          should not carry the same scope or price.
+          There is no reliable single average for a website in Des Moines. A
+          focused professional site for a service business sits at one end of
+          the market. A project that also needs original content, a new design
+          system, migration, local-search planning, or ongoing support requires
+          more work. Quoting tools, ordering, customer portals, and custom
+          integrations can turn the website into a much larger software
+          project.
         </p>
         <p>
-          That is why a useful proposal begins with the business goal. Is the
-          site meant to establish credibility, generate qualified leads,
-          support multiple service areas, sell products, or connect to an
-          existing system? Once the outcome is clear, a designer can define
-          what the website actually needs instead of pricing an arbitrary page
-          count.
+          When I scope a website, I care less about the raw page count than what
+          each page and feature has to do. A five-page site with finished copy
+          and a standard contact form is very different from five pages that
+          require research, writing, custom photography, scheduling, and a CRM
+          connection. A proposal should price the work behind the pages, not
+          treat every page as an interchangeable unit.
         </p>
-        <ArticleCallout title="A better first question">
+        <ArticleCallout title="Decide what job the website has in Des Moines">
           <p>
-            Instead of asking, “How much is a website?” ask, “What must this
-            website help the business accomplish, and what work is required to
-            make that happen?” The answer gives you something useful to compare
-            across proposals.
+            A referral-driven business may only need a credible place where
+            people can verify services, service area, proof, and contact details.
+            A business expecting the site to produce local leads needs stronger
+            service pages, a deliberate path to call or request a quote,
+            consistent Google Business Profile information, measurement, and
+            continued search work. Those are different scopes even when the
+            menus look similar.
           </p>
         </ArticleCallout>
       </ArticleSection>
@@ -55,6 +60,12 @@ export default function WebsiteCostArticle() {
             <strong>Content.</strong> If the business has polished copy and
             photography ready, production can move quickly. Content strategy,
             copywriting, editing, and image production expand the project.
+          </li>
+          <li>
+            <strong>Local reach and lead expectations.</strong> A site that
+            validates referrals needs less search and conversion work than one
+            expected to compete for several services across Des Moines and
+            nearby service areas.
           </li>
           <li>
             <strong>Functionality.</strong> Booking, quoting, customer portals,
@@ -146,13 +157,14 @@ export default function WebsiteCostArticle() {
         </p>
         <ArticleCallout title="Ready for a scoped conversation?">
           <p>
-            Veriq does not publish a one-size-fits-all price because the right
-            scope depends on the business. Explore our approach to{" "}
+            I would rather define a smaller first version that does its job than
+            pad a proposal with pages or features the business cannot use yet.
+            Explore Veriq&apos;s approach to{" "}
             <Link href="/des-moines-web-design">
               professional web design in Des Moines
             </Link>
-            , then share the problem you want the site to solve. We can define
-            the work before discussing a proposal.
+            , then bring the business goal, current content, and required
+            customer actions to the scope conversation.
           </p>
         </ArticleCallout>
       </ArticleSection>

@@ -139,7 +139,7 @@ export const resources: readonly ResourceArticle[] = [
     seoTitle: "Website Cost in Des Moines: A Practical Guide",
     shortTitle: "Website costs in Des Moines",
     description:
-      "A practical guide to website design costs in Des Moines, including the scope, content, functionality, and support choices that shape a proposal.",
+      "Plan a Des Moines website budget by comparing a referral-validation site, a local lead-generation site, and larger custom functionality.",
     topic: "Web Design",
     category: "Buying guide",
     funnel: "Commercial investigation",
@@ -152,8 +152,9 @@ export const resources: readonly ResourceArticle[] = [
     intent: "Understand pricing variables before requesting proposals.",
     nextStep: "/des-moines-web-design",
     publishedAt: "2026-08-09",
+    dateModified: "2026-08-30",
     tableOfContents: [
-      { id: "why-prices-vary", label: "Why prices vary" },
+      { id: "why-prices-vary", label: "The practical answer" },
       { id: "cost-drivers", label: "The main cost drivers" },
       { id: "routes", label: "DIY, template, or custom" },
       { id: "proposal", label: "Reading a proposal" },
@@ -304,15 +305,15 @@ export const resources: readonly ResourceArticle[] = [
   },
   {
     slug: "does-your-small-business-need-a-website-in-2026",
-    title: "Does Your Small Business Still Need a Website in 2026?",
-    seoTitle: "Does a Small Business Need a Website in 2026?",
+    title: "Does Your Small Business Still Need a Website?",
+    seoTitle: "Does a Small Business Still Need a Website?",
     shortTitle: "Does your business need a website?",
     description:
-      "A practical look at what a business website still does that social profiles and marketplace listings cannot—and when a simple site is enough.",
+      "See how an owned website works alongside Google Business Profile, social platforms, and marketplaces—and when one strong page is enough.",
     topic: "Branding & Digital Presence",
     category: "Website fundamentals",
     funnel: "Educational",
-    primaryTarget: "does a small business need a website in 2026",
+    primaryTarget: "does a small business need a website",
     secondaryTargets: [
       "is a website necessary for a small business",
       "website vs social media for small business",
@@ -320,6 +321,7 @@ export const resources: readonly ResourceArticle[] = [
     intent: "Decide whether a website is necessary and what level is appropriate.",
     nextStep: "/resources/what-should-a-local-business-website-include",
     publishedAt: "2026-08-09",
+    dateModified: "2026-08-30",
     tableOfContents: [
       { id: "short-answer", label: "The short answer" },
       { id: "social-vs-owned", label: "Social vs. owned presence" },
@@ -442,7 +444,7 @@ export const resources: readonly ResourceArticle[] = [
     seoTitle: "What Makes a Small Business Website Professional?",
     shortTitle: "What makes a website look professional",
     description:
-      "Learn how hierarchy, typography, consistency, imagery, trust details, mobile behavior, and performance shape a professional business website.",
+      "See how hierarchy, consistency, trust details, mobile behavior, and two transparent Veriq concept projects make a website feel professional.",
     topic: "Branding & Digital Presence",
     category: "Website fundamentals",
     funnel: "Educational",
@@ -456,6 +458,7 @@ export const resources: readonly ResourceArticle[] = [
       "Understand the visual, content, and technical qualities that make a business website feel credible.",
     nextStep: "/small-business-web-design",
     publishedAt: "2026-08-11",
+    dateModified: "2026-08-30",
     tableOfContents: [
       { id: "coherence", label: "Professional means coherent" },
       { id: "hierarchy", label: "Clear visual hierarchy" },
@@ -579,7 +582,7 @@ export const resources: readonly ResourceArticle[] = [
     shortTitle: "Why your website is slow",
     description:
       "Understand how media, scripts, third-party tools, hosting, plugins, and architecture create a slow business website—and what to fix first.",
-    topic: "Web Design",
+    topic: "Web Development",
     category: "Website fundamentals",
     funnel: "Educational",
     primaryTarget: "why is my website slow",
@@ -682,7 +685,7 @@ export const resources: readonly ResourceArticle[] = [
     seoTitle: "Website Redesign Cost: A Practical Guide",
     shortTitle: "Website redesign cost",
     description:
-      "Learn how current-site condition, content, design, migration, integrations, redirects, testing, and support shape website redesign pricing.",
+      "Compare focused improvements, broad redesigns, restructuring and migration, and custom functionality before budgeting a website redesign.",
     topic: "Web Design",
     category: "Buying guide",
     funnel: "Commercial investigation",
@@ -698,8 +701,9 @@ export const resources: readonly ResourceArticle[] = [
       "Understand redesign-specific cost drivers before requesting a scoped proposal.",
     nextStep: "/website-redesign",
     publishedAt: "2026-08-12",
+    dateModified: "2026-08-30",
     tableOfContents: [
-      { id: "why-prices-vary", label: "Why prices vary" },
+      { id: "why-prices-vary", label: "Four redesign levels" },
       { id: "cost-drivers", label: "Cost drivers" },
       { id: "migration", label: "Migration and SEO work" },
       { id: "proposal", label: "Compare proposals" },

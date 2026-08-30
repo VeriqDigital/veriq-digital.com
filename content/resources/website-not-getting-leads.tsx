@@ -21,7 +21,7 @@ export default function WebsiteNotGettingLeadsArticle() {
           arriving? Do they recognize that the service fits? Do they have enough
           confidence to continue? Can they complete the next step? A redesign
           aimed at the wrong stage will change the appearance without changing
-          the underlying problem.
+          the reason leads are missing.
         </p>
         <ArticleCallout title="Traffic and conversion are different problems">
           <p>
@@ -112,7 +112,7 @@ export default function WebsiteNotGettingLeadsArticle() {
           does not guarantee traffic or inquiries. It should be tied to a
           defined problem and followed by measurement.
         </p>
-        <ArticleCallout title="When the whole customer path needs attention">
+        <ArticleCallout title="When several stages need attention">
           <p>
             Start with Veriq&apos;s{" "}
             <WebsiteAuditDiscoveryLink>

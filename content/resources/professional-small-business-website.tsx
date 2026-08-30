@@ -9,11 +9,11 @@ export default function ProfessionalSmallBusinessWebsiteArticle() {
     <>
       <ArticleSection id="coherence" title="Professional means coherent, not expensive-looking">
         <p>
-          A professional small-business website feels intentional. The message,
-          typography, imagery, spacing, controls, and page structure appear to
-          belong to the same business and help the visitor complete a task.
-          Polish comes from consistency and judgment more than decorative
-          effects.
+          When I review a website, I do not start by asking whether it looks
+          expensive. I look for decisions that agree with one another. The
+          message, typography, imagery, spacing, controls, and page structure
+          should feel like parts of the same business and make the visitor&apos;s
+          next move easier. That coherence matters more than decorative effects.
         </p>
         <p>
           Visitors also read operational details as design signals. A beautiful
@@ -61,6 +61,19 @@ export default function ProfessionalSmallBusinessWebsiteArticle() {
           art direction. A coherent system should be visible across navigation,
           service pages, forms, resources, and mobile layouts.
         </p>
+        <ArticleCallout title="Two Veriq concepts, two different visual jobs">
+          <p>
+            The <Link href="/work/iron-palace">Iron Palace gym concept</Link>{" "}
+            uses dramatic contrast and an editorial feel, but the practical
+            routes to join, tour the facility, and get a day pass stay prominent.
+            The <Link href="/work/abc-auto-repair">ABC Auto Repair concept</Link>{" "}
+            is more utilitarian: service hierarchy, trust details, and a strong
+            quote action carry the design. Both are self-directed concept
+            projects, not client case studies. They show why “professional”
+            should look different for a destination gym and a neighborhood
+            repair shop.
+          </p>
+        </ArticleCallout>
       </ArticleSection>
 
       <ArticleSection id="imagery-trust" title="Use imagery and trust information with purpose">

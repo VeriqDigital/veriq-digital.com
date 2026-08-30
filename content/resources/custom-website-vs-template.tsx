@@ -41,7 +41,8 @@ export default function CustomWebsiteVsTemplateArticle() {
         <p>
           Professional planning still matters. A template does not decide which
           services to prioritize, write the message, select useful proof, create
-          a customer path, or check accessibility and performance.
+          the route from interest to action, or check accessibility and
+          performance.
         </p>
       </ArticleSection>
 
@@ -114,7 +115,7 @@ export default function CustomWebsiteVsTemplateArticle() {
         <p>
           If it can, professional design on that platform may be the strongest
           answer. If the site would depend on workarounds, duplicated effort, or
-          a compromised customer path, custom development deserves a closer
+          an awkward buying flow, custom development deserves a closer
           look. Our guide to{" "}
           <Link href="/resources/web-designer-vs-website-builder-for-small-business">
             web designers and website builders
@@ -125,7 +126,7 @@ export default function CustomWebsiteVsTemplateArticle() {
         <ArticleCallout title="Veriq builds around the business">
           <p>
             Veriq provides custom website design and development when a business
-            needs a site shaped around its message, customer journey,
+            needs a site shaped around its message, customer decision process,
             performance, search visibility, and functionality. See the full{" "}
             <Link href="/small-business-web-design">
               small-business web design service

@@ -7,6 +7,7 @@ type PageMetadataOptions = {
   path: string;
   type?: "website" | "article";
   publishedTime?: string;
+  modifiedTime?: string;
   image?: {
     url: string;
     alt: string;
@@ -19,6 +20,7 @@ export function createPageMetadata({
   path,
   type = "website",
   publishedTime,
+  modifiedTime,
   image,
 }: PageMetadataOptions): Metadata {
   const socialTitle = title
@@ -44,6 +46,7 @@ export function createPageMetadata({
           locale: siteConfig.locale,
           type: "article",
           publishedTime,
+          modifiedTime,
         }
       : {
           title: socialTitle,

@@ -9,45 +9,60 @@ export default function SmallBusinessWebsiteValueArticle() {
     <>
       <ArticleSection id="short-answer" title="The short answer: usually, but the site can be simple">
         <p>
-          A small business does not need a complicated website simply because
-          the calendar says 2026. It does need a reliable place where a
-          prospective customer can understand the business, verify important
-          details, and take the next step without depending entirely on a
-          platform the business does not control.
+          Most small businesses still benefit from a website, but the site may
+          have a narrow job. It gives prospective customers one dependable place
+          to understand the offer, verify important details, and contact or buy
+          from the business without piecing the story together across several
+          profiles.
         </p>
         <p>
           For some businesses, that job can be handled by a concise site with a
           home page, service information, proof, and contact options. Others
           need location pages, resources, online scheduling, ecommerce,
-          quoting, or customer tools. The useful question is not whether every
-          business needs a large website. It is what customers need before they
-          feel comfortable calling, visiting, booking, or buying.
+          quoting, or customer tools. I would rather build one dependable page
+          than sell a business a large site it does not need. The scope should
+          follow what customers need before they feel comfortable calling,
+          visiting, booking, or buying.
         </p>
       </ArticleSection>
 
-      <ArticleSection id="social-vs-owned" title="Social profiles help discovery; a website gives you control">
+      <ArticleSection id="social-vs-owned" title="Other platforms can introduce the business; the website carries the full explanation">
         <p>
           A Google Business Profile, Facebook page, Instagram account, or
-          industry marketplace can be valuable. Customers already use those
-          platforms, and they may be the first place someone encounters the
-          business. But each platform decides how the profile is displayed,
-          what content receives reach, which features remain available, and how
-          customers move through the experience.
+          industry marketplace can be valuable, and any of them may be the
+          first place someone encounters the business. They do different jobs:
         </p>
+        <ul>
+          <li>
+            A Google Business Profile puts practical local information and
+            reviews near map and search activity.
+          </li>
+          <li>
+            Social profiles show current activity and give people a familiar
+            way to follow or message the business.
+          </li>
+          <li>
+            Marketplaces can place an offer in front of people already
+            comparing providers or products.
+          </li>
+          <li>
+            The website explains the full offer, connects related information,
+            and supports the business&apos;s preferred next action.
+          </li>
+        </ul>
         <p>
-          A website gives the business a stable destination under its own
-          domain. You control the order of information, the calls to action, the
-          brand presentation, the forms, the analytics, and the relationship
-          between pages. It can support search queries that do not fit neatly
-          into a social post or directory category, and it remains useful when
-          a platform changes its interface or policies.
+          The website is the part under the business&apos;s own domain. The business
+          decides how services are organized, what proof appears beside each
+          claim, which forms or tools are available, and how traffic from Google,
+          social posts, email, ads, referrals, and marketplaces reaches the same
+          source of detailed information.
         </p>
         <ArticleCallout title="Think in roles, not replacements">
           <p>
-            Your website does not need to replace social media or a Google
-            Business Profile. Those channels can introduce the business; the
-            website can answer the deeper questions and guide the customer
-            toward a decision.
+            Do not close a productive social account or marketplace just to push
+            everyone toward the website. Keep each channel doing the job it does
+            well, and use the site when a customer needs more context, stronger
+            proof, or a direct action the profile cannot support cleanly.
           </p>
         </ArticleCallout>
       </ArticleSection>
@@ -69,8 +84,7 @@ export default function SmallBusinessWebsiteValueArticle() {
         </ul>
         <p>
           Simple is not the same as vague. One strong page can outperform ten
-          thin pages when it answers the customer’s real questions and removes
-          friction.
+          thin pages when it answers the questions that delay a call or visit.
         </p>
       </ArticleSection>
 
@@ -98,7 +112,7 @@ export default function SmallBusinessWebsiteValueArticle() {
           Review what they see, then try to complete the most important action
           from a phone. If the path depends on scattered profiles, outdated
           information, direct messages, or a platform account, a website can
-          provide a clearer foundation.
+          give those channels a common destination.
         </p>
         <p>
           If a useful site already exists, the answer may be maintenance rather
