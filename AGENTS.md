@@ -106,6 +106,8 @@ Do not flood every section with cyan.
 
 Do not introduce unrelated purple, blue-gradient, neon, glassmorphism, or trendy SaaS visual systems.
 
+All Veriq cyan/blue brand accents should use the same canonical accent color as the primary CTA buttons unless a specific semantic state requires otherwise.
+
 ## 3. Command Attention is a philosophy, not decoration
 
 "Command Attention" is part of Veriq's brand language.

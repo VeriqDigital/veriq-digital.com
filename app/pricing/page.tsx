@@ -46,7 +46,7 @@ const pricingGuides = [
   {
     id: "growth",
     label: "Growth",
-    badge: "Most Popular",
+    badge: "Recommended",
     prefix: "Starting at",
     price: "$2,500",
     description:
@@ -342,6 +342,7 @@ export default function PricingPage() {
             description="The proposal defines the exact scope, price, payment structure, and responsibilities before work begins."
             contactLabel="Ask about your project"
             questionsName="pricing-faq"
+            showLabelLine
           />
         </Container>
       </section>

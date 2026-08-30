@@ -14,6 +14,7 @@ type FAQProps = {
   description?: string;
   contactLabel?: string;
   questionsName?: string;
+  showLabelLine?: boolean;
 };
 
 const FAQ = ({
@@ -24,12 +25,16 @@ const FAQ = ({
     "Every project is scoped individually, but the fundamentals should be clear before you decide whether a conversation is worthwhile.",
   contactLabel = "Ask a different question",
   questionsName = "homepage-faq",
+  showLabelLine = false,
 }: FAQProps) => {
   return (
     <div className={styles.faq}>
       <header className={styles.header}>
         <div>
-          <p>{label}</p>
+          <p className={showLabelLine ? styles.eyebrowLabel : undefined}>
+            {showLabelLine ? <span aria-hidden="true" /> : null}
+            {label}
+          </p>
           <h2>{title}</h2>
         </div>
         <div>
