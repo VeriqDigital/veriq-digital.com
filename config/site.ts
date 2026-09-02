@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Veriq",
   shortName: "Veriq Digital",
   brandSlogan: "COMMAND ATTENTION.",
-  defaultTitle: "Des Moines Web Design, SEO & Conversion | Veriq",
+  defaultTitle: "Custom Websites, SEO & Conversion | Veriq",
   tagline:
     "Custom websites, local SEO, conversion-focused functionality, and ongoing support.",
   description:
