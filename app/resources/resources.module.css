@@ -485,7 +485,8 @@
   .indexHero h1,
   .articleHeading h1 {
     max-width: 15ch;
-    font-size: clamp(2.65rem, 13vw, 4rem);
+    font-size: clamp(2.25rem, 11vw, 3.4rem);
+    overflow-wrap: break-word;
   }
 
   .resourceRow {
