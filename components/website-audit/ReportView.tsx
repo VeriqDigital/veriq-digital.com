@@ -19,6 +19,7 @@ import styles from "./website-audit.module.css";
 
 type ReportViewProps = {
   auditId: string;
+  initialAudit?: WebsiteAuditState | null;
 };
 
 type ReportViewState =
@@ -54,11 +55,13 @@ const getStatusCopy = (audit: WebsiteAuditState) => {
   };
 };
 
-export default function ReportView({ auditId }: ReportViewProps) {
+export default function ReportView({ auditId, initialAudit }: ReportViewProps) {
   const [refreshKey, setRefreshKey] = useState(0);
-  const [viewState, setViewState] = useState<ReportViewState>({
-    status: "loading",
-  });
+  const [viewState, setViewState] = useState<ReportViewState>(() =>
+    initialAudit
+      ? { status: "ready", audit: initialAudit }
+      : { status: "loading" },
+  );
 
   const retry = useCallback(() => {
     setViewState({ status: "loading" });
@@ -66,6 +69,14 @@ export default function ReportView({ auditId }: ReportViewProps) {
   }, []);
 
   useEffect(() => {
+    if (
+      refreshKey === 0 &&
+      (initialAudit?.status === "failed" ||
+        (initialAudit?.status === "completed" && initialAudit.result))
+    ) {
+      return;
+    }
+
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout> | undefined;
     let isActive = true;
@@ -157,7 +168,7 @@ export default function ReportView({ auditId }: ReportViewProps) {
         clearTimeout(timer);
       }
     };
-  }, [auditId, refreshKey]);
+  }, [auditId, initialAudit, refreshKey]);
 
   if (viewState.status === "loading") {
     return (

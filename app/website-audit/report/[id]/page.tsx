@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReportView from "@/components/website-audit/ReportView";
+import { readInitialWebsiteAuditState } from "@/lib/website-audit/report-state";
 import { isWebsiteAuditEnabled } from "@/lib/website-audit/runtime-config";
 import styles from "@/components/website-audit/website-audit.module.css";
 
@@ -17,6 +18,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function WebsiteAuditReportPage({
   params,
 }: {
@@ -28,9 +31,13 @@ export default async function WebsiteAuditReportPage({
     notFound();
   }
 
+  // A missing record may be an interrupted client-side creation. Preserve the
+  // existing recovery flow by letting ReportView retry it from sessionStorage.
+  const initialAudit = await readInitialWebsiteAuditState(id).catch(() => null);
+
   return (
     <main id="main-content" className={`${styles.page} ${styles.reportPage}`}>
-      <ReportView auditId={id} />
+      <ReportView auditId={id} initialAudit={initialAudit} />
     </main>
   );
 }
