@@ -1101,7 +1101,8 @@
 }
 
 .reportPage {
-  min-height: 70vh;
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 .reportHero {
