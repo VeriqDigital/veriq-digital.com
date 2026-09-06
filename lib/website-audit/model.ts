@@ -142,10 +142,51 @@ export type RenderedMobileMetrics = Readonly<{
   textSampleCount: number;
 }>;
 
+export type RenderResourceMetrics = {
+  requested: number;
+  fulfilled: number;
+  blocked: number;
+  failed: number;
+};
+
+export type RenderFidelityMetrics = {
+  scriptsRemoved: number;
+  executableScriptsRemoved: number;
+  inlineHandlersRemoved: number;
+  embeddedDocumentsRemoved: number;
+  sourceTextCharacters: number;
+  sourceStructurallyComplete: boolean;
+  stylesheets: RenderResourceMetrics;
+  images: RenderResourceMetrics;
+  crossOriginStylesheetsBlocked: number;
+  stylesheetLimitReached: boolean;
+  imageLimitReached: boolean;
+  stylesheetByteLimitReached: boolean;
+  imageByteLimitReached: boolean;
+  totalByteLimitReached: boolean;
+  fulfilledBytes: number;
+};
+
+export type RenderFidelityReason =
+  | "stylesheet_loss"
+  | "cross_origin_stylesheets"
+  | "stylesheet_count_limit"
+  | "stylesheet_byte_limit"
+  | "total_byte_limit"
+  | "dynamic_layout_uncertainty"
+  | "embedded_content_removed";
+
+export type RenderFidelity = Readonly<{
+  level: "high" | "moderate" | "low";
+  reasons: readonly RenderFidelityReason[];
+  metrics: Readonly<RenderFidelityMetrics>;
+}>;
+
 export type RenderedMobileData =
   | Readonly<{
       available: true;
       metrics: RenderedMobileMetrics;
+      renderFidelity: RenderFidelity;
     }>
   | Readonly<{
       available: false;

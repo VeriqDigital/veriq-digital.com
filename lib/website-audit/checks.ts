@@ -1,4 +1,5 @@
 import { getAuditCategory } from "./categories";
+import { applyRenderFidelity, renderFidelityNotice } from "./render-fidelity";
 import type { CrawlAuditData, ResourceDiscoveryStatus } from "./crawl-types";
 import type {
   AuditCheckResult,
@@ -1566,6 +1567,28 @@ function buildTechnicalChecks(
   return checks;
 }
 
+// Corroboration is limited to the same measured condition. PageSpeed width
+// cannot prove that a particular action is off-screen or that text is tiny.
+function renderedCorroboration(
+  check: AuditCheckResult, crawl: CrawlAuditData,
+  pageSpeed: PageSpeedData, rendered: RenderedMobileData,
+): string | undefined {
+  if (!rendered.available) return;
+  if (check.id === "mobile-rendered-width") {
+    if (!crawl.primaryPage.hasViewport &&
+      rendered.metrics.documentWidth >= rendered.metrics.viewportWidth * 1.5) {
+      return "Source HTML also lacks a usable mobile viewport declaration.";
+    }
+    if (pageSpeed.available && pageSpeed.audits.contentWidth != null && pageSpeed.audits.contentWidth < 50) {
+      return "The independent PageSpeed content-width check also found a substantial problem.";
+    }
+  }
+  if (check.id === "mobile-rendered-controls" && pageSpeed.available &&
+    pageSpeed.audits.tapTargets != null && pageSpeed.audits.tapTargets < 50) {
+    return "The independent PageSpeed tap-target check also found a substantial problem.";
+  }
+}
+
 export function buildAuditChecks(
   crawl: CrawlAuditData,
   pageSpeed: PageSpeedData,
@@ -1603,6 +1626,8 @@ export function buildAuditChecks(
     notices.unshift(
       "Rendered mobile validation was unavailable. Render-dependent checks were excluded and evidence coverage was reduced rather than scored as zero or perfect.",
     );
+  } else if (renderedMobile.renderFidelity.level !== "high") {
+    notices.unshift(renderFidelityNotice);
   }
 
   return {
@@ -1613,7 +1638,13 @@ export function buildAuditChecks(
       ...buildAccessibilityChecks(crawl, pageSpeed),
       ...buildConversionChecks(crawl, renderedMobile),
       ...buildTechnicalChecks(crawl, pageSpeed, renderedMobile),
-    ],
+    ].map((check) => {
+      // Intrinsic image attributes remain independently verifiable in source.
+      if (!renderedMobile.available ||
+        (check.id === "technical-image-dimensions" && crawl.primaryPage.missingDimensionImageCount === 0)) return check;
+      return applyRenderFidelity(check, renderedMobile.renderFidelity,
+        renderedCorroboration(check, crawl, pageSpeed, renderedMobile));
+    }),
     notices,
   };
 }
