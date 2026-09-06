@@ -4,8 +4,7 @@ import type { WebsiteAuditResult } from "./model";
 import { runPageSpeedAudit } from "./providers/pagespeed";
 import { runRenderedMobileAudit } from "./providers/rendered-mobile";
 import { buildAuditResult } from "./scoring";
-
-const auditDeadlineMs = 45_000;
+import { auditTimeBudgets, createAuditDeadline, remainingBudgetMs } from "./time-budgets";
 
 const getErrorCode = (error: unknown) =>
   error instanceof Error &&
@@ -50,6 +49,7 @@ export type RunWebsiteAuditOptions = Readonly<{
   signal?: AbortSignal;
   pageSpeedApiKey?: string;
   now?: () => Date;
+  deadlineAt?: number;
 }>;
 
 /**
@@ -64,76 +64,83 @@ export async function runWebsiteAudit({
   signal: parentSignal,
   pageSpeedApiKey = process.env.GOOGLE_PAGESPEED_API_KEY,
   now = () => new Date(),
+  deadlineAt = Date.now() + auditTimeBudgets.engineMs,
 }: RunWebsiteAuditOptions): Promise<WebsiteAuditResult> {
   const auditStartedAt = Date.now();
-  const deadlineSignal = AbortSignal.timeout(auditDeadlineMs);
-  const signal = parentSignal
-    ? AbortSignal.any([parentSignal, deadlineSignal])
-    : deadlineSignal;
+  const engineDeadlineAt = Math.min(deadlineAt, auditStartedAt + auditTimeBudgets.engineMs);
+  const deadline = createAuditDeadline(remainingBudgetMs(engineDeadlineAt, auditTimeBudgets.engineMs), parentSignal);
+  const signal = deadline.signal;
 
-  // Direct retrieval and public-IP pinning must succeed before the URL is
-  // shared with PageSpeed Insights.
-  const primary = await runAuditStage(
-    id,
-    "primary-crawl",
-    () => fetchPrimaryAuditPage(submittedUrl, signal),
-    (value) => ({ redirectCount: value.redirectCount }),
-  );
-  const [crawl, pageSpeed, renderedMobile] = await Promise.all([
-    runAuditStage(
+  try {
+    signal.throwIfAborted();
+
+    // Direct retrieval and public-IP pinning must succeed before the URL is
+    // shared with PageSpeed Insights.
+    const primary = await runAuditStage(
       id,
-      "first-party-crawl",
-      () => completeWebsiteCrawl(primary, signal),
-      (value) => ({
-        pagesAnalyzed: value.pages.length,
-        linksTested: value.brokenLinks.tested,
-      }),
-    ),
-    runAuditStage(
-      id,
-      "pagespeed-mobile",
-      () =>
-        runPageSpeedAudit(primary.finalUrl, {
-          apiKey: pageSpeedApiKey,
-          signal,
+      "primary-crawl",
+      () => fetchPrimaryAuditPage(submittedUrl, signal),
+      (value) => ({ redirectCount: value.redirectCount }),
+    );
+    const [crawl, pageSpeed, renderedMobile] = await Promise.all([
+      runAuditStage(
+        id,
+        "first-party-crawl",
+        () => completeWebsiteCrawl(primary, signal),
+        (value) => ({
+          pagesAnalyzed: value.pages.length,
+          linksTested: value.brokenLinks.tested,
         }),
-      (value) => ({
-        available: value.available,
-        reason: value.available ? undefined : value.reason,
-      }),
-    ),
-    runAuditStage(
+      ),
+      runAuditStage(
+        id,
+        "pagespeed-mobile",
+        () =>
+          runPageSpeedAudit(primary.finalUrl, {
+            apiKey: pageSpeedApiKey,
+            signal,
+            deadlineAt: engineDeadlineAt - auditTimeBudgets.scoringReserveMs,
+          }),
+        (value) => ({
+          available: value.available,
+          reason: value.available ? undefined : value.reason,
+        }),
+      ),
+      runAuditStage(
+        id,
+        "rendered-mobile",
+        () => runRenderedMobileAudit(primary, { signal }),
+        (value) => ({
+          available: value.available,
+          reason: value.available ? undefined : value.reason,
+          overflowPixels: value.available
+            ? value.metrics.horizontalOverflowPixels
+            : undefined,
+        }),
+      ),
+    ]);
+    const { checks, notices } = buildAuditChecks(
+      crawl,
+      pageSpeed,
+      renderedMobile,
+    );
+    const result = buildAuditResult({
       id,
-      "rendered-mobile",
-      () => runRenderedMobileAudit(primary, { signal }),
-      (value) => ({
-        available: value.available,
-        reason: value.available ? undefined : value.reason,
-        overflowPixels: value.available
-          ? value.metrics.horizontalOverflowPixels
-          : undefined,
-      }),
-    ),
-  ]);
-  const { checks, notices } = buildAuditChecks(
-    crawl,
-    pageSpeed,
-    renderedMobile,
-  );
-  const result = buildAuditResult({
-    id,
-    auditedUrl: primary.finalUrl,
-    createdAt,
-    completedAt: now().toISOString(),
-    checks,
-    notices,
-  });
+      auditedUrl: primary.finalUrl,
+      createdAt,
+      completedAt: now().toISOString(),
+      checks,
+      notices,
+    });
 
-  console.info("Website audit engine completed", {
-    auditId: id,
-    durationMs: Date.now() - auditStartedAt,
-    checksEvaluated: checks.length,
-    findingsReturned: result.findings.length,
-  });
-  return result;
+    console.info("Website audit engine completed", {
+      auditId: id,
+      durationMs: Date.now() - auditStartedAt,
+      checksEvaluated: checks.length,
+      findingsReturned: result.findings.length,
+    });
+    return result;
+  } finally {
+    deadline.dispose();
+  }
 }
