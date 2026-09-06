@@ -6,6 +6,10 @@ export const renderEvidenceConfidence = Object.freeze({
   high: 1, moderate: 0.7, lowCorroborated: 0.5,
 });
 
+// Eight removed executable scripts/handlers indicate substantial client behavior.
+// This counts dependency signals, not code complexity or proven layout changes.
+const substantialRemovedJavaScriptCount = 8;
+
 export const renderFidelityNotice =
   "Some rendered mobile checks have reduced confidence because the site could not be fully reproduced within the audit's secure rendering limits.";
 
@@ -45,15 +49,21 @@ export function assessRenderFidelity(input: RenderFidelityMetrics): RenderFideli
   if (metrics.stylesheetLimitReached) reasons.push("stylesheet_count_limit");
   if (metrics.stylesheetByteLimitReached) reasons.push("stylesheet_byte_limit");
   if (metrics.totalByteLimitReached) reasons.push("total_byte_limit");
-  const dynamicUncertainty = !metrics.sourceStructurallyComplete &&
-    (metrics.executableScriptsRemoved > 0 || metrics.inlineHandlersRemoved > 0);
+  const removedJavaScriptCount = metrics.executableScriptsRemoved + metrics.inlineHandlersRemoved;
+  const substantialJavaScript = removedJavaScriptCount >= substantialRemovedJavaScriptCount;
+  const dynamicUncertainty = substantialJavaScript ||
+    (!metrics.sourceStructurallyComplete && removedJavaScriptCount > 0);
   if (dynamicUncertainty) reasons.push("dynamic_layout_uncertainty");
   if (metrics.embeddedDocumentsRemoved > 0) reasons.push("embedded_content_removed");
   const low = metrics.stylesheetLimitReached || metrics.stylesheetByteLimitReached ||
     (cssLost > 0 && (cssLossShare >= 0.25 || metrics.totalByteLimitReached)) ||
-    (dynamicUncertainty && (metrics.executableScriptsRemoved >= 8 || cssLost > 0));
+    (!metrics.sourceStructurallyComplete && substantialJavaScript) ||
+    (dynamicUncertainty && cssLost > 0);
+  // An embedded document has its own layout. Its removal alone does not prove
+  // that unrelated top-level geometry is unrepresentative; retain the diagnostic.
+  const globallyUncertain = reasons.some((reason) => reason !== "embedded_content_removed");
   // Image-only total-byte exhaustion is at most moderate, never low.
-  return { level: low ? "low" : reasons.length ? "moderate" : "high", reasons, metrics };
+  return { level: low ? "low" : globallyUncertain ? "moderate" : "high", reasons, metrics };
 }
 
 const potentialTitles: Record<string, string> = {

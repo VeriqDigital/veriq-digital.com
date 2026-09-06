@@ -1,4 +1,5 @@
 import { normalizeAuditResult } from "@/lib/website-audit/result-schema";
+import { CURRENT_AUDIT_METHODOLOGY_VERSION } from "@/lib/website-audit/methodology";
 
 export const demoAuditResult = normalizeAuditResult({
   id: "demo_01JVERIQAUDITPREVIEW",
@@ -178,5 +179,5 @@ export const demoAuditResult = normalizeAuditResult({
     "Conversion foundations has partial evidence: no customer action was observed for the rendered action usability check.",
     "Automated accessibility checks do not certify WCAG or legal compliance.",
   ],
-  methodologyVersion: "v4",
+  methodologyVersion: CURRENT_AUDIT_METHODOLOGY_VERSION,
 });

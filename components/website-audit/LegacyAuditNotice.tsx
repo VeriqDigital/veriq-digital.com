@@ -1,10 +1,12 @@
+import { CURRENT_AUDIT_METHODOLOGY_VERSION } from "@/lib/website-audit/methodology";
+
 type LegacyAuditNoticeProps = {
   methodologyVersion: string;
   className?: string;
 };
 
 export default function LegacyAuditNotice({ methodologyVersion, className }: LegacyAuditNoticeProps) {
-  if (methodologyVersion === "v4") return null;
+  if (methodologyVersion === CURRENT_AUDIT_METHODOLOGY_VERSION) return null;
 
   return (
     <aside className={className} aria-label="Legacy scoring methodology">
