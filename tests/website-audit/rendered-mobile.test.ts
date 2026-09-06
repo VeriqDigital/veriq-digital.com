@@ -1,13 +1,85 @@
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
+import type { Route } from "playwright-core";
+import { SafeHttpError, type safeHttpRequest } from "../../lib/website-audit/http";
+import { assessRenderFidelity, createRenderFidelityMetrics } from "../../lib/website-audit/render-fidelity";
 import type { PrimaryCrawlData } from "../../lib/website-audit/crawler";
 import {
   closeRenderedMobileBrowserForTesting,
+  fulfillSafeResource,
   interpretRenderedMobileMeasurement,
   runRenderedMobileAudit,
   type RenderedControlMeasurement,
   type RenderedMobileMeasurement,
 } from "../../lib/website-audit/providers/rendered-mobile";
+
+const resourceRoute = (kind = "stylesheet", url = "https://example.com/layout.css") => {
+  const actions: string[] = [];
+  const route = {
+    request: () => ({ method: () => "GET", resourceType: () => kind, url: () => url }),
+    abort: async (reason: string) => { actions.push(reason); },
+    fulfill: async () => { actions.push("fulfilled"); },
+  } as unknown as Route;
+  return { route, actions };
+};
+
+const cssResponse = (bytes: number): Awaited<ReturnType<typeof safeHttpRequest>> => ({
+  requestedUrl: "https://example.com/layout.css", finalUrl: "https://example.com/layout.css", status: 200,
+  headers: { "content-type": "text/css" }, body: Buffer.alloc(bytes), redirects: [],
+});
+
+test("safe resource delivery records intact CSS with unchanged request security bounds", async () => {
+  const { route, actions } = resourceRoute();
+  const counters = { stylesheets: 0, images: 0, metrics: createRenderFidelityMetrics() };
+  await fulfillSafeResource(route, "https://example.com", new AbortController().signal, counters, async (_url, options) => {
+    assert.equal(options?.allowedRedirectOrigin, "https://example.com");
+    assert.equal(options?.maxBytes, 768 * 1024);
+    assert.equal(options?.maxRedirects, 2);
+    assert.equal(options?.timeoutMs, 3000);
+    return cssResponse(100);
+  });
+  assert.deepEqual(actions, ["fulfilled"]);
+  assert.deepEqual(counters.metrics.stylesheets, { requested: 1, fulfilled: 1, blocked: 0, failed: 0 });
+  assert.equal(counters.metrics.fulfilledBytes, 100);
+  assert.equal(assessRenderFidelity(counters.metrics).level, "high");
+});
+
+test("stylesheet byte ceiling and failed fetches are distinguished in fidelity metrics", async () => {
+  for (const oversized of [true, false]) {
+    const { route } = resourceRoute();
+    const counters = { stylesheets: 0, images: 0, metrics: createRenderFidelityMetrics() };
+    await fulfillSafeResource(route, "https://example.com", new AbortController().signal, counters, async () => {
+      if (oversized) throw new SafeHttpError("RESPONSE_TOO_LARGE", "test fixture");
+      throw new Error("test transport failure");
+    });
+    assert.equal(counters.metrics.stylesheetByteLimitReached, oversized);
+    assert.equal(counters.metrics.stylesheets.failed, 1);
+    assert.equal(counters.metrics.stylesheets.fulfilled, 0);
+    assert.equal(assessRenderFidelity(counters.metrics).level, "low");
+  }
+});
+
+test("total byte ceiling blocks CSS instead of counting it as reproduced", async () => {
+  const { route, actions } = resourceRoute();
+  const counters = { stylesheets: 0, images: 0, metrics: createRenderFidelityMetrics() };
+  counters.metrics.fulfilledBytes = 4 * 1024 * 1024;
+  await fulfillSafeResource(route, "https://example.com", new AbortController().signal, counters, async () => cssResponse(1));
+  assert.deepEqual(actions, ["blockedbyclient"]);
+  assert.equal(counters.metrics.totalByteLimitReached, true);
+  assert.equal(counters.metrics.stylesheets.blocked, 1);
+  assert.equal(counters.metrics.stylesheets.fulfilled, 0);
+  assert.equal(assessRenderFidelity(counters.metrics).level, "low");
+});
+
+test("cross-origin CSS never reaches the resource transport", async () => {
+  const { route } = resourceRoute("stylesheet", "https://assets.example.test/layout.css");
+  const counters = { stylesheets: 0, images: 0, metrics: createRenderFidelityMetrics() };
+  await fulfillSafeResource(route, "https://example.com", new AbortController().signal, counters, async () => {
+    assert.fail("cross-origin CSS must not be fetched");
+  });
+  assert.equal(counters.metrics.crossOriginStylesheetsBlocked, 1);
+  assert.equal(counters.metrics.stylesheets.blocked, 1);
+});
 
 const primary = (body: string): PrimaryCrawlData =>
   ({

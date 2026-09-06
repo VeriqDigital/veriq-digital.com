@@ -522,7 +522,7 @@ test("rendered mobile scoring remains deterministic", () => {
   );
 });
 
-const scoreFixture = (html: string, rendered: RenderedMobileData, provider = pageSpeed) => {
+const scoreFixture = (html: string, rendered: RenderedMobileData, provider: PageSpeedData = pageSpeed) => {
   const page = parsePageSnapshot({ url: "https://example.com/", statusCode: 200, html });
   const { checks, notices } = buildAuditChecks(makeCrawl(page), provider, rendered);
   const result = buildAuditResult({

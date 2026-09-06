@@ -70,6 +70,10 @@ export const sanitizeRenderedHtml = (html: string, finalUrl: string) => {
     /^(?:|module|(?:text|application)\/(?:java|ecma)script)$/i.test(($(script).attr("type") ?? "").trim()),
   ).length;
   metrics.embeddedDocumentsRemoved = $("iframe, frame, object, embed, portal").length;
+  $("*").each((_, element) => {
+    if ("attribs" in element) metrics.inlineHandlersRemoved +=
+      Object.keys(element.attribs).filter((attribute) => /^on/i.test(attribute)).length;
+  });
 
   $("script, iframe, frame, object, embed, portal").remove();
   $("base").remove();
@@ -80,7 +84,6 @@ export const sanitizeRenderedHtml = (html: string, finalUrl: string) => {
 
     for (const attribute of Object.keys(attributes)) {
       if (/^on/i.test(attribute) || attribute.toLowerCase() === "srcdoc") {
-        if (/^on/i.test(attribute)) metrics.inlineHandlersRemoved += 1;
         $(element).removeAttr(attribute);
       }
     }
@@ -88,6 +91,9 @@ export const sanitizeRenderedHtml = (html: string, finalUrl: string) => {
 
   const sourceBody = $("body").clone();
   sourceBody.find("style, noscript, template, [hidden], [aria-hidden='true']").remove();
+  sourceBody.find("[style]").filter((_, element) =>
+    /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test($(element).attr("style") ?? ""),
+  ).remove();
   metrics.sourceTextCharacters = sourceBody.text().replace(/\s+/g, " ").trim().length;
   metrics.sourceStructurallyComplete = metrics.sourceTextCharacters >= 200 &&
     sourceBody.find("h1, h2").length > 0 && sourceBody.find("p, li, form").length > 0;
@@ -231,11 +237,12 @@ const waitForBrowser = async (
   }
 };
 
-const fulfillSafeResource = async (
+export const fulfillSafeResource = async (
   route: Route,
   finalOrigin: string,
   signal: AbortSignal,
   counters: { stylesheets: number; images: number; metrics: RenderFidelityMetrics },
+  requestResource: typeof safeHttpRequest = safeHttpRequest,
 ) => {
   const request = route.request();
   const resourceType = request.resourceType();
@@ -286,7 +293,7 @@ const fulfillSafeResource = async (
   counters[counterKey] += 1;
 
   try {
-    const response = await safeHttpRequest(resourceUrl, {
+    const response = await requestResource(resourceUrl, {
       allowedRedirectOrigin: finalOrigin,
       headers: {
         Accept:
