@@ -3,12 +3,47 @@ import { access } from "node:fs/promises";
 import { after, test } from "node:test";
 import { chromium as playwrightChromium } from "playwright-core";
 import type { PrimaryCrawlData } from "../../lib/website-audit/crawler";
+import { parsePageSnapshot } from "../../lib/website-audit/page-analysis";
+import { buildAuditChecks } from "../../lib/website-audit/checks";
+import { buildAuditResult } from "../../lib/website-audit/scoring";
+import { bigUglyFoundationsHtml, strongFoundationsHtml } from "../website-audit/fixtures/foundations";
 import {
   closeRenderedMobileBrowserForTesting,
   runRenderedMobileAudit,
 } from "../../lib/website-audit/providers/rendered-mobile";
 
 after(() => closeRenderedMobileBrowserForTesting());
+
+test("real Chromium evidence separates strong foundations from Big Ugly style failures", { timeout: 30_000 }, async () => {
+  for (const [name, html] of [["strong", strongFoundationsHtml], ["broken", bigUglyFoundationsHtml]]) {
+    const primaryPage = parsePageSnapshot({ url: "https://example.com/", statusCode: 200, html });
+    const primary = { submittedUrl: primaryPage.url, finalUrl: primaryPage.url, redirectCount: 0, html, primaryPage };
+    const rendered = await runRenderedMobileAudit(primary, { browserExecutablePathForTesting: playwrightChromium.executablePath() });
+    assert.equal(rendered.available, true);
+    if (!rendered.available) continue;
+    const { checks } = buildAuditChecks({
+      ...primary, pages: [primaryPage],
+      robots: { status: "present", blocksPrimaryPage: false, blocksOptionalCrawl: false, sitemapUrl: null },
+      sitemapStatus: "present", brokenLinks: { tested: 1, broken: [], unavailable: 0 },
+    }, {
+      available: true, performanceScore: 100, accessibilityScore: name === "strong" ? 100 : 60,
+      seoScore: 100, metrics: {}, audits: { colorContrast: name === "strong" ? 100 : 0 },
+    }, rendered);
+    const result = buildAuditResult({
+      id: "a6799d85-eab3-4fa7-aefd-131b0d9b2cb2", auditedUrl: primaryPage.url,
+      createdAt: "2026-08-12T12:00:00.000Z", completedAt: "2026-08-12T12:00:10.000Z", checks,
+    });
+    if (name === "strong") {
+      assert.ok(rendered.metrics.primaryActionCount >= 2);
+      assert.ok(result.overallScore >= 90);
+    } else {
+      assert.equal(rendered.metrics.primaryActionCount, 0);
+      assert.ok(result.categoryScores.find((entry) => entry.id === "mobile-experience")!.score! < 50);
+      assert.ok(result.categoryScores.find((entry) => entry.id === "conversion-ux")!.score! <= 59);
+      assert.ok(result.overallScore <= 66);
+    }
+  }
+});
 
 test(
   "renders one bounded mobile layout with Playwright Chromium",

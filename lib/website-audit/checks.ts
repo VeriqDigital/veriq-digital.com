@@ -9,7 +9,7 @@ import type {
   PageSpeedMetric,
   RenderedMobileData,
 } from "./model";
-import { healthConstraintCaps } from "./health-constraints";
+import { categoryConstraintCaps, healthConstraintCaps } from "./health-constraints";
 import { hasObviousHeadingSkip } from "./page-analysis";
 
 type FindingInput = Omit<AuditFinding, "id" | "category" | "impact"> &
@@ -720,6 +720,9 @@ function buildMobileChecks(
           weight: 15,
           status: "failed",
           score: 15,
+          penaltyGroup: "mobile-horizontal-layout",
+          categoryScoreCap: categoryConstraintCaps.missingViewport,
+          overallScoreCap: healthConstraintCaps.fundamentalUsability,
           finding: {
             severity: "high",
             title: "The page is missing mobile viewport settings",
@@ -775,7 +778,9 @@ function buildMobileChecks(
             penaltyGroup:
               id === "mobile-content-width"
                 ? "mobile-horizontal-layout"
-                : undefined,
+                : "mobile-tap-targets",
+            categoryScoreCap: score < 50 ? categoryConstraintCaps.majorUsability : undefined,
+            overallScoreCap: score < 50 ? healthConstraintCaps.majorCustomerExperience : undefined,
             finding: {
               severity: score < 50 ? "high" : "medium",
               title,
@@ -811,12 +816,15 @@ function buildMobileChecks(
   const confirmedHorizontalOverflow =
     metrics.horizontalScrollPixels > 8 ||
     (metrics.horizontalOverflowPixels > 8 && metrics.wideElementCount > 0);
+  const desktopRenderingWithoutViewport =
+    !page.hasViewport && metrics.documentWidth >= metrics.viewportWidth * 1.5;
   const catastrophicOverflow =
+    desktopRenderingWithoutViewport ||
     metrics.horizontalScrollPixels >= 160 ||
     (metrics.fixedWidthElementCount > 0 && materialOverflow >= 120);
 
   checks.push(
-    confirmedHorizontalOverflow
+    (confirmedHorizontalOverflow || desktopRenderingWithoutViewport)
       ? check({
           id: "mobile-rendered-width",
           category: "mobile-experience",
@@ -824,11 +832,15 @@ function buildMobileChecks(
           status: "failed",
           score: catastrophicOverflow ? 10 : materialOverflow >= 48 ? 45 : 75,
           penaltyGroup: "mobile-horizontal-layout",
-          categoryScoreCap: catastrophicOverflow ? 49 : undefined,
+          categoryScoreCap: catastrophicOverflow
+            ? categoryConstraintCaps.fundamentalMobile
+            : materialOverflow >= 48 ? categoryConstraintCaps.majorUsability : undefined,
           overallScoreCap:
-            catastrophicOverflow || materialOverflow >= 48
-              ? healthConstraintCaps.majorCustomerExperience
-              : healthConstraintCaps.moderateMaterialDefect,
+            catastrophicOverflow
+              ? healthConstraintCaps.fundamentalUsability
+              : materialOverflow >= 48
+                ? healthConstraintCaps.majorCustomerExperience
+                : healthConstraintCaps.moderateMaterialDefect,
           finding: {
             impact: "confirmed",
             severity: catastrophicOverflow
@@ -895,10 +907,14 @@ function buildMobileChecks(
               ? 30
               : 60,
           penaltyGroup: "mobile-horizontal-layout",
+          categoryScoreCap:
+            metrics.clippedNavigation || metrics.offscreenPrimaryActionCount > 0
+              ? categoryConstraintCaps.fundamentalMobile
+              : categoryConstraintCaps.majorUsability,
           overallScoreCap:
             metrics.clippedNavigation || metrics.offscreenPrimaryActionCount > 0
-              ? healthConstraintCaps.majorCustomerExperience
-              : healthConstraintCaps.moderateMaterialDefect,
+              ? healthConstraintCaps.fundamentalUsability
+              : healthConstraintCaps.majorCustomerExperience,
           finding: {
             impact: "confirmed",
             severity:
@@ -997,6 +1013,9 @@ function buildMobileChecks(
             weight: 5,
             status: "failed",
             score: seriousTapRatio >= 0.3 ? 45 : 72,
+            penaltyGroup: "mobile-tap-targets",
+            categoryScoreCap: seriousTapRatio >= 0.3 ? categoryConstraintCaps.majorUsability : undefined,
+            overallScoreCap: seriousTapRatio >= 0.3 ? healthConstraintCaps.majorCustomerExperience : undefined,
             finding: {
               severity: seriousTapRatio >= 0.3 ? "high" : "medium",
               title: "Some rendered mobile controls are extremely small",
@@ -1030,7 +1049,10 @@ function buildMobileChecks(
             weight: 5,
             status: "failed",
             score: tinyTextRatio >= 0.25 ? 55 : 78,
+            categoryScoreCap: tinyTextRatio >= 0.5 ? categoryConstraintCaps.majorUsability : undefined,
+            overallScoreCap: tinyTextRatio >= 0.5 ? healthConstraintCaps.majorCustomerExperience : undefined,
             finding: {
+              impact: tinyTextRatio >= 0.5 ? "confirmed" : "likely",
               severity: tinyTextRatio >= 0.25 ? "medium" : "low",
               title: "A meaningful share of mobile text renders very small",
               explanation: `${metrics.tinyTextCount} of ${metrics.textSampleCount} sampled text elements rendered below 12px.`,
@@ -1198,20 +1220,23 @@ function buildConversionChecks(
   renderedMobile: RenderedMobileData,
 ): AuditCheckResult[] {
   const page = crawl.primaryPage;
-  const hasContactPath = page.contactLinkCount > 0 || page.formCount > 0;
+  const hasContactPath = page.contactLinkCount > 0 || page.contactFormCount > 0;
 
+  const missingCustomerPath = page.actionLinkCount === 0 && !hasContactPath;
   const checks: AuditCheckResult[] = [
     page.actionLinkCount > 0
-      ? check({ id: "conversion-action-path", category: "conversion-ux", weight: 55, status: "passed", score: 100 })
+      ? check({ id: "conversion-action-path", category: "conversion-ux", weight: 25, status: "passed", score: 100 })
       : check({
           id: "conversion-action-path",
           category: "conversion-ux",
-          weight: 55,
-          status: "opportunity",
-          score: 68,
+          weight: 25,
+          status: "failed",
+          score: 40,
           evidenceConfidence: 0.7,
+          penaltyGroup: missingCustomerPath ? "customer-action-path" : undefined,
           finding: {
-            severity: "opportunity",
+            impact: "likely",
+            severity: "medium",
             title: "No obvious action link was detected on the audited page",
             explanation:
               "The page did not contain a link or button whose visible text clearly matched common customer actions such as contact, book, request, call, or quote.",
@@ -1222,19 +1247,21 @@ function buildConversionChecks(
           },
         }),
     hasContactPath
-      ? check({ id: "conversion-contact-path", category: "conversion-ux", weight: 45, status: "passed", score: 100 })
+      ? check({ id: "conversion-contact-path", category: "conversion-ux", weight: 25, status: "passed", score: 100 })
       : check({
           id: "conversion-contact-path",
           category: "conversion-ux",
-          weight: 45,
-          status: "opportunity",
-          score: 70,
+          weight: 25,
+          status: "failed",
+          score: 45,
           evidenceConfidence: 0.7,
+          penaltyGroup: missingCustomerPath ? "customer-action-path" : undefined,
           finding: {
-            severity: "opportunity",
+            impact: "likely",
+            severity: "medium",
             title: "No direct contact path was detected on the audited page",
             explanation:
-              "The HTML did not contain a form, telephone link, or email link. A separate contact page may still exist.",
+              "No available telephone link, email link, or contact-like form was detected. A separate contact page or JavaScript flow may still exist.",
             whyItMatters:
               "A direct contact path can reduce friction for visitors who are ready to ask a question or start a project.",
             recommendation:
@@ -1243,48 +1270,88 @@ function buildConversionChecks(
         }),
   ];
 
-  if (page.actionLinkCount > 0) {
-    if (!renderedMobile.available) {
-      checks.push(
-        unavailableCheck(
-          "conversion-mobile-action-usability",
-          "conversion-ux",
-          15,
-        ),
-      );
-    } else if (renderedMobile.metrics.offscreenPrimaryActionCount > 0) {
-      checks.push(
-        check({
-          id: "conversion-mobile-action-usability",
-          category: "conversion-ux",
-          weight: 15,
-          status: "failed",
-          score: 25,
-          penaltyGroup: "mobile-horizontal-layout",
-          categoryScoreCap: 79,
-          overallScoreCap: healthConstraintCaps.majorCustomerExperience,
-          finding: {
-            severity: "high",
-            title: "A primary customer action is cut off on mobile",
-            explanation: `${renderedMobile.metrics.offscreenPrimaryActionCount} detected customer actions rendered substantially outside the usable mobile viewport.`,
-            whyItMatters:
-              "A contact, booking, quote, or purchase action cannot help customers if it is not reachable in the mobile layout.",
-            recommendation:
-              "Keep the primary customer action fully visible and usable at common phone widths.",
-          },
-        }),
-      );
-    } else {
-      checks.push(
-        check({
-          id: "conversion-mobile-action-usability",
-          category: "conversion-ux",
-          weight: 15,
-          status: "passed",
-          score: 100,
-        }),
-      );
-    }
+  // Absence is scoped to the audited HTML. On a business-oriented page,
+  // missing both routes is one root problem, not two independent penalties.
+  if (missingCustomerPath) {
+    checks.push(check({
+      id: "conversion-customer-path",
+      category: "conversion-ux",
+      weight: 25,
+      status: "failed",
+      score: 40,
+      evidenceConfidence: 0.7,
+      penaltyGroup: "customer-action-path",
+      categoryScoreCap: categoryConstraintCaps.missingCustomerPath,
+      overallScoreCap: healthConstraintCaps.majorCustomerExperience,
+      finding: {
+        impact: "confirmed",
+        severity: "high",
+        title: "No customer action or direct contact path was detected",
+        explanation: "Neither action matching nor direct-contact checks found an available route in the audited HTML. This confirms a gap in detectable page foundations, not the absence of every JavaScript or off-page route.",
+        whyItMatters: "On a page intended to generate inquiries or sales, missing both routes is a substantial barrier to a customer's next step.",
+        recommendation: "If this page serves customers, provide a reachable contact, booking, quote, or purchase path in the markup and verify the complete journey manually.",
+        supportingMetric: {
+          label: "Detected customer routes",
+          value: "0 actions; 0 direct contact paths",
+          context: "Primary page HTML only; visual prominence and JavaScript behavior are not assessed.",
+        },
+      },
+    }));
+  }
+
+  // Labels are a structural signal, not a form UX review. Share the existing
+  // accessibility root so these fields cannot create another independent cap.
+  if (page.formCount > 0 && page.formControlCount > 0) {
+    const labelScore = Math.max(0, 100 * (1 - page.unlabeledFormControlCount / page.formControlCount));
+    checks.push(check({
+      id: "conversion-form-labels",
+      category: "conversion-ux",
+      weight: 15,
+      status: labelScore === 100 ? "passed" : "failed",
+      score: labelScore,
+      penaltyGroup: "form-accessibility",
+      categoryScoreCap: labelScore < 60 ? categoryConstraintCaps.majorUsability : undefined,
+      overallScoreCap: labelScore < 60 ? healthConstraintCaps.moderateMaterialDefect : undefined,
+      finding: labelScore === 100 ? undefined : {
+        impact: "confirmed",
+        severity: labelScore < 60 ? "high" : "medium",
+        title: "Form fields lack detectable labels for customer input",
+        explanation: page.unlabeledFormControlCount + " of " + page.formControlCount + " fields lack a detectable label or accessible name.",
+        whyItMatters: "Customers need to identify what each field asks for. Labels alone do not establish good form UX or successful submission.",
+        recommendation: "Label each field and manually verify validation, errors, and successful submission.",
+      },
+    }));
+  }
+
+  // No observed action is unavailable evidence, never a successful usability test.
+  if (!renderedMobile.available || renderedMobile.metrics.primaryActionCount === 0) {
+    checks.push(unavailableCheck("conversion-mobile-action-usability", "conversion-ux", 35));
+  } else {
+    const metrics = renderedMobile.metrics;
+    const offscreen = metrics.offscreenPrimaryActionCount > 0;
+    const tinyActions = metrics.seriousPrimaryActionCount > 0;
+    checks.push(check({
+      id: "conversion-mobile-action-usability",
+      category: "conversion-ux",
+      weight: 35,
+      status: offscreen || tinyActions ? "failed" : "passed",
+      score: offscreen ? 25 : tinyActions ? 55 : 100,
+      penaltyGroup: offscreen ? "mobile-horizontal-layout" : "mobile-tap-targets",
+      categoryScoreCap: offscreen || tinyActions ? categoryConstraintCaps.majorUsability : undefined,
+      overallScoreCap: offscreen
+        ? healthConstraintCaps.fundamentalUsability
+        : tinyActions ? healthConstraintCaps.majorCustomerExperience : undefined,
+      finding: offscreen || tinyActions ? {
+        impact: "confirmed",
+        severity: "high",
+        title: offscreen ? "A primary customer action is cut off on mobile" : "A customer action is extremely small on mobile",
+        explanation: offscreen
+          ? metrics.offscreenPrimaryActionCount + " detected actions rendered substantially outside the usable mobile viewport."
+          : metrics.seriousPrimaryActionCount + " detected actions rendered below 20px in both dimensions without an adequate label target.",
+        whyItMatters: "Customers need reachable controls with usable touch areas. These measurements do not establish persuasion or successful completion of an action.",
+        recommendation: "Keep customer actions within the usable viewport with comfortable touch areas, then manually test the destination or submission.",
+      } : undefined,
+    }));
   }
 
   return checks;
@@ -1505,7 +1572,7 @@ export function buildAuditChecks(
 ): { checks: readonly AuditCheckResult[]; notices: readonly string[] } {
   const notices = [
     "Automated accessibility checks identify detectable issues but do not certify WCAG conformance or legal compliance.",
-    "Conversion / UX checks are limited to detectable action and contact paths; they are recommendations, not a visual design review.",
+    "Conversion foundations checks assess detectable customer paths, form labels, and rendered action geometry. They do not grade design, messaging, persuasion, or completed transactions.",
   ];
 
   if (!pageSpeed.available) {

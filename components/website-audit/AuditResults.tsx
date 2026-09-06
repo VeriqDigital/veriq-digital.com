@@ -45,8 +45,8 @@ export default function AuditResults({ result, variant }: AuditResultsProps) {
           </p>
           <h2>
             {isSample
-              ? "See the site’s health in one clear view."
-              : "Your website’s health, prioritized."}
+              ? "Your audit, at a glance."
+              : "Your audit findings, prioritized."}
           </h2>
         </div>
         <p>
@@ -98,7 +98,7 @@ export default function AuditResults({ result, variant }: AuditResultsProps) {
         <div className={styles.resultSectionHeading}>
           <p>Health by category</p>
           <h2 id={categoryTitleId}>
-            Where the website is strong — and where it needs work.
+            Measured strengths and issues.
           </h2>
         </div>
         <CategoryScores scores={result.categoryScores} />

@@ -56,3 +56,30 @@ test("does not count disabled, hidden, inert, aria-disabled, or decorative butto
 
   assert.equal(page.actionLinkCount, 0);
 });
+
+test("hidden contact links, placeholder actions, and non-contact forms do not fabricate customer routes", () => {
+  const page = parsePageSnapshot({ url: "https://example.com/", statusCode: 200, html: `<html><body>
+    <a hidden href="tel:+15555550100">Call us</a><a href="mailto:">Email</a>
+    <a href="#">Book now</a><a href="javascript:void(0)">Request a quote</a>
+    <form role="search"><input type="search"></form><form></form>
+    <form><input type="email"><input type="password"></form>
+    <form hidden><textarea></textarea></form>
+    </body></html>` });
+  assert.equal(page.contactLinkCount, 0);
+  assert.equal(page.actionLinkCount, 0);
+  assert.equal(page.contactFormCount, 0);
+});
+
+test("contact-like forms provide structural evidence without claiming submission works", () => {
+  const page = parsePageSnapshot({ url: "https://example.com/", statusCode: 200,
+    html: '<form><input type="email"><textarea></textarea><button>Send</button></form>' });
+  assert.equal(page.contactFormCount, 1);
+});
+
+test("a nonempty viewport tag must declare device width to pass the mobile fundamental", () => {
+  for (const [content, expected] of [["width=device-width, initial-scale=1", true], ["WIDTH = device-width", true], ["width=980", false], ["initial-scale=1", false], ["", false]] as const) {
+    const page = parsePageSnapshot({ url: "https://example.com/", statusCode: 200,
+      html: `<meta name="viewport" content="${content}">` });
+    assert.equal(page.hasViewport, expected, content);
+  }
+});

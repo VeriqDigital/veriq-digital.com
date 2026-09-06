@@ -5,10 +5,10 @@ export const demoAuditResult = normalizeAuditResult({
   status: "demo",
   auditedUrl: "https://northstarheating.example/",
   createdAt: "2026-08-12T12:00:00.000Z",
-  overallScore: 66,
-  evidenceCoverage: 100,
+  overallScore: 61,
+  evidenceCoverage: 96,
   overallSummary:
-    "The foundation is workable, but a few high-impact issues are getting in the way of visibility, speed, and customer action.",
+    "The automated checks found weaknesses in visibility, speed, and customer action that need attention.",
   categoryScores: [
     {
       id: "seo",
@@ -36,7 +36,7 @@ export const demoAuditResult = normalizeAuditResult({
       score: 67,
       evidenceLevel: "full",
       evidenceCoverage: 100,
-      summary: "Usable overall, with friction around key actions.",
+      summary: "Measured touch-target issues need attention.",
       checksRun: 3,
       checksUnavailable: 0,
     },
@@ -54,11 +54,11 @@ export const demoAuditResult = normalizeAuditResult({
       id: "conversion-ux",
       available: true,
       score: 48,
-      evidenceLevel: "full",
-      evidenceCoverage: 100,
-      summary: "The next step is easy to miss on high-intent pages.",
-      checksRun: 3,
-      checksUnavailable: 0,
+      evidenceLevel: "partial",
+      evidenceCoverage: 70,
+      summary: "No customer action or direct contact route was detected.",
+      checksRun: 2,
+      checksUnavailable: 1,
     },
     {
       id: "technical-health",
@@ -66,7 +66,7 @@ export const demoAuditResult = normalizeAuditResult({
       score: 76,
       evidenceLevel: "full",
       evidenceCoverage: 100,
-      summary: "Generally healthy, with one serious indexing risk.",
+      summary: "Several technical checks passed; a service page is blocked from indexing.",
       checksRun: 7,
       checksUnavailable: 0,
     },
@@ -116,15 +116,15 @@ export const demoAuditResult = normalizeAuditResult({
       category: "conversion-ux",
       impact: "confirmed",
       severity: "high",
-      title: "The primary next step is difficult to find",
+      title: "No customer action or direct contact path was detected",
       explanation:
-        "Service pages introduce several equal-looking links without identifying the action a ready customer should take.",
+        "The audited page HTML contains no detectable customer action, telephone link, email link, or contact-like form. A JavaScript or off-page route may still exist.",
       whyItMatters:
-        "Visitors who are ready to act may hesitate or leave when the route to contact, booking, or a quote is unclear.",
+        "On a page intended to generate inquiries, customers need a reachable route to contact, booking, or a quote.",
       recommendation:
-        "Choose one primary action for each high-intent page and repeat it after the information customers need to decide.",
-      observedValue: "Four equal calls to action",
-      recommendedValue: "One primary action with supporting links",
+        "Provide a reachable customer action in the page markup and verify the complete journey manually.",
+      observedValue: "0 actions; 0 direct contact paths",
+      recommendedValue: "A reachable customer action or contact route",
     },
     {
       id: "demo-page-title",
@@ -160,22 +160,23 @@ export const demoAuditResult = normalizeAuditResult({
       },
     },
     {
-      id: "demo-form-labels",
+      id: "demo-link-names",
       category: "accessibility",
       impact: "informational",
       severity: "passed",
-      title: "Contact fields have useful accessible labels",
+      title: "Navigation links have detectable accessible names",
       explanation:
-        "Each visible field is programmatically connected to a clear label.",
+        "Each sampled navigation link has text or an accessible name detectable from the HTML.",
       whyItMatters:
-        "Clear labels help everyone complete the form and give assistive technology the context it needs.",
+        "Named links give assistive technology context about where a link leads.",
       recommendation:
-        "Keep the labels in place and include them when new fields are added.",
+        "Keep meaningful accessible names when navigation links change.",
     },
   ],
   notices: [
     "Sample data only. No real website was analyzed for this preview.",
+    "Conversion foundations has partial evidence: no customer action was observed for the rendered action usability check.",
     "Automated accessibility checks do not certify WCAG or legal compliance.",
   ],
-  methodologyVersion: "v3",
+  methodologyVersion: "v4",
 });

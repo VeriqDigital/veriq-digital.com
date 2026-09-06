@@ -121,13 +121,68 @@ client-error, invalid-result, and timeout responses are not retried. Safe
 provider logs classify the failure without recording the audited URL, API key,
 or upstream response content.
 
-Scoring methodology v2 uses explicit check weights inside six canonical
-categories and explicit category weights for the overall score. Missing checks
-reduce evidence coverage and pull partial results toward a conservative prior;
-they are never silently zero or perfect. Partial/sparse categories cannot score
-90+, severe findings impose centralized ceilings, and the source-only
-Conversion/UX category has a conservative ceiling. Automated accessibility
-checks do not certify WCAG or legal compliance.
+Scoring methodology **v4** reports automated website health across six categories:
+SEO (22%), performance (20%), mobile experience (15%), accessibility (15%),
+conversion foundations (12%), and technical health (16%). The stable internal
+conversion category ID remains `conversion-ux`; existing saved results remain
+readable and retain their original scores and methodology version. Run a new
+audit to apply v4.
+
+Checks use explicit weights and impact-adjusted deductions (confirmed 1,
+likely 0.55, informational 0.1). Within each category, a `penaltyGroup` uses
+only its largest deduction and largest scoring weight. Shared mobile overflow,
+clipped content, and offscreen action findings therefore do not stack as
+independent root failures. Findings retain their individual explanations.
+
+The final score is the minimum of the weighted available-category average,
+explicit/material constraints, the weakest available category's ceiling, and
+the perfection constraint. The centralized weakest-category ceiling applies
+even when no check declares an explicit overall cap:
+
+| Weakest measured category | Overall ceiling |
+| --- | --- |
+| 90–100 | 100 |
+| 80–89 | 92 |
+| 70–79 | 86 |
+| 60–69 | 79 |
+| 50–59 | 72 |
+| 0–49 | 66 |
+
+`health-constraints.ts` also defines semantic overall ceilings: catastrophic
+website failure 49; fundamental visibility/usability failure 69; major customer
+experience defect 79; moderate material defect 93; incomplete perfection 99.
+Confirmed independent material roots can tighten a ceiling by up to six points;
+additional weak material categories with independent roots can tighten the
+weak-category ceiling by up to ten points. These constraints are combined by
+minimum, not added together. Severity alone never activates an explicit cap.
+
+Missing a device-width viewport caps mobile at 59 and overall at 69. Measured
+desktop-style rendering without that viewport, enormous overflow (160px of
+horizontal scrolling, or 120px with a fixed-width element), clipped navigation,
+and unreachable primary actions cap mobile at 49. Meaningful overflow (48px+),
+clipped important content, serious tap problems (30%+ of controls below 20px in
+both dimensions), and widespread tiny text (50%+ of sampled text below 12px)
+receive major constraints. The existing 8px overflow tolerance, uncertain
+off-canvas geometry, and decorative/image opportunities remain conservative.
+
+Conversion foundations weights action detection 25, direct contact detection
+25, rendered action geometry 35, and form labels 15 when forms are present.
+A hidden or empty contact link and a search/login/empty form do not establish a
+direct contact route. Missing both customer paths adds a shared-root check,
+caps this category at 59, and declares a modest overall ceiling of 79; the
+weakest-category rule can constrain it further. This absence finding is scoped
+to the primary HTML and explains its relevance to business-oriented pages.
+Form label findings share the accessibility root. Rendered actions must actually
+be observed before their geometry can pass; absent observations are unavailable.
+No forms are required on sites that provide other customer routes.
+
+Unavailable checks are excluded from health-score denominators and reduce
+evidence coverage. Partial evidence uses completed checks without a prior or a
+fabricated failure; its confidence remains separately visible. Only complete
+evidence with no findings permits 100. High scores mean **strong automated
+foundations**, not excellent visual design. The report does not grade branding,
+copy quality, visual hierarchy, persuasion, or end-to-end customer journeys.
+Automated accessibility checks do not certify WCAG or legal compliance.
 
 Known limitations: the crawler analyzes server-returned HTML rather than a
 fully rendered browser, PageSpeed runs mobile only, compression is not scored

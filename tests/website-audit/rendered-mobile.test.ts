@@ -176,7 +176,20 @@ test("confirms a meaningful action that is outside and unreachable", () => {
   );
 
   assert.equal(metrics.offscreenPrimaryActionCount, 1);
+  assert.equal(metrics.primaryActionCount, 1);
   assert.equal(metrics.clippedImportantElementCount, 1);
+});
+
+test("action evidence excludes disabled and uncertain off-canvas controls and counts tiny observed actions", () => {
+  const metrics = interpretRenderedMobileMeasurement(measurement({ controls: [
+    control({ elementKind: "button", primaryAction: true, width: 80, height: 44 }),
+    control({ elementKind: "button", primaryAction: true }),
+    control({ elementKind: "button", primaryAction: true, disabled: true }),
+    control({ elementKind: "button", primaryAction: true, potentiallyOutside: true, intentionallyOffCanvas: true }),
+    control({ elementKind: "button", primaryAction: true, potentiallyOutside: true }),
+  ] }));
+  assert.equal(metrics.primaryActionCount, 2);
+  assert.equal(metrics.seriousPrimaryActionCount, 1);
 });
 
 test("keeps missing image attributes separate from rendered layout reservation", () => {

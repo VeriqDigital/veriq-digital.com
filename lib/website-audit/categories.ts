@@ -33,10 +33,10 @@ export const auditCategoryRegistry = [
   },
   {
     id: "conversion-ux",
-    label: "Conversion / UX",
-    pageLabel: "Conversion / UX",
+    label: "Conversion foundations",
+    pageLabel: "Conversion foundations",
     description:
-      "Whether measurable page elements give visitors a clear way to contact or act.",
+      "Detectable action paths, contact routes, form labels, and mobile action usability. This does not assess messaging, visual hierarchy, persuasion, or design quality.",
     overallWeight: 12,
   },
   {
@@ -72,4 +72,3 @@ export function getAuditCategory(id: AuditCategoryId) {
 export function isAuditCategoryId(value: string): value is AuditCategoryId {
   return auditCategoryById.has(value as AuditCategoryId);
 }
-

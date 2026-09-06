@@ -21,6 +21,7 @@ export type PageSnapshot = Readonly<{
   responsiveImageCount: number;
   structuredDataCount: number;
   formCount: number;
+  contactFormCount: number;
   formControlCount: number;
   unlabeledFormControlCount: number;
   contactLinkCount: number;
@@ -116,30 +117,34 @@ export function parsePageSnapshot({
   let contactLinkCount = 0;
   let actionLinkCount = 0;
   const countedActions = new Set<unknown>();
+  const isUnavailable = (element: (typeof formControls)[number]) => {
+    const control = $(element);
+    return control.is("[disabled]") || control.closest(
+      '[hidden], [inert], [aria-hidden="true" i], [aria-disabled="true" i], fieldset[disabled]',
+    ).length > 0 || control.parents().addBack().toArray().some((candidate) =>
+      /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test(
+        $(candidate).attr("style") ?? "",
+      ),
+    );
+  };
 
   $("a[href]").each((_, element) => {
     const link = $(element);
     const href = (link.attr("href") ?? "").trim();
     const text = normalizeText(link.text());
-    const unavailableAction =
-      link.closest(
-        '[hidden], [inert], [aria-hidden="true" i], [aria-disabled="true" i]',
-      ).length > 0 ||
-      link
-        .parents()
-        .addBack()
-        .toArray()
-        .some((candidate) =>
-          /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test(
-            $(candidate).attr("style") ?? "",
-          ),
-        );
+    const unavailableAction = isUnavailable(element);
 
-    if (/^(tel:|mailto:)/i.test(href)) {
+    if (!unavailableAction && /^(tel:|mailto:)\S+/i.test(href)) {
       contactLinkCount += 1;
     }
 
-    if (!unavailableAction && actionTextPattern.test(`${text} ${href}`)) {
+    const resolvedAction = resolveUrl(href, resolutionBase);
+    const hasDestination = Boolean(
+      href && href !== "#" && resolvedAction &&
+      (["http:", "https:"].includes(resolvedAction.protocol) ||
+        /^(tel:|mailto:)\S+/i.test(href)),
+    );
+    if (!unavailableAction && hasDestination && actionTextPattern.test(`${text} ${href}`)) {
       actionLinkCount += 1;
       countedActions.add(element);
     }
@@ -177,24 +182,7 @@ export function parsePageSnapshot({
 
     if (!isNativeButton && !isInteractiveAriaButton) return;
 
-    const unavailableAncestor = control.closest(
-      '[hidden], [inert], [aria-hidden="true" i], [aria-disabled="true" i], fieldset[disabled]',
-    );
-    const hiddenByInlineStyle = control
-      .parents()
-      .addBack()
-      .toArray()
-      .some((candidate) =>
-        /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test(
-          $(candidate).attr("style") ?? "",
-        ),
-      );
-
-    if (
-      control.is("[disabled]") ||
-      unavailableAncestor.length > 0 ||
-      hiddenByInlineStyle
-    ) {
+    if (isUnavailable(element)) {
       return;
     }
 
@@ -257,7 +245,7 @@ export function parsePageSnapshot({
     h1s: headings
       .filter((heading) => heading.level === 1 && heading.text.length > 0)
       .map((heading) => heading.text),
-    hasViewport: Boolean(
+    hasViewport: /(?:^|[,;\s])width\s*=\s*device-width(?:$|[,;\s])/i.test(
       normalizeText($('meta[name="viewport" i]').first().attr("content")),
     ),
     documentLanguage: normalizeText($("html").attr("lang")),
@@ -273,6 +261,15 @@ export function parsePageSnapshot({
     ).length,
     structuredDataCount: $('script[type="application/ld+json" i]').length,
     formCount: $("form").length,
+    // A search/login/empty form alone is not evidence of a contact route.
+    contactFormCount: $("form").filter((_, element) => {
+      const form = $(element);
+      return !isUnavailable(element) &&
+        !form.is('[role="search"]') &&
+        form.find('input[type="search"], input[type="password"]').length === 0 &&
+        form.find('input[type="email"], input[type="tel"], textarea').toArray()
+          .some((control) => !isUnavailable(control));
+    }).length,
     formControlCount: formControls.length,
     unlabeledFormControlCount,
     contactLinkCount,

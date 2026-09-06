@@ -341,6 +341,8 @@ export function normalizeRenderedMobileMetrics(
       metrics.offscreenPrimaryActionCount,
       10_000,
     ),
+    primaryActionCount: boundedInteger(metrics.primaryActionCount, 10_000),
+    seriousPrimaryActionCount: boundedInteger(metrics.seriousPrimaryActionCount, 10_000),
     missingDimensionImageCount: boundedInteger(
       metrics.missingDimensionImageCount,
       10_000,
@@ -383,6 +385,10 @@ export function interpretRenderedMobileMeasurement(
       control.width < 20 &&
       control.height < 20,
   );
+  const observedPrimaryActions = new Set(interactiveControls.filter(
+    (control) => control.primaryAction &&
+      (!control.potentiallyOutside || control.materiallyOutside),
+  ));
 
   return normalizeRenderedMobileMetrics({
     viewportWidth: measurement.viewportWidth,
@@ -412,6 +418,8 @@ export function interpretRenderedMobileMeasurement(
         (control) => control.insideNavigation && control.materiallyOutside,
       ),
     offscreenPrimaryActionCount: offscreenPrimaryActions.length,
+    primaryActionCount: observedPrimaryActions.size,
+    seriousPrimaryActionCount: seriousTapTargets.filter((control) => observedPrimaryActions.has(control)).length,
     missingDimensionImageCount: measurement.missingDimensionImageCount,
     unreservedImageCount: measurement.unreservedImageCount,
     seriousTapTargetCount: seriousTapTargets.length,
@@ -855,7 +863,7 @@ const measurePage = async (
           height: rect.height,
           hasAdequateLabelTarget,
           primaryAction: actionPattern.test(
-            `${element.textContent ?? ""} ${element.getAttribute("aria-label") ?? ""} ${element.getAttribute("href") ?? ""}`,
+            `${element.textContent ?? ""} ${element.getAttribute("aria-label") ?? ""} ${element.getAttribute("href") ?? ""} ${element instanceof HTMLInputElement ? element.value : ""}`,
           ),
           materiallyOutside: isConfirmedInaccessible(element),
           potentiallyOutside: geometry.outside,

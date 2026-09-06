@@ -11,12 +11,15 @@ export type {
 export type { AuditCategoryId } from "@/lib/website-audit/categories";
 
 export const getScoreInterpretation = (score: number) => {
-  if (score >= 90) return "Excellent";
-  if (score >= 80) return "Good";
-  if (score >= 70) return "Fair";
-  if (score >= 50) return "Needs work";
-  return "Significant issues";
+  if (score >= 90) return "Strong automated foundations";
+  if (score >= 80) return "Generally strong foundations";
+  if (score >= 70) return "Mixed foundations";
+  if (score >= 50) return "Needs attention";
+  return "Significant issues detected";
 };
+
+export const automatedScoreScope =
+  "This score reflects automated technical and structural checks. It does not grade visual design, branding, copy quality, or overall persuasiveness.";
 
 export const getEvidenceConfidence = (coverage: number) => {
   if (coverage >= 85) return "High confidence";
