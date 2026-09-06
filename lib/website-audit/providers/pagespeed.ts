@@ -3,7 +3,7 @@ import { toNormalizedScore } from "../result-schema";
 
 const endpoint = "https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed";
 const responseLimitBytes = 6 * 1024 * 1024;
-const defaultTimeoutMs = 36_000;
+const defaultTimeoutMs = 50_000;
 const defaultRetryDelayMs = 250;
 const maximumAttempts = 2;
 
