@@ -773,7 +773,7 @@ test("the supplied Big Ugly category profile is constrained even before new chec
   assert.ok(result.overallScore <= 66);
 });
 
-test("partial weak evidence keeps its measured score and ceiling with separate confidence", () => {
+test("partial weak evidence keeps its measured score with a coverage-scaled generic ceiling", () => {
   const result = build(passingCategoryChecks("partial").map((check) =>
     check.category === "mobile-experience" ? { ...check, score: 40, evidenceConfidence: 0.5 } : check,
   ));
@@ -781,7 +781,7 @@ test("partial weak evidence keeps its measured score and ceiling with separate c
   assert.equal(mobile.score, 40);
   assert.equal(mobile.evidenceCoverage, 50);
   assert.equal(mobile.evidenceLevel, "partial");
-  assert.equal(result.overallScore, 66);
+  assert.equal(result.overallScore, 76);
 });
 
 test("even a finding with a perfect check score prevents overall perfection", () => {

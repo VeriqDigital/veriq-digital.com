@@ -7,7 +7,7 @@ export const demoAuditResult = normalizeAuditResult({
   auditedUrl: "https://northstarheating.example/",
   createdAt: "2026-08-12T12:00:00.000Z",
   overallScore: 61,
-  evidenceCoverage: 96,
+  evidenceCoverage: 85,
   overallSummary:
     "The automated checks found weaknesses in visibility, speed, and customer action that need attention.",
   categoryScores: [
@@ -23,6 +23,7 @@ export const demoAuditResult = normalizeAuditResult({
     },
     {
       id: "performance",
+      hasConfirmedMaterialIssue: true,
       available: true,
       score: 54,
       evidenceLevel: "full",
@@ -35,11 +36,11 @@ export const demoAuditResult = normalizeAuditResult({
       id: "mobile-experience",
       available: true,
       score: 67,
-      evidenceLevel: "full",
-      evidenceCoverage: 100,
+      evidenceLevel: "partial",
+      evidenceCoverage: 55,
       summary: "Measured touch-target issues need attention.",
       checksRun: 3,
-      checksUnavailable: 0,
+      checksUnavailable: 2,
     },
     {
       id: "accessibility",
@@ -53,16 +54,18 @@ export const demoAuditResult = normalizeAuditResult({
     },
     {
       id: "conversion-ux",
+      hasConfirmedMaterialIssue: true,
       available: true,
       score: 48,
       evidenceLevel: "partial",
-      evidenceCoverage: 70,
+      evidenceCoverage: 30,
       summary: "No customer action or direct contact route was detected.",
       checksRun: 2,
-      checksUnavailable: 1,
+      checksUnavailable: 4,
     },
     {
       id: "technical-health",
+      hasConfirmedMaterialIssue: true,
       available: true,
       score: 76,
       evidenceLevel: "full",

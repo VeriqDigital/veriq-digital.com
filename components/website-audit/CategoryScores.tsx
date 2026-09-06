@@ -1,5 +1,5 @@
 import { getAuditCategory } from "@/lib/website-audit/categories";
-import { getScoreInterpretation } from "./types";
+import { getCategoryScorePresentation } from "./types";
 import type { AuditCategoryScore } from "./types";
 import styles from "./website-audit.module.css";
 
@@ -18,9 +18,7 @@ export default function CategoryScores({
     <div className={compact ? styles.categoryScoresCompact : styles.categoryScores}>
       {scores.map((category) => {
         const definition = getAuditCategory(category.id);
-        const interpretation = category.score === null
-          ? null
-          : getScoreInterpretation(category.score, methodologyVersion);
+        const presentation = getCategoryScorePresentation(category, methodologyVersion);
         const evidenceLabel =
           category.evidenceLevel === "full"
             ? "Full evidence"
@@ -39,10 +37,10 @@ export default function CategoryScores({
                 ) : (
                   <h3>{definition.label}</h3>
                 )}
-                {!compact ? <p>{category.summary}</p> : null}
+                {!compact && presentation.showNumeric ? <p>{presentation.summary}</p> : null}
                 <span className={styles.evidenceLabel}>{evidenceLabel}</span>
               </div>
-              {category.available && category.score !== null && interpretation ? (
+              {presentation.showNumeric && category.score !== null ? (
                 <p>
                   <strong>{category.score}</strong>
                   <span>/100</span>
@@ -52,28 +50,30 @@ export default function CategoryScores({
                   className={styles.categoryUnavailable}
                 >
                   <strong aria-hidden="true">—</strong>
-                  <span>Unavailable</span>
+                  <span>{presentation.display === "withheld" ? "Limited evidence" : "Unavailable"}</span>
                 </p>
               )}
             </div>
-            {category.available && category.score !== null && interpretation ? (
+            {presentation.showNumeric && category.score !== null ? (
               <meter
                 className={styles.categoryMeter}
                 min={0}
                 max={100}
                 value={category.score}
-                aria-label={`${definition.label}: ${category.score} out of 100, ${interpretation}; ${evidenceLabel}`}
+                aria-label={`${definition.label}: ${category.score} out of 100, ${presentation.interpretation}; ${evidenceLabel}`}
               >
                 {category.score} out of 100
               </meter>
             ) : (
               <p className={styles.unavailableMeter}>
-                {compact
+                {presentation.display === "withheld"
+                  ? presentation.summary
+                  : compact
                   ? "Score unavailable."
                   : "This category was not scored because the required data was unavailable."}
               </p>
             )}
-            {!compact && interpretation ? <small>{interpretation}</small> : null}
+            {presentation.showNumeric && (!compact || presentation.display === "limited") ? <small>{presentation.interpretation}</small> : null}
           </article>
         );
       })}
