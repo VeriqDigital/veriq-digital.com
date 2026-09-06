@@ -6,8 +6,9 @@ import { load } from "cheerio";
 import { chromium as playwrightChromium } from "playwright-core";
 import type { Browser, Route } from "playwright-core";
 import type { PrimaryCrawlData } from "../crawler";
-import { safeHttpRequest } from "../http";
-import type { RenderedMobileData, RenderedMobileMetrics } from "../model";
+import { safeHttpRequest, SafeHttpError } from "../http";
+import type { RenderedMobileData, RenderedMobileMetrics, RenderFidelityMetrics } from "../model";
+import { assessRenderFidelity, createRenderFidelityMetrics } from "../render-fidelity";
 
 const viewport = Object.freeze({ width: 390, height: 844 });
 const defaultTimeoutMs = 12_000;
@@ -61,8 +62,18 @@ export type RenderedMobileMeasurement = Readonly<{
   textSampleCount: number;
 }>;
 
-const sanitizeHtml = (html: string, finalUrl: string) => {
+export const sanitizeRenderedHtml = (html: string, finalUrl: string) => {
   const $ = load(html);
+  const metrics = createRenderFidelityMetrics();
+  metrics.scriptsRemoved = $("script").length;
+  metrics.executableScriptsRemoved = $("script").filter((_, script) =>
+    /^(?:|module|(?:text|application)\/(?:java|ecma)script)$/i.test(($(script).attr("type") ?? "").trim()),
+  ).length;
+  metrics.embeddedDocumentsRemoved = $("iframe, frame, object, embed, portal").length;
+  $("*").each((_, element) => {
+    if ("attribs" in element) metrics.inlineHandlersRemoved +=
+      Object.keys(element.attribs).filter((attribute) => /^on/i.test(attribute)).length;
+  });
 
   $("script, iframe, frame, object, embed, portal").remove();
   $("base").remove();
@@ -78,6 +89,15 @@ const sanitizeHtml = (html: string, finalUrl: string) => {
     }
   });
 
+  const sourceBody = $("body").clone();
+  sourceBody.find("style, noscript, template, [hidden], [aria-hidden='true']").remove();
+  sourceBody.find("[style]").filter((_, element) =>
+    /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test($(element).attr("style") ?? ""),
+  ).remove();
+  metrics.sourceTextCharacters = sourceBody.text().replace(/\s+/g, " ").trim().length;
+  metrics.sourceStructurallyComplete = metrics.sourceTextCharacters >= 200 &&
+    sourceBody.find("h1, h2").length > 0 && sourceBody.find("p, li, form").length > 0;
+
   const head = $("head").first();
   const securityMarkup = [
     `<base href="${finalUrl.replaceAll('"', "&quot;")}">`,
@@ -90,7 +110,7 @@ const sanitizeHtml = (html: string, finalUrl: string) => {
     $("html").prepend(`<head>${securityMarkup}</head>`);
   }
 
-  return $.html();
+  return { html: $.html(), metrics };
 };
 
 const firstExistingPath = async (candidates: readonly string[]) => {
@@ -217,11 +237,12 @@ const waitForBrowser = async (
   }
 };
 
-const fulfillSafeResource = async (
+export const fulfillSafeResource = async (
   route: Route,
   finalOrigin: string,
   signal: AbortSignal,
-  counters: { stylesheets: number; images: number; fulfilledBytes: number },
+  counters: { stylesheets: number; images: number; metrics: RenderFidelityMetrics },
+  requestResource: typeof safeHttpRequest = safeHttpRequest,
 ) => {
   const request = route.request();
   const resourceType = request.resourceType();
@@ -232,12 +253,22 @@ const fulfillSafeResource = async (
         ? maximumImages
         : 0;
   const counterKey = resourceType === "stylesheet" ? "stylesheets" : "images";
+  const metrics = counters.metrics;
+  const resource = metrics[counterKey];
+  if (resourceLimit > 0) resource.requested += 1;
 
   if (
     request.method() !== "GET" ||
     resourceLimit === 0 ||
     counters[counterKey] >= resourceLimit
   ) {
+    if (resourceLimit > 0) {
+      resource.blocked += 1;
+      if (counters[counterKey] >= resourceLimit) {
+        if (resourceType === "stylesheet") metrics.stylesheetLimitReached = true;
+        else metrics.imageLimitReached = true;
+      }
+    }
     await route.abort("blockedbyclient");
     return;
   }
@@ -247,11 +278,14 @@ const fulfillSafeResource = async (
   try {
     resourceUrl = new URL(request.url());
   } catch {
+    resource.blocked += 1;
     await route.abort("blockedbyclient");
     return;
   }
 
   if (resourceUrl.origin !== finalOrigin) {
+    resource.blocked += 1;
+    if (resourceType === "stylesheet") metrics.crossOriginStylesheetsBlocked += 1;
     await route.abort("blockedbyclient");
     return;
   }
@@ -259,7 +293,7 @@ const fulfillSafeResource = async (
   counters[counterKey] += 1;
 
   try {
-    const response = await safeHttpRequest(resourceUrl, {
+    const response = await requestResource(resourceUrl, {
       allowedRedirectOrigin: finalOrigin,
       headers: {
         Accept:
@@ -285,21 +319,32 @@ const fulfillSafeResource = async (
     if (
       response.status < 200 ||
       response.status >= 300 ||
-      !expectedContentType.test(contentType) ||
-      counters.fulfilledBytes + response.body.byteLength >
-        totalResourceLimitBytes
+      !expectedContentType.test(contentType)
     ) {
+      resource.failed += 1;
       await route.abort("blockedbyclient");
       return;
     }
 
-    counters.fulfilledBytes += response.body.byteLength;
+    if (metrics.fulfilledBytes + response.body.byteLength > totalResourceLimitBytes) {
+      resource.blocked += 1;
+      metrics.totalByteLimitReached = true;
+      await route.abort("blockedbyclient");
+      return;
+    }
+    metrics.fulfilledBytes += response.body.byteLength;
     await route.fulfill({
       status: response.status,
       headers: { "Content-Type": contentType },
       body: response.body,
     });
-  } catch {
+    resource.fulfilled += 1;
+  } catch (error) {
+    resource.failed += 1;
+    if (error instanceof SafeHttpError && error.code === "RESPONSE_TOO_LARGE") {
+      if (resourceType === "stylesheet") metrics.stylesheetByteLimitReached = true;
+      else metrics.imageByteLimitReached = true;
+    }
     await route.abort("failed");
   }
 };
@@ -433,7 +478,7 @@ const measurePage = async (
   primary: PrimaryCrawlData,
   signal: AbortSignal,
   browserExecutablePathForTesting?: string,
-): Promise<RenderedMobileMetrics> => {
+): Promise<Omit<Extract<RenderedMobileData, { available: true }>, "available">> => {
   const browser = await waitForBrowser(
     signal,
     browserExecutablePathForTesting,
@@ -447,9 +492,9 @@ const measurePage = async (
     userAgent: renderedUserAgent,
   });
   const page = await context.newPage();
-  const sanitizedHtml = sanitizeHtml(primary.html, primary.finalUrl);
+  const sanitized = sanitizeRenderedHtml(primary.html, primary.finalUrl);
   const finalUrl = new URL(primary.finalUrl);
-  const counters = { stylesheets: 0, images: 0, fulfilledBytes: 0 };
+  const counters = { stylesheets: 0, images: 0, metrics: sanitized.metrics };
   let documentFulfilled = false;
   const closeOnAbort = () => {
     void context.close().catch(() => undefined);
@@ -477,7 +522,7 @@ const measurePage = async (
         await route.fulfill({
           status: 200,
           contentType: "text/html; charset=utf-8",
-          body: sanitizedHtml,
+          body: sanitized.html,
         });
         return;
       }
@@ -948,9 +993,10 @@ const measurePage = async (
       };
     });
 
-    return interpretRenderedMobileMeasurement(
-      measurement as RenderedMobileMeasurement,
-    );
+    return {
+      metrics: interpretRenderedMobileMeasurement(measurement as RenderedMobileMeasurement),
+      renderFidelity: assessRenderFidelity(counters.metrics),
+    };
   } finally {
     signal.removeEventListener("abort", closeOnAbort);
     await context.close().catch(() => undefined);
@@ -979,7 +1025,7 @@ export async function runRenderedMobileAudit(
   try {
     return {
       available: true,
-      metrics: await measurePage(
+      ...await measurePage(
         primary,
         signal,
         options.browserExecutablePathForTesting,

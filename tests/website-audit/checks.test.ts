@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { buildAuditChecks } from "../../lib/website-audit/checks";
+import { dynamicRestrictedHtml } from "./fixtures/restricted-render";
+import { sanitizeRenderedHtml } from "../../lib/website-audit/providers/rendered-mobile";
+import { assessRenderFidelity, createRenderFidelityMetrics } from "../../lib/website-audit/render-fidelity";
 import type { CrawlAuditData } from "../../lib/website-audit/crawl-types";
 import type {
   PageSpeedData,
@@ -82,6 +85,7 @@ const makeRenderedMobile = (
   overrides: Partial<RenderedMobileMetrics> = {},
 ): RenderedMobileData => ({
   available: true,
+  renderFidelity: assessRenderFidelity(createRenderFidelityMetrics()),
   metrics: {
     viewportWidth: 390,
     documentWidth: 390,
@@ -518,7 +522,7 @@ test("rendered mobile scoring remains deterministic", () => {
   );
 });
 
-const scoreFixture = (html: string, rendered: RenderedMobileData, provider = pageSpeed) => {
+const scoreFixture = (html: string, rendered: RenderedMobileData, provider: PageSpeedData = pageSpeed) => {
   const page = parsePageSnapshot({ url: "https://example.com/", statusCode: 200, html });
   const { checks, notices } = buildAuditChecks(makeCrawl(page), provider, rendered);
   const result = buildAuditResult({
@@ -530,6 +534,117 @@ const scoreFixture = (html: string, rendered: RenderedMobileData, provider = pag
   });
   return { checks, result };
 };
+
+const withFidelity = (rendered: RenderedMobileData, level: "moderate" | "low"): RenderedMobileData => {
+  assert.ok(rendered.available);
+  const metrics = sanitizeRenderedHtml(dynamicRestrictedHtml, "https://example.com/").metrics;
+  metrics.stylesheets = { requested: 8, fulfilled: level === "low" ? 0 : 7, blocked: level === "low" ? 8 : 1, failed: 0 };
+  // Isolate small CSS loss from the dynamic shell signal in moderate fixtures.
+  if (level === "moderate") metrics.sourceStructurallyComplete = true;
+  return { ...rendered, renderFidelity: assessRenderFidelity(metrics) };
+};
+
+test("giant low-fidelity overflow reduces coverage without the confirmed catastrophic caps", () => {
+  const geometry = makeRenderedMobile({ documentWidth: 2400, horizontalOverflowPixels: 2010, horizontalScrollPixels: 2060, wideElementCount: 78 });
+  const unavailableProvider: PageSpeedData = { available: false, reason: "provider_error" };
+  const before = scoreFixture(dynamicRestrictedHtml, geometry, unavailableProvider);
+  const after = scoreFixture(dynamicRestrictedHtml, withFidelity(geometry, "low"), unavailableProvider);
+  const width = (value: typeof after) => value.checks.find((check) => check.id === "mobile-rendered-width")!;
+  assert.equal(width(before).finding?.impact, "confirmed");
+  assert.equal(width(before).finding?.severity, "critical");
+  assert.equal(width(before).categoryScoreCap, 49);
+  assert.equal(before.result.overallScore, 66);
+  assert.equal(width(after).status, "unavailable");
+  assert.equal(width(after).score, null);
+  assert.equal(width(after).finding?.impact, "informational");
+  assert.match(width(after).finding!.explanation, /restricted mobile render.*enough fidelity/);
+  assert.match(width(after).finding!.observedValue!, /2400px.*2060px.*78 rendered wide/);
+  assert.equal(width(after).categoryScoreCap, undefined);
+  assert.equal(width(after).overallScoreCap, undefined);
+  assert.ok(after.result.overallScore > before.result.overallScore);
+  assert.ok(after.result.evidenceCoverage < before.result.evidenceCoverage);
+  assert.equal(after.result.categoryScores.find((category) => category.id === "mobile-experience")?.score, 100);
+  assert.equal(after.result.notices.filter((notice) => notice.includes("secure rendering limits")).length, 1);
+  assert.ok(!before.result.notices.some((notice) => notice.includes("secure rendering limits")));
+  console.info("Synthetic dynamic fixture (trusted geometry -> assessed fidelity)", {
+    beforeOverall: before.result.overallScore, afterOverall: after.result.overallScore,
+    beforeCoverage: before.result.evidenceCoverage, afterCoverage: after.result.evidenceCoverage,
+  });
+});
+
+test("all rendered defect families lose hard caps and confirmed impact at reduced fidelity", () => {
+  const geometry = makeRenderedMobile({
+    documentWidth: 2400, horizontalOverflowPixels: 2010, horizontalScrollPixels: 2010,
+    fixedWidthElementCount: 3, wideElementCount: 78, clippedNavigation: true,
+    clippedImportantElementCount: 3, offscreenPrimaryActionCount: 1,
+    overflowingImageCount: 4, seriousPrimaryActionCount: 1,
+    seriousTapTargetCount: 4, tinyTextCount: 20, unreservedImageCount: 1,
+  });
+  for (const level of ["moderate", "low"] as const) {
+    const { checks } = buildAuditChecks(makeCrawl(makePage({ missingDimensionImageCount: 1 })), pageSpeed, withFidelity(geometry, level));
+    const affected = checks.filter((check) => check.id.startsWith("mobile-rendered-") ||
+      ["conversion-mobile-action-usability", "technical-image-dimensions"].includes(check.id));
+    assert.equal(affected.length, 7);
+    for (const check of affected) {
+      assert.equal(check.categoryScoreCap, undefined, check.id);
+      assert.equal(check.overallScoreCap, undefined, check.id);
+      assert.notEqual(check.finding?.impact, "confirmed", check.id);
+      assert.ok(check.evidenceConfidence! <= 0.7, check.id);
+      if (level === "low") {
+        assert.equal(check.status, "unavailable", check.id);
+        assert.equal(check.score, null, check.id);
+      }
+    }
+  }
+});
+
+test("low-fidelity healthy geometry cannot fabricate passes; moderate geometry remains partial", () => {
+  for (const level of ["moderate", "low"] as const) {
+    const { checks, result } = scoreFixture(strongFoundationsHtml, withFidelity(makeRenderedMobile(), level));
+    for (const check of checks.filter((check) => check.id.startsWith("mobile-rendered-") || check.id === "conversion-mobile-action-usability")) {
+      assert.equal(check.status, level === "low" ? "unavailable" : "passed");
+      assert.equal(check.evidenceConfidence, level === "low" ? 0 : 0.7);
+    }
+    assert.equal(result.categoryScores.find((category) => category.id === "mobile-experience")?.evidenceLevel, "partial");
+  }
+});
+
+test("independent width and tap failures strengthen only matching low-fidelity claims", () => {
+  const rendered = withFidelity(makeRenderedMobile({ documentWidth: 2400,
+    horizontalScrollPixels: 2010, horizontalOverflowPixels: 2010,
+    seriousTapTargetCount: 4, offscreenPrimaryActionCount: 1 }), "low");
+  const { checks } = buildAuditChecks(makeCrawl(), {
+    ...pageSpeed, audits: { ...pageSpeed.audits, contentWidth: 0, tapTargets: 0 },
+  }, rendered);
+  for (const id of ["mobile-rendered-width", "mobile-rendered-controls"]) {
+    const check = checks.find((check) => check.id === id)!;
+    assert.equal(check.status, "failed");
+    assert.equal(check.finding?.impact, "likely");
+    assert.equal(check.evidenceConfidence, 0.5);
+    assert.match(check.finding!.explanation, /independent PageSpeed.*does not verify its rendered magnitude/);
+    assert.equal(check.overallScoreCap, undefined);
+    assert.equal(check.categoryScoreCap, undefined);
+  }
+  assert.equal(checks.find((check) => check.id === "conversion-mobile-action-usability")?.status, "unavailable");
+  assert.ok(checks.find((check) => check.id === "mobile-content-width")?.overallScoreCap);
+});
+
+test("healthy PageSpeed width cannot corroborate giant low-fidelity overflow", () => {
+  const { checks } = scoreFixture(strongFoundationsHtml, withFidelity(makeRenderedMobile({ documentWidth: 2400, horizontalScrollPixels: 2010 }), "low"));
+  assert.equal(checks.find((check) => check.id === "mobile-content-width")?.status, "passed");
+  assert.equal(checks.find((check) => check.id === "mobile-rendered-width")?.status, "unavailable");
+});
+
+test("missing source viewport remains material and corroborates low-fidelity desktop width without PageSpeed", () => {
+  const { checks } = scoreFixture(strongFoundationsHtml.replace(/<meta name="viewport"[^>]+>/, ""),
+    withFidelity(makeRenderedMobile({ documentWidth: 2400, horizontalScrollPixels: 2010 }), "low"),
+    { available: false, reason: "provider_error" });
+  const width = checks.find((check) => check.id === "mobile-rendered-width")!;
+  assert.equal(width.finding?.impact, "likely");
+  assert.match(width.finding!.explanation, /Source HTML also lacks/);
+  assert.equal(width.overallScoreCap, undefined);
+  assert.ok(checks.find((check) => check.id === "mobile-viewport")?.overallScoreCap);
+});
 
 test("a modern site with strong measured foundations can still score 90+", () => {
   const { result } = scoreFixture(strongFoundationsHtml, makeRenderedMobile());

@@ -195,6 +195,43 @@ foundations**, not excellent visual design. The report does not grade branding,
 copy quality, visual hierarchy, persuasion, or end-to-end customer journeys.
 Automated accessibility checks do not certify WCAG or legal compliance.
 
+Rendered mobile checks measure a **security-restricted reconstruction**, not a
+normal visit to the live website. Scripts, inline handlers, and embedded
+documents are removed; stylesheets and images use bounded, same-origin, SSRF-safe
+requests. Those security and resource restrictions remain in force.
+
+The provider assesses **render fidelity separately from measured geometry**.
+It records numeric resource outcomes, count/byte ceilings, removed executable
+scripts/handlers, and source-content completeness without retaining resource URLs.
+High fidelity means no detected CSS loss or significant dynamic uncertainty.
+Small CSS loss is moderate; losing at least 25% of requested CSS, hitting a
+stylesheet count/byte ceiling, or a script-heavy shell (at least eight executable
+scripts without meaningful source content) is low. CSS loss combined with dynamic
+uncertainty or total-byte exhaustion is also low. Source completeness requires
+at least 200 text characters, a heading, and paragraph/list/form content after
+non-content markup is removed. It is a heuristic, not a guarantee about hydration.
+JavaScript on an otherwise complete source page and missing decorative images
+alone do not automatically make fidelity low. Image-only total-byte exhaustion
+is at most moderate.
+
+Width/scroll, clipping, image overflow, touch targets, text size, customer action
+geometry, and rendered image-space checks use this fidelity. High-fidelity
+findings retain their existing penalties and material caps without requiring
+PageSpeed. Moderate evidence has at most 0.7 confidence and likely impact; hard
+render-derived caps are removed. Low-fidelity checks are unavailable, with useful
+measurements retained as potential informational findings. This lowers coverage
+and leaves the remaining reliable checks to determine scores; it fabricates
+neither success nor failure. One report notice explains the reconstruction limit.
+
+A PageSpeed width or tap-target score below 50 can support the corresponding
+low-fidelity rendered finding at 0.5 confidence and likely impact. Missing source
+viewport metadata plus desktop-width rendering can similarly support a likely
+width issue. These signals cannot establish the synthetic defect's magnitude,
+specific clipped controls, or catastrophic render caps. Independent source and
+PageSpeed checks retain their own existing penalties/caps. A healthy or missing
+PageSpeed width result cannot corroborate synthetic overflow. Overall weights,
+weakest-category constraints, and semantic score caps are unchanged.
+
 Known limitations: the crawler analyzes server-returned HTML rather than a
 fully rendered browser, PageSpeed runs mobile only, compression is not scored
 because crawler requests use identity encoding, and execution remains

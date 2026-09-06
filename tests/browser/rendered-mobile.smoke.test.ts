@@ -7,6 +7,7 @@ import { parsePageSnapshot } from "../../lib/website-audit/page-analysis";
 import { buildAuditChecks } from "../../lib/website-audit/checks";
 import { buildAuditResult } from "../../lib/website-audit/scoring";
 import { bigUglyFoundationsHtml, strongFoundationsHtml } from "../website-audit/fixtures/foundations";
+import { dynamicRestrictedHtml } from "../website-audit/fixtures/restricted-render";
 import {
   closeRenderedMobileBrowserForTesting,
   runRenderedMobileAudit,
@@ -21,6 +22,7 @@ test("real Chromium evidence separates strong foundations from Big Ugly style fa
     const rendered = await runRenderedMobileAudit(primary, { browserExecutablePathForTesting: playwrightChromium.executablePath() });
     assert.equal(rendered.available, true);
     if (!rendered.available) continue;
+    assert.equal(rendered.renderFidelity.level, "high");
     const { checks } = buildAuditChecks({
       ...primary, pages: [primaryPage],
       robots: { status: "present", blocksPrimaryPage: false, blocksOptionalCrawl: false, sitemapUrl: null },
@@ -42,7 +44,58 @@ test("real Chromium evidence separates strong foundations from Big Ugly style fa
       assert.ok(result.categoryScores.find((entry) => entry.id === "conversion-ux")!.score! <= 59);
       assert.ok(result.overallScore <= 66);
     }
+    console.info("Chromium foundations fixture", { name, fidelity: rendered.renderFidelity.level,
+      mobile: result.categoryScores.find((entry) => entry.id === "mobile-experience")?.score,
+      overall: result.overallScore });
   }
+});
+
+test("restricted Chromium preserves synthetic geometry but exposes missing cross-origin CSS and removed scripts", { timeout: 20_000 }, async () => {
+  const primaryPage = parsePageSnapshot({ url: "https://example.com/", statusCode: 200, html: dynamicRestrictedHtml });
+  const primary = { submittedUrl: primaryPage.url, finalUrl: primaryPage.url, redirectCount: 0, html: dynamicRestrictedHtml, primaryPage };
+  const rendered = await runRenderedMobileAudit(primary, { browserExecutablePathForTesting: playwrightChromium.executablePath() });
+  assert.ok(rendered.available);
+  assert.equal(rendered.renderFidelity.level, "low");
+  assert.equal(rendered.renderFidelity.metrics.scriptsRemoved, 20);
+  assert.equal(rendered.renderFidelity.metrics.crossOriginStylesheetsBlocked, 8);
+  assert.deepEqual(rendered.renderFidelity.metrics.stylesheets, { requested: 8, fulfilled: 0, blocked: 8, failed: 0 });
+  assert.ok(rendered.metrics.documentWidth >= 2400);
+  assert.ok(rendered.metrics.horizontalScrollPixels >= 2000, "removed scripts must never run to repair the fixture");
+  const { checks, notices } = buildAuditChecks({
+    ...primary, pages: [primaryPage],
+    robots: { status: "present", blocksPrimaryPage: false, blocksOptionalCrawl: false, sitemapUrl: null },
+    sitemapStatus: "present", brokenLinks: { tested: 1, broken: [], unavailable: 0 },
+  }, { available: false, reason: "provider_error" }, rendered);
+  const width = checks.find((check) => check.id === "mobile-rendered-width")!;
+  assert.equal(width.status, "unavailable");
+  assert.equal(width.finding?.impact, "informational");
+  assert.equal(width.categoryScoreCap, undefined);
+  assert.equal(width.overallScoreCap, undefined);
+  assert.equal(notices.filter((notice) => notice.includes("secure rendering limits")).length, 1);
+});
+
+test("resource count ceilings and SSRF rejections are recorded by the restricted Chromium pipeline", { timeout: 20_000 }, async () => {
+  // The initial document is fulfilled from memory. All resource fetches to this
+  // private origin must be rejected by safeHttpRequest before network access.
+  const html = `<html><head><meta name="viewport" content="width=device-width">
+    ${Array.from({ length: 18 }, (_, i) => `<link rel="stylesheet" href="/style-${i}.css">`).join("")}
+    </head><body><h1>Resource bounds</h1>
+    ${Array.from({ length: 8 }, (_, i) => `<img src="/image-${i}.png" width="20" height="20">`).join("")}</body></html>`;
+  const rendered = await runRenderedMobileAudit({ submittedUrl: "https://127.0.0.1/", finalUrl: "https://127.0.0.1/",
+    redirectCount: 0, html, primaryPage: parsePageSnapshot({ url: "https://127.0.0.1/", statusCode: 200, html }),
+  }, { browserExecutablePathForTesting: playwrightChromium.executablePath() });
+  assert.ok(rendered.available);
+  const metrics = rendered.renderFidelity.metrics;
+  assert.equal(metrics.stylesheetLimitReached, true);
+  assert.equal(metrics.imageLimitReached, true);
+  assert.equal(metrics.stylesheets.requested, 18);
+  assert.equal(metrics.stylesheets.failed, 16);
+  assert.equal(metrics.stylesheets.blocked, 2);
+  assert.equal(metrics.images.requested, 8);
+  assert.equal(metrics.images.failed, 6);
+  assert.equal(metrics.images.blocked, 2);
+  assert.equal(metrics.fulfilledBytes, 0);
+  assert.equal(rendered.renderFidelity.level, "low");
 });
 
 test(
