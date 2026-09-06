@@ -1397,7 +1397,7 @@ function buildTechnicalChecks(
           crawl.brokenLinks.tested) *
         100;
   const htmlSizeScore = scoreHtmlResponseSize(page.htmlBytes, pageSpeed);
-  const renderedUnreservedImages = renderedMobile.available
+  const renderedUnreservedImages = renderedMobile.available && renderedMobile.renderFidelity.level !== "low"
     ? renderedMobile.metrics.unreservedImageCount
     : null;
   const imageDimensionRiskScore =
@@ -1528,7 +1528,7 @@ function buildTechnicalChecks(
                 : "Some images omit intrinsic width and height attributes",
             explanation:
               renderedUnreservedImages === null
-                ? `${page.missingDimensionImageCount} of ${page.imageCount} images omit one or both intrinsic dimension attributes. Rendered layout evidence was unavailable, so this is not treated as proof of layout instability.`
+                ? `${page.missingDimensionImageCount} of ${page.imageCount} images omit one or both intrinsic dimension attributes. Rendered layout reservation could not be verified${renderedMobile.available ? " because render fidelity was low" : " because rendered evidence was unavailable"}, so this is not treated as proof of layout instability.`
                 : `${page.missingDimensionImageCount} of ${page.imageCount} images omit intrinsic dimensions; ${renderedUnreservedImages} visible images also lacked a detectable CSS aspect ratio or other reserved dimensions in the rendered sample.`,
             whyItMatters:
               "Browsers need intrinsic dimensions, a CSS aspect ratio, or another stable container to reserve space before image content loads.",
@@ -1639,9 +1639,11 @@ export function buildAuditChecks(
       ...buildConversionChecks(crawl, renderedMobile),
       ...buildTechnicalChecks(crawl, pageSpeed, renderedMobile),
     ].map((check) => {
-      // Intrinsic image attributes remain independently verifiable in source.
+      // Low-fidelity image checks already use the source-only branch above.
+      // Preserve that objective evidence instead of excluding it with geometry.
       if (!renderedMobile.available ||
-        (check.id === "technical-image-dimensions" && crawl.primaryPage.missingDimensionImageCount === 0)) return check;
+        (check.id === "technical-image-dimensions" &&
+          (crawl.primaryPage.missingDimensionImageCount === 0 || renderedMobile.renderFidelity.level === "low"))) return check;
       return applyRenderFidelity(check, renderedMobile.renderFidelity,
         renderedCorroboration(check, crawl, pageSpeed, renderedMobile));
     }),

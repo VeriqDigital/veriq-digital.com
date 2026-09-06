@@ -1,3 +1,5 @@
+import { CURRENT_AUDIT_METHODOLOGY_VERSION } from "@/lib/website-audit/methodology";
+
 export type {
   AuditCategoryScore,
   AuditEvidenceLevel,
@@ -10,8 +12,8 @@ export type {
 } from "@/lib/website-audit/model";
 export type { AuditCategoryId } from "@/lib/website-audit/categories";
 
-export const getScoreInterpretation = (score: number, methodologyVersion = "v4") => {
-  if (methodologyVersion !== "v4") return "Historical score";
+export const getScoreInterpretation = (score: number, methodologyVersion: string = CURRENT_AUDIT_METHODOLOGY_VERSION) => {
+  if (methodologyVersion !== CURRENT_AUDIT_METHODOLOGY_VERSION) return "Historical score";
   if (score >= 90) return "Strong automated foundations";
   if (score >= 80) return "Generally strong foundations";
   if (score >= 70) return "Mixed foundations";

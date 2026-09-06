@@ -1,3 +1,5 @@
+import { CURRENT_AUDIT_METHODOLOGY_VERSION } from "../../lib/website-audit/methodology";
+import { normalizeAuditResult } from "../../lib/website-audit/result-schema";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -26,13 +28,29 @@ test("the score component exposes scope in both preview and full report", async 
 });
 
 test("demo data follows the current health ceiling and avoids subjective CTA judgments", () => {
-  assert.equal(demoAuditResult.methodologyVersion, "v4");
+  assert.equal(CURRENT_AUDIT_METHODOLOGY_VERSION, "v5");
+  assert.equal(demoAuditResult.methodologyVersion, CURRENT_AUDIT_METHODOLOGY_VERSION);
   assert.ok(demoAuditResult.overallScore <= getWeakestCategoryHealthCap(Math.min(...demoAuditResult.categoryScores.map((category) => category.score!))));
   assert.doesNotMatch(JSON.stringify(demoAuditResult), /equal-looking|Four equal|difficult to find/);
 });
 
-test("legacy methods render an update notice and a new-audit action, while v4 renders neither", () => {
-  for (const version of ["v1", "v2", "v3", "v5"]) {
+test("saved v4 reports preserve historical scores and receive the legacy presentation", () => {
+  const saved = normalizeAuditResult({
+    ...demoAuditResult, methodologyVersion: "v4", overallScore: 84,
+    categoryScores: demoAuditResult.categoryScores.map((category) =>
+      category.id === "mobile-experience" ? { ...category, score: 36 } : category),
+  });
+  assert.equal(saved.methodologyVersion, "v4");
+  assert.equal(saved.overallScore, 84);
+  assert.equal(saved.categoryScores.find((category) => category.id === "mobile-experience")?.score, 36);
+  assert.equal(getScoreInterpretation(saved.overallScore, saved.methodologyVersion), "Historical score");
+  const notice = renderToStaticMarkup(createElement(LegacyAuditNotice, { methodologyVersion: saved.methodologyVersion }));
+  assert.match(notice, /Legacy scoring methodology \(v4\)/);
+  assert.match(notice, /Run a new audit/);
+});
+
+test("legacy methods render an update notice and a new-audit action, while the current method renders neither", () => {
+  for (const version of ["v1", "v2", "v3", "v4", "v999"]) {
     const html = renderToStaticMarkup(createElement(LegacyAuditNotice, { methodologyVersion: version }));
     assert.match(html, /Legacy scoring methodology/);
     assert.ok(html.includes(version));
@@ -41,16 +59,16 @@ test("legacy methods render an update notice and a new-audit action, while v4 re
     assert.match(html, /href="\/website-audit"/);
     assert.match(html, /Run a new audit/);
   }
-  assert.equal(renderToStaticMarkup(createElement(LegacyAuditNotice, { methodologyVersion: "v4" })), "");
+  assert.equal(renderToStaticMarkup(createElement(LegacyAuditNotice, { methodologyVersion: CURRENT_AUDIT_METHODOLOGY_VERSION })), "");
 });
 
-test("legacy scores are never interpreted using v4 health bands", () => {
-  for (const version of ["v1", "v2", "v3", "v5"]) {
+test("legacy scores are never interpreted using current health bands", () => {
+  for (const version of ["v1", "v2", "v3", "v4", "v999"]) {
     for (const score of [0, 36, 66, 84, 100]) {
       assert.equal(getScoreInterpretation(score, version), "Historical score");
     }
   }
-  assert.equal(getScoreInterpretation(84, "v4"), "Generally strong foundations");
+  assert.equal(getScoreInterpretation(84, CURRENT_AUDIT_METHODOLOGY_VERSION), "Generally strong foundations");
 });
 
 test("both report surfaces pass the saved methodology to scores and the legacy notice", async () => {

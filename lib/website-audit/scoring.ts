@@ -1,4 +1,5 @@
 import { auditCategoryRegistry } from "./categories";
+import { CURRENT_AUDIT_METHODOLOGY_VERSION } from "./methodology";
 import type { AuditCategoryId } from "./categories";
 import type {
   AuditCategoryScore,
@@ -253,7 +254,7 @@ type BuildAuditResultOptions = {
 };
 
 /**
- * Scoring methodology v4:
+ * Current scoring methodology (version centralized in methodology.ts):
  * - Each check declares a positive weight and a normalized 0–100 result.
  * - Impact controls scoring influence, so informational observations have only
  *   a tiny effect while confirmed harmful issues keep their full effect.
@@ -469,6 +470,6 @@ export function buildAuditResult({
     },
     findings,
     notices: [...new Set([...notices, ...coverageNotices])].slice(0, 8),
-    methodologyVersion: "v4",
+    methodologyVersion: CURRENT_AUDIT_METHODOLOGY_VERSION,
   });
 }

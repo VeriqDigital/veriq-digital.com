@@ -51,9 +51,36 @@ test("script-heavy shells are low but complete server markup with scripts is not
   assert.equal(assessRenderFidelity(shell.metrics).level, "low");
   const complete = sanitizeRenderedHtml(strongFoundationsHtml.replace("</body>", `<p>${"Useful server-rendered content. ".repeat(12)}</p>${scripts}</body>`), "https://example.com/");
   assert.equal(complete.metrics.sourceStructurallyComplete, true);
-  assert.equal(assessRenderFidelity(complete.metrics).level, "high");
+  assert.equal(assessRenderFidelity(complete.metrics).level, "moderate");
   assert.equal(fidelity({ executableScriptsRemoved: 2 }).level, "moderate");
   assert.equal(fidelity({ scriptsRemoved: 20 }).level, "high", "inert JSON does not imply a dynamic layout");
+});
+
+test("substantial removed executable scripts or handlers downgrade complete SSR to moderate, shells to low", () => {
+  for (const signals of [
+    { executableScriptsRemoved: 8 },
+    { inlineHandlersRemoved: 8 },
+    { executableScriptsRemoved: 4, inlineHandlersRemoved: 4 },
+    { executableScriptsRemoved: 100 },
+  ]) {
+    const complete = fidelity({ ...signals, sourceStructurallyComplete: true });
+    assert.equal(complete.level, "moderate");
+    assert.ok(complete.reasons.includes("dynamic_layout_uncertainty"));
+    assert.equal(fidelity(signals).level, "low");
+  }
+  assert.equal(fidelity({ executableScriptsRemoved: 7, sourceStructurallyComplete: true }).level, "high");
+  assert.equal(fidelity({ inlineHandlersRemoved: 7, sourceStructurallyComplete: true }).level, "high");
+  assert.equal(fidelity({ executableScriptsRemoved: 7 }).level, "moderate");
+});
+
+test("one ordinary removed iframe is diagnostic without downgrading otherwise intact geometry", () => {
+  const { metrics } = sanitizeRenderedHtml(strongFoundationsHtml.replace("</body>",
+    '<iframe src="https://video.example.test/embed" width="300" height="200"></iframe></body>'), "https://example.com/");
+  const result = assessRenderFidelity(metrics);
+  assert.equal(result.metrics.embeddedDocumentsRemoved, 1);
+  assert.ok(result.reasons.includes("embedded_content_removed"));
+  assert.equal(result.level, "high");
+  assert.equal(fidelity({ ...metrics, executableScriptsRemoved: 2 }).level, "moderate", "independent dynamic uncertainty still applies");
 });
 
 test("fidelity metrics are bounded and snapshotted", () => {

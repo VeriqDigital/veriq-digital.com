@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { buildAuditChecks } from "../../lib/website-audit/checks";
+import { CURRENT_AUDIT_METHODOLOGY_VERSION } from "../../lib/website-audit/methodology";
 import { dynamicRestrictedHtml } from "./fixtures/restricted-render";
 import { sanitizeRenderedHtml } from "../../lib/website-audit/providers/rendered-mobile";
 import { assessRenderFidelity, createRenderFidelityMetrics } from "../../lib/website-audit/render-fidelity";
@@ -539,8 +540,11 @@ const withFidelity = (rendered: RenderedMobileData, level: "moderate" | "low"): 
   assert.ok(rendered.available);
   const metrics = sanitizeRenderedHtml(dynamicRestrictedHtml, "https://example.com/").metrics;
   metrics.stylesheets = { requested: 8, fulfilled: level === "low" ? 0 : 7, blocked: level === "low" ? 8 : 1, failed: 0 };
-  // Isolate small CSS loss from the dynamic shell signal in moderate fixtures.
-  if (level === "moderate") metrics.sourceStructurallyComplete = true;
+  // Isolate small CSS loss from substantial removed JavaScript in moderate fixtures.
+  if (level === "moderate") {
+    metrics.sourceStructurallyComplete = true;
+    metrics.executableScriptsRemoved = 0;
+  }
   return { ...rendered, renderFidelity: assessRenderFidelity(metrics) };
 };
 
@@ -591,8 +595,14 @@ test("all rendered defect families lose hard caps and confirmed impact at reduce
       assert.notEqual(check.finding?.impact, "confirmed", check.id);
       assert.ok(check.evidenceConfidence! <= 0.7, check.id);
       if (level === "low") {
-        assert.equal(check.status, "unavailable", check.id);
-        assert.equal(check.score, null, check.id);
+        if (check.id === "technical-image-dimensions") {
+          assert.equal(check.status, "opportunity");
+          assert.equal(check.finding?.impact, "informational");
+          assert.equal(check.score, 99);
+        } else {
+          assert.equal(check.status, "unavailable", check.id);
+          assert.equal(check.score, null, check.id);
+        }
       }
     }
   }
@@ -607,6 +617,60 @@ test("low-fidelity healthy geometry cannot fabricate passes; moderate geometry r
     }
     assert.equal(result.categoryScores.find((category) => category.id === "mobile-experience")?.evidenceLevel, "partial");
   }
+});
+
+test("low fidelity preserves missing source image dimensions independently of unreliable reservation measurements", () => {
+  const page = makePage({ imageCount: 2, missingDimensionImageCount: 1 });
+  for (const unreservedImageCount of [0, 1, 2]) {
+    const rendered = withFidelity(makeRenderedMobile({ unreservedImageCount }), "low");
+    const { checks } = buildAuditChecks(makeCrawl(page), pageSpeed, rendered);
+    const dimensions = checks.find((check) => check.id === "technical-image-dimensions")!;
+    assert.equal(dimensions.status, "opportunity");
+    assert.equal(dimensions.score, 99);
+    assert.equal(dimensions.evidenceConfidence, 0.65);
+    assert.equal(dimensions.finding?.impact, "informational");
+    assert.match(dimensions.finding!.title, /omit intrinsic width and height/);
+    assert.match(dimensions.finding!.explanation, /1 of 2 images omit/);
+    assert.match(dimensions.finding!.explanation, /reservation could not be verified because render fidelity was low/);
+    assert.doesNotMatch(dimensions.finding!.explanation, /visible images also lacked/);
+    assert.equal(dimensions.categoryScoreCap, undefined);
+    assert.equal(dimensions.overallScoreCap, undefined);
+  }
+  const { checks } = buildAuditChecks(makeCrawl(page), pageSpeed, makeRenderedMobile({ unreservedImageCount: 1 }));
+  const corroborated = checks.find((check) => check.id === "technical-image-dimensions")!;
+  assert.equal(corroborated.finding?.impact, "likely");
+  assert.ok(corroborated.score! < 99);
+  assert.match(corroborated.finding!.explanation, /1 visible images also lacked/);
+});
+
+test("an ordinary embedded document does not strip unrelated confirmed mobile overflow caps", () => {
+  const geometry = makeRenderedMobile({ documentWidth: 2400, horizontalScrollPixels: 2010 });
+  assert.ok(geometry.available);
+  const { checks } = buildAuditChecks(makeCrawl(), pageSpeed, {
+    ...geometry,
+    renderFidelity: assessRenderFidelity({ ...createRenderFidelityMetrics(), embeddedDocumentsRemoved: 1 }),
+  });
+  const width = checks.find((check) => check.id === "mobile-rendered-width")!;
+  assert.equal(width.finding?.impact, "confirmed");
+  assert.equal(width.finding?.severity, "critical");
+  assert.equal(width.categoryScoreCap, 49);
+  assert.equal(width.overallScoreCap, 69);
+});
+
+test("substantial removed JavaScript in complete SSR lowers rendered evidence confidence", () => {
+  const geometry = makeRenderedMobile({ documentWidth: 2400, horizontalScrollPixels: 2010 });
+  assert.ok(geometry.available);
+  const { checks, notices } = buildAuditChecks(makeCrawl(), pageSpeed, {
+    ...geometry,
+    renderFidelity: assessRenderFidelity({ ...createRenderFidelityMetrics(),
+      sourceStructurallyComplete: true, executableScriptsRemoved: 8 }),
+  });
+  const width = checks.find((check) => check.id === "mobile-rendered-width")!;
+  assert.equal(width.finding?.impact, "likely");
+  assert.equal(width.evidenceConfidence, 0.7);
+  assert.equal(width.categoryScoreCap, undefined);
+  assert.equal(width.overallScoreCap, undefined);
+  assert.equal(notices.filter((notice) => notice.includes("secure rendering limits")).length, 1);
 });
 
 test("independent width and tap failures strengthen only matching low-fidelity claims", () => {
@@ -665,7 +729,7 @@ test("Big Ugly style HTML cannot hide absent customer routes and mobile failures
   assert.ok(category("conversion-ux") <= 59);
   assert.ok(category("accessibility") < 80);
   assert.ok(result.overallScore <= 66);
-  assert.equal(result.methodologyVersion, "v4");
+  assert.equal(result.methodologyVersion, CURRENT_AUDIT_METHODOLOGY_VERSION);
   const pathChecks = checks.filter((entry) => entry.id.startsWith("conversion-") && entry.id.endsWith("-path"));
   assert.equal(new Set(pathChecks.map((entry) => entry.penaltyGroup)).size, 1);
   assert.equal(pathChecks.find((entry) => entry.id === "conversion-customer-path")?.finding?.severity, "high");
