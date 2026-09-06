@@ -9,6 +9,7 @@ import type { PrimaryCrawlData } from "../crawler";
 import { safeHttpRequest, SafeHttpError } from "../http";
 import type { RenderedMobileData, RenderedMobileMetrics, RenderFidelityMetrics } from "../model";
 import { assessRenderFidelity, createRenderFidelityMetrics } from "../render-fidelity";
+import { logRenderedFailure, RenderStageError, runRenderedStage } from "./rendered-diagnostics";
 
 const viewport = Object.freeze({ width: 390, height: 844 });
 const defaultTimeoutMs = 12_000;
@@ -167,13 +168,14 @@ const getExecutablePath = async () => {
 const launchBrowser = async (browserExecutablePathForTesting?: string) => {
   chromium.setGraphicsMode = false;
 
-  return playwrightChromium.launch({
+  const executablePath = await runRenderedStage("executable_resolution", async () =>
+    browserExecutablePathForTesting ?? await getExecutablePath());
+  return runRenderedStage("browser_launch", () => playwrightChromium.launch({
     args: browserExecutablePathForTesting ? [] : chromium.args,
-    executablePath:
-      browserExecutablePathForTesting ?? (await getExecutablePath()),
+    executablePath,
     headless: true,
     timeout: defaultTimeoutMs,
-  });
+  }));
 };
 
 const discardPendingBrowser = () => {
@@ -478,27 +480,33 @@ const measurePage = async (
   primary: PrimaryCrawlData,
   signal: AbortSignal,
   browserExecutablePathForTesting?: string,
+  browserForTesting?: Browser,
 ): Promise<Omit<Extract<RenderedMobileData, { available: true }>, "available">> => {
-  const browser = await waitForBrowser(
+  const browser = browserForTesting ?? await runRenderedStage("browser_connection", () => waitForBrowser(
     signal,
     browserExecutablePathForTesting,
-  );
-  const context = await browser.newContext({
+  ));
+  const context = await runRenderedStage("context_creation", () => browser.newContext({
     viewport,
     deviceScaleFactor: 1,
     hasTouch: true,
     isMobile: true,
     javaScriptEnabled: true,
     userAgent: renderedUserAgent,
-  });
-  const page = await context.newPage();
-  const sanitized = sanitizeRenderedHtml(primary.html, primary.finalUrl);
-  const finalUrl = new URL(primary.finalUrl);
-  const counters = { stylesheets: 0, images: 0, metrics: sanitized.metrics };
+  }));
+  let resourceError: unknown;
   let documentFulfilled = false;
   const closeOnAbort = () => {
-    void context.close().catch(() => undefined);
+    void closeContext();
   };
+  // One cleanup attempt, including page-creation and sanitization failures.
+  let closing: Promise<void> | undefined;
+  const closeContext = () => closing ??= runRenderedStage("context_close", () => context.close())
+    .catch((error: unknown) => {
+      console.warn("Website audit rendered-mobile cleanup failed", {
+        stage: "context_close", code: error instanceof RenderStageError ? error.code : "operation_failed",
+      });
+    });
 
   try {
     if (signal.aborted) {
@@ -508,34 +516,48 @@ const measurePage = async (
     }
 
     signal.addEventListener("abort", closeOnAbort, { once: true });
-    await page.addInitScript("globalThis.__name = (target) => target;");
-    await page.route("**/*", async (route) => {
-      const request = route.request();
-
-      if (
-        !documentFulfilled &&
-        request.isNavigationRequest() &&
-        request.resourceType() === "document" &&
-        request.url() === primary.finalUrl
-      ) {
-        documentFulfilled = true;
-        await route.fulfill({
-          status: 200,
-          contentType: "text/html; charset=utf-8",
-          body: sanitized.html,
+    const page = await runRenderedStage("page_creation", () => context.newPage());
+    const sanitized = await runRenderedStage("sanitization", async () => sanitizeRenderedHtml(primary.html, primary.finalUrl));
+    const finalUrl = new URL(primary.finalUrl);
+    const counters = { stylesheets: 0, images: 0, metrics: sanitized.metrics };
+    const handleRoute = async (route: Route) => {
+      try {
+        await runRenderedStage("resource_fulfillment", async () => {
+          const request = route.request();
+          if (
+            !documentFulfilled &&
+            request.isNavigationRequest() &&
+            request.resourceType() === "document" &&
+            request.url() === primary.finalUrl
+          ) {
+            documentFulfilled = true;
+            await route.fulfill({
+              status: 200,
+              contentType: "text/html; charset=utf-8",
+              body: sanitized.html,
+            });
+            return;
+          }
+          await fulfillSafeResource(route, finalUrl.origin, signal, counters);
         });
-        return;
+      } catch (error) {
+        resourceError ??= error;
+        await closeContext();
       }
-
-      await fulfillSafeResource(route, finalUrl.origin, signal, counters);
+    };
+    await runRenderedStage("route_setup", async () => {
+      await page.addInitScript("globalThis.__name = (target) => target;");
+      await page.route("**/*", handleRoute);
     });
-    await page.goto(primary.finalUrl, {
-      waitUntil: "load",
-      timeout: 10_000,
+    await runRenderedStage("navigation", async () => {
+      await page.goto(primary.finalUrl, {
+        waitUntil: "load",
+        timeout: 10_000,
+      });
+      await page.waitForTimeout(200);
     });
-    await page.waitForTimeout(200);
 
-    const measurement = await page.evaluate(() => {
+    const measurement = await runRenderedStage("measurement", () => page.evaluate(() => {
       const viewportWidth = Math.round(
         Math.min(
           ...[
@@ -991,15 +1013,17 @@ const measurePage = async (
         tinyTextCount: tinyText.length,
         textSampleCount: textElements.length,
       };
-    });
+    }));
 
     return {
       metrics: interpretRenderedMobileMeasurement(measurement as RenderedMobileMeasurement),
       renderFidelity: assessRenderFidelity(counters.metrics),
     };
+  } catch (error) {
+    throw resourceError ?? error;
   } finally {
     signal.removeEventListener("abort", closeOnAbort);
-    await context.close().catch(() => undefined);
+    await closeContext();
   }
 };
 
@@ -1009,6 +1033,7 @@ export async function runRenderedMobileAudit(
     signal?: AbortSignal;
     timeoutMs?: number;
     browserExecutablePathForTesting?: string;
+    browserForTesting?: Browser;
   }> = {},
 ): Promise<RenderedMobileData> {
   if (renderInProgress) {
@@ -1016,6 +1041,7 @@ export async function runRenderedMobileAudit(
   }
 
   renderInProgress = true;
+  const startedAt = Date.now();
   const timeoutSignal = AbortSignal.timeout(options.timeoutMs ?? defaultTimeoutMs);
   const signal = options.signal
     ? AbortSignal.any([options.signal, timeoutSignal])
@@ -1029,6 +1055,7 @@ export async function runRenderedMobileAudit(
         primary,
         signal,
         options.browserExecutablePathForTesting,
+        options.browserForTesting,
       ),
     };
   } catch (error) {
@@ -1036,21 +1063,7 @@ export async function runRenderedMobileAudit(
       discardPendingBrowser();
     }
 
-    const reason =
-      signal.aborted ||
-      (error instanceof Error && /timeout/i.test(`${error.name} ${error.message}`))
-        ? "timeout"
-        : error instanceof Error &&
-            /executable|browserType\.launch|ENOENT|no such file/i.test(
-              error.message,
-            )
-          ? "browser_unavailable"
-          : "render_error";
-
-    console.warn("Website audit rendered-mobile provider unavailable", {
-      reason,
-      errorName: error instanceof Error ? error.name : "UnknownError",
-    });
+    const reason = logRenderedFailure(error, Date.now() - startedAt, signal.aborted);
     return { available: false, reason };
   } finally {
     renderInProgress = false;

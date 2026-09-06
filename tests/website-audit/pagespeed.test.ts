@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { runPageSpeedAudit } from "../../lib/website-audit/providers/pagespeed";
+import { auditTimeBudgets } from "../../lib/website-audit/time-budgets";
 
 test("PageSpeed is explicitly unavailable when its server key is absent", async () => {
   const result = await runPageSpeedAudit("https://example.com/");
@@ -80,7 +81,7 @@ test("PageSpeed retries within one total timeout rather than extending the reque
     const result = await runPageSpeedAudit("https://example.com/", {
       apiKey: "test-key",
       signal: controller.signal,
-      timeoutMs: 1_000,
+      timeoutMs: auditTimeBudgets.pageSpeedMs,
       retryDelayMs: 0,
       fetchImpl: async (_input, init) => {
         attempts += 1;
@@ -177,6 +178,7 @@ test("PageSpeed requests only the official endpoint and normalizes scores", asyn
   assert.equal(parsedRequestUrl.origin, "https://pagespeedonline.googleapis.com");
   assert.equal(parsedRequestUrl.pathname, "/pagespeedonline/v5/runPagespeed");
   assert.equal(parsedRequestUrl.searchParams.get("strategy"), "MOBILE");
+  assert.equal(parsedRequestUrl.searchParams.get("prettyPrint"), "false");
   assert.deepEqual(parsedRequestUrl.searchParams.getAll("category"), [
     "PERFORMANCE",
     "ACCESSIBILITY",

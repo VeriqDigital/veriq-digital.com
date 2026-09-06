@@ -12,6 +12,7 @@ import {
 } from "@/lib/website-audit/api-security";
 import { WebsiteCrawlError } from "@/lib/website-audit/crawler";
 import { runWebsiteAudit } from "@/lib/website-audit/orchestrator";
+import { auditTimeBudgets, createAuditDeadline, remainingBudgetMs } from "@/lib/website-audit/time-budgets";
 import { normalizeAuditResult } from "@/lib/website-audit/result-schema";
 import {
   reconcilePersistedAuditResult,
@@ -33,7 +34,6 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const runBodySchema = z.object({}).strict().nullable();
-const auditExecutionTimeoutMs = 50_000;
 const staleRunningThresholdMs = 2 * 60 * 1000;
 
 type RouteContext = Readonly<{
@@ -151,6 +151,7 @@ const handleAlreadyRunning = async (id: string, storedState: StoredAuditState) =
 };
 
 export async function POST(request: Request, { params }: RouteContext) {
+  const routeStartedAt = Date.now();
   const { id } = await params;
   let runningState: StoredAuditState | null = null;
   let resultPersisted = false;
@@ -238,8 +239,9 @@ export async function POST(request: Request, { params }: RouteContext) {
 
     await enforceGlobalAuditRunQuota(request);
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), auditExecutionTimeoutMs);
+    const execution = createAuditDeadline(
+      remainingBudgetMs(routeStartedAt + auditTimeBudgets.routeMs, auditTimeBudgets.routeMs),
+    );
     let result: WebsiteAuditResult;
 
     try {
@@ -249,11 +251,12 @@ export async function POST(request: Request, { params }: RouteContext) {
           submittedUrl:
             runningState.state.normalizedUrl ?? runningState.state.submittedUrl,
           createdAt: runningState.state.createdAt,
-          signal: controller.signal,
+          signal: execution.signal,
+          deadlineAt: routeStartedAt + auditTimeBudgets.engineMs,
         }),
       );
     } finally {
-      clearTimeout(timeout);
+      execution.dispose();
     }
 
     if (result.id !== id || result.status !== "complete") {

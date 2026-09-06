@@ -115,11 +115,65 @@ decorative, inert, and otherwise non-actionable elements are excluded. A
 provider timeout or browser failure reduces
 evidence coverage rather than failing the whole audit.
 
-PageSpeed uses a 36-second total provider budget. One fast retry is allowed for
-transient network or upstream 5xx failures within that same budget; quota,
-client-error, invalid-result, and timeout responses are not retried. Safe
-provider logs classify the failure without recording the audited URL, API key,
-or upstream response content.
+Provider budgets are centralized in `lib/website-audit/time-budgets.ts`:
+
+| Boundary | Budget |
+| --- | --- |
+| PageSpeed, all attempts together | Up to 44 seconds |
+| Engine, including initial crawl and scoring | 51 seconds |
+| Route execution controller | 55 seconds |
+| Vercel `maxDuration` | 60 seconds |
+
+Engine and controller deadlines count from POST entry, including validation,
+storage reads, quota checks, and state claiming. The provider starts only after
+the primary URL passes the existing SSRF-safe crawl. Its deadline is the earlier
+of 44 seconds after provider start and two seconds before the engine deadline.
+Slow preflight or primary crawling therefore reduces the provider budget rather
+than shifting work past the platform ceiling. The schedule reserves two seconds
+for scoring, four seconds between engine completion and the controller boundary
+for persistence/state finalization, and five seconds of platform headroom. Storage
+still uses the SDK's own I/O behavior; these reserves are not a guarantee against
+a stalled storage service.
+
+One retry for transient network/5xx failure is allowed only with at least 20 seconds
+remaining after its delay. Attempts share one deadline. Quota, client-error,
+invalid-result, and timeout responses are not retried. Parent cancellation also
+stops PSI, including during retry delay. Failure remains unavailable, never zero.
+Success logs include total duration, attempt, HTTP status, response bytes, and
+Google's reported Lighthouse duration when present. Failures log stable classes,
+duration, attempt, retry decision, and HTTP status when available; neither path
+logs target URLs, keys, upstream messages, or response bodies.
+
+The request retains PERFORMANCE, ACCESSIBILITY, and SEO because all three scores
+feed existing checks; accessibility additionally supplies rendered contrast
+evidence that the source crawler cannot establish. Google's API supports selecting
+[Lighthouse categories](https://developers.google.com/speed/docs/insights/rest/v5/pagespeedapi/runpagespeed).
+A small sequential comparison on Veriq's public site measured 12.9 seconds / 773 KB
+for all three, 15.3 seconds / 580 KB for performance alone, and 15.9 seconds / 660 KB
+for performance plus accessibility (decoded response bytes, rounded). This sample
+shows fewer returned audits/bytes, but does not establish reduced execution latency.
+Requests now ask for compact JSON (`prettyPrint=false`) without dropping scoring
+evidence. A final live provider request succeeded in 26.2 seconds / 660 KB.
+These are diagnostic observations, not availability or speed guarantees.
+
+Production's repeated 36-second failures confirm that the prior provider ceiling
+was reached; they do not identify why Google's run was slow. The inspected checkout
+had independently raised PSI to 50 seconds while retaining a 45-second engine,
+which could terminate it earlier after crawling. A later bounded live probe still
+exceeded 55 seconds. PSI has long-tail execution times beyond a safe request-bound
+budget: if this remains frequent, move it to a separately retriable enrichment job
+with durable state rather than increasing this route beyond its safe window.
+
+Rendered-mobile keeps its existing 12-second deadline and resource/security limits.
+Failures now identify executable resolution, browser launch/connection, context or
+page creation, sanitization, route setup, navigation, resource fulfillment, or
+measurement. Context-close failures have a separate safe cleanup diagnostic.
+Only fixed stage/code enums and elapsed milliseconds are logged; known OS and
+Playwright failures are classified without logging their messages or arbitrary
+names. Context cleanup also covers page-creation failures. The historical 359 ms
+`render_error` cannot identify a root cause by itself; local Chromium smoke tests
+do not reproduce the production environment. Stage/code telemetry is needed to
+distinguish deployment startup failures from navigation or evaluation failures.
 
 Scoring methodology **v5**, centralized as `CURRENT_AUDIT_METHODOLOGY_VERSION`
 in `lib/website-audit/methodology.ts`, reports automated website health across six categories:
