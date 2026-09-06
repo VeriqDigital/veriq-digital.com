@@ -4,6 +4,7 @@ import styles from "./website-audit.module.css";
 
 type OverallScoreProps = {
   score: NormalizedScore;
+  methodologyVersion: string;
   evidenceCoverage?: NormalizedScore;
   checksCompleted?: number;
   applicableChecks?: number;
@@ -13,13 +14,14 @@ type OverallScoreProps = {
 
 export default function OverallScore({
   score,
+  methodologyVersion,
   evidenceCoverage,
   checksCompleted,
   applicableChecks,
   summary,
   compact = false,
 }: OverallScoreProps) {
-  const interpretation = getScoreInterpretation(score);
+  const interpretation = getScoreInterpretation(score, methodologyVersion);
   const confidence =
     evidenceCoverage === undefined
       ? null

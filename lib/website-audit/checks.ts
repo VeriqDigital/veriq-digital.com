@@ -1221,12 +1221,14 @@ function buildConversionChecks(
 ): AuditCheckResult[] {
   const page = crawl.primaryPage;
   const hasContactPath = page.contactLinkCount > 0 || page.contactFormCount > 0;
-
-  const missingCustomerPath = page.actionLinkCount === 0 && !hasContactPath;
+  const hasUnverifiedPath = page.unverifiedActionControlCount > 0 || page.unverifiedContactFormCount > 0;
+  const missingCustomerPath = page.actionLinkCount === 0 && !hasContactPath && !hasUnverifiedPath;
   const checks: AuditCheckResult[] = [
     page.actionLinkCount > 0
       ? check({ id: "conversion-action-path", category: "conversion-ux", weight: 25, status: "passed", score: 100 })
-      : check({
+      : hasUnverifiedPath
+        ? unavailableCheck("conversion-action-path", "conversion-ux", 25)
+        : check({
           id: "conversion-action-path",
           category: "conversion-ux",
           weight: 25,
@@ -1239,7 +1241,7 @@ function buildConversionChecks(
             severity: "medium",
             title: "No obvious action link was detected on the audited page",
             explanation:
-              "The page did not contain a link or button whose visible text clearly matched common customer actions such as contact, book, request, call, or quote.",
+              "No available customer-action link with a meaningful destination or native submit control in a relevant inquiry form was detected.",
             whyItMatters:
               "Visitors benefit from a clear next step once they understand the offer. This text-based check cannot judge visual prominence.",
             recommendation:
@@ -1248,7 +1250,9 @@ function buildConversionChecks(
         }),
     hasContactPath
       ? check({ id: "conversion-contact-path", category: "conversion-ux", weight: 25, status: "passed", score: 100 })
-      : check({
+      : hasUnverifiedPath
+        ? unavailableCheck("conversion-contact-path", "conversion-ux", 25)
+        : check({
           id: "conversion-contact-path",
           category: "conversion-ux",
           weight: 25,
@@ -1574,6 +1578,12 @@ export function buildAuditChecks(
     "Automated accessibility checks identify detectable issues but do not certify WCAG conformance or legal compliance.",
     "Conversion foundations checks assess detectable customer paths, form labels, and rendered action geometry. They do not grade design, messaging, persuasion, or completed transactions.",
   ];
+
+  if (crawl.primaryPage.unverifiedActionControlCount > 0 || crawl.primaryPage.unverifiedContactFormCount > 0) {
+    notices.unshift(
+      "Some customer controls or forms could not be verified from the HTML. Uncertain paths reduce evidence coverage rather than passing or failing; JavaScript behavior and completed submissions need manual review.",
+    );
+  }
 
   if (!pageSpeed.available) {
     const reason =

@@ -10,7 +10,8 @@ export type {
 } from "@/lib/website-audit/model";
 export type { AuditCategoryId } from "@/lib/website-audit/categories";
 
-export const getScoreInterpretation = (score: number) => {
+export const getScoreInterpretation = (score: number, methodologyVersion = "v4") => {
+  if (methodologyVersion !== "v4") return "Historical score";
   if (score >= 90) return "Strong automated foundations";
   if (score >= 80) return "Generally strong foundations";
   if (score >= 70) return "Mixed foundations";

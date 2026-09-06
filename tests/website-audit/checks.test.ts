@@ -36,10 +36,12 @@ const makePage = (overrides: Partial<PageSnapshot> = {}): PageSnapshot => ({
   structuredDataCount: 1,
   formCount: 1,
   contactFormCount: 1,
+  unverifiedContactFormCount: 0,
   formControlCount: 2,
   unlabeledFormControlCount: 0,
   contactLinkCount: 1,
   actionLinkCount: 1,
+  unverifiedActionControlCount: 0,
   mixedContentCount: 0,
   internalLinks: ["https://example.com/contact"],
   ...overrides,
@@ -612,4 +614,31 @@ test("overflow, clipped content and offscreen CTA retain one overall mobile root
   assert.equal(single.result.overallScore, correlated.result.overallScore);
   assert.equal(single.result.categoryScores.find((entry) => entry.id === "mobile-experience")?.score,
     correlated.result.categoryScores.find((entry) => entry.id === "mobile-experience")?.score);
+});
+
+test("unverified JS customer controls reduce evidence without passing or failing customer paths", () => {
+  for (const html of ['<button>Book now</button>', '<form><input type="email" aria-label="Email"><button>Continue</button></form>']) {
+    const { checks, result } = scoreFixture(html, { available: false, reason: "render_error" });
+    for (const id of ["conversion-action-path", "conversion-contact-path"]) {
+      const check = checks.find((entry) => entry.id === id)!;
+      assert.equal(check.status, "unavailable");
+      assert.equal(check.score, null);
+      assert.equal(check.finding, undefined);
+      assert.equal(check.overallScoreCap, undefined);
+    }
+    assert.ok(!checks.some((entry) => entry.id === "conversion-customer-path"));
+    const conversion = result.categoryScores.find((entry) => entry.id === "conversion-ux")!;
+    assert.ok(conversion.evidenceCoverage < 100);
+    assert.notEqual(conversion.evidenceLevel, "full");
+    assert.ok(result.notices.some((notice) => notice.includes("could not be verified")));
+  }
+});
+
+test("a JS-heavy otherwise strong page is not capped as broken solely by uncertain behavior", () => {
+  const html = strongFoundationsHtml.replace(/<a[\s\S]*<\/form>/, '<button>Book now</button>');
+  const { result, checks } = scoreFixture(html, makeRenderedMobile());
+  assert.ok(result.overallScore >= 90);
+  assert.ok(result.evidenceCoverage < 100);
+  assert.equal(checks.find((entry) => entry.id === "conversion-action-path")?.status, "unavailable");
+  assert.ok(!checks.some((entry) => entry.id === "conversion-customer-path"));
 });

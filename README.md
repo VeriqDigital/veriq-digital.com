@@ -125,8 +125,10 @@ Scoring methodology **v4** reports automated website health across six categorie
 SEO (22%), performance (20%), mobile experience (15%), accessibility (15%),
 conversion foundations (12%), and technical health (16%). The stable internal
 conversion category ID remains `conversion-ux`; existing saved results remain
-readable and retain their original scores and methodology version. Run a new
-audit to apply v4.
+readable and retain their original scores and methodology version. Reports using
+another methodology show a legacy notice and a "Run a new audit" link. Their
+overall and category scores use "Historical score" instead of v4 health bands;
+the original summaries and findings remain readable. Run a new audit to apply v4.
 
 Checks use explicit weights and impact-adjusted deductions (confirmed 1,
 likely 0.55, informational 0.1). Within each category, a `penaltyGroup` uses
@@ -167,8 +169,17 @@ off-canvas geometry, and decorative/image opportunities remain conservative.
 
 Conversion foundations weights action detection 25, direct contact detection
 25, rendered action geometry 35, and form labels 15 when forms are present.
-A hidden or empty contact link and a search/login/empty form do not establish a
-direct contact route. Missing both customer paths adds a shared-root check,
+A hidden or empty contact link and a newsletter/signup/search/login/account form
+do not establish a direct contact route. Inquiry forms require relevant fields
+(such as a message or phone field) or form-specific contact/quote/request intent;
+an ambiguous email-only form stays unverified. Action paths require a meaningful
+anchor destination (including phone/email links) or a native submit control
+owned by a relevant inquiry form. These signals verify structure, not successful
+submission. Bare buttons, click handlers, and interactive ARIA controls alone
+reveal intent but cannot verify JavaScript behavior. When such uncertain controls
+or forms are the only potential routes, path checks are unavailable and reduce
+coverage; they neither pass nor trigger the combined missing-path cap.
+Missing both customer paths without these uncertainty signals adds a shared-root check,
 caps this category at 59, and declares a modest overall ceiling of 79; the
 weakest-category rule can constrain it further. This absence finding is scoped
 to the primary HTML and explains its relevance to business-oriented pages.

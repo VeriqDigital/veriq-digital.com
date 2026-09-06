@@ -3,6 +3,7 @@ import FindingCard from "./FindingCard";
 import { pluralLabel } from "./format-count";
 import FullReportForm from "./FullReportForm";
 import OverallScore from "./OverallScore";
+import LegacyAuditNotice from "./LegacyAuditNotice";
 import type { WebsiteAuditResult } from "./types";
 import styles from "./website-audit.module.css";
 
@@ -56,9 +57,12 @@ export default function AuditResults({ result, variant }: AuditResultsProps) {
         </p>
       </header>
 
+      <LegacyAuditNotice methodologyVersion={result.methodologyVersion} className={styles.methodologyNotice} />
+
       <div className={styles.scoreOverview}>
         <OverallScore
           score={result.overallScore}
+          methodologyVersion={result.methodologyVersion}
           evidenceCoverage={result.evidenceCoverage}
           checksCompleted={checksCompleted}
           applicableChecks={applicableChecks}
@@ -101,7 +105,7 @@ export default function AuditResults({ result, variant }: AuditResultsProps) {
             Measured strengths and issues.
           </h2>
         </div>
-        <CategoryScores scores={result.categoryScores} />
+        <CategoryScores scores={result.categoryScores} methodologyVersion={result.methodologyVersion} />
       </section>
 
       <section className={styles.resultSection} aria-labelledby={findingsTitleId}>

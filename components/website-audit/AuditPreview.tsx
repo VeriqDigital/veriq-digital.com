@@ -1,6 +1,7 @@
 import CategoryScores from "./CategoryScores";
 import { formatCount } from "./format-count";
 import OverallScore from "./OverallScore";
+import LegacyAuditNotice from "./LegacyAuditNotice";
 import type { WebsiteAuditResult } from "./types";
 import styles from "./website-audit.module.css";
 
@@ -18,8 +19,9 @@ export default function AuditPreview({ result }: AuditPreviewProps) {
         </div>
         <span className={styles.previewStatus}>Demo data</span>
       </header>
-      <OverallScore score={result.overallScore} compact />
-      <CategoryScores scores={result.categoryScores} compact />
+      <LegacyAuditNotice methodologyVersion={result.methodologyVersion} className={styles.methodologyNotice} />
+      <OverallScore score={result.overallScore} methodologyVersion={result.methodologyVersion} compact />
+      <CategoryScores scores={result.categoryScores} methodologyVersion={result.methodologyVersion} compact />
       <footer>
         <span>{formatCount(result.summary.criticalIssues, "critical issue")}</span>
         <a href="#sample-audit-results">View sample findings ↘</a>

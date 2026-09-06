@@ -22,7 +22,7 @@ test("page analysis combines header robots directives and ignores empty H1 text"
   ]);
 });
 
-test("counts actionable CTA links, buttons, submit inputs, and valid ARIA buttons", () => {
+test("separates destination-backed CTA links from unverified buttons and ARIA controls", () => {
   const page = parsePageSnapshot({
     url: "https://example.com/",
     statusCode: 200,
@@ -34,7 +34,8 @@ test("counts actionable CTA links, buttons, submit inputs, and valid ARIA button
     </body></html>`,
   });
 
-  assert.equal(page.actionLinkCount, 4);
+  assert.equal(page.actionLinkCount, 1);
+  assert.equal(page.unverifiedActionControlCount, 3);
   assert.deepEqual(page.internalLinks, ["https://example.com/contact"]);
 });
 
@@ -55,6 +56,80 @@ test("does not count disabled, hidden, inert, aria-disabled, or decorative butto
   });
 
   assert.equal(page.actionLinkCount, 0);
+  assert.equal(page.unverifiedActionControlCount, 0);
+});
+
+const parseBody = (html: string) => parsePageSnapshot({ url: "https://example.com/", statusCode: 200, html });
+
+test("a bare Book now button has intent but no verified structural action path", () => {
+  for (const html of ['<button>Book now</button>', '<button onclick="book()">Book now</button>', '<div role="button" tabindex="0">Book now</div>']) {
+    const page = parseBody(html);
+    assert.equal(page.actionLinkCount, 0);
+    assert.equal(page.unverifiedActionControlCount, 1);
+  }
+});
+
+test("meaningful booking, telephone and email anchors establish structural paths", () => {
+  for (const href of ["/book", "tel:+15555550100", "mailto:hello@example.com"]) {
+    const page = parseBody(`<a href="${href}">${href === "/book" ? "Book now" : "Reach us"}</a>`);
+    assert.equal(page.actionLinkCount, 1);
+    assert.equal(page.unverifiedActionControlCount, 0);
+  }
+});
+
+test("native submit controls require a relevant form owner and submission method", () => {
+  const form = '<form id="quote" action="/inquiries" method="post"><input type="email"><textarea></textarea>';
+  for (const button of ['<button>Send</button>', '<button type="submit">Request a quote</button>', '<input type="submit" value="Send">']) {
+    assert.equal(parseBody(form + button + '</form>').actionLinkCount, 1);
+  }
+  assert.equal(parseBody(form + '</form><button form="quote">Send</button>').actionLinkCount, 1);
+  assert.equal(parseBody('<form action=""><textarea></textarea><button>Send</button></form>').actionLinkCount, 1);
+  for (const button of ['<button type="button">Request a quote</button>', '<button form="missing">Request a quote</button>', '<button formmethod="dialog">Request a quote</button>', '<button formaction="javascript:void(0)">Request a quote</button>']) {
+    const page = parseBody(form + button + '</form>');
+    assert.equal(page.actionLinkCount, 0);
+    assert.equal(page.unverifiedActionControlCount, 1);
+  }
+});
+
+test("newsletter, signup, login, search and account forms cannot establish direct contact credit", () => {
+  for (const form of [
+    '<form><input type="email"><button>Subscribe to our newsletter</button></form>',
+    '<form aria-label="Newsletter"><input type="email"><input type="tel"><button>Submit</button></form>',
+    '<form action="/signup"><input type="email"><button>Sign up</button></form>',
+    '<form><input type="email"><input type="password"><button>Log in</button></form>',
+    '<form role="search"><input type="text"><button>Search</button></form>',
+    '<form><input type="search"><button>Find</button></form>',
+    '<form aria-label="Create account"><input type="email"><button>Get started</button></form>',
+    '<form><input type="email"><button>Request a password reset</button></form>',
+  ]) {
+    const page = parseBody(form);
+    assert.equal(page.contactFormCount, 0, form);
+    assert.equal(page.unverifiedContactFormCount, 0, form);
+    assert.equal(page.actionLinkCount, 0, form);
+  }
+});
+
+test("contact and quote forms use inquiry fields or form-specific intent", () => {
+  for (const form of [
+    '<form><input type="email"><textarea></textarea><button>Send</button></form>',
+    '<form><input type="email"><button>Request a quote</button></form>',
+    '<form aria-label="Contact us"><input name="name"><button>Send</button></form>',
+    '<form><input type="tel"><button>Request a callback</button></form>',
+    '<form><input type="email"><textarea></textarea><label><input type="checkbox">Subscribe to newsletter</label><button>Send message</button></form>',
+  ]) {
+    const page = parseBody(form);
+    assert.equal(page.contactFormCount, 1, form);
+    assert.equal(page.actionLinkCount, 1, form);
+  }
+});
+
+test("an email-only form with ambiguous purpose stays unverified", () => {
+  for (const field of ['<input type="email">', '<input name="details">']) {
+    const page = parseBody(`<form>${field}<button>Continue</button></form>`);
+    assert.equal(page.contactFormCount, 0);
+    assert.equal(page.unverifiedContactFormCount, 1);
+    assert.equal(page.actionLinkCount, 0);
+  }
 });
 
 test("hidden contact links, placeholder actions, and non-contact forms do not fabricate customer routes", () => {
