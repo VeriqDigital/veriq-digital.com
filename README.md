@@ -121,14 +121,18 @@ client-error, invalid-result, and timeout responses are not retried. Safe
 provider logs classify the failure without recording the audited URL, API key,
 or upstream response content.
 
-Scoring methodology **v4** reports automated website health across six categories:
+Scoring methodology **v5**, centralized as `CURRENT_AUDIT_METHODOLOGY_VERSION`
+in `lib/website-audit/methodology.ts`, reports automated website health across six categories:
 SEO (22%), performance (20%), mobile experience (15%), accessibility (15%),
 conversion foundations (12%), and technical health (16%). The stable internal
 conversion category ID remains `conversion-ux`; existing saved results remain
 readable and retain their original scores and methodology version. Reports using
 another methodology show a legacy notice and a "Run a new audit" link. Their
-overall and category scores use "Historical score" instead of v4 health bands;
-the original summaries and findings remain readable. Run a new audit to apply v4.
+overall and category scores use "Historical score" instead of current health bands;
+the original summaries and findings remain readable. This includes saved v4
+reports: their scores are not recomputed. Run a new audit to apply v5's rendered
+evidence methodology. Scored results, the demo, and presentation use the same
+current-version constant.
 
 Checks use explicit weights and impact-adjusted deductions (confirmed 1,
 likely 0.55, informational 0.1). Within each category, a `penaltyGroup` uses
@@ -205,14 +209,22 @@ It records numeric resource outcomes, count/byte ceilings, removed executable
 scripts/handlers, and source-content completeness without retaining resource URLs.
 High fidelity means no detected CSS loss or significant dynamic uncertainty.
 Small CSS loss is moderate; losing at least 25% of requested CSS, hitting a
-stylesheet count/byte ceiling, or a script-heavy shell (at least eight executable
-scripts without meaningful source content) is low. CSS loss combined with dynamic
+stylesheet count/byte ceiling, or a script-heavy shell (at least eight removed
+executable scripts and inline handlers combined, without meaningful source content)
+is low. CSS loss combined with dynamic
 uncertainty or total-byte exhaustion is also low. Source completeness requires
 at least 200 text characters, a heading, and paragraph/list/form content after
 non-content markup is removed. It is a heuristic, not a guarantee about hydration.
-JavaScript on an otherwise complete source page and missing decorative images
-alone do not automatically make fidelity low. Image-only total-byte exhaustion
-is at most moderate.
+Complete source with fewer than eight removed executable scripts/handlers may
+remain high; eight or more makes it moderate even with intact CSS. This threshold
+retains the existing eight-script boundary and includes inline behavior: substantial
+client code can still initialize responsive classes, navigation, or transforms
+after server rendering. It is a dependency-count proxy, not a measurement of code
+complexity. Complete SSR is never low solely for using JavaScript. Inert JSON
+scripts are excluded. Removed embedded documents remain diagnostic and do not
+independently lower global fidelity or strip unrelated geometry caps.
+Missing decorative images alone do not make fidelity low. Image-only total-byte
+exhaustion is at most moderate.
 
 Width/scroll, clipping, image overflow, touch targets, text size, customer action
 geometry, and rendered image-space checks use this fidelity. High-fidelity
@@ -222,6 +234,10 @@ render-derived caps are removed. Low-fidelity checks are unavailable, with usefu
 measurements retained as potential informational findings. This lowers coverage
 and leaves the remaining reliable checks to determine scores; it fabricates
 neither success nor failure. One report notice explains the reconstruction limit.
+Missing source image width/height attributes remain an informational opportunity
+even at low fidelity (0.65 confidence for this partially evaluated check). Rendered
+reservation is then unverified, and its measurements cannot imply layout instability
+or apply caps. Adequate rendered evidence may still strengthen that source finding.
 
 A PageSpeed width or tap-target score below 50 can support the corresponding
 low-fidelity rendered finding at 0.5 confidence and likely impact. Missing source
