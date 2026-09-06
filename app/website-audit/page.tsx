@@ -34,7 +34,7 @@ export const metadata = {
   ...createPageMetadata({
   title: "Free Website Audit for Growing Businesses",
   description:
-    "Run a free website audit covering SEO, performance, mobile usability, accessibility, conversion UX, and technical health.",
+    "Run a free automated website audit covering SEO, performance, mobile usability, accessibility, conversion foundations, and technical health.",
   path: "/website-audit",
   }),
   robots: {
@@ -51,7 +51,7 @@ const structuredData = {
   url: canonicalUrl,
   name: "Free Website Audit for Growing Businesses",
   description:
-    "A free Veriq website audit covering search visibility, performance, mobile usability, accessibility, conversion UX, and technical health.",
+    "A free automated Veriq website audit covering search visibility, performance, mobile usability, accessibility, conversion foundations, and technical health.",
   isPartOf: { "@id": `${siteConfig.url}/#website` },
   about: auditCategoryRegistry.map((category) => category.pageLabel),
   inLanguage: "en-US",
@@ -77,11 +77,11 @@ export default function WebsiteAuditPage() {
                   <span aria-hidden="true" />
                   Free website audit
                 </p>
-                <h1 id="audit-title">How good is your website, really?</h1>
+                <h1 id="audit-title">Check your site’s health.</h1>
                 <p className={styles.heroDescription}>
-                  Get a clear website audit covering SEO, performance, mobile
-                  usability, accessibility, technical health, and opportunities
-                  to turn more visitors into customers.
+                  Get an automated audit of SEO, performance, mobile usability,
+                  accessibility, technical health, and detectable paths for
+                  customers to take action.
                 </p>
                 <AuditForm />
               </div>

@@ -8,6 +8,8 @@ import type {
   RenderedMobileMetrics,
 } from "../../lib/website-audit/model";
 import type { PageSnapshot } from "../../lib/website-audit/page-analysis";
+import { parsePageSnapshot } from "../../lib/website-audit/page-analysis";
+import { bigUglyFoundationsHtml, strongFoundationsHtml } from "./fixtures/foundations";
 import { buildAuditResult } from "../../lib/website-audit/scoring";
 
 const makePage = (overrides: Partial<PageSnapshot> = {}): PageSnapshot => ({
@@ -33,10 +35,13 @@ const makePage = (overrides: Partial<PageSnapshot> = {}): PageSnapshot => ({
   responsiveImageCount: 2,
   structuredDataCount: 1,
   formCount: 1,
+  contactFormCount: 1,
+  unverifiedContactFormCount: 0,
   formControlCount: 2,
   unlabeledFormControlCount: 0,
   contactLinkCount: 1,
   actionLinkCount: 1,
+  unverifiedActionControlCount: 0,
   mixedContentCount: 0,
   internalLinks: ["https://example.com/contact"],
   ...overrides,
@@ -91,6 +96,8 @@ const makeRenderedMobile = (
     potentiallyClippedImportantElementCount: 0,
     clippedNavigation: false,
     offscreenPrimaryActionCount: 0,
+    primaryActionCount: 1,
+    seriousPrimaryActionCount: 0,
     missingDimensionImageCount: 0,
     unreservedImageCount: 0,
     seriousTapTargetCount: 0,
@@ -159,6 +166,7 @@ test("missing objective page signals produce plain-English findings", () => {
     imageCount: 2,
     missingAltImageCount: 2,
     formCount: 0,
+    contactFormCount: 0,
     actionLinkCount: 0,
     contactLinkCount: 0,
   });
@@ -180,8 +188,8 @@ test("missing objective page signals produce plain-English findings", () => {
     assert.ok(byId.get(id)?.finding?.recommendation, id);
   }
 
-  assert.equal(byId.get("conversion-action-path")?.status, "opportunity");
-  assert.equal(byId.get("conversion-contact-path")?.status, "opportunity");
+  assert.equal(byId.get("conversion-action-path")?.status, "failed");
+  assert.equal(byId.get("conversion-contact-path")?.status, "failed");
 });
 
 test("robots blocking and cross-page canonicals stay explicit and conservative", () => {
@@ -203,7 +211,7 @@ test("robots blocking and cross-page canonicals stay explicit and conservative",
 
   assert.equal(byId.get("seo-robots-access")?.status, "failed");
   assert.equal(byId.get("seo-robots-access")?.finding?.severity, "high");
-  assert.equal(byId.get("seo-robots-access")?.overallScoreCap, 79);
+  assert.equal(byId.get("seo-robots-access")?.overallScoreCap, 69);
   assert.equal(byId.get("seo-canonical")?.status, "opportunity");
 });
 
@@ -293,11 +301,11 @@ test("overflowing images and clipped navigation produce specific findings", () =
   assert.match(imageCheck?.finding?.title ?? "", /horizontal mobile scrolling/);
   assert.equal(contentCheck?.finding?.severity, "high");
   assert.ok((conversion?.score ?? 100) <= 79);
-  assert.equal(widthCheck?.overallScoreCap, 88);
-  assert.equal(contentCheck?.overallScoreCap, 88);
-  assert.equal(conversionCheck?.overallScoreCap, 88);
+  assert.equal(widthCheck?.overallScoreCap, 69);
+  assert.equal(contentCheck?.overallScoreCap, 69);
+  assert.equal(conversionCheck?.overallScoreCap, 69);
   assert.equal(widthCheck?.penaltyGroup, conversionCheck?.penaltyGroup);
-  assert.equal(result.overallScore, 74);
+  assert.equal(result.overallScore, 66);
 });
 
 test("severe measured performance and form barriers declare independent material constraints", () => {
@@ -361,7 +369,7 @@ test("confirmed mobile and form failures cannot be hidden by otherwise strong ca
 
   assert.equal(performance?.score, null);
   assert.ok(result.evidenceCoverage < 100);
-  assert.ok(result.overallScore >= 70 && result.overallScore <= 75);
+  assert.ok(result.overallScore >= 50 && result.overallScore <= 66);
   assert.ok(result.overallScore < 90);
 });
 
@@ -508,4 +516,129 @@ test("rendered mobile scoring remains deterministic", () => {
     buildResultWithRenderedMobile(rendered),
     buildResultWithRenderedMobile(rendered),
   );
+});
+
+const scoreFixture = (html: string, rendered: RenderedMobileData, provider = pageSpeed) => {
+  const page = parsePageSnapshot({ url: "https://example.com/", statusCode: 200, html });
+  const { checks, notices } = buildAuditChecks(makeCrawl(page), provider, rendered);
+  const result = buildAuditResult({
+    id: "a6799d85-eab3-4fa7-aefd-131b0d9b2cb2",
+    auditedUrl: page.url,
+    createdAt: "2026-08-12T12:00:00.000Z",
+    completedAt: "2026-08-12T12:00:10.000Z",
+    checks, notices,
+  });
+  return { checks, result };
+};
+
+test("a modern site with strong measured foundations can still score 90+", () => {
+  const { result } = scoreFixture(strongFoundationsHtml, makeRenderedMobile());
+  assert.ok(result.overallScore >= 90);
+  assert.ok(result.categoryScores.every((category) => (category.score ?? 0) >= 90));
+});
+
+test("Big Ugly style HTML cannot hide absent customer routes and mobile failures behind speed", () => {
+  const { checks, result } = scoreFixture(bigUglyFoundationsHtml, makeRenderedMobile({
+    documentWidth: 1000, horizontalOverflowPixels: 610, horizontalScrollPixels: 610,
+    wideElementCount: 2, fixedWidthElementCount: 1,
+    primaryActionCount: 0, tinyTextCount: 18, textSampleCount: 20,
+  }), { ...pageSpeed, performanceScore: 100, accessibilityScore: 60,
+    audits: { ...pageSpeed.audits, colorContrast: 0 } });
+  const category = (id: string) => result.categoryScores.find((entry) => entry.id === id)!.score!;
+  assert.equal(category("performance"), 100);
+  assert.ok(category("mobile-experience") < 50);
+  assert.ok(category("conversion-ux") <= 59);
+  assert.ok(category("accessibility") < 80);
+  assert.ok(result.overallScore <= 66);
+  assert.equal(result.methodologyVersion, "v4");
+  const pathChecks = checks.filter((entry) => entry.id.startsWith("conversion-") && entry.id.endsWith("-path"));
+  assert.equal(new Set(pathChecks.map((entry) => entry.penaltyGroup)).size, 1);
+  assert.equal(pathChecks.find((entry) => entry.id === "conversion-customer-path")?.finding?.severity, "high");
+});
+
+test("one source action without contact or rendered evidence does not earn a nineties conversion score", () => {
+  const { result } = scoreFixture('<html><body><a href="/shop">Shop now</a></body></html>',
+    { available: false, reason: "render_error" });
+  const conversion = result.categoryScores.find((entry) => entry.id === "conversion-ux")!;
+  assert.ok(conversion.score! < 90);
+  assert.equal(conversion.evidenceLevel, "partial");
+});
+
+test("a source action absent from the render cannot pass mobile action usability", () => {
+  const { checks } = scoreFixture(strongFoundationsHtml, makeRenderedMobile({ primaryActionCount: 0 }));
+  assert.equal(checks.find((entry) => entry.id === "conversion-mobile-action-usability")?.status, "unavailable");
+});
+
+test("forms are optional, while unlabeled forms and tiny customer actions affect foundations", () => {
+  const healthy = scoreFixture('<html><body><a href="/book">Book now</a><a href="tel:+15555550100">Call us</a></body></html>', makeRenderedMobile());
+  assert.equal(healthy.result.categoryScores.find((entry) => entry.id === "conversion-ux")?.score, 100);
+  const tiny = scoreFixture(strongFoundationsHtml, makeRenderedMobile({ seriousPrimaryActionCount: 1, seriousTapTargetCount: 1 }));
+  assert.ok(tiny.result.categoryScores.find((entry) => entry.id === "conversion-ux")!.score! <= 69);
+  const unlabeled = scoreFixture(strongFoundationsHtml.replaceAll(/<label[^>]*>.*?<\/label>/g, ""), makeRenderedMobile());
+  assert.ok(unlabeled.result.categoryScores.find((entry) => entry.id === "conversion-ux")!.score! <= 69);
+  const forms = unlabeled.checks.filter((entry) => entry.id.endsWith("form-labels"));
+  assert.equal(new Set(forms.map((entry) => entry.penaltyGroup)).size, 1);
+});
+
+test("missing viewport is material even when rendering is unavailable", () => {
+  const { checks, result } = scoreFixture(strongFoundationsHtml.replace(/<meta name="viewport"[^>]+>/, ""),
+    { available: false, reason: "render_error" });
+  assert.ok(result.categoryScores.find((entry) => entry.id === "mobile-experience")!.score! <= 59);
+  assert.ok(result.overallScore <= 69);
+  assert.ok(checks.find((entry) => entry.id === "mobile-viewport")?.overallScoreCap);
+});
+
+test("clipped navigation alone and serious control failures remain material without overflow", () => {
+  for (const metrics of [
+    { clippedNavigation: true },
+    { seriousTapTargetCount: 3, interactiveControlCount: 4 },
+    { tinyTextCount: 15, textSampleCount: 20 },
+  ]) {
+    const { result } = buildResultWithRenderedMobile(makeRenderedMobile(metrics));
+    assert.ok(result.overallScore < 80);
+  }
+});
+
+test("a minor isolated overflow warning does not crater otherwise strong foundations", () => {
+  const { result } = buildResultWithRenderedMobile(makeRenderedMobile({ horizontalScrollPixels: 12, horizontalOverflowPixels: 12 }));
+  assert.ok(result.overallScore >= 90);
+});
+
+test("overflow, clipped content and offscreen CTA retain one overall mobile root", () => {
+  const overflow = { documentWidth: 1000, horizontalOverflowPixels: 610, horizontalScrollPixels: 610, wideElementCount: 1 };
+  const single = buildResultWithRenderedMobile(makeRenderedMobile(overflow));
+  const correlated = buildResultWithRenderedMobile(makeRenderedMobile({
+    ...overflow, clippedImportantElementCount: 2, clippedNavigation: true,
+    offscreenPrimaryActionCount: 1, overflowingImageCount: 1,
+  }));
+  assert.equal(single.result.overallScore, correlated.result.overallScore);
+  assert.equal(single.result.categoryScores.find((entry) => entry.id === "mobile-experience")?.score,
+    correlated.result.categoryScores.find((entry) => entry.id === "mobile-experience")?.score);
+});
+
+test("unverified JS customer controls reduce evidence without passing or failing customer paths", () => {
+  for (const html of ['<button>Book now</button>', '<form><input type="email" aria-label="Email"><button>Continue</button></form>']) {
+    const { checks, result } = scoreFixture(html, { available: false, reason: "render_error" });
+    for (const id of ["conversion-action-path", "conversion-contact-path"]) {
+      const check = checks.find((entry) => entry.id === id)!;
+      assert.equal(check.status, "unavailable");
+      assert.equal(check.score, null);
+      assert.equal(check.finding, undefined);
+      assert.equal(check.overallScoreCap, undefined);
+    }
+    assert.ok(!checks.some((entry) => entry.id === "conversion-customer-path"));
+    const conversion = result.categoryScores.find((entry) => entry.id === "conversion-ux")!;
+    assert.ok(conversion.evidenceCoverage < 100);
+    assert.notEqual(conversion.evidenceLevel, "full");
+    assert.ok(result.notices.some((notice) => notice.includes("could not be verified")));
+  }
+});
+
+test("a JS-heavy otherwise strong page is not capped as broken solely by uncertain behavior", () => {
+  const html = strongFoundationsHtml.replace(/<a[\s\S]*<\/form>/, '<button>Book now</button>');
+  const { result, checks } = scoreFixture(html, makeRenderedMobile());
+  assert.ok(result.overallScore >= 90);
+  assert.ok(result.evidenceCoverage < 100);
+  assert.equal(checks.find((entry) => entry.id === "conversion-action-path")?.status, "unavailable");
+  assert.ok(!checks.some((entry) => entry.id === "conversion-customer-path"));
 });

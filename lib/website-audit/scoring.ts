@@ -10,7 +10,7 @@ import type {
 } from "./model";
 import {
   getAdditionalWeakCategoryAdjustment,
-  getMaterialCategoryHealthCap,
+  getWeakestCategoryHealthCap,
   healthConstraintCaps,
   independentMaterialGroupStep,
   maximumIndependentGroupAdjustment,
@@ -57,7 +57,7 @@ const summarizeCategory = (score: number | null) => {
   }
 
   if (score >= 80) {
-    return "Generally healthy, with a few worthwhile improvements.";
+    return "Generally strong measured foundations, with some improvements worth addressing.";
   }
 
   if (score >= 70) {
@@ -73,19 +73,19 @@ const summarizeCategory = (score: number | null) => {
 
 const summarizeOverall = (score: number) => {
   if (score >= 90) {
-    return "The checks completed in this audit found a strong website foundation with only minor opportunities.";
+    return "The completed technical and structural checks found strong automated foundations.";
   }
 
   if (score >= 80) {
-    return "The website is generally healthy, with a focused set of improvements worth addressing.";
+    return "The completed checks found generally strong automated foundations, with some measured weaknesses to address.";
   }
 
   if (score >= 70) {
-    return "The website has a fair foundation, with meaningful improvements needed in measured areas.";
+    return "The completed checks found mixed foundations, with meaningful improvements needed in measured areas.";
   }
 
   if (score >= 50) {
-    return "The website has a workable foundation, but several measurable issues are limiting visibility, usability, or customer action.";
+    return "Measured weaknesses need attention in visibility, usability, or customer action, even if other checks performed well.";
   }
 
   return "The audit found high-impact issues that should be addressed before lower-priority improvements.";
@@ -253,7 +253,7 @@ type BuildAuditResultOptions = {
 };
 
 /**
- * Scoring methodology v3:
+ * Scoring methodology v4:
  * - Each check declares a positive weight and a normalized 0–100 result.
  * - Impact controls scoring influence, so informational observations have only
  *   a tiny effect while confirmed harmful issues keep their full effect.
@@ -265,8 +265,8 @@ type BuildAuditResultOptions = {
  *   severity alone does not impose a generic ceiling.
  * - Confirmed material caps are grouped by root cause. Independent material
  *   groups can tighten the strongest cap, while duplicate manifestations do not.
- * - Confirmed materially weak categories add a score-sensitive ceiling, so a
- *   severely broken system cannot be averaged away by unrelated perfect areas.
+ * - Every available weak category adds a monotonic ceiling, independent of
+ *   explicit caps. Confirmed independent material roots can tighten it further.
  * - A literal 100 requires complete evidence and no remaining findings. Missing
  *   evidence is not scored as failure; it only prevents a claim of perfection.
  */
@@ -389,7 +389,7 @@ export function buildAuditResult({
     if (!introducesIndependentRoot) continue;
 
     if (countedWeakCategoryGroups.size === 0) {
-      weakCategoryConstraint = getMaterialCategoryHealthCap(
+      weakCategoryConstraint = getWeakestCategoryHealthCap(
         weakCategory.score,
       );
     } else {
@@ -423,6 +423,9 @@ export function buildAuditResult({
     Math.min(
       rawOverallScore,
       materialConstraint,
+      getWeakestCategoryHealthCap(
+        Math.min(...availableCategories.map((category) => category.score)),
+      ),
       perfectionConstraint,
     ),
   );
@@ -466,6 +469,6 @@ export function buildAuditResult({
     },
     findings,
     notices: [...new Set([...notices, ...coverageNotices])].slice(0, 8),
-    methodologyVersion: "v3",
+    methodologyVersion: "v4",
   });
 }

@@ -5,11 +5,13 @@ import styles from "./website-audit.module.css";
 
 type CategoryScoresProps = {
   scores: readonly AuditCategoryScore[];
+  methodologyVersion: string;
   compact?: boolean;
 };
 
 export default function CategoryScores({
   scores,
+  methodologyVersion,
   compact = false,
 }: CategoryScoresProps) {
   return (
@@ -18,7 +20,7 @@ export default function CategoryScores({
         const definition = getAuditCategory(category.id);
         const interpretation = category.score === null
           ? null
-          : getScoreInterpretation(category.score);
+          : getScoreInterpretation(category.score, methodologyVersion);
         const evidenceLabel =
           category.evidenceLevel === "full"
             ? "Full evidence"

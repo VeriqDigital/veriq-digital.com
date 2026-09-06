@@ -302,6 +302,7 @@
 
 .scoreHeading {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -401,6 +402,14 @@
   color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
   font-size: 0.9rem;
   line-height: 1.65;
+}
+
+.scoreScope {
+  max-width: 60ch;
+  margin-top: 1rem;
+  color: color-mix(in srgb, var(--surface-foreground) 68%, transparent);
+  font-size: 0.78rem;
+  line-height: 1.6;
 }
 
 .categoryScoresCompact {
@@ -614,6 +623,35 @@
   border: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
 }
 
+.methodologyNotice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+  margin-top: 2rem;
+  border-block: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
+  padding-block: 1.25rem;
+  color: color-mix(in srgb, var(--surface-foreground) 72%, transparent);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.methodologyNotice p {
+  flex: 1 1 28rem;
+}
+
+.methodologyNotice a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.auditPreview .methodologyNotice {
+  margin: 0;
+  padding: 1.25rem;
+}
+
 .scoreOverview > .overallScore {
   border-right: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
 }
@@ -702,6 +740,14 @@
 
 .categoryScoreHeading > div {
   min-width: 0;
+}
+
+.categoryScores .categoryScoreHeading {
+  flex-wrap: wrap;
+}
+
+.categoryScores .categoryScoreHeading > div {
+  flex: 1 1 12rem;
 }
 
 .categoryScoreHeading h3 {
@@ -1237,7 +1283,7 @@
   .scoreOverview,
   .findingLead,
   .serviceCtaInner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .heroCopy h1 {
@@ -1303,7 +1349,7 @@
   .findingDetails,
   .reportFields,
   .reportFormFooter {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .urlFieldRow button,
@@ -1362,6 +1408,10 @@
     border-left: 0;
   }
 
+  .categoryScoreHeading h3 {
+    font-size: 1.2rem;
+  }
+
   .categoryScores .categoryScore {
     min-height: 0;
     border-left: 1px solid color-mix(in srgb, var(--surface-foreground) 16%, transparent);
@@ -1400,6 +1450,11 @@
 }
 
 @media (max-width: 420px) {
+  .sectionIntro h2,
+  .resultSectionHeading h2 {
+    font-size: 2.1rem;
+  }
+
   .categoryScoresCompact {
     grid-template-columns: 1fr;
   }

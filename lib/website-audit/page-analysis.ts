@@ -21,10 +21,13 @@ export type PageSnapshot = Readonly<{
   responsiveImageCount: number;
   structuredDataCount: number;
   formCount: number;
+  contactFormCount: number;
+  unverifiedContactFormCount: number;
   formControlCount: number;
   unlabeledFormControlCount: number;
   contactLinkCount: number;
   actionLinkCount: number;
+  unverifiedActionControlCount: number;
   mixedContentCount: number;
   internalLinks: readonly string[];
 }>;
@@ -115,32 +118,76 @@ export function parsePageSnapshot({
   const internalLinks = new Set<string>();
   let contactLinkCount = 0;
   let actionLinkCount = 0;
+  let unverifiedActionControlCount = 0;
   const countedActions = new Set<unknown>();
+  const isUnavailable = (element: (typeof formControls)[number]) => {
+    const control = $(element);
+    return control.is("[disabled]") || control.closest(
+      '[hidden], [inert], [aria-hidden="true" i], [aria-disabled="true" i], fieldset[disabled]',
+    ).length > 0 || control.parents().addBack().toArray().some((candidate) =>
+      /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test(
+        $(candidate).attr("style") ?? "",
+      ),
+    );
+  };
+
+  const labelledByText = (value: string | undefined) => (value ?? "")
+    .split(/\s+/).filter(Boolean)
+    .map((id) => $("[id]").filter((_, candidate) => $(candidate).attr("id") === id).first().text())
+    .join(" ");
+  type FormPurpose = "contact" | "other" | "unverified";
+  const formPurposes = new Map<(typeof formControls)[number], FormPurpose>();
+  $("form").each((_, element) => {
+    const form = $(element);
+    const availableFields = form.find("input, select, textarea").toArray()
+      .filter((field) => !isUnavailable(field) &&
+        !$(field).is('[type="hidden" i], [type="submit" i], [type="button" i], [type="reset" i]'));
+    // Inspect the form's own purpose and primary controls, not nearby page copy
+    // or an optional newsletter checkbox inside an otherwise valid inquiry form.
+    const purposeText = normalizeText([
+      form.attr("aria-label"), labelledByText(form.attr("aria-labelledby")),
+      form.attr("id"), form.attr("name"), form.attr("action"),
+      form.find("legend, h1, h2, h3, h4").text(),
+      ...form.find('button, input[type="submit" i], input[type="button" i]').toArray()
+        .filter((button) => !isUnavailable(button))
+        .map((button) => $(button).attr("aria-label") || $(button).attr("value") || $(button).text()),
+    ].filter(Boolean).join(" ")).replace(/[_/.-]+/g, " ");
+    const otherPurpose = /\b(newsletter|subscrib\w*|subscription|sign\s*up|log\s*in|sign\s*in|account|password|register|registration|search)\b/i.test(purposeText);
+    const inquiryIntent = /\b(contact|quote|estimate|inquir(?:y|ies)|request|message|callback|call back|consultation)\b/i.test(purposeText);
+    const explicitOther = form.is('[role="search" i]') ||
+      availableFields.some((field) => $(field).is('[type="search" i], [type="password" i]'));
+    const inquiryFields = availableFields.some((field) => $(field).is('textarea, input[type="tel" i]'));
+    const purpose: FormPurpose = isUnavailable(element) || availableFields.length === 0 || explicitOther || otherPurpose
+      ? "other"
+      : inquiryFields || inquiryIntent
+        ? "contact"
+        : "unverified";
+    formPurposes.set(element, purpose);
+  });
 
   $("a[href]").each((_, element) => {
     const link = $(element);
     const href = (link.attr("href") ?? "").trim();
     const text = normalizeText(link.text());
-    const unavailableAction =
-      link.closest(
-        '[hidden], [inert], [aria-hidden="true" i], [aria-disabled="true" i]',
-      ).length > 0 ||
-      link
-        .parents()
-        .addBack()
-        .toArray()
-        .some((candidate) =>
-          /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test(
-            $(candidate).attr("style") ?? "",
-          ),
-        );
+    const unavailableAction = isUnavailable(element);
 
-    if (/^(tel:|mailto:)/i.test(href)) {
+    const isDirectContact = /^(tel:|mailto:)\S+/i.test(href);
+    if (!unavailableAction && isDirectContact) {
       contactLinkCount += 1;
     }
 
-    if (!unavailableAction && actionTextPattern.test(`${text} ${href}`)) {
+    const resolvedAction = resolveUrl(href, resolutionBase);
+    const hasDestination = Boolean(
+      href && href !== "#" && resolvedAction &&
+      (["http:", "https:"].includes(resolvedAction.protocol) ||
+        /^(tel:|mailto:)\S+/i.test(href)),
+    );
+    if (!unavailableAction && hasDestination && (isDirectContact || actionTextPattern.test(`${text} ${href}`))) {
       actionLinkCount += 1;
+      countedActions.add(element);
+    }
+    if (!unavailableAction && !hasDestination && actionTextPattern.test(text)) {
+      unverifiedActionControlCount += 1;
       countedActions.add(element);
     }
 
@@ -177,48 +224,38 @@ export function parsePageSnapshot({
 
     if (!isNativeButton && !isInteractiveAriaButton) return;
 
-    const unavailableAncestor = control.closest(
-      '[hidden], [inert], [aria-hidden="true" i], [aria-disabled="true" i], fieldset[disabled]',
-    );
-    const hiddenByInlineStyle = control
-      .parents()
-      .addBack()
-      .toArray()
-      .some((candidate) =>
-        /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:;|$)/i.test(
-          $(candidate).attr("style") ?? "",
-        ),
-      );
-
-    if (
-      control.is("[disabled]") ||
-      unavailableAncestor.length > 0 ||
-      hiddenByInlineStyle
-    ) {
+    if (isUnavailable(element)) {
       return;
     }
 
-    const labelledByText = (control.attr("aria-labelledby") ?? "")
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((id) =>
-        normalizeText(
-          $("[id]")
-            .filter((_, candidate) => $(candidate).attr("id") === id)
-            .first()
-            .text(),
-        ),
-      )
-      .join(" ");
     const accessibleName = normalizeText(
       control.attr("aria-label") ||
-        labelledByText ||
+        labelledByText(control.attr("aria-labelledby")) ||
         (tagName === "input" ? control.attr("value") : control.text()) ||
         control.attr("title"),
     );
 
-    if (accessibleName && actionTextPattern.test(accessibleName)) {
+    // A form attribute overrides ancestry, including when its ID is invalid.
+    const formId = control.attr("form");
+    const owner = formId !== undefined
+      ? $("form[id]").filter((_, candidate) => $(candidate).attr("id") === formId).first()
+      : control.closest("form");
+    const ownerElement = owner.get(0);
+    const purpose = ownerElement?.type === "tag" ? formPurposes.get(ownerElement) : undefined;
+    const isSubmit = (tagName === "button" && !["button", "reset"].includes(type)) ||
+      (tagName === "input" && type === "submit");
+    const method = (control.attr("formmethod") ?? owner.attr("method") ?? "get").trim().toLowerCase();
+    const action = control.attr("formaction") ?? owner.attr("action");
+    // An empty action submits to the current document under native HTML rules.
+    const target = resolveUrl(action?.trim() || pageUrl.href, resolutionBase);
+    const nativeSubmission = isSubmit && ownerElement && purpose === "contact" &&
+      ["get", "post"].includes(method) && target && ["http:", "https:"].includes(target.protocol);
+    if (nativeSubmission) {
       actionLinkCount += 1;
+      countedActions.add(element);
+    } else if (purpose !== "other" && accessibleName && actionTextPattern.test(accessibleName)) {
+      // Button names and click handlers reveal intent, not verified behavior.
+      unverifiedActionControlCount += 1;
       countedActions.add(element);
     }
   });
@@ -257,7 +294,7 @@ export function parsePageSnapshot({
     h1s: headings
       .filter((heading) => heading.level === 1 && heading.text.length > 0)
       .map((heading) => heading.text),
-    hasViewport: Boolean(
+    hasViewport: /(?:^|[,;\s])width\s*=\s*device-width(?:$|[,;\s])/i.test(
       normalizeText($('meta[name="viewport" i]').first().attr("content")),
     ),
     documentLanguage: normalizeText($("html").attr("lang")),
@@ -273,10 +310,13 @@ export function parsePageSnapshot({
     ).length,
     structuredDataCount: $('script[type="application/ld+json" i]').length,
     formCount: $("form").length,
+    contactFormCount: [...formPurposes.values()].filter((purpose) => purpose === "contact").length,
+    unverifiedContactFormCount: [...formPurposes.values()].filter((purpose) => purpose === "unverified").length,
     formControlCount: formControls.length,
     unlabeledFormControlCount,
     contactLinkCount,
     actionLinkCount,
+    unverifiedActionControlCount,
     mixedContentCount,
     internalLinks: [...internalLinks],
   };

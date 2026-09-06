@@ -1,9 +1,10 @@
-import { getEvidenceConfidence, getScoreInterpretation } from "./types";
+import { automatedScoreScope, getEvidenceConfidence, getScoreInterpretation } from "./types";
 import type { NormalizedScore } from "./types";
 import styles from "./website-audit.module.css";
 
 type OverallScoreProps = {
   score: NormalizedScore;
+  methodologyVersion: string;
   evidenceCoverage?: NormalizedScore;
   checksCompleted?: number;
   applicableChecks?: number;
@@ -13,13 +14,14 @@ type OverallScoreProps = {
 
 export default function OverallScore({
   score,
+  methodologyVersion,
   evidenceCoverage,
   checksCompleted,
   applicableChecks,
   summary,
   compact = false,
 }: OverallScoreProps) {
-  const interpretation = getScoreInterpretation(score);
+  const interpretation = getScoreInterpretation(score, methodologyVersion);
   const confidence =
     evidenceCoverage === undefined
       ? null
@@ -28,7 +30,7 @@ export default function OverallScore({
   return (
     <div className={compact ? styles.overallScoreCompact : styles.overallScore}>
       <div className={styles.scoreHeading}>
-        <p>Website health score</p>
+        <p>Automated website health</p>
         <span>
           {interpretation}
         </span>
@@ -42,7 +44,7 @@ export default function OverallScore({
         min={0}
         max={100}
         value={score}
-        aria-label={`Website health score: ${score} out of 100, ${interpretation}${confidence ? `; ${confidence.toLowerCase()}` : ""}`}
+        aria-label={`Automated website health: ${score} out of 100, ${interpretation}${confidence ? `; ${confidence.toLowerCase()}` : ""}`}
       >
         {score} out of 100
       </meter>
@@ -59,6 +61,7 @@ export default function OverallScore({
       {!compact && summary ? (
         <p className={styles.scoreExplanation}>{summary}</p>
       ) : null}
+      <p className={styles.scoreScope}>{automatedScoreScope}</p>
     </div>
   );
 }

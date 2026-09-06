@@ -132,6 +132,8 @@ export type RenderedMobileMetrics = Readonly<{
   potentiallyClippedImportantElementCount: number;
   clippedNavigation: boolean;
   offscreenPrimaryActionCount: number;
+  primaryActionCount: number;
+  seriousPrimaryActionCount: number;
   missingDimensionImageCount: number;
   unreservedImageCount: number;
   seriousTapTargetCount: number;

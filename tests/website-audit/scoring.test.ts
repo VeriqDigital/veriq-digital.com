@@ -6,7 +6,7 @@ import type {
   AuditSeverity,
 } from "../../lib/website-audit/model";
 import type { AuditCategoryId } from "../../lib/website-audit/categories";
-import { getMaterialCategoryHealthCap } from "../../lib/website-audit/health-constraints";
+import { getWeakestCategoryHealthCap } from "../../lib/website-audit/health-constraints";
 import { buildAuditResult } from "../../lib/website-audit/scoring";
 
 const baseCheck = (
@@ -57,21 +57,21 @@ const passingCategoryChecks = (prefix: string) =>
     baseCheck({ id: `${prefix}-${category}`, category }),
   );
 
-test("material category ceilings are monotonic across health bands", () => {
+test("weakest-category ceilings are monotonic across every health band", () => {
   const categoryScores = [95, 85, 75, 65, 55, 49];
-  const caps = categoryScores.map(getMaterialCategoryHealthCap);
+  const caps = categoryScores.map(getWeakestCategoryHealthCap);
 
-  assert.deepEqual(caps, [100, 94, 89, 84, 79, 74]);
+  assert.deepEqual(caps, [100, 92, 86, 79, 72, 66]);
   for (let index = 1; index < caps.length; index += 1) {
     assert.ok(caps[index] <= caps[index - 1]);
   }
   for (let score = 1; score <= 100; score += 1) {
     assert.ok(
-      getMaterialCategoryHealthCap(score) >=
-        getMaterialCategoryHealthCap(score - 1),
+      getWeakestCategoryHealthCap(score) >=
+        getWeakestCategoryHealthCap(score - 1),
     );
   }
-  assert.throws(() => getMaterialCategoryHealthCap(Number.NaN));
+  assert.throws(() => getWeakestCategoryHealthCap(Number.NaN));
 });
 
 test("health is normalized from available evidence while coverage stays separate", () => {
@@ -181,7 +181,7 @@ test("overall scoring preserves explicit category weights", () => {
         id: `performance-${id}`,
         category: "performance",
         status: "failed",
-        score: 50,
+        score: 90,
       }),
     ),
   ];
@@ -193,10 +193,10 @@ test("overall scoring preserves explicit category weights", () => {
   );
   assert.equal(
     result.categoryScores.find((category) => category.id === "performance")?.score,
-    50,
+    90,
   );
   assert.equal(result.evidenceCoverage, 42);
-  assert.equal(result.overallScore, 76);
+  assert.equal(result.overallScore, 95);
 });
 
 test("informational observations have only a tiny direct score effect", () => {
@@ -262,7 +262,7 @@ test("unavailable performance is excluded from health and lowers confidence", ()
   );
 });
 
-test("a concentrated confirmed material failure cannot be averaged into Excellent", () => {
+test("a concentrated confirmed material failure cannot be averaged into strong foundations", () => {
   const result = build([
     ...passingCategoryChecks("confirmed").filter(
       (check) => check.category !== "mobile-experience",
@@ -287,11 +287,11 @@ test("a concentrated confirmed material failure cannot be averaged into Excellen
   );
 
   assert.equal(mobile?.score, 49);
-  assert.equal(result.overallScore, 74);
+  assert.equal(result.overallScore, 66);
   assert.ok(result.overallScore < 80);
 });
 
-test("a concentrated likely weakness remains governed by weighted scoring", () => {
+test("a likely weakness still constrains overall health after impact weighting", () => {
   const result = build([
     ...passingCategoryChecks("likely").filter(
       (check) => check.category !== "mobile-experience",
@@ -315,7 +315,7 @@ test("a concentrated likely weakness remains governed by weighted scoring", () =
   );
 
   assert.equal(mobile?.score, 49);
-  assert.ok(result.overallScore >= 90);
+  assert.equal(result.overallScore, 66);
 });
 
 test("informational complexity stays very high without rounding to perfect", () => {
@@ -341,7 +341,7 @@ test("informational complexity stays very high without rounding to perfect", () 
   assert.ok(result.overallScore < 100);
 });
 
-test("a mixed strong site can remain in the low nineties without material failures", () => {
+test("a category in the seventies limits an otherwise strong site without explicit caps", () => {
   const result = build(
     allCategories.map((category) =>
       baseCheck({
@@ -357,7 +357,7 @@ test("a mixed strong site can remain in the low nineties without material failur
     ),
   );
 
-  assert.equal(result.overallScore, 92);
+  assert.equal(result.overallScore, 86);
 });
 
 test("a true perfect score requires full evidence and no findings", () => {
@@ -461,8 +461,8 @@ test("duplicate material manifestations share one overall constraint", () => {
     ),
   ]);
 
-  assert.equal(single.overallScore, 74);
-  assert.equal(duplicated.overallScore, 74);
+  assert.equal(single.overallScore, 66);
+  assert.equal(duplicated.overallScore, 66);
 });
 
 test("independent confirmed material failures strengthen the constraint", () => {
@@ -501,7 +501,7 @@ test("independent confirmed material failures strengthen the constraint", () => 
     }),
   ]);
 
-  assert.equal(result.overallScore, 69);
+  assert.equal(result.overallScore, 61);
 });
 
 test("weak categories sharing one root do not create category breadth", () => {
@@ -528,10 +528,10 @@ test("weak categories sharing one root do not create category breadth", () => {
     ),
   ]);
 
-  assert.equal(result.overallScore, 74);
+  assert.equal(result.overallScore, 66);
 });
 
-test("a low category with a confirmed material check cannot remain Excellent", () => {
+test("a low category with a confirmed material check cannot remain strong foundations", () => {
   const result = build([
     ...passingCategoryChecks("guardrail").filter(
       (check) => check.category !== "accessibility",
@@ -557,7 +557,7 @@ test("a low category with a confirmed material check cannot remain Excellent", (
       ?.score,
     75,
   );
-  assert.equal(result.overallScore, 89);
+  assert.equal(result.overallScore, 86);
 });
 
 test("a confirmed material category at 60 receives an intermediate ceiling", () => {
@@ -580,7 +580,7 @@ test("a confirmed material category at 60 receives an intermediate ceiling", () 
     }),
   ]);
 
-  assert.equal(result.overallScore, 84);
+  assert.equal(result.overallScore, 79);
 });
 
 test("catastrophic explicit constraints remain effective", () => {
@@ -732,4 +732,62 @@ test("summary counts include findings beyond the displayed top fifteen", () => {
 
   assert.equal(result.findings.length, 15);
   assert.equal(result.summary.opportunities, 18);
+});
+
+test("every category can constrain five perfect peers without findings or explicit caps", () => {
+  for (const weakCategory of allCategories) {
+    for (const [score, ceiling] of [[0, 66], [35, 66], [45, 66], [49, 66], [50, 72], [59, 72], [60, 79], [69, 79], [70, 86], [79, 86], [80, 92], [89, 92], [90, 100]]) {
+      const result = build(passingCategoryChecks("weak").map((check) =>
+        check.category === weakCategory ? { ...check, score, status: "failed" } : check,
+      ));
+      assert.ok(result.overallScore <= ceiling, `${weakCategory} at ${score}`);
+      if (score < 50) assert.ok(result.overallScore > score, "The ceiling is not a minimum-category score");
+    }
+  }
+});
+
+test("raising a single category never lowers overall health", () => {
+  let previous = 0;
+  for (let score = 0; score <= 100; score++) {
+    const result = build(passingCategoryChecks("monotonic").map((check) =>
+      check.category === "mobile-experience" ? { ...check, score } : check,
+    ));
+    assert.ok(result.overallScore >= previous);
+    previous = result.overallScore;
+  }
+});
+
+test("Blinkee's supplied category profile can still have strong automated foundations", () => {
+  const result = build(passingCategoryChecks("visually-unassessed").map((check) => ({
+    ...check,
+    score: check.category === "performance" ? 94 : check.category === "accessibility" ? 81 : 100,
+  })));
+  assert.ok(result.overallScore >= 90 && result.overallScore <= 92);
+  assert.match(result.overallSummary, /automated foundations/);
+  assert.doesNotMatch(result.overallSummary, /excellent|design quality/i);
+});
+
+test("the supplied Big Ugly category profile is constrained even before new checks", () => {
+  const scores = [99, 100, 36, 71, 97, 91];
+  const result = build(passingCategoryChecks("reported-profile").map((check, index) => ({ ...check, score: scores[index] })));
+  assert.ok(result.overallScore <= 66);
+});
+
+test("partial weak evidence keeps its measured score and ceiling with separate confidence", () => {
+  const result = build(passingCategoryChecks("partial").map((check) =>
+    check.category === "mobile-experience" ? { ...check, score: 40, evidenceConfidence: 0.5 } : check,
+  ));
+  const mobile = result.categoryScores.find((category) => category.id === "mobile-experience")!;
+  assert.equal(mobile.score, 40);
+  assert.equal(mobile.evidenceCoverage, 50);
+  assert.equal(mobile.evidenceLevel, "partial");
+  assert.equal(result.overallScore, 66);
+});
+
+test("even a finding with a perfect check score prevents overall perfection", () => {
+  const result = build(passingCategoryChecks("not-perfect").map((check, index) => index === 0
+    ? { ...check, finding: withFinding("opportunity", "remaining", "informational") }
+    : check));
+  assert.equal(result.evidenceCoverage, 100);
+  assert.equal(result.overallScore, 99);
 });
