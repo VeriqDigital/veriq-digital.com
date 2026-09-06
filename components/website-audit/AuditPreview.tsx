@@ -20,7 +20,7 @@ export default function AuditPreview({ result }: AuditPreviewProps) {
         <span className={styles.previewStatus}>Demo data</span>
       </header>
       <LegacyAuditNotice methodologyVersion={result.methodologyVersion} className={styles.methodologyNotice} />
-      <OverallScore score={result.overallScore} methodologyVersion={result.methodologyVersion} compact />
+      <OverallScore score={result.overallScore} methodologyVersion={result.methodologyVersion} evidenceCoverage={result.evidenceCoverage} compact />
       <CategoryScores scores={result.categoryScores} methodologyVersion={result.methodologyVersion} compact />
       <footer>
         <span>{formatCount(result.summary.criticalIssues, "critical issue")}</span>

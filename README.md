@@ -175,7 +175,7 @@ names. Context cleanup also covers page-creation failures. The historical 359 ms
 do not reproduce the production environment. Stage/code telemetry is needed to
 distinguish deployment startup failures from navigation or evaluation failures.
 
-Scoring methodology **v5**, centralized as `CURRENT_AUDIT_METHODOLOGY_VERSION`
+Scoring methodology **v6**, centralized as `CURRENT_AUDIT_METHODOLOGY_VERSION`
 in `lib/website-audit/methodology.ts`, reports automated website health across six categories:
 SEO (22%), performance (20%), mobile experience (15%), accessibility (15%),
 conversion foundations (12%), and technical health (16%). The stable internal
@@ -183,9 +183,9 @@ conversion category ID remains `conversion-ux`; existing saved results remain
 readable and retain their original scores and methodology version. Reports using
 another methodology show a legacy notice and a "Run a new audit" link. Their
 overall and category scores use "Historical score" instead of current health bands;
-the original summaries and findings remain readable. This includes saved v4
-reports: their scores are not recomputed. Run a new audit to apply v5's rendered
-evidence methodology. Scored results, the demo, and presentation use the same
+the original summaries and findings remain readable. This includes saved v4 and v5
+reports: their scores are not recomputed. Run a new audit to apply v6's
+evidence-aware weighting and presentation. Scored results, the demo, and presentation use the same
 current-version constant.
 
 Checks use explicit weights and impact-adjusted deductions (confirmed 1,
@@ -194,10 +194,24 @@ only its largest deduction and largest scoring weight. Shared mobile overflow,
 clipped content, and offscreen action findings therefore do not stack as
 independent root failures. Findings retain their individual explanations.
 
-The final score is the minimum of the weighted available-category average,
-explicit/material constraints, the weakest available category's ceiling, and
-the perfection constraint. The centralized weakest-category ceiling applies
-even when no check declares an explicit overall cap:
+Category scores describe completed checks. Evidence coverage measures the weighted
+share of intended evidence available, including evidence confidence. In
+`evidence-policy.ts`, category ratings display normally at **70%+** coverage,
+with qualified completed-check labels at **40–69%**, and as **Limited evidence**
+below **40%**. Withheld ratings keep their internal score; confirmed material
+findings remain visible. Historical reports retain their original numeric scores.
+
+Overall influence uses `effectiveWeight = configuredOverallWeight × coverage / 100`.
+The raw score is `sum(categoryScore × effectiveWeight) / sum(effectiveWeight)`;
+unavailable categories have zero weight. Missing evidence is neither a zero
+score nor a hidden penalty.
+
+The final score is the minimum of that raw average, explicit/material constraints,
+evidence-aware generic category ceilings, and the perfection constraint. For a
+category with coverage `c`, its generic ceiling is
+`100 − (100 − baseCeiling(score)) × min(1, c / 70)`. It continuously reaches
+full strength at 70% coverage. Confirmed material caps, penalty groups, and
+material-root constraints remain independent and unchanged. Base ceilings:
 
 | Weakest measured category | Overall ceiling |
 | --- | --- |

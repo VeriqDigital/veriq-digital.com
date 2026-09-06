@@ -1,5 +1,6 @@
 import { auditCategoryRegistry } from "./categories";
 import { CURRENT_AUDIT_METHODOLOGY_VERSION } from "./methodology";
+import { getEvidenceAwareCategoryHealthCap, getEvidenceWeightedOverallScore } from "./evidence-policy";
 import type { AuditCategoryId } from "./categories";
 import type {
   AuditCategoryScore,
@@ -219,6 +220,10 @@ const scoreCategory = (
     summary: summarizeCategory(score),
     checksRun: availableChecks.length,
     checksUnavailable: categoryChecks.length - availableChecks.length,
+    hasConfirmedMaterialIssue: availableChecks.some((check) =>
+      check.status === "failed" && check.finding && inferFindingImpact(check.finding) === "confirmed" &&
+      (["critical", "high"].includes(check.finding.severity) ||
+        check.categoryScoreCap !== undefined || check.overallScoreCap !== undefined)),
   };
 };
 
@@ -266,8 +271,9 @@ type BuildAuditResultOptions = {
  *   severity alone does not impose a generic ceiling.
  * - Confirmed material caps are grouped by root cause. Independent material
  *   groups can tighten the strongest cap, while duplicate manifestations do not.
- * - Every available weak category adds a monotonic ceiling, independent of
- *   explicit caps. Confirmed independent material roots can tighten it further.
+ * - Category influence in the raw overall average scales linearly by coverage.
+ *   Generic weak-category ceilings soften continuously below normal-rating
+ *   coverage; explicit confirmed material roots retain their original strength.
  * - A literal 100 requires complete evidence and no remaining findings. Missing
  *   evidence is not scored as failure; it only prevents a claim of perfection.
  */
@@ -293,13 +299,6 @@ export function buildAuditResult({
     (category): category is AuditCategoryScore & { score: number } =>
       category.available && category.score !== null,
   );
-  const availableOverallWeight = availableCategories.reduce(
-    (total, category) =>
-      total +
-      auditCategoryRegistry.find((entry) => entry.id === category.id)!
-        .overallWeight,
-    0,
-  );
   const totalOverallWeight = auditCategoryRegistry.reduce(
     (total, category) => total + category.overallWeight,
     0,
@@ -316,18 +315,7 @@ export function buildAuditResult({
       100,
   );
 
-  if (availableOverallWeight === 0) {
-    throw new TypeError("An audit result requires at least one scored category.");
-  }
-
-  const rawOverallScore =
-    availableCategories.reduce((total, category) => {
-      const categoryWeight = auditCategoryRegistry.find(
-        (entry) => entry.id === category.id,
-      )!.overallWeight;
-
-      return total + category.score * categoryWeight;
-    }, 0) / availableOverallWeight;
+  const rawOverallScore = getEvidenceWeightedOverallScore(categoryScores);
   const groupedMaterialCaps = new Map<string, number>();
   const materialGroupsByCategory = new Map<AuditCategoryId, Set<string>>();
 
@@ -424,9 +412,8 @@ export function buildAuditResult({
     Math.min(
       rawOverallScore,
       materialConstraint,
-      getWeakestCategoryHealthCap(
-        Math.min(...availableCategories.map((category) => category.score)),
-      ),
+      ...availableCategories.map((category) =>
+        getEvidenceAwareCategoryHealthCap(category.score, category.evidenceCoverage)),
       perfectionConstraint,
     ),
   );

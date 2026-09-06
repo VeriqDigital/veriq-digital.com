@@ -1,4 +1,5 @@
-import { automatedScoreScope, getEvidenceConfidence, getScoreInterpretation } from "./types";
+import { CURRENT_AUDIT_METHODOLOGY_VERSION } from "@/lib/website-audit/methodology";
+import { automatedScoreScope, evidenceWeightedScoreScope, getEvidenceConfidence, getScoreInterpretation } from "./types";
 import type { NormalizedScore } from "./types";
 import styles from "./website-audit.module.css";
 
@@ -62,6 +63,9 @@ export default function OverallScore({
         <p className={styles.scoreExplanation}>{summary}</p>
       ) : null}
       <p className={styles.scoreScope}>{automatedScoreScope}</p>
+      {methodologyVersion === CURRENT_AUDIT_METHODOLOGY_VERSION ? (
+        <p className={styles.scoreScope}>{evidenceWeightedScoreScope}</p>
+      ) : null}
     </div>
   );
 }

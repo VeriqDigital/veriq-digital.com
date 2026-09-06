@@ -26,6 +26,8 @@ export type AuditCategoryScore = Readonly<{
   summary: string;
   checksRun: number;
   checksUnavailable: number;
+  // Optional for historical reports; computed from all checks before findings are truncated.
+  hasConfirmedMaterialIssue?: boolean;
 }>;
 
 export type AuditSupportingMetric = Readonly<{

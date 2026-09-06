@@ -28,7 +28,7 @@ test("the score component exposes scope in both preview and full report", async 
 });
 
 test("demo data follows the current health ceiling and avoids subjective CTA judgments", () => {
-  assert.equal(CURRENT_AUDIT_METHODOLOGY_VERSION, "v5");
+  assert.equal(CURRENT_AUDIT_METHODOLOGY_VERSION, "v6");
   assert.equal(demoAuditResult.methodologyVersion, CURRENT_AUDIT_METHODOLOGY_VERSION);
   assert.ok(demoAuditResult.overallScore <= getWeakestCategoryHealthCap(Math.min(...demoAuditResult.categoryScores.map((category) => category.score!))));
   assert.doesNotMatch(JSON.stringify(demoAuditResult), /equal-looking|Four equal|difficult to find/);
@@ -50,7 +50,7 @@ test("saved v4 reports preserve historical scores and receive the legacy present
 });
 
 test("legacy methods render an update notice and a new-audit action, while the current method renders neither", () => {
-  for (const version of ["v1", "v2", "v3", "v4", "v999"]) {
+  for (const version of ["v1", "v2", "v3", "v4", "v5", "v999"]) {
     const html = renderToStaticMarkup(createElement(LegacyAuditNotice, { methodologyVersion: version }));
     assert.match(html, /Legacy scoring methodology/);
     assert.ok(html.includes(version));
@@ -63,7 +63,7 @@ test("legacy methods render an update notice and a new-audit action, while the c
 });
 
 test("legacy scores are never interpreted using current health bands", () => {
-  for (const version of ["v1", "v2", "v3", "v4", "v999"]) {
+  for (const version of ["v1", "v2", "v3", "v4", "v5", "v999"]) {
     for (const score of [0, 36, 66, 84, 100]) {
       assert.equal(getScoreInterpretation(score, version), "Historical score");
     }
@@ -82,6 +82,8 @@ test("both report surfaces pass the saved methodology to scores and the legacy n
   }
   for (const file of ["OverallScore", "CategoryScores"]) {
     const source = await readFile(new URL(`../../components/website-audit/${file}.tsx`, import.meta.url), "utf8");
-    assert.match(source, /getScoreInterpretation\([^,]+, methodologyVersion\)/);
+    assert.match(source, file === "CategoryScores"
+      ? /getCategoryScorePresentation\(category, methodologyVersion\)/
+      : /getScoreInterpretation\([^,]+, methodologyVersion\)/);
   }
 });

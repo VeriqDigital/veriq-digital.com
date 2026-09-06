@@ -30,6 +30,7 @@ const categoryScoreSchema = z
     summary: boundedText(240),
     checksRun: z.number().finite().int().min(0).max(100),
     checksUnavailable: z.number().finite().int().min(0).max(100),
+    hasConfirmedMaterialIssue: z.boolean().optional(),
   })
   .superRefine((value, context) => {
     if (value.available !== (value.score !== null)) {
