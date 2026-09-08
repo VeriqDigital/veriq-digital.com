@@ -23,12 +23,13 @@ export function createPageMetadata({
   modifiedTime,
   image,
 }: PageMetadataOptions): Metadata {
+  const titleBrand = type === "article" ? siteConfig.shortName : siteConfig.name;
   const socialTitle = title
-    ? `${title} | ${siteConfig.name}`
+    ? `${title} | ${titleBrand}`
     : siteConfig.defaultTitle;
   const openGraphImage = image ?? {
     url: "/opengraph-image",
-    alt: `${siteConfig.name} — web design, SEO, and conversion partner`,
+    alt: `${siteConfig.shortName} — web design, SEO, and conversion partner`,
   };
   const twitterImage = image ?? {
     url: "/twitter-image",
@@ -59,7 +60,10 @@ export function createPageMetadata({
         };
 
   return {
-    title: title ? title : { absolute: siteConfig.defaultTitle },
+    title:
+      title && type === "article"
+        ? { absolute: socialTitle }
+        : title ?? { absolute: siteConfig.defaultTitle },
     description,
     alternates: {
       canonical: path,

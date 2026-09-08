@@ -17,6 +17,10 @@ const Hero = ({ auditEnabled, campaign }: HeroProps) => {
       <Container>
         <div className={styles.layout}>
           <div className={styles.content}>
+            <p className={styles.eyebrow}>
+              <span aria-hidden="true" />
+              Veriq Digital &middot; Des Moines, Iowa
+            </p>
             <h1 className={styles.title}>
               Custom websites.
               <span>That turn leads into customers.</span>
