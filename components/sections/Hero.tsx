@@ -1,16 +1,14 @@
 import type { ReactNode } from "react";
 import HeroInquiryForm from "@/components/forms/HeroInquiryForm";
-import Button, { getButtonClassName } from "@/components/ui/Button";
+import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
-import WebsiteAuditLink from "@/components/ui/WebsiteAuditLink";
 import styles from "./Hero.module.css";
 
 type HeroProps = {
-  auditEnabled: boolean;
   campaign?: ReactNode;
 };
 
-const Hero = ({ auditEnabled, campaign }: HeroProps) => {
+const Hero = ({ campaign }: HeroProps) => {
   return (
     <section className={styles.hero}>
       <div className={styles.grid} aria-hidden="true" />

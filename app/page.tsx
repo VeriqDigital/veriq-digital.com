@@ -44,7 +44,6 @@ export default function Home() {
       />
       <main id="main-content">
         <Hero
-          auditEnabled={auditEnabled}
           campaign={
             homepageCampaign.enabled ? (
               <HomepageCampaignOffer campaign={homepageCampaign} />
