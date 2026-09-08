@@ -59,7 +59,10 @@ export function createPageMetadata({
         };
 
   return {
-    title: title ? title : { absolute: siteConfig.defaultTitle },
+    title:
+      title && type === "article"
+        ? { absolute: socialTitle }
+        : title ?? { absolute: siteConfig.defaultTitle },
     description,
     alternates: {
       canonical: path,
@@ -83,7 +86,7 @@ export const siteStructuredData = {
       "@type": "WebSite",
       "@id": `${siteConfig.url}/#website`,
       name: siteConfig.name,
-      alternateName: siteConfig.shortName,
+      alternateName: siteConfig.alternateName,
       url: siteConfig.url,
       inLanguage: "en-US",
       publisher: {
@@ -94,7 +97,8 @@ export const siteStructuredData = {
       "@type": "Organization",
       "@id": organizationId,
       name: siteConfig.name,
-      alternateName: siteConfig.shortName,
+      legalName: siteConfig.legalName,
+      alternateName: siteConfig.alternateName,
       url: siteConfig.url,
       logo: `${siteConfig.url}/icon.svg`,
       image: `${siteConfig.url}/opengraph-image`,
