@@ -19,7 +19,7 @@ const Hero = ({ auditEnabled, campaign }: HeroProps) => {
           <div className={styles.content}>
             <p className={styles.eyebrow}>
               <span aria-hidden="true" />
-              Veriq Digital &middot; Des Moines, Iowa
+              Veriq &middot; Des Moines, Iowa
             </p>
             <h1 className={styles.title}>
               Custom websites.

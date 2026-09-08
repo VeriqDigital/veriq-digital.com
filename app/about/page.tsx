@@ -71,17 +71,16 @@ export default function AboutPage() {
             <div className={styles.heroCopy}>
               <p className={styles.eyebrow}>
                 <span aria-hidden="true" />
-                About {siteConfig.shortName}
+                About {siteConfig.name}
               </p>
               <h1>
                 Small studio. <span>Serious digital work.</span>
               </h1>
               <div className={styles.heroSummary}>
                 <p>
-                  Veriq Digital, known simply as Veriq, is an independent Des
-                  Moines studio creating websites and customer-facing
-                  experiences that help businesses get found, earn trust, and
-                  turn interest into action.
+                  Veriq is an independent Des Moines studio creating websites
+                  and customer-facing experiences that help businesses get
+                  found, earn trust, and turn interest into action.
                 </p>
                 <div className={styles.heroActions}>
                   <Link href="#philosophy" className={styles.primaryLink}>
@@ -209,7 +208,7 @@ export default function AboutPage() {
             <div className={styles.whyHeading}>
               <div className={styles.sectionMarker}>
                 <span>04</span>
-                Why {siteConfig.shortName}
+                Why {siteConfig.name}
               </div>
               <h2>Less distance between the idea and the outcome.</h2>
               <p>

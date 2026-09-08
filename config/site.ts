@@ -1,12 +1,13 @@
 export const siteConfig = {
-  name: "Veriq Digital",
-  shortName: "Veriq",
+  name: "Veriq",
+  legalName: "Veriq LLC",
+  alternateName: "Veriq Digital",
   brandSlogan: "COMMAND ATTENTION.",
-  defaultTitle: "Veriq Digital | Custom Websites & SEO in Des Moines",
+  defaultTitle: "Veriq | Custom Websites & SEO in Des Moines",
   tagline:
     "Custom websites, local SEO, conversion-focused functionality, and ongoing support.",
   description:
-    "Veriq Digital is a Des Moines web design and development studio building custom websites, improving local SEO, and helping businesses turn more visitors into customers.",
+    "Veriq is a Des Moines web design and development studio building custom websites, improving local SEO, and helping businesses turn more visitors into customers.",
   url: "https://www.veriqdigital.com",
   locale: "en_US",
   location: {
