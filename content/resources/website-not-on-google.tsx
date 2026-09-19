@@ -84,6 +84,10 @@ export default function WebsiteNotOnGoogleArticle() {
           crawled and reevaluated. Preserve or redirect valuable old URLs during
           a redesign so search engines and visitors do not hit dead ends.
         </p>
+        <p>
+          If visibility changed after a redesign, work through the <Link href="/resources/website-redesign-seo-checklist">redesign launch and monitoring checks</Link>{" "}
+          to compare old URLs, indexability settings, and the new page map.
+        </p>
       </ArticleSection>
 
       <ArticleSection

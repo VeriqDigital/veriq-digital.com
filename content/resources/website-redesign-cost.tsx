@@ -101,6 +101,11 @@ export default function WebsiteRedesignCostArticle() {
           post-launch monitoring. None of those steps guarantees rankings will
           remain unchanged, but omitting them creates avoidable risk.
         </p>
+        <p>
+          Use the <Link href="/resources/website-redesign-seo-checklist">redesign SEO checklist</Link>{" "}
+          to identify which preservation and launch tasks belong in your
+          proposal, with an owner and an allowance for the work.
+        </p>
       </ArticleSection>
 
       <ArticleSection id="proposal" title="Compare the work, not only the total">
