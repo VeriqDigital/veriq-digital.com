@@ -3,6 +3,7 @@ export { default as CustomWebsiteVsTemplateArticle } from "./custom-website-vs-t
 export { default as InformationArchitectureWebDesignArticle } from "./information-architecture-web-design";
 export { default as LocalDesignerVsAgencyArticle } from "./local-designer-vs-agency";
 export { default as LocalWebsiteEssentialsArticle } from "./local-website-essentials";
+export { default as OneTimeWebsitePricingVsMonthlyPlansArticle } from "./one-time-website-pricing-vs-monthly-plans";
 export { default as ProfessionalSmallBusinessWebsiteArticle } from "./professional-small-business-website";
 export { default as SmallBusinessWebsiteCostArticle } from "./small-business-website-cost";
 export { default as SmallBusinessWebsiteTimelineArticle } from "./small-business-website-timeline";

@@ -13,7 +13,8 @@ export type WebsiteAuditPlacement =
   | "services_hero"
   | "services_seo"
   | "services_closing"
-  | "footer_resources";
+  | "footer_resources"
+  | "resource_next_step";
 
 type WebsiteAuditLinkProps = {
   children: ReactNode;

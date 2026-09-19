@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --incremental false",
-    "test": "tsx --test tests/website-audit/*.test.ts",
+    "test": "tsx --test tests/website-audit/*.test.ts tests/resources/*.test.ts",
+    "test:resources-browser": "tsx --test tests/resources/articles.smoke.ts",
     "test:browser-smoke": "tsx --test tests/browser/*.test.ts"
   },
   "dependencies": {

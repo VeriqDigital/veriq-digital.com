@@ -5,6 +5,7 @@ import {
   InformationArchitectureWebDesignArticle,
   LocalDesignerVsAgencyArticle,
   LocalWebsiteEssentialsArticle,
+  OneTimeWebsitePricingVsMonthlyPlansArticle,
   ProfessionalSmallBusinessWebsiteArticle,
   SmallBusinessWebsiteCostArticle,
   SmallBusinessWebsiteTimelineArticle,
@@ -24,6 +25,15 @@ import {
 
 export type ResourceCategory = "Buying guide" | "Website fundamentals";
 export type ResourceFunnel = "Educational" | "Commercial investigation";
+export type ResourceServiceDestination =
+  | "/des-moines-web-design"
+  | "/small-business-web-design"
+  | "/website-redesign";
+export type ResourceNextStep =
+  | ResourceServiceDestination
+  | "/pricing"
+  | `/resources/${string}`
+  | { type: "audit"; fallback: ResourceServiceDestination };
 
 export const resourceTopics = [
   {
@@ -77,7 +87,7 @@ export type ResourceArticle = {
   primaryTarget: string;
   secondaryTargets: readonly string[];
   intent: string;
-  nextStep: string;
+  nextStep: ResourceNextStep;
   publishedAt: string;
   /** ISO date for a substantive, verified update; omit for newly published copy. */
   dateModified?: string;
@@ -106,7 +116,7 @@ export const resources: readonly ResourceArticle[] = [
     seoTitle: "Small Business Website Cost: A Practical Guide",
     shortTitle: "Small business website costs",
     description:
-      "Understand small-business website costs across DIY, professionally built platform sites, custom development, functionality, and ongoing ownership.",
+      "Build a small-business website budget with four scope options, a worked first-year example, recurring costs, and Veriq’s current project starting points.",
     topic: "Web Design",
     category: "Buying guide",
     funnel: "Commercial investigation",
@@ -121,19 +131,56 @@ export const resources: readonly ResourceArticle[] = [
       "Compare website investment levels and total ownership costs before defining a project.",
     nextStep: "/small-business-web-design",
     publishedAt: "2026-08-11",
+    dateModified: "2026-09-19",
     tableOfContents: [
-      { id: "useful-range", label: "A realistic market range" },
-      { id: "approaches", label: "Four planning bands" },
+      { id: "useful-range", label: "Budget for launch and operation" },
+      { id: "approaches", label: "Four scope bands" },
       { id: "project-cost", label: "Project cost drivers" },
       { id: "ongoing-cost", label: "Ongoing ownership costs" },
       { id: "budget", label: "Build a first-year budget" },
+      { id: "where-veriq-fits", label: "Where Veriq fits" },
     ],
     relatedSlugs: [
       "web-designer-vs-website-builder-for-small-business",
       "custom-website-vs-template-for-small-business",
-      "how-much-does-a-website-cost-in-des-moines",
+      "one-time-website-pricing-vs-monthly-plans",
     ],
     Content: SmallBusinessWebsiteCostArticle,
+  },
+  {
+    slug: "one-time-website-pricing-vs-monthly-plans",
+    title: "One-Time Website Pricing vs. Monthly Plans: Compare the Real Cost",
+    seoTitle: "One-Time Website Pricing vs. Monthly Plans",
+    shortTitle: "One-time website pricing vs. monthly plans",
+    description:
+      "Compare project fees, installments, and managed website plans with hypothetical 12- and 36-month totals, support differences, and handoff questions.",
+    topic: "Web Design",
+    category: "Buying guide",
+    funnel: "Commercial investigation",
+    primaryTarget: "one-time website pricing",
+    secondaryTargets: [
+      "one time pricing for a business website",
+      "one time pricing for a small business website",
+      "monthly website plans vs upfront",
+      "website payment options for small businesses",
+    ],
+    intent: "Compare payment arrangements and continuing obligations separately from the scope of a website build.",
+    nextStep: "/pricing",
+    publishedAt: "2026-09-19",
+    tableOfContents: [
+      { id: "arrangements", label: "What the payment buys" },
+      { id: "schedule-and-rights", label: "Timing, access, and rights" },
+      { id: "worked-comparison", label: "12- and 36-month comparison" },
+      { id: "quote-checklist", label: "Compare the quotes" },
+      { id: "which-fits", label: "Which arrangement fits" },
+      { id: "veriq", label: "Veriq’s approach" },
+    ],
+    relatedSlugs: [
+      "how-much-does-a-small-business-website-cost",
+      "how-to-choose-a-web-designer-in-des-moines",
+      "web-designer-vs-website-builder-for-small-business",
+    ],
+    Content: OneTimeWebsitePricingVsMonthlyPlansArticle,
   },
   {
     slug: "how-much-does-a-website-cost-in-des-moines",
@@ -175,7 +222,7 @@ export const resources: readonly ResourceArticle[] = [
     seoTitle: "How to Choose a Des Moines Web Designer",
     shortTitle: "Choosing a Des Moines web designer",
     description:
-      "A clear framework for comparing Des Moines web designers on business fit, technical quality, ownership, communication, and support.",
+      "Compare Des Moines web designers with a practical proposal worksheet, portfolio checks, and specific questions about scope, access, testing, and support.",
     topic: "Web Design",
     category: "Buying guide",
     funnel: "Commercial investigation",
@@ -188,17 +235,20 @@ export const resources: readonly ResourceArticle[] = [
     intent: "Evaluate providers before hiring.",
     nextStep: "/des-moines-web-design",
     publishedAt: "2026-08-09",
+    dateModified: "2026-09-19",
     tableOfContents: [
       { id: "define-project", label: "Define the project" },
       { id: "evaluate-work", label: "Evaluate the work" },
       { id: "technical-baseline", label: "Check the technical baseline" },
       { id: "ownership-support", label: "Clarify ownership and support" },
+      { id: "proposal-worksheet", label: "Compare proposals" },
+      { id: "specific-answers", label: "Clarify vague answers" },
       { id: "questions", label: "Questions to ask" },
     ],
     relatedSlugs: [
       "local-web-designer-vs-large-agency",
-      "how-much-does-a-website-cost-in-des-moines",
-      "website-mistakes-that-cost-local-businesses-customers",
+      "how-much-does-a-small-business-website-cost",
+      "one-time-website-pricing-vs-monthly-plans",
     ],
     Content: ChooseWebDesignerArticle,
   },
@@ -689,7 +739,7 @@ export const resources: readonly ResourceArticle[] = [
     seoTitle: "Why Your Website Looks Bad on Mobile",
     shortTitle: "Why your website looks bad on mobile",
     description:
-      "Find the responsive layout, navigation, typography, media, form, and performance problems that make a business website difficult to use on phones.",
+      "Diagnose mobile website problems with a symptom table, illustrated examples, and a safe testing sequence, then decide what to repair or redesign.",
     topic: "UI/UX & Conversion",
     category: "Website fundamentals",
     funnel: "Educational",
@@ -701,14 +751,17 @@ export const resources: readonly ResourceArticle[] = [
     ],
     intent:
       "Diagnose recurring mobile usability failures and decide whether to repair a component or redesign the system.",
-    nextStep: "/resources/website-redesign-vs-rebuild",
+    nextStep: { type: "audit", fallback: "/website-redesign" },
     publishedAt: "2026-08-12",
+    dateModified: "2026-09-19",
     tableOfContents: [
       { id: "responsive", label: "Responsive layout" },
-      { id: "navigation", label: "Navigation and touch" },
+      { id: "diagnostics", label: "Match symptoms to checks" },
       { id: "content", label: "Type, media, and tables" },
+      { id: "navigation", label: "Navigation and touch" },
       { id: "forms", label: "Mobile forms" },
       { id: "performance", label: "Mobile performance" },
+      { id: "manual-test", label: "Test the customer path" },
       { id: "decision", label: "Repair or redesign" },
     ],
     relatedSlugs: [

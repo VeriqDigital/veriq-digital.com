@@ -176,6 +176,10 @@
   outline: 3px solid var(--primary-readable);
 }
 
+.tableScroll + p {
+  margin-top: 1.5rem;
+}
+
 .comparisonTable {
   width: 100%;
   min-width: 42rem;

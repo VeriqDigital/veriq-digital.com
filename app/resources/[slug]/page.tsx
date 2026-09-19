@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ResourceAuthor from "@/components/resources/ResourceAuthor";
+import ResourceNextStep from "@/components/resources/ResourceNextStep";
 import Container from "@/components/ui/Container";
 import articleStyles from "@/components/resources/resources.module.css";
 import { createPageMetadata, serializeJsonLd } from "@/config/seo";
@@ -52,17 +53,6 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
   }
 
   const relatedResources = getRelatedResources(article);
-  const nextStepResource = article.nextStep.startsWith("/resources/")
-    ? getResource(article.nextStep.replace("/resources/", ""))
-    : undefined;
-  const isServiceNextStep =
-    article.nextStep === "/des-moines-web-design" ||
-    article.nextStep === "/small-business-web-design" ||
-    article.nextStep === "/website-redesign";
-  const serviceNextStepIsLocal =
-    article.nextStep === "/des-moines-web-design";
-  const serviceNextStepIsRedesign =
-    article.nextStep === "/website-redesign";
   const canonicalUrl = `${siteConfig.url}/resources/${article.slug}`;
   const ArticleContent = article.Content;
   const structuredData = {
@@ -198,38 +188,7 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
         </Container>
       </section>
 
-      <section className={styles.articleCta}>
-        <Container>
-          <div className={styles.articleCtaInner}>
-            <p>
-              {isServiceNextStep
-                ? serviceNextStepIsLocal
-                  ? "Planning a website project in Des Moines?"
-                  : serviceNextStepIsRedesign
-                    ? "Considering a website redesign?"
-                  : "Planning a small-business website project?"
-                : "Continue with the next practical question"}
-            </p>
-            <h2>
-              {isServiceNextStep
-                ? serviceNextStepIsRedesign
-                  ? "Turn the current-site problems into a clear redesign plan."
-                  : "Turn the research into a clear, useful website."
-                : nextStepResource?.title ?? "Keep building a clearer website plan."}
-            </h2>
-            <Link href={article.nextStep}>
-              {isServiceNextStep
-                ? serviceNextStepIsLocal
-                  ? "Explore Des Moines web design"
-                  : serviceNextStepIsRedesign
-                    ? "Explore website redesign services"
-                  : "Explore small business web design"
-                : "Read the next guide"}{" "}
-              <span aria-hidden="true">↗</span>
-            </Link>
-          </div>
-        </Container>
-      </section>
+      <ResourceNextStep nextStep={article.nextStep} />
     </main>
   );
 }
