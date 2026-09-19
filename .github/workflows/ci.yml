@@ -46,5 +46,62 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Article browser smoke test
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .next/content-review
+          server_pid=""
+          cleanup() {
+            trap - EXIT INT TERM
+            if [[ -n "$server_pid" ]]; then
+              kill -TERM -- "-$server_pid" 2>/dev/null || true
+              for attempt in {1..20}; do
+                if ! kill -0 -- "-$server_pid" 2>/dev/null; then break; fi
+                sleep 0.25
+              done
+              kill -KILL -- "-$server_pid" 2>/dev/null || true
+              wait "$server_pid" 2>/dev/null || true
+            fi
+          }
+          trap cleanup EXIT
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+
+          # Own a process group so cleanup also stops any server children.
+          setsid node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3100 \
+            > .next/content-review/server.log 2>&1 &
+          server_pid=$!
+          # At most 30 one-second requests plus 30 one-second waits.
+          for attempt in {1..30}; do
+            if ! kill -0 "$server_pid" 2>/dev/null; then
+              cat .next/content-review/server.log
+              echo "Production server exited before readiness."
+              exit 1
+            fi
+            if curl --fail --silent --max-time 1 http://127.0.0.1:3100/blog > /dev/null; then
+              npm run test:resources-browser 2>&1 | tee .next/content-review/browser.log
+              exit 0
+            fi
+            sleep 1
+          done
+          cat .next/content-review/server.log
+          echo "Production server did not become ready within 60 seconds."
+          exit 1
+
+      - name: Upload article browser artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: article-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .next/content-review/*.png
+            .next/content-review/*.json
+            .next/content-review/*.log
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high

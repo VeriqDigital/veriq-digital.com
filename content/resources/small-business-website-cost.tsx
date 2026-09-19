@@ -5,76 +5,100 @@ import {
   ComparisonTable,
 } from "@/components/resources/ArticleElements";
 
+// Illustrative USD amounts only; these are not vendor quotes or Veriq prices.
+export const firstYearBudgetExample = {
+  project: 4000,
+  domainAnnual: 20,
+  hostingMonthly: 25,
+  emailMonthly: 8,
+  maintenanceMonthly: 50,
+  optionalSoftwareMonthly: 10,
+  months: 12,
+} as const;
+
+const budget = firstYearBudgetExample;
+export const firstYearOperatingTotal =
+  budget.domainAnnual +
+  budget.months *
+    (budget.hostingMonthly +
+      budget.emailMonthly +
+      budget.maintenanceMonthly +
+      budget.optionalSoftwareMonthly);
+export const firstYearBudgetTotal = budget.project + firstYearOperatingTotal;
+
+const dollars = (amount: number) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(amount);
+
 export default function SmallBusinessWebsiteCostArticle() {
   return (
     <>
-      <ArticleSection id="useful-range" title="A realistic range starts in hundreds and reaches tens of thousands">
+      <ArticleSection id="useful-range" title="Budget for launch and a year of operation">
         <p>
-          For planning purposes, an owner-built website can cost a few hundred
-          dollars a year in core software, while professional work can range
-          from the low thousands to tens of thousands. A website with custom
-          commerce, customer portals, or conversion tools can go higher. Those
-          categories are wide because they describe different products, not
-          different prices for the same product.
+          A small-business website budget has two parts: the work needed to
+          launch it and the services needed to keep it running. Building it
+          yourself means paying for software and supplying the labor. Hiring a
+          professional adds planning, design, development, and testing to the
+          budget. Specialized functionality adds its own scope.
         </p>
         <p>
-          Current market guides illustrate the spread. Clutch lists DIY builder
-          fees around $10–$50 per month and a basic freelancer-built five-to-ten
-          page site around $500–$5,000, while its broader set of reviewed web
-          design projects often falls below $10,000 but includes much larger
-          engagements. Treat those figures as market context, not a Veriq quote
-          or a promise that a particular scope belongs in that range.
+          For a concrete professional starting point, Veriq currently lists
+          smaller custom website projects from $1,000 and larger Growth
+          projects from $2,500. Those are starting points for scoped work,
+          not national averages or an all-in annual budget. The{" "}
+          <Link href="/pricing">current pricing page</Link> explains the
+          distinction. The worked example below shows how to add operating
+          costs to a hypothetical project fee.
         </p>
-        <ArticleCallout title="What these ranges do not include">
+        <ArticleCallout title="Compare the same scope before comparing prices">
           <p>
-            Published ranges rarely normalize strategy, copy, photography,
-            custom design, migration, ecommerce, integrations, accessibility,
-            SEO, or support. Review the{" "}
-            <a
-              href="https://clutch.co/resources/how-to-create-a-budget-for-a-new-website"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              current Clutch website budget guide
-            </a>{" "}
-            and then compare the work included in each proposal.
+            A five-page site with finished copy and a contact form is a
+            different purchase from five pages requiring interviews, writing,
+            photography, booking, and migration. A page count alone cannot
+            tell you whether two quotes cover the same work.
           </p>
         </ArticleCallout>
       </ArticleSection>
 
-      <ArticleSection id="approaches" title="Use four planning bands, not one average">
+      <ArticleSection id="approaches" title="Use four scope bands, not one average">
         <ComparisonTable
-          caption="Small-business website planning bands"
-          columns={["Planning band", "Market context", "What changes the total"]}
+          caption="Four small-business website scopes and the costs to budget for"
+          columns={["Scope band", "What you are paying for", "What changes the total"]}
           rows={[
             [
               "Owner-built",
-              "Core builder fees commonly land in the hundreds per year before optional products and the owner’s time.",
+              "A builder or hosting plan; you handle content, design decisions, setup, and testing.",
               "Plan level, domain, email, apps, commerce fees, purchased assets, and outside help.",
             ],
             [
-              "Professionally assembled",
-              "A focused site built from an established system may land in the low thousands.",
+              "Professional work on an established system",
+              "A provider configures and adapts an existing platform or template, using its supported features.",
               "Content readiness, template customization, page types, platform setup, and the provider’s role.",
             ],
             [
-              "Professionally designed",
-              "Original strategy, messaging, and responsive design commonly move the project from low to higher thousands.",
+              "More extensive custom design and development",
+              "Original structure, visual design, and implementation, with more decisions and production work.",
               "Research, copy, visual direction, content depth, migration, testing, and launch responsibility.",
             ],
             [
               "Custom functionality",
-              "Specialized commerce, customer portals, quoting, booking, or calculators can move the work into tens of thousands or more.",
+              "Specialized commerce, customer portals, or business-specific workflows that need their own specification and testing.",
               "Product decisions, engineering, data, security, edge cases, integrations, and long-term support.",
             ],
           ]}
         />
         <p>
-          These are budgeting bands, not package prices. A website assembled by
-          its owner from a standard builder has a different cost structure from
-          a professionally planned, custom-designed, and custom-developed site.
-          When estimating recurring software, review current vendor pricing and
-          included features because plans and fees can change.
+          These scopes overlap. A professional can use an established platform
+          and still provide substantial custom design. A standard booking
+          integration is also different from building a booking system. Ask
+          which work the provider is doing and which existing tools cover the
+          requirement. For that decision, compare{" "}
+          <Link href="/resources/web-designer-vs-website-builder-for-small-business">
+            a web designer with a DIY website builder
+          </Link>.
         </p>
       </ArticleSection>
 
@@ -120,56 +144,166 @@ export default function SmallBusinessWebsiteCostArticle() {
 
       <ArticleSection id="ongoing-cost" title="Budget for ownership, not only launch">
         <p>
-          The project invoice is one part of the cost. Depending on the setup,
-          the business may also pay for a domain, hosting or platform plan,
-          email, premium software, ecommerce fees, maintenance, backups,
-          security work, content updates, analytics, SEO, and future features.
+          Recurring costs pay for different things. Some may be bundled into a
+          platform or support agreement; do not count them twice. Make a list
+          showing the supplier, renewal amount, billing frequency, and person
+          responsible for each item.
         </p>
+        <ul>
+          <li>
+            <strong>Domain.</strong> The registration for your website address.
+            Check renewals even when the first year is included. For example,{" "}
+            <a href="https://wordpress.com/support/domains/register-a-free-domain/">
+              WordPress.com’s annual-plan domain credit
+            </a>{" "}
+            covers the first year of an eligible new registration; renewal
+            is separate afterward.
+          </li>
+          <li>
+            <strong>Hosting or platform.</strong> The service that runs the
+            site. Confirm whether backups, software updates, and technical
+            support are included and what the business still has to manage.
+          </li>
+          <li>
+            <strong>Business email.</strong> Mailboxes using your domain may be
+            a separate subscription. Count the accounts you need and any
+            migration or setup work.
+          </li>
+          <li>
+            <strong>Maintenance and updates.</strong> Distinguish keeping the
+            underlying system working from changing text, adding pages, or
+            improving the site. Agree on who does each job and how extra work
+            is approved.
+          </li>
+          <li>
+            <strong>Optional software.</strong> Booking tools, paid extensions,
+            email marketing, and other services may have their own fees.
+            Include only the tools the site actually needs; transaction or
+            usage charges require separate estimates when relevant.
+          </li>
+        </ul>
         <p>
-          Ask which costs are recurring, which accounts belong to the business,
-          and what happens if the relationship with the provider ends. A lower
-          launch price can become expensive when routine changes require a
-          specialist or the platform cannot support the next phase. The reverse
-          is also true: paying for custom infrastructure is wasteful when a
-          managed platform already handles the job well.
+          Check the amount due at checkout as well as the advertised monthly
+          equivalent. Annual billing, introductory offers, and usage limits
+          can change the cash you need now and at renewal. Recurring spending
+          is useful when it covers work or services the business needs.
         </p>
       </ArticleSection>
 
-      <ArticleSection id="budget" title="Turn the range into a first-year budget">
+      <ArticleSection id="budget" title="A worked first-year website budget">
         <p>
-          Build two columns: launch and twelve months of operation. Under
-          launch, include strategy, content, design, development, integrations,
-          migration, testing, and project management. Under operation, include
-          the domain, platform or hosting, email, paid extensions, transaction
-          fees, maintenance, content changes, analytics, SEO, and planned
-          improvements. Add the value of owner or employee time when comparing
-          DIY with professional work.
+          <strong>Hypothetical example, in US dollars.</strong> A service
+          business commissions five pages: home, services, about, work, and
+          contact. The assumed project fee includes planning, design,
+          development, a contact form, mobile and functional checks, basic
+          on-page SEO setup, and launch. The owner supplies final copy,
+          branding, and images. This is a budgeting exercise, not a market
+          average, actual quote, or Veriq offer.
         </p>
+        <ComparisonTable
+          caption="Hypothetical budget: a five-page site plus 12 months of operation"
+          columns={["Budget item", "Assumed charge", "First-year amount"]}
+          rows={[
+            [
+              "Website project",
+              `${dollars(budget.project)} once`,
+              dollars(budget.project),
+            ],
+            [
+              "Domain",
+              `${dollars(budget.domainAnnual)} per year`,
+              dollars(budget.domainAnnual),
+            ],
+            [
+              "Hosting/platform",
+              `${dollars(budget.hostingMonthly)} per month × ${budget.months}`,
+              dollars(budget.hostingMonthly * budget.months),
+            ],
+            [
+              "One business email account",
+              `${dollars(budget.emailMonthly)} per month × ${budget.months}`,
+              dollars(budget.emailMonthly * budget.months),
+            ],
+            [
+              "Maintenance and minor updates",
+              `${dollars(budget.maintenanceMonthly)} per month × ${budget.months}`,
+              dollars(budget.maintenanceMonthly * budget.months),
+            ],
+            [
+              "Optional scheduling software",
+              `${dollars(budget.optionalSoftwareMonthly)} per month × ${budget.months}`,
+              dollars(budget.optionalSoftwareMonthly * budget.months),
+            ],
+            [
+              "Operating subtotal",
+              "Domain plus all recurring items above",
+              dollars(firstYearOperatingTotal),
+            ],
+            [
+              "First-year total",
+              "Project plus operating subtotal",
+              dollars(firstYearBudgetTotal),
+            ],
+          ]}
+        />
         <p>
-          Then separate launch requirements from later opportunities. Define
-          the customer action the first version must support and postpone
-          features that do not protect that path. Veriq does not publish a
-          fixed package or invent a number before understanding the work. For
-          the local buying question, use our separate guide to{" "}
-          <Link href="/resources/how-much-does-a-website-cost-in-des-moines">
-            website cost in Des Moines
-          </Link>
-          , which focuses on comparing provider proposals rather than national
-          market ranges.
+          The {dollars(firstYearOperatingTotal)} operating subtotal assumes a
+          full {budget.months} months after launch, unchanged charges, and no
+          free introductory periods. Hosting covers infrastructure; the
+          separate maintenance allowance assumes a monthly form/link check
+          and minor text updates. Scheduling software is optional and paid
+          separately; this example assumes a simple link to it, not a custom
+          integration. Replace every assumed amount with the relevant quote
+          or vendor price for your own budget.
         </p>
-        <ArticleCallout title="Need help defining the right level of investment?">
+        <ArticleCallout title="What this example leaves out">
           <p>
-            See how Veriq approaches{" "}
-            <Link href="/small-business-web-design">
-              professional websites for small businesses
-            </Link>{" "}
-            or compare a{" "}
-            <Link href="/resources/web-designer-vs-website-builder-for-small-business">
-              web designer with a DIY website builder
-            </Link>{" "}
-            before requesting proposals.
+            Taxes, copywriting, photography, a new logo, content migration,
+            ecommerce and payment fees, custom integrations, paid advertising,
+            ongoing SEO campaigns, major changes, and owner time are excluded.
+            There is no contingency reserve in the total. Add any that apply
+            before treating the number as your spending limit.
           </p>
         </ArticleCallout>
+        <p>
+          Your own budget should separate launch requirements from later
+          improvements. Define the customer action the first version must
+          support, then identify what can wait. If the same work is offered
+          under different billing arrangements, use the guide to{" "}
+          <Link href="/resources/one-time-website-pricing-vs-monthly-plans">
+            one-time website pricing versus monthly plans
+          </Link>{" "}
+          to compare the payment schedule and continuing obligations.
+        </p>
+      </ArticleSection>
+
+      <ArticleSection id="where-veriq-fits" title="Where Veriq fits">
+        <p>
+          Veriq publishes project starting points so you can assess fit before
+          requesting a proposal. Essential starts at <strong>$1,000</strong>{" "}
+          for a focused professional presence, with 1–3 core pages depending
+          on scope. Growth starts at <strong>$2,500</strong> for an expanded
+          multi-page site with more involved layouts, service-specific pages, and
+          lead paths. Custom functionality, integrations, and more complex
+          applications receive a custom quote.
+        </p>
+        <p>
+          These are guides, not fixed packages that promise every project will
+          fit the starting amount. Final scope and price depend on the work;
+          payment structure and responsibilities are set out in the proposal.
+          Ongoing updates and support can be discussed separately. None of the
+          hypothetical operating charges above represents a Veriq fee.
+        </p>
+        <p>
+          Review <Link href="/pricing">Veriq’s current website pricing</Link>{" "}
+          alongside the approach to{" "}
+          <Link href="/small-business-web-design">
+            small-business website design
+          </Link>
+          . Bring the required pages, available content, essential
+          functionality, and post-launch support needs to the conversation.
+          That is enough to start defining a useful scope.
+        </p>
       </ArticleSection>
     </>
   );
