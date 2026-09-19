@@ -91,7 +91,7 @@ npm.cmd run build
 npm.cmd run test:browser-smoke
 npm.cmd run start -- --hostname 127.0.0.1 --port 3100
 npm.cmd run test:resources-browser
-npm.cmd audit --omit=dev
+npm.cmd audit --omit=dev --audit-level=high
 git diff --check
 ```
 
@@ -128,11 +128,9 @@ artifacts, not committed assets. A normal rebuild may replace this directory.
 
 Initial sandboxed build could not fetch existing Google fonts; the normal build
 passed with network access. Lint retains a pre-existing unused `HomeWhyGrowth`
-import warning in `app/page.tsx`. The dependency audit reports three pre-existing
-production advisories: moderate `baseline-browser-mapping`, high `sharp`, critical
-`next` (16.3.0). Dependencies and lockfile are unchanged per scope; remediation
-belongs in a separate reviewed change before publication. This content batch
-does not address those advisories.
+import warning in `app/page.tsx`. The original batch at `40bdd5c` reported three
+production advisories; the narrowly authorized PR #39 follow-up below resolves
+them in a separate dependency commit.
 
 Changed-file inventory: the three refreshed components and new payment component
 under `content/resources/`, its `index.ts` export, the dedicated mobile illustration
@@ -143,6 +141,83 @@ the two existing article CSS modules, `tests/resources/articles.test.ts`,
 The service pages, pricing offer, SEO helpers, sitemap generator, blog template,
 audit configuration, production form behavior, dependencies, and lockfile were
 not changed.
+
+## PR #39 follow-up: dependencies and CI
+
+The follow-up preserves all article content, metadata, publication/update dates,
+and audit feature flags. No production credentials, services, submissions, or
+manual deployment were used. The dependency-only commit is `58fb358`.
+
+| Package / resolved family | Before | After |
+| --- | --- | --- |
+| `next`, `eslint-config-next` | 16.3.0 | 16.3.5, exact manifest pins |
+| `@next/env`, `@next/eslint-plugin-next`, all platform `@next/swc-*` | 16.3.0 | 16.3.5 |
+| `sharp` and platform `@img/sharp-*` binaries | 0.35.3 | 0.35.4 |
+| `@img/sharp-libvips-*` bundles | 1.3.2 | 1.3.3 |
+| `baseline-browser-mapping` | 2.10.40 | 2.11.25 |
+| `@swc/helpers`, required by patched Next.js | 0.5.15 | 0.5.23 |
+| `@emnapi/runtime`, required by Sharp's WASM package | 1.11.1 | 1.11.3 |
+
+Maintainer advisories checked: Next.js [Windows hosting](https://github.com/vercel/next.js/security/advisories/GHSA-p293-qw3h-jr36)
+and [AVIF optimization](https://github.com/vercel/next.js/security/advisories/GHSA-2xp9-vwfh-vxw4)
+are patched starting at 16.3.3; 16.3.5 stays on the existing maintained release
+line and requires Sharp `^0.35.4`. The [Sharp advisory](https://github.com/lovell/sharp/security/advisories/GHSA-rgj7-g3m4-5g8c)
+requires 0.35.4 / libheif 1.23.2. The [baseline-browser-mapping maintainer release](https://github.com/web-platform-dx/baseline-browser-mapping/releases/tag/v2.11.0)
+fixes unsafe process termination beginning at 2.11.0; 2.11.25 satisfies both
+Next.js and Browserslist's existing dependency ranges.
+
+The lockfile was updated using explicit Next/tooling versions and a targeted
+`npm update baseline-browser-mapping --package-lock-only`. It retains every
+unrelated resolved package, including an incidental `fastq` update removed during
+diff review. No overrides, ignored advisories, forced audit fix, React upgrade,
+or audit-threshold change was introduced. A subsequent `npm ci` verified the
+manifest/lockfile agreement; `npm ls` verified the actual installed dependency
+tree. Loading native Sharp reported Sharp 0.35.4, libvips 8.18.6, and libheif 1.23.2.
+The lockfile also retains the matching patched Linux packages for CI.
+
+Verification repeated from a clean install on Windows (Node 24.20.0, npm 11.19.0):
+
+| Command | Actual result |
+| --- | --- |
+| `npm.cmd ci` | Passed |
+| `npm.cmd run lint` | Passed, existing unused-import warning only |
+| `npm.cmd run typecheck` | Passed |
+| `npm.cmd test` | 225 passed |
+| `npm.cmd run test:browser-smoke` | 6 passed |
+| `npm.cmd run build` | Passed on Next.js 16.3.5, 46 pages generated |
+| `npm.cmd run test:resources-browser` | Passed, all 20 article/viewport combinations |
+| `npm.cmd audit --omit=dev --audit-level=high --json` | Passed, zero production vulnerabilities at every severity |
+| `git diff --check` | Passed |
+
+The unfiltered `npm audit --json` still reports two pre-existing development-only
+high findings (`browserslist` and `js-yaml`). Their versions were unchanged; they
+are outside the authorized production remediation and do not affect the retained
+production audit gate. There is no remaining production-audit blocker.
+
+Representative phone and desktop screenshots were visually inspected after the
+patched build: payment-guide heading at 320/1440px, payment table at 430px, cost
+table at 1440px, proposal worksheet at 320px, and mobile diagnostic table at
+1440px. Headings remain readable and within their columns; tables retain readable
+type and keyboard-accessible horizontal scrolling at narrow widths. The existing
+floating booking widget overlap remains unchanged. This is Chromium viewport
+verification, not a claim of testing physical phone keyboards or every browser.
+
+`.github/workflows/ci.yml` now runs the existing article browser suite after a
+successful build on Ubuntu 24.04 / Node 22. It starts `next start` at
+`127.0.0.1:3100` in its own process group, polls `/blog` with a bounded 60-second
+readiness budget, and traps exit/interrupt/termination to stop the group (TERM,
+bounded grace, then KILL). The step has a five-minute limit and preserves the
+test command's failure status through `pipefail`. The existing production audit
+and all existing tests remain intact. Workflow YAML parsing and the extracted
+Bash script's syntax were checked locally.
+
+The always-run artifact step uploads only `.next/content-review/*.png`, `*.json`,
+and `*.log`, including available partial screenshots and failure logs. Its name is
+`article-browser-<run_id>-<attempt>` with 14-day retention. Hidden-path inclusion
+is explicit because the files live under `.next`; build output and environment
+files are not uploaded. `server.log` and `browser.log` accompany the screenshots
+and `results.json`. Local Windows verification also saves `server-error.log`
+and stops its production server in a `finally` block.
 
 ## Post-publication measurement
 
