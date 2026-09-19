@@ -15,6 +15,8 @@ const articles = [
   { slug: "how-much-does-a-small-business-website-cost", section: "budget", cta: "/small-business-web-design" },
   { slug: "how-to-choose-a-web-designer-in-des-moines", section: "proposal-worksheet", cta: "/des-moines-web-design" },
   { slug: "one-time-website-pricing-vs-monthly-plans", section: "worked-comparison", cta: "/pricing" },
+  { slug: "web-designer-vs-website-builder-for-small-business", section: "comparison", cta: "/small-business-web-design" },
+  { slug: "website-redesign-seo-checklist", section: "url-map", cta: "/website-redesign" },
 ];
 
 test("production articles retain metadata, readable responsive layouts, keyboard tables, and working TOCs", { timeout: 180_000 }, async () => {
@@ -61,8 +63,11 @@ test("production articles retain metadata, readable responsive layouts, keyboard
             ["$3,600 + 36 × $35 = $4,860", "$300 + 36 × $200 = $7,500"],
           ]);
         }
-        if (article.slug !== "one-time-website-pricing-vs-monthly-plans") {
+        if (!["one-time-website-pricing-vs-monthly-plans", "website-redesign-seo-checklist"].includes(article.slug)) {
           assert.equal(html("meta[property='article:modified_time']").attr("content"), "2026-09-19");
+        } else {
+          assert.equal(html("meta[property='article:published_time']").attr("content"), "2026-09-19");
+          assert.equal(html("meta[property='article:modified_time']").attr("content"), undefined);
         }
         for (const script of html("script[type='application/ld+json']").toArray()) {
           JSON.parse(html(script).text());
@@ -107,6 +112,12 @@ test("production articles retain metadata, readable responsive layouts, keyboard
           window.scrollTo({ top: window.scrollY + node.getBoundingClientRect().top - 80, behavior: "instant" });
         });
         await page.screenshot({ path: path.join(artifacts, `${article.slug}-${width}-table.png`) });
+        if (width < 700 && ["web-designer-vs-website-builder-for-small-business", "website-redesign-seo-checklist"].includes(article.slug)) {
+          const region = page.locator(`#${article.section} [role='region']`);
+          await region.evaluate((node) => { node.scrollLeft = node.scrollWidth; });
+          await page.screenshot({ path: path.join(artifacts, `${article.slug}-${width}-table-end.png`) });
+          await region.evaluate((node) => { node.scrollLeft = 0; });
+        }
         if (article.slug === "website-looks-bad-on-mobile") {
           await page.locator("figure").screenshot({ path: path.join(artifacts, `mobile-illustration-${width}.png`) });
         }
@@ -115,6 +126,14 @@ test("production articles retain metadata, readable responsive layouts, keyboard
         assert.ok(destination === article.cta || (article.slug === "website-looks-bad-on-mobile" && destination === "/website-audit"));
         assert.ok(await cta.locator("a").innerText());
         await cta.screenshot({ path: path.join(artifacts, `${article.slug}-${width}-cta.png`) });
+        const reviewSection = article.slug === "website-redesign-seo-checklist" ? "launch-prep"
+          : article.slug === "web-designer-vs-website-builder-for-small-business" ? "decision" : null;
+        if (reviewSection) {
+          await page.locator(`#${reviewSection}`).evaluate((node) => {
+            window.scrollTo({ top: window.scrollY + node.getBoundingClientRect().top - 128, behavior: "instant" });
+          });
+          await page.screenshot({ path: path.join(artifacts, `${article.slug}-${width}-checklist.png`) });
+        }
         // Verify commercial destination exists; do not follow the optional audit.
         if (destination !== "/website-audit") {
           const linked = await context.request.get(`${origin}${destination}`);
@@ -130,7 +149,14 @@ test("production articles retain metadata, readable responsive layouts, keyboard
     await page.goto(`${origin}/blog`, { waitUntil: "networkidle" });
     assert.equal(await page.locator("a[href='/resources/one-time-website-pricing-vs-monthly-plans']").count(), 1);
     const sitemap = await context.request.get(`${origin}/sitemap.xml`);
-    assert.ok((await sitemap.text()).includes(`${siteConfig.url}/resources/one-time-website-pricing-vs-monthly-plans`));
+    const sitemapXml = await sitemap.text();
+    for (const article of articles) {
+      assert.equal(await page.locator(`main a[href='/resources/${article.slug}']`).count(), 1, `blog listing: ${article.slug}`);
+      assert.ok(sitemapXml.includes(`${siteConfig.url}/resources/${article.slug}`));
+    }
+    const service = await context.request.get(`${origin}/website-redesign`);
+    const serviceHtml = load(await service.text());
+    assert.equal(serviceHtml("a[href='/resources/website-redesign-seo-checklist']").length, 1);
     await writeFile(path.join(artifacts, "results.json"), JSON.stringify(results, null, 2));
     console.info(`Verified ${results.length} article/viewport combinations; screenshots: ${artifacts}`);
   } finally {

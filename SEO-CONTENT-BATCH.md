@@ -219,6 +219,134 @@ files are not uploaded. `server.log` and `browser.log` accompany the screenshots
 and `results.json`. Local Windows verification also saves `server-error.log`
 and stops its production server in a `finally` block.
 
+## Batch 2: responsibility and redesign launch preservation
+
+Implemented on `Article-Refresh-Batch2` from fetched `origin/main` at
+`8f2b67d` (merged PR #39), September 19, 2026. Exactly one new editorial route:
+`/resources/website-redesign-seo-checklist`. No dependency, CI, shared template,
+CTA infrastructure, styling, feature-flag, pricing, or integration changes.
+
+### Intent and content decisions
+
+| Page | Responsibility retained |
+| --- | --- |
+| `/small-business-web-design` | Transactional small-business design/development |
+| `/website-redesign` | Transactional redesign service |
+| Builder-versus-designer guide | Who plans, builds, tests, and manages the website |
+| Custom-versus-template guide | Which implementation approach fits the requirements |
+| Redesign-versus-rebuild guide | How much of the existing system should change |
+| Redesign cost guide | Budgeting and scope-related cost drivers |
+| New redesign SEO checklist | Inventory, URL mapping, preservation, launch verification, and monitoring |
+
+The refreshed builder guide retains its useful opening and time tradeoff. It now
+assigns 12 responsibilities, explains shared work and proposal exclusions, gives
+concrete DIY/hiring conditions, and ends with a scoring-free decision worksheet.
+It links to implementation, budgeting, provider selection, and redesign launch
+guidance without presenting custom code as the automatic consequence of hiring.
+
+The new checklist follows the actual lifecycle, with five illustrative URL
+decisions, content-preservation checks, staging/indexability safeguards,
+distinctions between layout/URL/platform/domain changes, controlled customer-path
+tests, and post-launch monitoring. Example paths are explicitly invented, not
+client evidence. No numerical budget or market claims were added.
+
+Contextual incoming links were added from the builder guide, redesign-versus-
+rebuild, redesign cost, and Google-visibility guide. The redesign service's
+existing preservation-section link now points to the new launch checklist.
+The outdated-site guide was inspected and left unchanged: its existing link to
+redesign-versus-rebuild already supports diagnosis → scope → launch planning.
+New related guides cover redesign scope, cost, and visibility diagnosis. The
+builder and checklist CTAs use the existing small-business and redesign service
+destinations respectively. Registry/export integration supplies blog discovery,
+static routes, metadata, sitemap, BlogPosting, and breadcrumbs without new schema.
+
+Unified editorial review confirmed distinct intent and consistent voice. Veriq
+claims were checked against the current service pages, pricing, and PRODUCT.md.
+Preservation/redirect/technical-launch work is conditional on agreed scope; no
+ranking guarantee, formal migration package, proprietary method, monitoring
+retainer, new fee, or automatic ongoing SEO deliverable is claimed.
+
+The builder guide keeps `publishedAt: 2026-08-11` and adds
+`dateModified: 2026-09-19`. The new guide uses `publishedAt: 2026-09-19` with no
+modification date. A registry comparison against main confirmed no other date
+changes, including pages with surgical reciprocal links. These are fixed editorial
+dates, not build timestamps. If publication occurs on a later day, align the new
+guide's publication date and its explicit test expectations with the actual release.
+
+### Primary sources read and checked
+
+Verified September 19, 2026; links are placed beside the relevant guidance:
+
+- [Google: moves with URL changes](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes) — mapping, relevant replacements, fluctuations, and redirect retention.
+- [Google: redirects](https://developers.google.com/search/docs/crawling-indexing/301-redirects) — permanent server-side 301/308 responses.
+- [Google: canonical URLs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls) — consistent preferred-URL signals, distinct from redirects.
+- [Google: build and submit a sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) — intended canonical URLs and submission limitations.
+- [Google: robots.txt](https://developers.google.com/search/docs/crawling-indexing/robots/intro) — crawl control is not confidentiality or a guaranteed indexing block.
+- [Google: noindex](https://developers.google.com/search/docs/crawling-indexing/block-indexing) — HTML/header directives must be accessible to the crawler.
+- [Google: hosting moves without URL changes](https://developers.google.com/search/docs/crawling-indexing/site-move-no-url-changes) — test infrastructure and monitor before retiring hosting.
+- [Search Console: Change of Address](https://support.google.com/webmasters/answer/9370220) — domain/subdomain eligibility, verified properties, and redirects before use; not same-domain path, HTTPS-only, or www/non-www changes.
+- [Google: Search Console monitoring](https://developers.google.com/search/docs/monitor-debug/search-console-start) — indexing, URL Inspection, sitemap, and page/query performance reports.
+
+### Actual verification
+
+| Command | Result |
+| --- | --- |
+| `npx.cmd --no-install tsx --test tests/resources/articles.test.ts` | 10 passed |
+| `npm.cmd run lint` | Passed; existing `HomeWhyGrowth` unused-import warning in `app/page.tsx:12` |
+| `npm.cmd run typecheck` | Passed |
+| `npm.cmd test` | 227 passed |
+| `npm.cmd run test:browser-smoke` | 6 passed |
+| `npm.cmd run build` | Passed, 47 pages generated on unchanged Next.js 16.3.5 |
+| `npm.cmd run test:resources-browser` | Passed, 30 article/viewport combinations |
+| `npm.cmd audit --omit=dev --audit-level=high` | Passed, zero production vulnerabilities |
+| `git diff --check` | Passed |
+
+The production audit initially could not reach npm inside the sandbox; it passed
+with network access. The build used network access for the existing Google Fonts.
+No dependencies were changed. Resource tests now check all 22 registered article
+routes, internal article/service links, TOCs, H1s, table semantics, and existing
+schema, plus both new-article discovery paths, dates, and Batch 2 service CTAs.
+
+The browser suite retains all Batch 1 coverage and adds both Batch 2 guides at
+320, 430, 768, 1024, and 1440px. Its first expanded run completed the layout checks
+but found that a new global blog-link assertion also counted the existing footer
+cost-guide link. Scoping that new assertion to `main` checks uniqueness in the
+actual blog listing; the final run passed. Existing checks were not removed.
+
+A local production server ran at `127.0.0.1:3100` with bounded readiness and
+`finally` cleanup. Requests to external origins, API routes, and non-GET/HEAD
+operations remained blocked. No real forms, payments, audit runs, emails, or paid
+APIs were exercised. Audit discovery flags were not changed.
+
+Artifacts: ignored `.next/content-review/` contains 109 PNGs, `results.json`,
+`browser.log`, `server.log`, and `server-error.log`. Both guides have hero, table,
+CTA, and checklist captures at all five widths; narrow-width `table-end` captures
+show the final column. Representative examples:
+
+- `website-redesign-seo-checklist-320-hero.png`
+- `website-redesign-seo-checklist-430-table-end.png`
+- `website-redesign-seo-checklist-768-hero.png`
+- `website-redesign-seo-checklist-1024-checklist.png`
+- `website-redesign-seo-checklist-1440-table.png`
+- `web-designer-vs-website-builder-for-small-business-320-table-end.png`
+- `web-designer-vs-website-builder-for-small-business-430-checklist.png`
+
+Visual review checked wrapping, readable table columns at both scroll positions,
+checklist spacing, CTA hierarchy, and tablet/desktop composition. Keyboard tests
+confirmed visible focus, table scrolling, and TOC navigation. All 30 combinations
+had no page-wide overflow or browser runtime errors. The existing floating booking
+button can cover lower content at some scroll positions; it remains outside this
+editorial scope. Verification used Chromium viewports, not physical devices or
+every browser. The unchanged CI workflow will run this expanded suite and upload
+the same artifacts on the next push; no remote CI result is claimed for this batch.
+No implementation blocker remains, and nothing was merged or manually deployed.
+
+Post-publication: annotate the actual release, inspect the new URL's selected
+canonical/indexing, compare the two guides' page/query performance over matched
+windows, and review service-page visits and qualified inquiries using existing
+analytics. Apply the common measurement cautions below; article count or ranking
+movement alone does not establish business value.
+
 ## Post-publication measurement
 
 Annotate the actual release date. Compare equal before/after Search Console

@@ -394,8 +394,8 @@ export default function WebsiteRedesignPage() {
                 Preserve what still serves the business and document deliberate
                 changes before launch.
               </p>
-              <Link href="/resources/why-isnt-my-business-website-showing-up-on-google">
-                Review indexing and crawlability basics <span aria-hidden="true">↗</span>
+              <Link href="/resources/website-redesign-seo-checklist">
+                Use the redesign SEO launch checklist <span aria-hidden="true">↗</span>
               </Link>
             </div>
             <dl className={styles.preservationList}>

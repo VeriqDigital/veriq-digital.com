@@ -19,6 +19,7 @@ import {
   WebsiteNotGettingLeadsArticle,
   WebsiteNotOnGoogleArticle,
   WebsiteRedesignCostArticle,
+  WebsiteRedesignSeoChecklistArticle,
   WebsiteRedesignVsRebuildArticle,
   WhyWebsiteIsSlowArticle,
 } from "@/content/resources";
@@ -107,7 +108,8 @@ export type ResourceArticle = {
  * support that page, but must not target the service phrase as their primary
  * intent. The website-redesign service page solely owns transactional
  * website-redesign phrases. Redesign resources own only their diagnostic,
- * comparison, or cost questions.
+ * comparison, cost, or launch-preservation questions. The builder comparison
+ * owns responsibility for the work; custom vs. template owns implementation.
  */
 export const resources: readonly ResourceArticle[] = [
   {
@@ -291,7 +293,7 @@ export const resources: readonly ResourceArticle[] = [
     seoTitle: "Web Designer vs. Website Builder for Small Business",
     shortTitle: "Web designer vs. website builder",
     description:
-      "Compare DIY website builders and professional web designers across cost, time, quality, flexibility, maintenance, and business complexity.",
+      "Decide who should plan, build, test, and maintain your business website with a responsibility comparison and a practical DIY-or-hire worksheet.",
     topic: "Web Design",
     category: "Buying guide",
     funnel: "Commercial investigation",
@@ -303,15 +305,16 @@ export const resources: readonly ResourceArticle[] = [
       "build my own business website",
     ],
     intent:
-      "Decide whether to build a business website independently or hire professional help.",
+      "Decide who should take responsibility for planning, building, testing, and managing a business website.",
     nextStep: "/small-business-web-design",
     publishedAt: "2026-08-11",
+    dateModified: "2026-09-19",
     tableOfContents: [
       { id: "real-choice", label: "The real choice" },
       { id: "comparison", label: "Responsibility comparison" },
       { id: "diy-fit", label: "When DIY fits" },
       { id: "designer-fit", label: "When a designer fits" },
-      { id: "decision", label: "Choose an operating model" },
+      { id: "decision", label: "Decision worksheet" },
     ],
     relatedSlugs: [
       "custom-website-vs-template-for-small-business",
@@ -842,6 +845,46 @@ export const resources: readonly ResourceArticle[] = [
       "how-long-does-it-take-to-build-a-small-business-website",
     ],
     Content: WebsiteRedesignCostArticle,
+  },
+  {
+    slug: "website-redesign-seo-checklist",
+    title: "Website Redesign SEO Checklist: What to Preserve Before Launch",
+    seoTitle: "Website Redesign SEO Checklist: Before Launch",
+    shortTitle: "Website redesign SEO checklist",
+    description:
+      "Plan what to preserve during a website redesign: inventory valuable pages, map URL changes, check launch settings, and monitor search and customer paths.",
+    topic: "SEO & Local Visibility",
+    category: "Buying guide",
+    funnel: "Commercial investigation",
+    primaryTarget: "website redesign SEO checklist",
+    secondaryTargets: [
+      "redesign website without losing SEO",
+      "preserve SEO during website redesign",
+      "SEO checklist for website redesign",
+      "website migration SEO checklist",
+      "SEO after website redesign",
+    ],
+    intent:
+      "Inventory, map, preserve, and verify search-related assets and customer paths before and after a redesign launch.",
+    nextStep: "/website-redesign",
+    publishedAt: "2026-09-19",
+    tableOfContents: [
+      { id: "before-build", label: "Inventory before design" },
+      { id: "url-map", label: "Map URL decisions" },
+      { id: "content", label: "Preserve useful content" },
+      { id: "launch-prep", label: "Prepare the production setup" },
+      { id: "change-type", label: "Domain and platform changes" },
+      { id: "launch-day", label: "Launch-day checks" },
+      { id: "monitoring", label: "Post-launch monitoring" },
+      { id: "avoid", label: "What not to do" },
+      { id: "where-veriq-fits", label: "Where Veriq fits" },
+    ],
+    relatedSlugs: [
+      "website-redesign-vs-rebuild",
+      "how-much-does-a-website-redesign-cost",
+      "why-isnt-my-business-website-showing-up-on-google",
+    ],
+    Content: WebsiteRedesignSeoChecklistArticle,
   },
 ];
 

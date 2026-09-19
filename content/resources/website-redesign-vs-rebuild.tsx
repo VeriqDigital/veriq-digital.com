@@ -97,6 +97,10 @@ export default function WebsiteRedesignVsRebuildArticle() {
           workflows, and recognizable brand elements can still be preserved or
           mapped into the new system.
         </p>
+        <p>
+          Before changing those foundations, use the <Link href="/resources/website-redesign-seo-checklist">website redesign SEO checklist</Link>{" "}
+          to record what stays, map what moves, and define the launch checks.
+        </p>
         <ArticleCallout title="Platform change is a consequence, not the goal">
           <p>
             Choose a new platform only when its editing model, capabilities,

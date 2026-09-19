@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import test from "node:test";
 import { load } from "cheerio";
@@ -20,6 +21,8 @@ const payment = require("../../content/resources/one-time-website-pricing-vs-mon
 delete require.extensions[".css"];
 
 const newSlug = "one-time-website-pricing-vs-monthly-plans";
+const redesignSlug = "website-redesign-seo-checklist";
+const builderSlug = "web-designer-vs-website-builder-for-small-business";
 const refreshed = [
   ["website-looks-bad-on-mobile", "2026-08-12"],
   ["how-much-does-a-small-business-website-cost", "2026-08-11"],
@@ -30,6 +33,7 @@ test("registry has unique articles, valid related guides, next steps, and comple
   const slugs = resources.map((article) => article.slug);
   assert.equal(new Set(slugs).size, slugs.length);
   assert.equal(slugs.filter((slug) => slug === newSlug).length, 1);
+  assert.equal(slugs.filter((slug) => slug === redesignSlug).length, 1);
   for (const article of resources) {
     assert.equal(new Set(article.relatedSlugs).size, article.relatedSlugs.length);
     for (const slug of article.relatedSlugs) {
@@ -47,21 +51,23 @@ test("registry has unique articles, valid related guides, next steps, and comple
   }
 });
 
-test("new guide is registered in static routes, blog links, sitemap, and canonical metadata", async () => {
-  const path = `/resources/${newSlug}`;
-  const article = getResource(newSlug)!;
-  assert.ok(generateStaticParams().some(({ slug }) => slug === newSlug));
-  const blog = load(renderToStaticMarkup(createElement(BlogPage)));
-  assert.equal(blog(`a[href="${path}"]`).length, 1);
-  const entry = sitemap().find(({ url }) => url === `${siteConfig.url}${path}`);
-  assert.ok(entry);
-  assert.equal(entry.lastModified, "2026-09-19");
-  const metadata = await generateMetadata({ params: Promise.resolve({ slug: newSlug }) });
-  assert.equal(metadata.alternates?.canonical, path);
-  assert.deepEqual(metadata.title, { absolute: `${article.seoTitle} | Veriq` });
-  assert.equal(metadata.description, article.description);
-  assert.equal(metadata.openGraph?.url, path);
-});
+for (const newSlug of ["one-time-website-pricing-vs-monthly-plans", redesignSlug]) {
+  test(`${newSlug} is registered in static routes, blog links, sitemap, and canonical metadata`, async () => {
+    const path = `/resources/${newSlug}`;
+    const article = getResource(newSlug)!;
+    assert.ok(generateStaticParams().some(({ slug }) => slug === newSlug));
+    const blog = load(renderToStaticMarkup(createElement(BlogPage)));
+    assert.equal(blog(`a[href="${path}"]`).length, 1);
+    const entry = sitemap().find(({ url }) => url === `${siteConfig.url}${path}`);
+    assert.ok(entry);
+    assert.equal(entry.lastModified, "2026-09-19");
+    const metadata = await generateMetadata({ params: Promise.resolve({ slug: newSlug }) });
+    assert.equal(metadata.alternates?.canonical, path);
+    assert.deepEqual(metadata.title, { absolute: `${article.seoTitle} | Veriq` });
+    assert.equal(metadata.description, article.description);
+    assert.equal(metadata.openGraph?.url, path);
+  });
+}
 
 test("refreshed publication dates are preserved and only substantive updates get dates", () => {
   for (const [slug, publishedAt] of refreshed) {
@@ -71,11 +77,24 @@ test("refreshed publication dates are preserved and only substantive updates get
   assert.equal(getResource(newSlug)?.publishedAt, "2026-09-19");
   assert.equal(getResource(newSlug)?.dateModified, undefined);
   assert.equal(getResource("why-is-my-website-slow")?.dateModified, undefined);
+  assert.equal(getResource(builderSlug)?.publishedAt, "2026-08-11");
+  assert.equal(getResource(builderSlug)?.dateModified, "2026-09-19");
+  assert.equal(getResource(redesignSlug)?.publishedAt, "2026-09-19");
+  assert.equal(getResource(redesignSlug)?.dateModified, undefined);
+  for (const [slug, publishedAt, dateModified] of [
+    ["website-redesign-vs-rebuild", "2026-08-12", undefined],
+    ["how-much-does-a-website-redesign-cost", "2026-08-12", "2026-08-30"],
+    ["why-isnt-my-business-website-showing-up-on-google", "2026-08-09", undefined],
+    ["signs-your-website-is-outdated", "2026-08-12", undefined],
+  ] as const) {
+    assert.equal(getResource(slug)?.publishedAt, publishedAt);
+    assert.equal(getResource(slug)?.dateModified, dateModified);
+  }
 });
 
-test("four article routes and an unaffected guide render with accurate existing schema", async () => {
-  for (const slug of [...refreshed.map(([slug]) => slug), newSlug, "why-is-my-website-slow"]) {
-    const article = getResource(slug)!;
+test("all article routes, including unaffected guides, render with accurate schema and internal links", async () => {
+  for (const article of resources) {
+    const { slug } = article;
     const $ = load(renderToStaticMarkup(await ResourcePage({ params: Promise.resolve({ slug }) })));
     assert.equal($("h1").length, 1);
     assert.equal($("h1").text(), article.title);
@@ -94,8 +113,14 @@ test("four article routes and an unaffected guide render with accurate existing 
       assert.equal($(table).parent().attr("role"), "region");
       assert.ok($(table).parent().attr("aria-label"));
     }
-    for (const anchor of $("article a[href^='/resources/']").toArray()) {
-      const [target, fragment] = $(anchor).attr("href")!.slice("/resources/".length).split("#");
+    for (const anchor of $("article a[href^='/']").toArray()) {
+      const href = $(anchor).attr("href")!;
+      if (!href.startsWith("/resources/")) {
+        const pathname = href.split(/[?#]/)[0];
+        assert.ok(existsSync(`app${pathname}/page.tsx`) || sitemap().some(({ url }) => url === `${siteConfig.url}${pathname}`), `${slug}: broken internal link ${href}`);
+        continue;
+      }
+      const [target, fragment] = href.slice("/resources/".length).split("#");
       const linkedArticle = getResource(target);
       assert.ok(linkedArticle, `broken article link: ${target}`);
       if (fragment) {
@@ -103,6 +128,22 @@ test("four article routes and an unaffected guide render with accurate existing 
         assert.equal(targetHtml(`[id='${fragment}']`).length, 1);
       }
     }
+  }
+});
+
+test("Batch 2 guides retain distinct service next steps and reciprocal redesign links", async () => {
+  for (const [slug, destination, label] of [
+    [builderSlug, "/small-business-web-design", "Explore small business web design"],
+    [redesignSlug, "/website-redesign", "Explore website redesign services"],
+  ]) {
+    const $ = load(renderToStaticMarkup(await ResourcePage({ params: Promise.resolve({ slug }) })));
+    const cta = $("section[aria-label='Next step'] a");
+    assert.equal(cta.attr("href"), destination);
+    assert.equal(cta.text().replace("↗", "").trim(), label);
+  }
+  for (const slug of [builderSlug, "website-redesign-vs-rebuild", "how-much-does-a-website-redesign-cost", "why-isnt-my-business-website-showing-up-on-google"]) {
+    const $ = load(renderToStaticMarkup(createElement(getResource(slug)!.Content)));
+    assert.equal($(`a[href='/resources/${redesignSlug}']`).length, 1);
   }
 });
 
