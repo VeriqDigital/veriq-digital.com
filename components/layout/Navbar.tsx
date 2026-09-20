@@ -141,7 +141,7 @@ const Navbar = () => {
         data-visible={isVisible || isMenuOpen}
       >
       <nav
-        className={`${styles.primary} relative z-10 mx-auto flex h-24 w-full items-center justify-between gap-3 px-4 min-[360px]:gap-8 min-[360px]:px-6 sm:px-10 lg:px-14 xl:px-20`}
+        className={`${styles.primary} relative z-10 mx-auto flex min-h-24 w-full items-center justify-between gap-3 px-4 min-[360px]:gap-8 min-[360px]:px-6 sm:px-10 lg:px-14 xl:px-20`}
         aria-label="Primary"
       >
         <Link

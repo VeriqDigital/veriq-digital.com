@@ -10,13 +10,24 @@ const artifacts = path.resolve(".next/customer-path");
 
 async function assertWithinViewport(control: Locator, width: number, height: number) {
   const bounds = await control.boundingBox();
-  assert.ok(bounds, "Navigation control has visible bounds");
+  const state = await control.evaluate((node) => {
+    const header = node.closest("header")!;
+    return {
+      control: node.getAttribute("aria-label") ?? node.textContent?.trim(),
+      rootTextSize: getComputedStyle(document.documentElement).fontSize,
+      scrollY,
+      headerVisible: header.dataset.visible,
+      headerTransform: getComputedStyle(header).transform,
+    };
+  });
+  const context = `${width}x${height}: ${JSON.stringify(state)}`;
+  assert.ok(bounds, `Navigation control has visible bounds: ${context}`);
   assert.ok(bounds.x >= -1 && bounds.x + bounds.width <= width + 1,
-    `${await control.getAttribute("aria-label") ?? await control.innerText()} extends outside ${width}px viewport: ${JSON.stringify(bounds)}`);
+    `Navigation control extends outside ${width}px viewport: ${JSON.stringify(bounds)}; ${context}`);
   assert.ok(bounds.y >= -1 && bounds.y + bounds.height <= height + 1,
-    `Navigation control extends outside ${height}px viewport: ${JSON.stringify(bounds)}`);
+    `Navigation control extends outside ${height}px viewport: ${JSON.stringify(bounds)}; ${context}`);
   assert.equal(await control.evaluate((node) => node.scrollWidth <= node.clientWidth + 1), true,
-    "Navigation label fits inside its control without colliding with the next control");
+    `Navigation label fits inside its control without colliding with the next control: ${context}`);
 }
 
 test("navigation remains reachable with enlarged text and a short viewport", { timeout: 120_000 }, async () => {
@@ -97,6 +108,27 @@ test("navigation remains reachable with enlarged text and a short viewport", { t
           }
         }
       }
+    }
+
+    // Row sizing must not disable hide-on-scroll or keyboard reveal.
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 640 });
+      await page.goto(`${origin}/services`, { waitUntil: "networkidle" });
+      await page.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" }));
+      await page.waitForFunction(() => document.querySelector("header.site-navbar")?.getAttribute("data-visible") === "false");
+      const header = page.locator("header.site-navbar");
+      assert.ok(await header.evaluate((node) => node.getBoundingClientRect().bottom <= 1), "Navigation hides after scrolling down");
+      await page.evaluate(() => window.scrollTo({ top: 560, behavior: "instant" }));
+      await page.waitForFunction(() => document.querySelector("header.site-navbar")?.getAttribute("data-visible") === "true");
+      const logo = header.getByRole("link", { name: "Veriq", exact: true });
+      await assertWithinViewport(logo, width, 640);
+      await page.evaluate(() => window.scrollTo({ top: 900, behavior: "instant" }));
+      await page.waitForFunction(() => document.querySelector("header.site-navbar")?.getAttribute("data-visible") === "false");
+      await logo.focus();
+      await page.keyboard.press("Tab");
+      const focused = page.locator(":focus");
+      assert.equal(await focused.evaluate((node) => Boolean(node.closest("header.site-navbar"))), true);
+      await assertWithinViewport(focused, width, 640);
     }
     assert.deepEqual(errors, []);
   } finally {
