@@ -28,7 +28,7 @@ const HeroInquiryForm = () => {
   };
 
   return (
-    <section className={styles.panel} aria-labelledby="hero-inquiry-title">
+    <section className={styles.panel} aria-labelledby="hero-inquiry-title" data-floating-booking-obstruction>
       <header className={styles.header}>
         <p className={styles.eyebrow}>Let&apos;s talk</p>
         <h2 id="hero-inquiry-title">Tell us about your project</h2>

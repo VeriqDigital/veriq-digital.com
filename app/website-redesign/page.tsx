@@ -529,7 +529,7 @@ export default function WebsiteRedesignPage() {
         </Container>
       </section>
 
-      <section className={styles.closing}>
+      <section className={styles.closing} data-floating-booking-obstruction>
         <Container>
           <div className={styles.closingInner}>
             <p>Bring the current website and the problems you are seeing.</p>

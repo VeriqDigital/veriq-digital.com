@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit --incremental false",
     "test": "tsx --test tests/website-audit/*.test.ts tests/resources/*.test.ts",
     "test:resources-browser": "tsx --test tests/resources/articles.smoke.ts",
-    "test:browser-smoke": "tsx --test tests/browser/*.test.ts"
+    "test:browser-smoke": "tsx --test tests/browser/*.test.ts",
+    "test:customer-paths": "tsx --test tests/customer-path/*.smoke.ts"
   },
   "dependencies": {
     "@sparticuz/chromium": "143.0.4",

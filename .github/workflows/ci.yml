@@ -46,12 +46,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Article browser smoke test
+      - name: Article and customer-path browser tests
         timeout-minutes: 5
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p .next/content-review
+          mkdir -p .next/content-review .next/customer-path
           server_pid=""
           cleanup() {
             trap - EXIT INT TERM
@@ -82,6 +82,7 @@ jobs:
             fi
             if curl --fail --silent --max-time 1 http://127.0.0.1:3100/blog > /dev/null; then
               npm run test:resources-browser 2>&1 | tee .next/content-review/browser.log
+              npm run test:customer-paths 2>&1 | tee .next/customer-path/browser.log
               exit 0
             fi
             sleep 1
@@ -99,6 +100,9 @@ jobs:
             .next/content-review/*.png
             .next/content-review/*.json
             .next/content-review/*.log
+            .next/customer-path/*.png
+            .next/customer-path/*.json
+            .next/customer-path/*.log
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14

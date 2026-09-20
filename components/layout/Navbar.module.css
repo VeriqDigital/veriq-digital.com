@@ -1,0 +1,65 @@
+.header {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  max-height: 100dvh;
+}
+
+.primary {
+  flex-shrink: 0;
+}
+
+.desktopLinks {
+  display: none;
+}
+
+.menuButton {
+  flex-shrink: 0;
+}
+
+.mobileMenu {
+  min-height: 0;
+  margin: 0 1rem 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Container queries use the enlarged root text size, unlike viewport breakpoints. */
+@container (min-width: 80rem) {
+  .desktopLinks {
+    display: flex;
+  }
+
+  .menuButton,
+  .mobileMenu {
+    display: none;
+  }
+}
+
+@container (width < 20rem) {
+  .primary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    height: auto;
+    gap: 0.5rem;
+    padding: 16px;
+  }
+
+  .actions {
+    display: contents;
+  }
+
+  .menuButton {
+    grid-column: 2;
+    grid-row: 1;
+    width: 44px;
+    height: 44px;
+  }
+
+  .booking {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    padding-inline: 1rem;
+    text-align: center;
+  }
+}

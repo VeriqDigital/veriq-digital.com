@@ -53,7 +53,7 @@ export default function ResourceNextStep({
   const linkContent = <>{copy.label} <span aria-hidden="true">↗</span></>;
 
   return (
-    <section className={styles.articleCta} aria-label="Next step">
+    <section className={styles.articleCta} aria-label="Next step" data-floating-booking-obstruction>
       <Container>
         <div className={styles.articleCtaInner}>
           <p>{copy.prompt}</p>

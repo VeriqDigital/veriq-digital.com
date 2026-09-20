@@ -434,7 +434,7 @@ export default function DesMoinesWebDesignPage() {
         </Container>
       </section>
 
-      <section className={styles.closing}>
+      <section className={styles.closing} data-floating-booking-obstruction>
         <Container>
           <div className={styles.closingInner}>
             <p>Have a website problem worth solving?</p>
