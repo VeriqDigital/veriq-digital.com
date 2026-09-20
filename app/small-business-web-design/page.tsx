@@ -264,7 +264,7 @@ export default function SmallBusinessWebDesignPage() {
         </Container>
       </section>
 
-      <section className={styles.closing}>
+      <section className={styles.closing} data-floating-booking-obstruction>
         <Container>
           <div className={styles.closingInner}>
             <p>Bring the business problem, not a finished technical brief.</p>

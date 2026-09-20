@@ -50,6 +50,11 @@ const BudgetSelect = ({ labelId = "budget-label" }: BudgetSelectProps) => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "Tab") {
+      setIsOpen(false);
+      return;
+    }
+
     if (event.key === "Escape" && isOpen) {
       event.preventDefault();
       event.stopPropagation();

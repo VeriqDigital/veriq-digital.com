@@ -158,14 +158,14 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
               </ol>
             </aside>
 
-            <article className={articleStyles.articleBody}>
+            <article className={articleStyles.articleBody} data-floating-booking-obstruction>
               <ArticleContent />
             </article>
           </div>
         </Container>
       </section>
 
-      <section className={styles.relatedSection} aria-labelledby="related-title">
+      <section className={styles.relatedSection} aria-labelledby="related-title" data-floating-booking-obstruction>
         <Container>
           <div className={styles.sectionHeading}>
             <p>Keep reading</p>

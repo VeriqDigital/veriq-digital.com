@@ -440,7 +440,7 @@ export default function ServicesPage() {
         </Container>
       </section>
 
-      <section className={styles.closing}>
+      <section className={styles.closing} data-floating-booking-obstruction>
         <Container>
           <div className={styles.closingInner}>
             <p>Not sure what the business actually needs?</p>
